@@ -166,7 +166,8 @@ export function revealIfOffscreen(element: Element | null, reducedMotion: boolea
   const box = element.getBoundingClientRect();
   const height = window.innerHeight || document.documentElement.clientHeight;
   if (box.top >= 0 && box.top < height * 0.8) return;
-  element.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+  const instant = reducedMotion || window.innerWidth <= 1023;
+  element.scrollIntoView({ behavior: instant ? "instant" : "smooth", block: "start" });
 }
 
 function usePrefersReducedMotion(): boolean {
@@ -302,6 +303,14 @@ export function BeatClockProvider({
     ? !state.rewinding && phase !== "intro" && state.index < beats.length - 1
     : beatDone && state.index < beats.length - 1;
 
+  // A consumed Next press can finish an answer without changing beats. Reveal
+  // only after that user action and its rendered update, never on completion alone.
+  const revealAfterNext = useCallback(() => {
+    window.requestAnimationFrame(() =>
+      window.requestAnimationFrame(() => revealIfOffscreen(stageRef.current, reducedMotion)),
+    );
+  }, [reducedMotion]);
+
   const next = useCallback(() => {
     if (v4 && phaseRef.current === "intro") return;
     if (v4 && phaseRef.current === "free") setPhase("guided");
@@ -312,20 +321,24 @@ export function BeatClockProvider({
       // A press during the motion finishes it first, then the next press moves on.
       stop();
       setState({ index, progress: 1, rewinding: false });
+      if (v4) revealAfterNext();
       return;
     }
     const gate = gateRef.current;
     if (v4) {
       // v4 never locks the path: an open estimate is skipped ("Vorschlag übernommen"),
       // a ready gate may still take the press for its inner step.
-      if (gate && gate.ready && gate.onNext?.()) return;
+      if (gate && gate.ready && gate.onNext?.()) {
+        revealAfterNext();
+        return;
+      }
       enter(index + 1, "user");
       return;
     }
     if (beat.kind === "commit" && !committed.has(index)) return;
     if (gate && (!gate.ready || gate.onNext?.())) return;
     enter(index + 1, "user");
-  }, [beats, committed, enter, stop, v4]);
+  }, [beats, committed, enter, revealAfterNext, stop, v4]);
 
   const prev = useCallback(() => {
     if (v4 && phaseRef.current === "intro") return;

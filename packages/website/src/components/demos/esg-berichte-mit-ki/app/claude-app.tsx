@@ -90,8 +90,6 @@ function useAnswerStart(ref: React.RefObject<HTMLElement | null>, pinned: React.
     if (!start) return;
     pinned.current = false;
     scroller.scrollTop += start.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 8;
-    // The dock can move the outer document; keep this reading position visible across its scroll ancestors.
-    start.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
   }, [ref, pinned, answer]);
 }
 

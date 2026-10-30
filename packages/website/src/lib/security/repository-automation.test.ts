@@ -33,6 +33,7 @@ type Step = {
 };
 type Job = {
   readonly name?: string;
+  readonly "runs-on"?: string | readonly string[];
   readonly if?: string;
   readonly needs?: readonly string[];
   readonly "continue-on-error"?: unknown;
@@ -150,6 +151,16 @@ describe("Dependabot configuration", () => {
 
 describe("workflow shape", () => {
   const ci = workflow("ci.yml");
+
+  it("keeps repository-controlled jobs on the reviewed Ubuntu LTS baseline", () => {
+    for (const file of workflowFiles) {
+      const jobs = Object.entries(workflow(file).jobs);
+      expect(jobs.length, file).toBeGreaterThan(0);
+      for (const [id, job] of jobs) {
+        expect(job["runs-on"], `${file} ${id}`).toBe("ubuntu-24.04");
+      }
+    }
+  });
 
   it("keeps verify as the only aggregate and the only job with that name", () => {
     expect(Object.keys(ci.jobs).sort()).toEqual(["browser", "static", "unit", "verify"]);

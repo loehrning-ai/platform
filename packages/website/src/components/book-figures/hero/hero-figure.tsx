@@ -90,21 +90,22 @@ function SvgHero({ spec, bare = false, stepVariants }: HeroFigureProps) {
   const layouts: readonly Variant[] = hp.layout ? [hp.layout] : ["compact", "wide"];
   // In a stage the control waits until the auto steps have been played: the first step is a clean picture.
   const showControl = !hp.inStage || stepVariants === undefined || hp.step >= 1;
+  const fitStage = hp.inStage && hp.mode === "scrub";
 
   // In a stage the figure fits the box the shell leaves it: tell the engine its aspect.
   useEffect(() => {
     const el = stageRef.current;
-    if (!el || !hp.inStage || typeof window.ResizeObserver !== "function") return undefined;
+    if (!el || !fitStage || typeof window.ResizeObserver !== "function") return undefined;
     const observe = (): void => setBox({ w: el.clientWidth, h: el.clientHeight });
     observe();
     const observer = new window.ResizeObserver(observe);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [hp.inStage]);
+  }, [fitStage]);
 
   const options = (layout: Variant) => {
     const width = VARIANT_WIDTH[layout];
-    const height = hp.inStage && box && box.w > 0 && box.h > 0 ? Math.round((width * box.h) / box.w) : undefined;
+    const height = fitStage && box && box.w > 0 && box.h > 0 ? Math.round((width * box.h) / box.w) : undefined;
     return {
       width,
       theme: "web" as const,

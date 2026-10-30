@@ -33,6 +33,10 @@ The shared bootstrap (Node, checksum-verified Bun,
 `bun install --frozen-lockfile --ignore-scripts`, optional Playwright browser)
 is the composite action at `.github/actions/setup`.
 
+Every repository-owned job uses `ubuntu-24.04`, the validated OS baseline. An
+OS-major migration requires a reviewed workflow change and passing Verify and
+Extended on that commit. Hosted-image patch updates still apply.
+
 | Job       | Check name       | Command            | What it proves                                                                                                                                                                                                                              |
 | --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, `bun audit --audit-level=critical` (a critical advisory blocks the PR), and that `git diff --exit-code` finds no regenerated file. |

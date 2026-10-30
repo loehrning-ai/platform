@@ -1,10 +1,13 @@
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CURVE, NETWORK, NULLDIST, SLOPE, STRIP } from "@/lib/figures/__tests__/fixtures-hero";
 import type { FigureSpec } from "@/lib/figures";
 import { HeroFigure } from "../hero-figure";
 import { setStage, stubIdle, stubMedia } from "./helpers";
+import { finishedState, publishStageState } from "@/components/book-reader/stage/stage-protocol";
 
 function html(node: React.ReactElement): Document {
   const doc = document.implementation.createHTMLDocument("t");
@@ -27,6 +30,22 @@ function inStage(spec: FigureSpec, props: { bare?: boolean; stepVariants?: reado
 }
 
 describe("server markup is the finished figure", () => {
+  it("keeps the stage readout out of flow before client stage detection, while standalone readouts remain visible", () => {
+    const style = document.createElement("style");
+    style.textContent = readFileSync(join(process.cwd(), "src/components/book-figures/hero/hero.css"), "utf8");
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(<><section className="cs"><HeroFigure spec={NULLDIST} bare /></section><HeroFigure spec={NULLDIST} /></>);
+    document.head.append(style);
+    document.body.append(container);
+    try {
+      const stageReadout = container.querySelector(".cs [data-hs-readout]")!;
+      expect(stageReadout.closest(".hs")).toHaveAttribute("data-hs-stage", "false");
+      expect(getComputedStyle(stageReadout).position).toBe("absolute");
+      const standaloneReadout = container.querySelectorAll("[data-hs-readout]")[1]!;
+      expect(getComputedStyle(standaloneReadout).position).not.toBe("absolute");
+    } finally { container.remove(); style.remove(); }
+  });
+
   it.each([NETWORK, STRIP, CURVE, SLOPE, NULLDIST])("$id: both layouts at progress 1, a control and a sentence, nothing live", (spec) => {
     const doc = html(<HeroFigure spec={spec} />);
     const svgs = [...doc.querySelectorAll("svg[data-figure]")];
@@ -171,6 +190,27 @@ describe("inside a chapter stage", () => {
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("keeps an inline stage control present while the controller has not started", () => {
+    const view = render(<section className="cs" data-chapter-stage="inline" data-mode="static" data-steps="3" data-step="2"><HeroFigure spec={NULLDIST} bare stepVariants={[undefined, undefined, undefined]} /></section>);
+    expect(view.container.querySelector(".hs")).toHaveAttribute("data-hs-stage", "true");
+    expect(view.container.querySelector(".hv")).not.toBeNull();
+  });
+
+  it("keeps static SVG dimensions natural, fits only a scrub box and restores natural dimensions on pause", () => {
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(390);
+    vi.spyOn(Element.prototype, "clientHeight", "get").mockReturnValue(1000);
+    vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} unobserve() {} });
+    const natural = html(<HeroFigure spec={NULLDIST} bare />).querySelector<HTMLElement>('.hs-variant[data-hs-variant="compact"]')!.style.aspectRatio;
+    const root = inStage(NULLDIST, { bare: true });
+    const ratio = () => root.querySelector<HTMLElement>(".hs-variant")!.style.aspectRatio;
+    expect(ratio()).toBe(natural);
+    setStage(root, 0.5);
+    expect(ratio()).not.toBe(natural);
+    act(() => publishStageState(root, finishedState(3)));
+    expect(ratio()).toBe(natural);
   });
 
   it("takes progress 0, 0.5 and 1 from the stage", () => {

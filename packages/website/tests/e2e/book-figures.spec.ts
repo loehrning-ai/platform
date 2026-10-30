@@ -70,15 +70,39 @@ test.describe("data book cover", () => {
     await expect(page.locator("main details, main summary, main [aria-expanded]")).toHaveCount(0);
   });
 
-  test("the reel slot shows the poster first, and no pause switch while nothing moves", async ({ page }) => {
+  test.describe("the reel without script", () => {
+    test.use({ javaScriptEnabled: false });
+
+    test("shows the settled server poster and no pause switch", async ({ page }) => {
+      await page.goto(BOOK_PATH, { waitUntil: "load" });
+      const reel = page.locator("[data-cover-reel]");
+      await expect(reel).toBeVisible();
+      await expect(reel).toHaveAttribute("data-state", "poster");
+      await expect(reel.locator("svg.cr-field")).toBeVisible();
+      await expect(reel.getByRole("switch", { includeHidden: true })).toBeHidden();
+    });
+  });
+
+  test("the live reel exposes a working pause and resume switch", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto(BOOK_PATH, { waitUntil: "load" });
     await hydrated(page);
     const reel = page.locator("[data-cover-reel]");
-    await expect(reel).toBeVisible();
-    // Without an engine (or under reduced motion) the poster stays and the switch is not offered.
-    const state = await reel.getAttribute("data-state");
-    if (state === "poster") await expect(reel.getByRole("switch")).toBeHidden();
-    else await expect(reel.getByRole("switch", { name: "Bewegung anhalten" })).toBeVisible();
+    await reel.scrollIntoViewIfNeeded();
+    // Idle loading may replace the server poster after hydration. Wait for
+    // that explicit state instead of branching on an earlier attribute read.
+    await expect(reel).toHaveAttribute("data-state", "playing");
+    const pause = reel.getByRole("switch", { name: "Bewegung anhalten" });
+    await expect(pause).toBeVisible();
+    await expect(pause).toHaveAttribute("aria-checked", "false");
+    await pause.click();
+    await expect(reel).toHaveAttribute("data-state", "paused");
+    const resume = reel.getByRole("switch", { name: "Bewegung starten" });
+    await expect(resume).toBeVisible();
+    await expect(resume).toHaveAttribute("aria-checked", "true");
+    await resume.click();
+    await expect(reel).toHaveAttribute("data-state", "playing");
+    await expect(pause).toHaveAttribute("aria-checked", "false");
   });
 
   test("reduced motion keeps the settled cover", async ({ page }) => {
@@ -88,6 +112,7 @@ test.describe("data book cover", () => {
     await page.waitForTimeout(500);
     await expect(page.locator("[data-cover-reel]")).toHaveAttribute("data-state", "poster");
     await expect(page.locator("[data-cover-reel] svg.cr-field")).toBeVisible();
+    await expect(page.locator("[data-cover-reel]").getByRole("switch", { includeHidden: true })).toBeHidden();
   });
 });
 

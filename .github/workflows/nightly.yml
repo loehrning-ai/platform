@@ -25,7 +25,7 @@ env:
 jobs:
   browser:
     name: browser chromium ${{ matrix.shard }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       E2E_SERVER_MODE: production
@@ -65,7 +65,7 @@ jobs:
   # transport/teardown state from accumulating across unrelated pages.
   webkit:
     name: browser mobile-webkit smoke
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     env:
       E2E_SERVER_MODE: production
@@ -93,7 +93,7 @@ jobs:
 
   konto-dom:
     name: konto DOM
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       E2E_SERVER_MODE: production
@@ -113,7 +113,7 @@ jobs:
 
   hygiene:
     name: hygiene
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

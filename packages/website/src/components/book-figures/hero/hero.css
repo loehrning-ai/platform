@@ -139,8 +139,7 @@
 }
 
 /* In a stage the shell owns the words; the sentence stays for screen readers. */
-.hs[data-hs-stage="true"] .hs-readout,
-.hf[data-hs-stage="true"] .hs-readout {
+.cs .hs-readout {
   position: absolute;
   width: 1px;
   height: 1px;
