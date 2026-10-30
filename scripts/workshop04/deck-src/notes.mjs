@@ -19,7 +19,7 @@ const SOURCE_NOTES = {
     }),
     note("Gastgeber", {
       Time: "1 min",
-      Say: "Ich bin Tim Löhr, früher Data Scientist bei Apple und Red Bull, heute Data Engineer bei Meta in Warschau und Gründer von loehrning.ai. Workshop und Kit kommen von loehrning.ai. Der Fall ist erfunden, ohne Arbeitgeberdaten.",
+      Say: "Ich bin Tim Loehr, früher Data Scientist bei Apple und Red Bull, heute AI Engineer. Ich betreibe loehrning.ai. Workshop und Kit kommen von loehrning.ai. Der Fall ist erfunden, ohne Arbeitgeberdaten.",
       Students: "Zuhören.",
       Cue: "Die Linie läuft von allein: Apple, Red Bull, Meta, loehrning.ai.",
       Remember: "Unter einer Minute bleiben.",
@@ -40,9 +40,9 @@ const SOURCE_NOTES = {
     }),
     note("Drei Anfragen", {
       Time: "2 min",
-      Say: "Heute ist im Fall der 16.10.2026. Wir sitzen im Büro des Weinguts, sieben Tage vor der Rückgabe an Nordvik. Auf dem Tisch liegen drei Anfragen. Der Importeur in Göteborg schickt 8 Fragen, Rückgabe am 23.10.; Antworten ohne Nachweis zählt er nicht. Nordvik bietet die Weine bei Vinmonopolet in Norwegen an; dort gilt die 420-g-Regel. Was die Regel nicht erfüllt, kann Nordvik dort nicht anbieten. Das Marketing des Weinguts will 7 Aussagen auf neue Etiketten für Deutschland drucken, nach dem 27.09. Die Bank in Skopje braucht 6 Felder für den Solarkredit über 8.550.000 Denar, jede Schätzung gekennzeichnet.",
+      Say: "Der Fallstichtag ist der 16.10.2026. Das ist nicht das heutige Workshop-Datum. Wir sitzen im Büro des Weinguts, sieben Tage vor der Rückgabe an Nordvik. Auf dem Tisch liegen drei Anfragen. Der Importeur in Göteborg schickt 8 Fragen, Rückgabe am 23.10.; Antworten ohne Nachweis zählt er nicht. Nordvik bietet die Weine bei Vinmonopolet in Norwegen an; dort gilt die 420-g-Regel. Was die Regel nicht erfüllt, kann Nordvik dort nicht anbieten. Das Marketing des Weinguts will 7 Aussagen auf neue Etiketten für Deutschland drucken, nach dem 27.09. Die Bank in Skopje braucht 6 Felder für den Solarkredit über 8.550.000 Denar, jede Schätzung gekennzeichnet.",
       Students: "Per Zuruf: Welche Anfrage beantwortet ihr zuerst?",
-      Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 Antworten aus einem Ordner, 53 % des Umsatzes und ein Kredit.",
+      Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 ESG-Antworten: Nachweise für Kundenanforderungen, Umweltaussagen und den Solarkredit. Die 53 % sind die betroffenen Umsatzanteile, kein nachgewiesener Umsatzverlust.",
       Remember: "Antwort: Nordvik zuerst, Frist 23.10. Aber alle drei fragen nach denselben Fakten, Strom steht in allen drei. Deshalb ein Ordner, und in Schritt 4 ein Register.",
     }),
     note("Heute", {
@@ -143,7 +143,7 @@ const SOURCE_NOTES = {
     }),
     note("Host", {
       Time: "1 min",
-      Say: "I am Tim Löhr. I was a data scientist at Apple and Red Bull. Today I am a data engineer at Meta in Warsaw, and I founded loehrning.ai, where this workshop and the kit come from. Today's case is invented: no employer data or systems.",
+      Say: "I am Tim Loehr. I was a data scientist at Apple and Red Bull. Today I am an AI Engineer, running loehrning.ai, where this workshop and the kit come from. Today's case is invented: no employer data or systems.",
       Students: "Listen.",
       Cue: "The line runs by itself: Apple, Red Bull, Meta, loehrning.ai.",
       Remember: "Stay under a minute.",
@@ -164,9 +164,9 @@ const SOURCE_NOTES = {
     }),
     note("Three requests", {
       Time: "2 min",
-      Say: "In the case, today is 16.10.2026. We sit in the winery's office, seven days before the return to Nordvik. Three requests are on the desk. The importer in Gothenburg sends 8 questions, due on 23.10.; it does not count answers without evidence. Nordvik offers the wines to Vinmonopolet in Norway; the 420 g rule applies there. What fails the rule, Nordvik cannot offer there. The winery's in-house marketing wants to print 7 claims on new labels for Germany, after 27.09. The bank in Skopje needs 6 fields for the solar loan of 8,550,000 denar, every estimate marked.",
+      Say: "The case reference date is 16.10.2026. This is not today’s workshop date. We sit in the winery's office, seven days before the return to Nordvik. Three requests are on the desk. The importer in Gothenburg sends 8 questions, due on 23.10.; it does not count answers without evidence. Nordvik offers the wines to Vinmonopolet in Norway; the 420 g rule applies there. What fails the rule, Nordvik cannot offer there. The winery's in-house marketing wants to print 7 claims on new labels for Germany, after 27.09. The bank in Skopje needs 6 fields for the solar loan of 8,550,000 denar, every estimate marked.",
       Students: "Call it out: which request do you answer first?",
-      Cue: "On arrival: the October timeline, 16.10. is marked. Arrow 1: envelope from Sweden with the 420 g rule. Arrow 2: envelope from marketing with the UWG. Arrow 3: envelope from the bank with the EBRD. Arrow 4: 8, 7 and 6 become 21 answers in one folder, 53 % of sales and a loan.",
+      Cue: "On arrival: the October timeline, 16.10. is marked. Arrow 1: envelope from Sweden with the 420 g rule. Arrow 2: envelope from marketing with the UWG. Arrow 3: envelope from the bank with the EBRD. Arrow 4: 8, 7 and 6 become 21 ESG answers: evidence for customer requirements, environmental claims and the solar loan. The 53 % is the combined sales share concerned, not a measured loss.",
       Remember: "Answer: Nordvik first, due 23.10. But all three ask for the same facts; electricity is in all three. Hence one folder, and one register in step 4.",
     }),
     note("Today", {

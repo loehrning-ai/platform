@@ -11,7 +11,7 @@ export function cover(c) {
 <div class="cover__main"><p class="label"${s(0, { win: "0,.35" })}>Workshop 04 · ESG</p>
 <h1 class="cover__title"${s(0, { win: ".05,.5", fx: "blur" })}>${c.t("ESG-Berichte", "ESG reports")}<br>${c.t("mit", "with")} <em>${c.t("KI", "AI")}</em></h1>
 <p class="cover__sub"${s(0, { win: ".25,.65" })}>${c.t("Ein Weingut. Drei Anfragen.<br>Welche Antwort hat einen", "One winery. Three requests.<br>Which answer has")} <span class="cover__word">${c.t("Nachweis?", "evidence?")}<i class="cover__thread"${s(0, { win: ".6,.95", fx: "line" })}></i></span></p>
-<p class="cover__meta"${s(0, { win: ".45,.9" })}><span class="pill">${c.ico("user")}Tim Löhr</span><span class="pill pill--quiet">${c.t("60 Minuten", "60 minutes")}</span><span class="pill pill--quiet">${c.ico("pin")}Kavadarci → ${c.t("Deutschland", "Germany")}</span></p></div>
+<p class="cover__meta"${s(0, { win: ".45,.9" })}><span class="pill">${c.ico("user")}Tim Loehr</span><span class="pill pill--quiet">${c.t("60 Minuten", "60 minutes")}</span><span class="pill pill--quiet">${c.ico("pin")}Kavadarci → ${c.t("Deutschland", "Germany")}</span></p></div>
 ${foot(c, 1)}`,
   );
 }
@@ -20,16 +20,16 @@ export function host(c) {
   const stops = [
     ["Apple", "Data Scientist", "0.36,0.56", ""],
     ["Red Bull", "Data Scientist", "0.48,0.68", ""],
-    ["Meta", "Data Engineer", "0.6,0.8", ""],
-    ["loehrning.ai", c.t("Gründer", "Founder"), "0.72,0.94", " host__own"],
+    ["Meta", "AI Engineer", "0.6,0.8", ""],
+    ["loehrning.ai", "Running loehrning.ai", "0.72,0.94", " host__own"],
   ]
     .map(([name, role, win, own]) => `<li class="host__stop${own}" data-step="0" data-win="${win}" data-fx="pop"><i class="host__dot" aria-hidden="true"></i><b>${name}</b><span>${role}</span></li>`)
     .join("");
   return section(
     { id: "gastgeber", label: c.t("Gastgeber", "Host"), steps: 0, durations: "2000" },
-    `<figure class="host__photo" data-step="0" data-win="0,0.4" data-fx="fade"><img src="${c.assets}/tim-loehr.jpg" alt="${c.t("Porträt von Tim Löhr", "Portrait of Tim Löhr")}" width="1100" height="1100" /></figure>
-<div class="host__body"><div class="host__main"><p class="host__kicker" data-step="0" data-win="0,0.35">${c.t("Gastgeber", "Your host")}</p><h2 class="host__name" data-step="0" data-win="0.06,0.45">Tim Löhr</h2>
-<p class="host__role" data-step="0" data-win="0.14,0.5">${c.t("Data Engineer bei Meta, Warschau", "Data Engineer at Meta, Warsaw")}</p>
+    `<figure class="host__photo" data-step="0" data-win="0,0.4" data-fx="fade"><img src="${c.assets}/tim-loehr.jpg" alt="${c.t("Porträt von Tim Loehr", "Portrait of Tim Loehr")}" width="1100" height="1100" /></figure>
+<div class="host__body"><div class="host__main"><p class="host__kicker" data-step="0" data-win="0,0.35">${c.t("Gastgeber", "Your host")}</p><h2 class="host__name" data-step="0" data-win="0.06,0.45">Tim Loehr</h2>
+<p class="host__role" data-step="0" data-win="0.14,0.5">${"AI Engineer"}</p>
 <div class="host__career" role="group" aria-label="${c.t("Werdegang", "Career")}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true" data-step="0" data-win="0.35,0.9" data-fx="line"></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc" data-step="0" data-win="0.5,0.85">${c.ico("cap")}<b>${c.t("M.Sc. Informatik", "M.Sc. Computer Science")}</b><span>${c.t("FAU Erlangen-Nürnberg", "FAU Erlangen-Nuremberg")}</span></p>
 <p class="host__line" data-step="0" data-win="0.6,0.95">${c.ico("shield")}<span>${c.t("Erfundener Fall. Keine Daten oder Systeme eines Arbeitgebers.", "Invented case. No employer data or systems.")}</span></p></div>
@@ -163,15 +163,15 @@ export function requests(c) {
   const tick = (k, d, text) => `<span class="tl__tick" style="left:${dayX(d)}px"${s(k, { fx: "pop", win: ".7,1" })}><i></i><span>${text}</span></span>`;
   return section(
     { id: "anfragen", label: c.t("Drei Anfragen", "Three requests"), steps: 4, durations: "1600,1700,1700,1700,2600" },
-    `${head(c.t("Der Auslöser · Oktober 2026", "The trigger · October 2026"), c.t("Im Oktober kommen drei Anfragen", "Three requests arrive in October"), { size: "m" })}
+    `${head(c.t("Der Auslöser · Oktober 2026", "The trigger · October 2026"), c.t("Drei Anfragen brauchen ESG-Nachweise", "Three requests need ESG evidence"), { size: "m" })}
 <div class="stage rqs">
 ${rows.map((row, i) => env(i, row)).join("\n")}
 ${nums}${plus}
 <div class="winery__sum rq__sum"${s(4, { fx: "pop", win: ".52,.8" })}><span class="ico-tile ico-tile--accent">${c.ico("folder")}</span><b class="winery__n"${s(4, { fx: "none", win: ".55,.9", count: "0,21,0" })}>21</b><span class="winery__w">${c.t("Antworten · 1 Ordner", "answers · 1 folder")}</span></div>
-<p class="rq__end"${s(4, { fx: "fly", win: ".66,.92" })} style="--dy:40px;--s:.96">${c.t(`Am Ordner hängen <b>53 %</b> des Umsatzes und ein <em>Kredit</em>.`, `<b>53 %</b> of sales and a <em>loan</em> depend on the folder.`)}</p>
+<p class="rq__end"${s(4, { fx: "fly", win: ".66,.92" })} style="--dy:40px;--s:.96">${c.t(`ESG-Nachweise für <b>53 %</b> des Umsatzes und den <em>Solarkredit</em>.`, `ESG evidence for <b>53 %</b> of sales and the <em>solar loan</em>.`)}</p>
 <div class="tl"><p class="tl__month"${s(0, { fx: "fade", win: ".1,.5" })}>${c.t("Oktober 2026", "October 2026")}</p><i class="tl__bar"${s(0, { fx: "line", win: ".1,.6" })}></i>
 ${tick(1, 23, c.t("23.10. Rückgabe Nordvik", "23.10. due to Nordvik"))}${tick(2, 14, c.t("14.10. Entwurf vom Marketing", "14.10. draft from marketing"))}
-<span class="tl__pin" style="left:${dayX(16)}px"${s(0, { fx: "pop", ease: "spring", win: ".55,.9" })}><span class="pill pill--accent"${s(4, { fx: "glow", win: ".6,1" })}>${c.ico("calendar")}${c.t("16.10. Heute im Fall", "16.10. Today in the case")}</span><i></i></span></div>
+<span class="tl__pin" style="left:${dayX(16)}px"${s(0, { fx: "pop", ease: "spring", win: ".55,.9" })}><span class="pill pill--accent"${s(4, { fx: "glow", win: ".6,1" })}>${c.ico("calendar")}${c.t("16.10. Fallstichtag", "16.10. Case reference date")}</span><i></i></span></div>
 </div>
 ${foot(c, 3)}`,
   );
