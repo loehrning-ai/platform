@@ -27,8 +27,11 @@ export const GLIDE_MS = 380;
  * `min-height: 0` is the same override the engine's own overflow probe
  * applies, so the measured height is the natural height WeasyPrint reports.
  * The outer frame draws the A4 sheet instead.
+ * `geometricPrecision` keeps Inter's fractional advances in Chromium on
+ * Linux. `optimizeLegibility` rounded a tight paragraph onto one line there,
+ * shortening the sheet by 13.6 px compared with the engine and macOS.
  */
-const PREVIEW_CSS = `:host{display:block}main.page{min-height:0!important;background:transparent!important}.cv-body{background:transparent!important;zoom:${LAYOUT_ZOOM}}`;
+const PREVIEW_CSS = `:host{display:block}main.page{min-height:0!important;background:transparent!important}.cv-body{background:transparent!important;zoom:${LAYOUT_ZOOM};text-rendering:geometricPrecision}`;
 
 /**
  * The blocks that glide: none of them contains another, so no block moves

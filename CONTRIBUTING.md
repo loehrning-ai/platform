@@ -47,6 +47,8 @@ For dependency, workflow, shared layout, security or other broad changes, dispat
 
 Automatic Git deployments are disabled. Preview and release commands are deliberate operator actions using authenticated `gh` and `vercel` CLIs and the intended existing project link. CI runs without deployment credentials. Do not publish an uncommitted directory with a raw deploy command or bypass the repository's source/check gates.
 
+After release, [retire obsolete worktrees](packages/website/docs/development.md#retire-a-worktree) to reclaim their dependency and build directories. Preserve unfinished changes, local notes and configuration, and keep the branch history when removing only its physical checkout.
+
 ## Verification contract
 
 `bun run verify` runs static checks and the full unit suite in parallel, then a single production build, the server-log privacy probe and twenty capability cases in both languages on Chromium and WebKit. WebKit runs in short fresh batches. The smoke reporter rejects missing, duplicated, skipped, expected-failure, retried or flaky cases.

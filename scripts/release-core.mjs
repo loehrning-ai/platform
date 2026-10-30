@@ -1,10 +1,11 @@
 import { execFile, execFileSync } from "node:child_process";
-import { existsSync, readFileSync, mkdtempSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { buildSmokeContract, MAX_RESPONSE_BYTES, PRODUCTION_ORIGINS, runSmoke, smokeSourcePaths } from "./release-smoke.mjs";
+import { readStableRegularFile } from "../packages/website/scripts/build-freshness.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LINK_FILES = ["packages/website/.vercel/project.json", ".vercel/project.json"];
@@ -278,7 +279,9 @@ export function createDefaultAdapters(root = ROOT, { exec = execFileSync, execAs
   };
   return {
     log: (message) => process.stdout.write(`${message}\n`), now: () => Date.now(), sleep: (ms) => new Promise((r) => setTimeout(r, ms)),
-    readProject: () => readLinkedProject((f) => readFileSync(f, "utf8"), existsSync, root),
+    readProject: () => readLinkedProject((f) => readStableRegularFile(f, path.relative(root, f), "Vercel project link", {
+      rootDirectory: root, minimumBytes: 2, maximumBytes: 16 * 1024,
+    }).toString("utf8"), existsSync, root),
     currentBranch: () => run("git", ["symbolic-ref", "--short", "HEAD"]).trim(),
     getRepository: () => JSON.parse(gh("repos/:owner/:repo")),
     getProject: (p) => api(p, `/v9/projects/${p.projectId}`),
@@ -317,8 +320,11 @@ export function createDefaultAdapters(root = ROOT, { exec = execFileSync, execAs
         try {
           const file = path.join(directory, "body");
           const status = (await runAsync("vercel", ["curl", route, "--deployment", `https://${deployment.url}`, "--scope", project.orgId, "--", "--silent", "--show-error", "--max-time", "20", "--max-filesize", String(MAX_RESPONSE_BYTES), "--output", file, "--write-out", "%{http_code}"], { cwd: projectCwd(project), timeout: 45_000 })).trim();
-          if (!/^\d{3}$/.test(status) || statSync(file).size > MAX_RESPONSE_BYTES) throw new Error(`${route}: invalid staged response`);
-          return { status: Number(status), bytes: readFileSync(file) };
+          if (!/^\d{3}$/.test(status)) throw new Error(`${route}: invalid staged response`);
+          const bytes = readStableRegularFile(file, "body", "Staged smoke response", {
+            rootDirectory: directory, minimumBytes: 1, maximumBytes: MAX_RESPONSE_BYTES,
+          });
+          return { status: Number(status), bytes };
         } finally { rmSync(directory, { recursive: true, force: true }); }
       } : readPublic;
       return runSmoke({ baseUrl, contract, request, log: (message) => process.stdout.write(`${message}\n`) });

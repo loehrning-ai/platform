@@ -96,6 +96,26 @@ test("the browser sets each page within 2 px of WeasyPrint", async ({ page }) =>
   expect(meaningful, formatBrowserErrors(meaningful)).toEqual([]);
 });
 
+test("the tight Inter paragraph keeps the engine's two-line wrap", async ({ page }) => {
+  const choice: CvLiveChoice = { lang: "de", template: "classic", density: "tight", stations: 4 };
+  await page.goto(deepLink(choice));
+  await measured(page, choice);
+
+  // The committed PDF wraps this paragraph onto two lines. On Linux,
+  // optimizeLegibility rounded Inter's advances enough to fit it on one,
+  // while CoreText and WeasyPrint kept the second line.
+  const lines = await page.locator("[data-cv-sheet]").first().evaluate((host) => {
+    const paragraph = [...(host.shadowRoot?.querySelectorAll("li") ?? [])].find((node) =>
+      node.textContent?.startsWith("Frachtkosten je Sendung aus 40.000 Rechnungszeilen"),
+    );
+    if (!paragraph) throw new Error("The engine's freight-cost paragraph is missing");
+    const text = document.createRange();
+    text.selectNodeContents(paragraph);
+    return [...text.getClientRects()].filter((rect) => rect.width > 0).length;
+  });
+  expect(lines).toBe(2);
+});
+
 test("one more job overflows, tight brings it back, R starts over", async ({ page }) => {
   test.setTimeout(90_000);
   const errors = collectBrowserErrors(page);

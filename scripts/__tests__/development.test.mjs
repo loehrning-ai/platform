@@ -60,6 +60,14 @@ test("mismatched Node pins and unsupported runtimes fail before starting command
   assert.throws(() => readToolchain(root), /consistent, exact/);
 });
 
+test("toolchain configuration cannot be read through a symbolic link", (t) => {
+  const root = fixture(t);
+  const pin = path.join(root, ".nvmrc");
+  rmSync(pin);
+  symlinkSync(path.join(root, ".node-version"), pin);
+  assert.throws(() => readToolchain(root), /regular project file/);
+});
+
 test("setup uses the frozen lock, denies lifecycle scripts and installs both locked engines", async (t) => {
   const root = fixture(t);
   const calls = [];
@@ -196,9 +204,9 @@ test("browser doctor fails when either locked executable is absent", (t) => {
   const root = fixture(t);
   const directory = path.join(root, "node_modules/@playwright/test");
   mkdirSync(directory, { recursive: true });
-  const binary = path.join(root, "fixture-browser");
+  const binary = path.join(directory, "fixture-browser");
   writeFileSync(binary, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
-  writeFileSync(path.join(directory, "index.js"), `module.exports = { chromium: { executablePath: () => ${JSON.stringify(binary)} }, webkit: { executablePath: () => ${JSON.stringify(binary)} } };\n`);
+  writeFileSync(path.join(directory, "index.js"), 'const path = require("node:path"); const executablePath = () => path.join(__dirname, "fixture-browser"); module.exports = { chromium: { executablePath }, webkit: { executablePath } };\n');
   const childEnvironment = providerFreeVerificationEnvironment(environment);
   assert.doesNotThrow(() => checkBrowserInstallations(root, childEnvironment));
   rmSync(binary);

@@ -1,4 +1,8 @@
 import { createHash } from "node:crypto";
+import { createRequire } from "node:module";
+
+// Resolve the website's declared, locked parser rather than a transitive package.
+const { JSDOM } = createRequire(new URL("../packages/website/package.json", import.meta.url))("jsdom");
 
 export const PRODUCTION_ORIGINS = Object.freeze(["https://loehrning.ai", "https://www.loehrning.ai"]);
 export const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
@@ -53,15 +57,25 @@ export function buildSmokeContract(sourceFiles, gitTree) {
 
 // Error boundaries retain the app shell; inspect rendered headings and the actual
 // React/Next error protocol, not ordinary copy or strings bundled in scripts.
-function hasApplicationErrorDocument(html) {
-  const rendered = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, "");
-  if (/<h1\b[^>]*>\s*(?:Die Seite konnte nicht geladen werden\.|The page could not be loaded\.|Die Anwendung konnte nicht geladen werden\.|The application could not be loaded\.)\s*<\/h1\s*>/i.test(rendered)) return true;
+function hasApplicationErrorDocument(document) {
+  const errorHeadings = new Set([
+    "die seite konnte nicht geladen werden.", "the page could not be loaded.",
+    "die anwendung konnte nicht geladen werden.", "the application could not be loaded.", "404",
+  ]);
+  if ([...document.querySelectorAll("h1")].some((heading) => errorHeadings.has(heading.textContent.trim().toLowerCase()))) return true;
   // Next's intentional no-SSR bailout is not an application failure.
-  if (/<template\b[^>]*\bdata-dgst=["'](?!BAILOUT_TO_CLIENT_SIDE_RENDERING["'])[^"']+["']/i.test(rendered)) return true;
+  if ([...document.querySelectorAll("template[data-dgst]")].some((template) => {
+    const digest = template.getAttribute("data-dgst");
+    return digest && digest !== "BAILOUT_TO_CLIENT_SIDE_RENDERING";
+  })) return true;
   const flight = [];
-  for (const match of html.matchAll(/<script\b[^>]*>\s*self\.__next_f\.push\((\[[\s\S]*?\])\)\s*;?\s*<\/script\s*>/gi)) {
+  for (const script of document.querySelectorAll("script")) {
+    const source = script.textContent.trim();
+    const call = source.endsWith(";") ? source.slice(0, -1).trim() : source;
+    const prefix = "self.__next_f.push(";
+    if (!call.startsWith(prefix) || !call.endsWith(")")) continue;
     try {
-      const frame = JSON.parse(match[1]);
+      const frame = JSON.parse(call.slice(prefix.length, -1));
       if (frame[0] === 1 && typeof frame[1] === "string") flight.push(frame[1]);
     } catch { /* Other scripts are not Flight data. */ }
   }
@@ -79,9 +93,14 @@ export function verifySmokeResponse(check, response) {
   }
   const text = bytes.toString("utf8");
   if (check.kind === "html") {
-    if (!/<main\b/i.test(text) || !/<h1\b/i.test(text) || !text.includes("data-app-hydration-marker") ||
-      !new RegExp(`<html\\b[^>]*\\blang=["']${check.language}["']`, "i").test(text) ||
-      /NEXT_HTTP_ERROR_FALLBACK;404|<h1[^>]*>\s*404\s*<\//i.test(text) || hasApplicationErrorDocument(text)) throw new Error(`${check.route}: missing expected application document`);
+    // JSDOM's defaults leave scripts and resource loading disabled. Never opt into either.
+    const dom = new JSDOM(text, { contentType: "text/html" });
+    try {
+      const document = dom.window.document;
+      if (!document.querySelector("main") || !document.querySelector("h1") || !document.querySelector("[data-app-hydration-marker]") ||
+        document.documentElement.lang !== check.language || text.includes("NEXT_HTTP_ERROR_FALLBACK;404") ||
+        hasApplicationErrorDocument(document)) throw new Error(`${check.route}: missing expected application document`);
+    } finally { dom.window.close(); }
   } else if (check.kind === "robots" && !/user-agent:/i.test(text)) throw new Error(`${check.route}: invalid robots document`);
   else if (check.kind === "sitemap" && !/<urlset\b/.test(text)) throw new Error(`${check.route}: invalid sitemap document`);
   else if (check.kind === "llms" && !/loehrning/i.test(text)) throw new Error(`${check.route}: invalid public knowledge document`);

@@ -2,11 +2,12 @@
 
 import { spawn, spawnSync } from "node:child_process";
 import { createServer } from "node:net";
-import { lstatSync, readFileSync } from "node:fs";
+import { lstatSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { providerFreeVerificationEnvironment } from "./environment-policy.mjs";
+import { readStableRegularFile } from "../packages/website/scripts/build-freshness.mjs";
 
 export const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BROWSERS = ["chromium", "webkit"];
@@ -14,11 +15,11 @@ const DEFAULT_PORT = 3430;
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "::1"]);
 
 function regularFile(file) {
-  const stat = lstatSync(file);
-  if (!stat.isFile() || stat.isSymbolicLink()) {
-    throw new Error(`${path.basename(file)} must be a regular project file.`);
-  }
-  return readFileSync(file, "utf8");
+  return readStableRegularFile(file, path.basename(file), "Project configuration", {
+    invalidMessage: `${path.basename(file)} must be a regular project file.`,
+    minimumBytes: 1,
+    maximumBytes: 16 * 1024 * 1024,
+  }).toString("utf8");
 }
 
 export function readToolchain(root = REPOSITORY_ROOT) {

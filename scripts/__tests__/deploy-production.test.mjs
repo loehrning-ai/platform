@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, symlinkSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
 import {
   deploymentRequestBody,
@@ -491,6 +492,22 @@ test("protected smoke executes four asynchronous curl children concurrently", as
   } });
   await io.smoke("https://platform-release.vercel.app", Array.from({ length: 8 }, (_, index) => ({ route: `/${index}`, kind: "html", language: "de" })), { project: PROJECT, deployment: readyDeployment(), authenticated: true });
   assert.equal(maximum, 4);
+});
+
+test("protected smoke rejects a symlinked curl response and removes only its owned directory", async () => {
+  const files = [];
+  const io = createDefaultAdapters("/repo", { execAsync: async (_command, args) => {
+    const file = args[args.indexOf("--output") + 1];
+    const target = path.join(path.dirname(file), "synthetic-response");
+    writeFileSync(target, '<html lang="de"><main><h1>Workshop</h1><span data-app-hydration-marker="true"></span></main></html>');
+    symlinkSync(target, file);
+    files.push(file, target);
+    return { stdout: "200" };
+  } });
+  await assert.rejects(io.smoke("https://platform-release.vercel.app", [{ route: "/", kind: "html", language: "de" }], {
+    project: PROJECT, deployment: readyDeployment(), authenticated: true,
+  }), /regular non-symlink file/);
+  assert.ok(files.length === 2 && files.every((file) => !existsSync(file)));
 });
 
 test("public smoke follows only same-path canonical-domain redirects", async () => {

@@ -107,3 +107,24 @@ symlink and dev refuses symlinked `.next` output. The helpers do not switch
 branches, delete worktrees, clean edits, copy provider configuration or change
 global tool defaults. Provider-backed testing remains a separate, explicitly
 configured tier in the [CI contract](ci-contract.md).
+
+## Retire a worktree
+
+Stop its server and other commands, then inspect both tracked changes and
+ignored local files before removing an obsolete checkout:
+
+```bash
+git -C /path/to/old-worktree status --short
+git -C /path/to/old-worktree status --short --ignored
+git worktree remove /path/to/old-worktree
+```
+
+Keep its branch when the committed history may still be needed. Preserve
+local notes and configuration separately; Git does not protect ignored files
+when removing a worktree. Do not use `--force` to discard unfinished work.
+
+An inactive checkout's `node_modules`, `.next`, `test-results`,
+`playwright-report` and `blob-report` are regenerable. Remove these when
+retiring the checkout instead of accumulating installations and build caches.
+Keep required authoring sources, kit recordings, asset provenance and regression
+fixtures in Git; they are inputs and evidence, rather than disposable run output.

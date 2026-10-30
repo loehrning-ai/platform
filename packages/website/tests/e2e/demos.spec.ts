@@ -92,9 +92,27 @@ test.describe("/demos hub", () => {
   test("reduced motion shows the end frame and never arms a tile", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/demos", { waitUntil: "networkidle" });
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
     await expect(page.locator(".is-armed, .is-playing")).toHaveCount(0);
-    const animations = await page.evaluate(() => document.getAnimations().length);
-    expect(animations).toBe(0);
+    // Finished fill-mode effects can remain in the browser's inventory.
+    // Reduced motion must leave no pending, running or paused animation.
+    await expect.poll(() => page.evaluate(() => document.getAnimations()
+      .filter((animation) => animation.pending || !["finished", "idle"].includes(animation.playState))
+      .map((animation) => {
+        const effect = animation.effect;
+        const target = effect instanceof KeyframeEffect ? effect.target : null;
+        return {
+          type: animation.constructor.name,
+          name: animation instanceof CSSAnimation ? animation.animationName
+            : animation instanceof CSSTransition ? animation.transitionProperty : animation.id,
+          state: animation.playState,
+          pending: animation.pending,
+          progress: effect?.getComputedTiming().progress ?? null,
+          target: target instanceof Element
+            ? { tag: target.tagName, id: target.id, class: target.getAttribute("class") }
+            : null,
+        };
+      })), { message: "Reduced motion leaves no unfinished animation" }).toEqual([]);
   });
 });
 

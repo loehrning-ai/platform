@@ -252,7 +252,13 @@ test.describe(`${PATH} on a 390 x 664 phone`, () => {
     const dock = await page.locator(".w4-dock").boundingBox();
     if (!send || !dock) throw new Error("no send button or dock");
     expect(send.y + send.height, "the send arrow above the dock").toBeLessThanOrEqual(dock.y);
-    await sendAndFinish(page, "schritt-1");
+    const turn = page.locator('[data-w4a-turn="schritt-1"]');
+    await firstPress(page, "[data-w4a-send]", () => expect(turn).toBeVisible({ timeout: 1000 }));
+    // Complete with the outer document displaced, as native dock scrolling did in the failed trace.
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    await page.locator("[data-demo-next]").click();
+    await expect(turn).toHaveAttribute("data-phase", "done");
     // After the answer the chat gets the room: the window is far taller than the dock, and the answer starts in view.
     const room = await page.evaluate(() => ({
       window: document.querySelector("[data-w4a-window]")?.getBoundingClientRect().height ?? 0,

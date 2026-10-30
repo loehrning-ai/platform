@@ -93,6 +93,25 @@ test("HTML smoke rejects real streamed error markers and accepts intentional cli
   verifySmokeResponse(check, { status: 200, bytes: withMarkup('<script>const example = \'<template data-dgst="2081249290"></template>\';</script>') });
 });
 
+test("HTML parser handles malformed script end tags and real headings outside scripts", () => {
+  const check = { route: "/workshops/example", kind: "html", language: "de" };
+  const title = "Die Anwendung konnte nicht geladen werden.";
+  const bundled = document().toString().replace("</main>", `<script>const copy = ${JSON.stringify(`<h1>${title}</h1>`)};</script data-note></main>`);
+  verifySmokeResponse(check, { status: 200, bytes: Buffer.from(bundled) });
+  const exposed = document().toString().replace("</main>", `<script>const copy = "</script data-note><h1>${title}</h1>";</script></main>`);
+  assert.throws(() => verifySmokeResponse(check, { status: 200, bytes: Buffer.from(exposed) }), /expected application document/);
+  const encodedTitle = document().toString().replace("Workshop", "Die Anwendung konnte nicht geladen werden&#46;");
+  assert.throws(() => verifySmokeResponse(check, { status: 200, bytes: Buffer.from(encodedTitle) }), /expected application document/);
+});
+
+test("HTML parsing does not execute scripts or accept app markup stored inside one", () => {
+  const check = { route: "/", kind: "html", language: "de" };
+  const inert = document().toString().replace("</body>", '<script>document.querySelector("h1").textContent = "404";</script><script src="https://release-smoke.invalid/script.js"></script></body>');
+  verifySmokeResponse(check, { status: 200, bytes: Buffer.from(inert) });
+  const scriptOnly = `<html lang="de"><script>const app = ${JSON.stringify(document().toString())};</script></html>`;
+  assert.throws(() => verifySmokeResponse(check, { status: 200, bytes: Buffer.from(scriptOnly) }), /expected application document/);
+});
+
 test("knowledge endpoints must contain their expected document format", () => {
   for (const [kind, valid] of [["robots", "User-agent: *"], ["sitemap", '<urlset xmlns="https://example.test"></urlset>'], ["llms", "# loehrning.ai"], ["json", '{"courses":[]}']]) {
     const check = { route: `/${kind}`, kind };
