@@ -9,13 +9,6 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
-      // The introduction card: one sentence on phones (lead + "."), from lg
-      // lead + detail + "." and the facts as one tag line under it.
-      introduction: {
-        lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
-        detail: " mit Übungen und Quellen",
-        facts: ["Ohne Paywall", "Deutsch und Englisch", "Quelloffen"],
-      },
       primaryCta: "Lernroute wählen",
       globeToggle: "Animation pausieren",
       pillars: [
@@ -105,11 +98,6 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
-      introduction: {
-        lead: "Free courses, examples and workshops on AI",
-        detail: " with exercises and sources",
-        facts: ["No paywall", "German and English", "Open source"],
-      },
       primaryCta: "Choose a learning route",
       globeToggle: "Pause animation",
       pillars: [
