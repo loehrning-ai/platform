@@ -9,15 +9,15 @@ import {
   signalArcs,
   signalOrigin,
 } from "./hero-signal-frame";
-import { PHONE_VIEW } from "./hero-network-geometry";
+import { CX, CY, PHONE_VIEW, R } from "./hero-network-geometry";
 
 describe("signal geometry", () => {
-  it("starts every arc at Berlin and lands it inside the phone window", () => {
+  it("connects Berlin to peer nodes inside the phone window", () => {
     const [ox, oy] = signalOrigin();
     const arcs = signalArcs();
     expect(arcs).toHaveLength(10);
     for (const arc of arcs) {
-      expect(arc.d.startsWith(`M${ox},${oy}Q`)).toBe(true);
+      expect(arc.d.startsWith(`M${ox},${oy}L`)).toBe(true);
       const [ex, ey] = arc.end;
       expect(ex).toBeGreaterThan(PHONE_VIEW.x);
       expect(ex).toBeLessThan(PHONE_VIEW.x + PHONE_VIEW.width);
@@ -26,15 +26,14 @@ describe("signal geometry", () => {
     }
   });
 
-  it("bows every arc to the upper side of its chord", () => {
-    const [ox, oy] = signalOrigin();
+  it("keeps each sampled connection on the projected globe surface", () => {
     for (const arc of signalArcs()) {
-      const match = /Q(-?[\d.]+),(-?[\d.]+) /.exec(arc.d);
-      expect(match).not.toBeNull();
-      const cy = Number(match?.[2]);
-      const midY = (oy + arc.end[1]) / 2;
-      // Upward (smaller y) or, for an arc that runs straight up, level.
-      expect(cy).toBeLessThanOrEqual(midY + 0.05 * Math.hypot(arc.end[0] - ox, arc.end[1] - oy));
+      const points = [...arc.d.matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)];
+      expect(points).toHaveLength(25);
+      for (const [, x, y] of points) {
+        expect(Math.hypot(Number(x) - CX, Number(y) - CY)).toBeLessThanOrEqual(R + 0.1);
+      }
+      expect(arc.d.endsWith(`L${arc.end[0]},${arc.end[1]}`)).toBe(true);
     }
   });
 });
@@ -49,9 +48,10 @@ describe("HeroSignalFrame", () => {
     expect(html).toContain('focusable="false"');
     expect(html).toContain("data-home-signals");
     expect(html).not.toMatch(/<text|<a |<button/);
-    // One staggered group per arc, each with its line, light and node.
+    // Persistent links and fixed nodes; no travelling heads or impact rings.
     expect(html.match(/class="sig-arc"/g)).toHaveLength(10);
-    expect(html.match(/class="sig-comet"/g)).toHaveLength(10);
+    expect(html).not.toMatch(/sig-comet|sig-land|sig-ring|pathLength/);
+    expect(html.match(/class="sig-line"/g)).toHaveLength(10);
     expect(html.match(/class="sig-node"/g)).toHaveLength(10);
     expect(html).toContain("--sig-i:9");
   });
