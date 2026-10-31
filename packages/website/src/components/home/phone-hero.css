@@ -15,7 +15,6 @@
  * with the globe added at its foot.
  *
  *   title      the promise on two lines (h1, the LCP element; never animated)
- *   lead       one sentence on its paper card
  *   actions    the cobalt action, and the globe's pause control
  *   sky        flexible; the line globe's dome rises here
  *
@@ -30,10 +29,9 @@
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto minmax(15rem, 1fr);
+    grid-template-rows: auto auto minmax(15rem, 1fr);
     grid-template-areas:
       "title"
-      "lead"
       "actions"
       "sky";
     min-height: calc(
@@ -55,18 +53,6 @@
     z-index: 2;
     margin: 1rem var(--hz-gutter) 0;
     text-wrap: balance;
-  }
-
-  [data-section="hero"] [data-hero-lead] {
-    grid-area: lead;
-    position: relative;
-    z-index: 2;
-    max-width: 34ch;
-    margin: 1rem var(--hz-gutter) 0;
-    padding: 0.625rem 1rem;
-    font-size: 1rem;
-    line-height: 1.55;
-    text-wrap: pretty;
   }
 
   [data-section="hero"] [data-hero-actions] {
@@ -121,19 +107,8 @@
     margin-top: 0.75rem;
   }
 
-  [data-section="hero"] [data-hero-lead] {
-    margin-top: 0.75rem;
-  }
-
   [data-section="hero"] [data-hero-actions] {
     margin-top: 1rem;
-  }
-}
-
-/* Narrow phones (320): the lead card takes the full column. */
-@media (width < 22.5rem) {
-  [data-section="hero"] [data-hero-lead] {
-    max-width: none;
   }
 }
 

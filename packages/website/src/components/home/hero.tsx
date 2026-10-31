@@ -4,7 +4,7 @@ import { m, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { GlobeToggle } from "@/components/home/globe-toggle";
 import {
@@ -38,13 +38,6 @@ function usePrefersReducedMotion(): boolean {
 
   return prefersReduced;
 }
-
-/** One tilted pastel block per hero fact, in the pillar cards' palette. */
-const FACT_MARKS = [
-  "bg-brand-acid rotate-12",
-  "bg-brand-sky -rotate-6",
-  "bg-brand-pink rotate-6",
-] as const;
 
 /* ──────────────────────────────────────────────────────────────────────────
    Tiny decorative atoms
@@ -181,7 +174,7 @@ export type HeroSectionProps = {
  * pastel step cards at the foot.
  *
  * Below lg (phone-hero.css) the same section is laid out between the top bar
- * and the tab bar: the two-line promise, the lead card, the action, then a
+ * and the tab bar: the two-line promise, the action, then a
  * window onto the same line globe fills the rest of the band. The wrappers that exist for the desktop grid are `display: contents`
  * there, so every row is placed on one grid. Nothing about the layout is
  * decided in JavaScript.
@@ -309,34 +302,6 @@ function HeroSectionContent({
                 </span>
               ))}
             </h1>
-
-            <p
-              data-hero-lead
-              className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card"
-            >
-              {copy.introduction.lead}
-              <span className="max-lg:hidden">{copy.introduction.detail}</span>.
-              {/* From lg: the facts as one tag line under the sentence, each
-                  behind a small tilted block in the hero's pastel geometry.
-                  A phone keeps the one sentence. */}
-              <span className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-kupfer-dark max-lg:hidden">
-                {copy.introduction.facts.map((fact, index) => (
-                  <Fragment key={fact}>
-                    {/* Apart only visually: a screen reader hears a comma,
-                        never "PaywallDeutsch" run together. Absolute, so it
-                        takes no flex gap. */}
-                    {index > 0 ? <span className="sr-only">, </span> : null}
-                    <span className="inline-flex items-center gap-2">
-                      <span
-                        aria-hidden="true"
-                        className={`size-2.5 rounded-[3px] border border-foreground/20 ${FACT_MARKS[index] ?? FACT_MARKS[0]}`}
-                      />
-                      {fact}
-                    </span>
-                  </Fragment>
-                ))}
-              </span>
-            </p>
 
             <div data-hero-actions className="mt-7 flex items-center gap-3">
               <BrandButton
