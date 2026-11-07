@@ -52,7 +52,7 @@ for (const edition of EDITIONS) {
       await open(page, edition.deck);
       expect(await page.evaluate(() => typeof (window as unknown as { DeckKeys?: unknown }).DeckKeys)).toBe("object");
       const positions = await mainPositions(page);
-      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(16);
+      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(26);
       await expectAt(page, positions[0], "starts on the cover");
 
       for (const position of positions.slice(1)) {
@@ -69,13 +69,13 @@ for (const edition of EDITIONS) {
     });
 
     test("r and Shift+R return to the cover; other keys and modified r do nothing", async ({ page }) => {
-      await open(page, `${edition.deck}#request/2`);
-      await expectAt(page, "#request/2", "deep link");
-      await expect(page.locator("#request")).toHaveAttribute("data-deck-active", "");
+      await open(page, `${edition.deck}#papers/2`);
+      await expectAt(page, "#papers/2", "deep link");
+      await expect(page.locator("#papers")).toHaveAttribute("data-deck-active", "");
 
       for (const key of ["Space", "PageDown", "End", "Home", "5", "0", "Enter"]) {
         await page.keyboard.press(key);
-        await expectAt(page, "#request/2", `${key} is unbound`);
+        await expectAt(page, "#papers/2", `${key} is unbound`);
       }
       const prevented = await page.evaluate(() =>
         [{ ctrlKey: true }, { metaKey: true }, { altKey: true }].map((mods) => {
@@ -85,7 +85,7 @@ for (const edition of EDITIONS) {
         }),
       );
       expect(prevented).toEqual([false, false, false]);
-      await expectAt(page, "#request/2", "modified r is the browser's");
+      await expectAt(page, "#papers/2", "modified r is the browser's");
 
       await page.evaluate(() => {
         const input = document.createElement("input");
@@ -94,7 +94,7 @@ for (const edition of EDITIONS) {
       });
       await page.locator("#probe").focus();
       await page.keyboard.press("r");
-      await expectAt(page, "#request/2", "r inside a form control types");
+      await expectAt(page, "#papers/2", "r inside a form control types");
       await page.locator("#probe").evaluate((input) => input.remove());
 
       await page.keyboard.press("r");
@@ -107,34 +107,34 @@ for (const edition of EDITIONS) {
     });
 
     test("Escape leaves an appendix page for the slide and step it came from; reload keeps the place", async ({ page }) => {
-      await open(page, `${edition.deck}#mission-1/1`);
-      await expectAt(page, "#mission-1/1", "deep link");
+      await open(page, `${edition.deck}#letter/1`);
+      await expectAt(page, "#letter/1", "deep link");
       await page.evaluate(() => {
         location.hash = "#a1/0";
       });
       await expect(page.locator("#a1")).toHaveAttribute("data-deck-active", "");
       await page.keyboard.press("ArrowRight");
       await page.keyboard.press("Escape");
-      await expectAt(page, "#mission-1/1", "Escape returns");
-      await expect(page.locator("#mission-1")).toHaveAttribute("data-deck-active", "");
+      await expectAt(page, "#letter/1", "Escape returns");
+      await expect(page.locator("#letter")).toHaveAttribute("data-deck-active", "");
 
       await page.keyboard.press("ArrowRight");
-      await expectAt(page, "#mission-1/2", "one step on");
+      await expectAt(page, "#letter/2", "one step on");
       await page.reload();
-      await expect(page.locator("#mission-1")).toHaveAttribute("data-deck-active", "");
-      await expectAt(page, "#mission-1/2", "reload keeps the position");
+      await expect(page.locator("#letter")).toHaveAttribute("data-deck-active", "");
+      await expectAt(page, "#letter/2", "reload keeps the position");
     });
 
     test("r clears the room's votes along with the position", async ({ page }) => {
-      await open(page, `${edition.deck}#request/5`);
-      const votes = page.locator('#request [data-poll="estimate"] [data-poll-n]');
-      await page.locator('#request [data-poll="estimate"][data-value="3"]').click();
-      await page.locator('#request [data-poll="estimate"][data-value="3"]').click();
-      await expect(page.locator('#request [data-poll="estimate"][data-value="3"] [data-poll-n]')).toHaveText("2");
+      await open(page, `${edition.deck}#papers/4`);
+      const votes = page.locator('#papers [data-poll="door"] [data-poll-n]');
+      await page.locator('#papers [data-poll="door"][data-value="1"]').click();
+      await page.locator('#papers [data-poll="door"][data-value="1"]').click();
+      await expect(page.locator('#papers [data-poll="door"][data-value="1"] [data-poll-n]')).toHaveText("2");
       await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
       await page.keyboard.press("r");
       await expectAt(page, "#cover/0", "r resets");
-      await expect.poll(() => votes.allTextContents()).toEqual(Array.from({ length: 9 }, () => "0"));
+      await expect.poll(() => votes.allTextContents()).toEqual(Array.from({ length: 4 }, () => "0"));
       expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.includes(":poll:")))).toEqual([]);
     });
 
@@ -145,10 +145,10 @@ for (const edition of EDITIONS) {
       expect(new URL(popup.url()).pathname).toBe(edition.presenter);
       await expect(popup.locator("#pv-conn")).toHaveAttribute("data-state", "live");
       const label = edition.lang === "de" ? "Folie" : "Slide";
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 16`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 26`);
       await page.bringToFront();
       await page.keyboard.press("ArrowRight");
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 16`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 26`);
       await popup.close();
     });
 

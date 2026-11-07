@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Writes the deck's QR codes (assets/qr-*.svg), Druckschwarz on Kalkweiß, each with its URL as <title>.
+ * Writes the deck's six QR codes (assets/qr-*-g26*.svg), Druckschwarz on Kalkweiß, each with its URL as <title>.
  * Usage (from the repository root): node scripts/workshop05/deck-src/make-qr.mjs
  */
 import { writeFileSync } from "node:fs";
@@ -14,15 +14,14 @@ const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..
 const SITE = "https://loehrning.ai";
 const SLUG = "audit-vorbereitung-mit-ki";
 
+/** New file names (assets are cached for a year): the g26 set replaces the retired qr-kit, qr-probe, qr-own and qr-skill files. */
 export const QR = {
-  "qr-kit.svg": `${SITE}/workshops/${SLUG}/kit`,
-  "qr-kit-en.svg": `${SITE}/en/workshops/${SLUG}/kit`,
-  "qr-probe.svg": `${SITE}/demos/${SLUG}#zitat-probe`,
-  "qr-probe-en.svg": `${SITE}/en/demos/${SLUG}#zitat-probe`,
-  "qr-own.svg": `${SITE}/demos/${SLUG}#dein-ordner`,
-  "qr-own-en.svg": `${SITE}/en/demos/${SLUG}#dein-ordner`,
-  "qr-skill.svg": `${SITE}/demos/${SLUG}#mitnehmen`,
-  "qr-skill-en.svg": `${SITE}/en/demos/${SLUG}#mitnehmen`,
+  "qr-kit-g26.svg": `${SITE}/workshops/${SLUG}/kit`,
+  "qr-kit-g26-en.svg": `${SITE}/en/workshops/${SLUG}/kit`,
+  "qr-demo-g26.svg": `${SITE}/demos/${SLUG}`,
+  "qr-demo-g26-en.svg": `${SITE}/en/demos/${SLUG}`,
+  "qr-skill-g26.svg": `${SITE}/skills/audit-nachweise`,
+  "qr-skill-g26-en.svg": `${SITE}/skills/audit-nachweise`,
 };
 
 for (const [file, url] of Object.entries(QR)) {

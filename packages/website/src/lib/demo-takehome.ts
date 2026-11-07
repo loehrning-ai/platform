@@ -32,16 +32,16 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-/** Workshop 05 ships an English and a German kit; both hold the same English case files. */
-const AUDIT_KIT = "vardar-audit-kit";
-const AUDIT_KIT_DE = "vardar-audit-kit-de";
+/** Workshop 05 ships an English and a German kit edition, each in its own language. */
+const AUDIT_KIT = "gradba-audit-kit";
+const AUDIT_KIT_DE = "gradba-audit-kit-de";
 
 const AUDIT_KIT_EN: TakeHomeKit = {
   href: `/workshops/audit-vorbereitung-mit-ki/${AUDIT_KIT}.zip`,
   shown: [
-    `${AUDIT_KIT}/folder/backup-report_2026-10.txt`,
-    `${AUDIT_KIT}/folder/training-records_2026.csv`,
-    `${AUDIT_KIT}/folder/infosec-policy_v4_DRAFT.md`,
+    `${AUDIT_KIT}/notice_DIT_2026-11-23.md`,
+    `${AUDIT_KIT}/folder/attendance_2026-11.csv`,
+    `${AUDIT_KIT}/templates/new-paper-note.md`,
     `${AUDIT_KIT}/project-instructions.md`,
   ],
   instructions: `${AUDIT_KIT}/project-instructions.md`,
@@ -51,9 +51,9 @@ const AUDIT_KIT_EN: TakeHomeKit = {
 const AUDIT_KIT_DE_EDITION: TakeHomeKit = {
   href: `/workshops/audit-vorbereitung-mit-ki/${AUDIT_KIT_DE}.zip`,
   shown: [
-    `${AUDIT_KIT_DE}/ordner/backup-report_2026-10.txt`,
-    `${AUDIT_KIT_DE}/ordner/training-records_2026.csv`,
-    `${AUDIT_KIT_DE}/ordner/infosec-policy_v4_DRAFT.md`,
+    `${AUDIT_KIT_DE}/mitteilung_DIT_2026-11-23.md`,
+    `${AUDIT_KIT_DE}/ordner/attendance_2026-11.csv`,
+    `${AUDIT_KIT_DE}/vorlagen/neues-papier.md`,
     `${AUDIT_KIT_DE}/projektanweisungen.md`,
   ],
   instructions: `${AUDIT_KIT_DE}/projektanweisungen.md`,
@@ -214,7 +214,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
   "audit-vorbereitung-mit-ki": {
     kit: { de: AUDIT_KIT_DE_EDITION, en: AUDIT_KIT_EN },
     skill: { name: "audit-nachweise" },
-    templates: [{ vorlage: "luecken-anfrage" }],
+    templates: [{ vorlage: "neues-papier" }],
   },
   // Workshop 06 "Die Vergleichsbasis": built by scripts/workshop06/build-kit.mjs from the rotfaden example.
   // One German kit for both locales: the case is German paperwork.

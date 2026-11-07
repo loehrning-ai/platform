@@ -367,9 +367,44 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     {
       auth: "redirect",
       cache: "public-short",
-      redirectTo: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+      redirectTo: "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
       status: 301,
     },
+  ),
+  // The Workshop 05 rebuild (2026-11) renamed the kit zips and replaced the gap-request template.
+  route(
+    "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+    "retired",
+    "The first kit zip of the rebuilt Workshop 05 resolves to the new kit zip.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
+      status: 301,
+    },
+  ),
+  route(
+    "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip",
+    "retired",
+    "The first German kit zip of the rebuilt Workshop 05 resolves to the new German kit zip.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip",
+      status: 301,
+    },
+  ),
+  route(
+    "/vorlagen/luecken-anfrage.md",
+    "retired",
+    "The retired gap-request template resolves to its replacement, the new-paper note.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/vorlagen/neues-papier.md", status: 301 },
+  ),
+  route(
+    "/vorlagen/luecken-anfrage.en.md",
+    "retired",
+    "The retired English gap-request template resolves to its replacement, the new-paper note.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/vorlagen/neues-papier.en.md", status: 301 },
   ),
   route(
     "/workshops/ki-im-unternehmen-sicher-nutzen/slides.html",

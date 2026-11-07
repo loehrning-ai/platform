@@ -235,7 +235,7 @@ describe("<WorkshopsContent>", () => {
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
     expect(within(rows[2]).getByText(/Das erfundene Weingut Crvena Zemja muss Importeur, Marketing und Bank antworten/).tagName).toBe("P");
     expect(rows[2].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[1]).getByText(/Vardar Works hat elf Dateien für acht Anforderungen/).tagName).toBe("P");
+    expect(within(rows[1]).getByText(/Drei echte Kontrollen in Nordmazedonien. Eine erfundene Firma bekommt in vier Tagen den Arbeitsinspektor/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(within(rows[0]).getByText(/Angebote auf einer Basis/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
@@ -332,7 +332,7 @@ describe("<WorkshopsContent>", () => {
     const heading = within(rows[1]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w05.title);
     // W05's title has a head and a subtitle: the phone shows the head, the subtitle stays in the name.
-    expect(heading.querySelector(".sr-only")).toHaveTextContent(": Nachweise ordnen, Lücken finden");
+    expect(heading.querySelector(".sr-only")).toHaveTextContent(": Vier Tage bis zur Kontrolle");
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const esgHeading = within(rows[2]).getByRole("heading", { level: 3 });
     expect(esgHeading).toHaveAccessibleName(w04.title);

@@ -21,9 +21,8 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CLAUDE_UI } from "../../../packages/website/src/lib/claude-ui.ts";
 import { deckData } from "./data.mjs";
-import { SLIDES, esc, renderSlides } from "./slides.mjs";
+import { MAIN_TOTAL as SLIDES_TOTAL, SLIDES, esc, renderSlides } from "./slides.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "../../..");
@@ -35,14 +34,18 @@ const PRESENTERS = { de: "presenter.html", en: "en/presenter.html" };
 const ROOT = { de: "./", en: "../" };
 export const DECK_IDS = { de: SLUG, en: `${SLUG}:en` };
 export const MAIN_SECONDS = 5400;
-export const MAIN_SLIDES = 16;
+export const MAIN_SLIDES = 26;
+/** The page counter "NN / 26" is written by slides.mjs; both copies of the number must agree. */
+export const MAIN_TOTAL = 26;
+/** 26 main slides and 5 appendix slides: one note each, in slide order. */
+export const NOTES_TOTAL = 31;
 
-/** Words a deck must never show (the shared copy lint covers the rest; this is the deck's own floor). */
-const BANNED = [
-  /[\u2012-\u2015]/,
-  /\b(by friday|bis freitag|freitag|friday|your boss|dein chef|chef|urgent|dringend|countdown|deadline|game changer|seamless|nahtlos|magisch|revolution\w*|konform)\b/i,
+/** Words a deck must never show on a slide (the shared copy lint covers the rest; this is the deck's own floor). */
+export const BANNED = [
+  /[\u2012-\u2015\u2192]/,
+  /\b(by friday|bis freitag|freitag|friday|your boss|dein chef|chef|boss|urgent|dringend|countdown|deadline|game[- ]changer|seamless|nahtlos|magisch|revolution\w*|revolutionär\w*|leverage|unlock|empower|robust|delve|logo|score|punkte)\b/i,
   /\b(stamp|stempel)/i,
-  /(Richtig!|Super\.|überrasch|surprise|\bfuer\b|\bPunkte\b)/i,
+  /(\bnon-compliant|\bcompliant\b|konform\w*|Richtig!|Super\.|überrasch|surprise|\bfuer\b|\bPunkte\b)/i,
 ];
 
 const DEMO = { de: "/demos/audit-vorbereitung-mit-ki", en: "/en/demos/audit-vorbereitung-mit-ki" };
@@ -51,23 +54,19 @@ const WORKSHOP = { de: "/workshops/audit-vorbereitung-mit-ki", en: "/en/workshop
 function copyFor(lang) {
   const all = JSON.parse(readFileSync(path.join(HERE, "deck-copy.json"), "utf8"));
   const c = all[lang];
-  const ui = CLAUDE_UI[lang];
   const suffix = lang === "en" ? "-en" : "";
   return {
     ...c,
-    // Establish the invented company before the host and the outside case.
-    notes: [c.notes[0], c.notes[3], c.notes[1], c.notes[2], ...c.notes.slice(4)].map((note, index) =>
-      index < MAIN_SLIDES ? note.replace(/^\d+/, String(index + 1).padStart(2, "0")) : note,
-    ),
-    ui2: { adminNote: ui.app.adminNote, plans: ui.project.plans },
-    qr: { kit: `qr-kit${suffix}.svg`, probe: `qr-probe${suffix}.svg`, skill: `qr-skill${suffix}.svg` },
+    // The notes are written in slide order, so nothing is reordered or renumbered here.
+    qr: { kit: `qr-kit-g26${suffix}.svg`, demo: `qr-demo-g26${suffix}.svg`, skill: `qr-skill-g26${suffix}.svg` },
   };
 }
 
 /** One edition's page; written with "./" paths, moved one folder up for the English edition. */
 export function buildEdition(lang, d = deckData(lang)) {
   const c = copyFor(lang);
-  if (c.notes.length !== SLIDES.length) throw new Error(`${lang}: ${c.notes.length} notes for ${SLIDES.length} slides`);
+  if (SLIDES_TOTAL !== MAIN_TOTAL) throw new Error(`slides.mjs counts ${SLIDES_TOTAL} main slides, build.mjs ${MAIN_TOTAL}`);
+  if (c.notes.length !== NOTES_TOTAL || c.notes.length !== SLIDES.length) throw new Error(`${lang}: ${c.notes.length} notes for ${SLIDES.length} slides (want ${NOTES_TOTAL})`);
   const sections = renderSlides(c, d);
   const other = lang === "de" ? "en" : "de";
   const html = `<!doctype html>
@@ -83,6 +82,7 @@ export function buildEdition(lang, d = deckData(lang)) {
 <link rel="stylesheet" href="./lib/fonts.css" />
 <link rel="stylesheet" href="./lib/engine.css" />
 <link rel="stylesheet" href="./lib/deck.css" />
+<link rel="stylesheet" href="./lib/w05-fx.css" />
 <script src="./lib/deck-keys.js"></script>
 <script src="./lib/deck-stage.js"></script>
 </head>
@@ -98,6 +98,11 @@ ${sections.join("\n")}
 <script src="./lib/scenes.js"></script>
 <script src="./lib/geo.js"></script>
 <script src="./lib/globe.js"></script>
+<script src="./lib/w05-tally.js"></script>
+<script src="./lib/w05-clock.js"></script>
+<script src="./lib/w05-matrix.js"></script>
+<script src="./lib/w05-days.js"></script>
+<script src="./lib/w05-gates.js"></script>
 </body>
 </html>
 `;
@@ -179,11 +184,20 @@ function presenterPage(lang) {
 
 function check(lang, html, sections) {
   const attr = (s, name) => new RegExp(`${name}="([^"]*)"`).exec(s.slice(0, s.indexOf(">")))?.[1];
+  const kinds = sections.map((s) => attr(s, "data-kind"));
+  const appendix = kinds.filter((k) => k === "appendix").length;
   const mains = sections.filter((s) => attr(s, "data-kind") === "main");
+  if (mains.length + appendix !== sections.length) throw new Error(`${lang}: a slide has a data-kind other than main or appendix`);
+  if (appendix !== NOTES_TOTAL - MAIN_SLIDES) throw new Error(`${lang}: ${appendix} appendix slides (want ${NOTES_TOTAL - MAIN_SLIDES})`);
   const seconds = mains.reduce((sum, s) => sum + Number(attr(s, "data-seconds")), 0);
   if (mains.length !== MAIN_SLIDES || seconds !== MAIN_SECONDS) {
     throw new Error(`${lang}: ${mains.length} main slides, ${seconds} s (want ${MAIN_SLIDES} and ${MAIN_SECONDS})`);
   }
+  const noteJson = /<script type="application\/json" id="speaker-notes">([\s\S]*?)<\/script>/.exec(html)?.[1];
+  const notes = JSON.parse(noteJson.replace(/\\u003c/g, "<"));
+  notes.forEach((note, i) => {
+    if (!/^(\d\d|a\d) · .+\nTime: .+\nSay: .+\nStudents: .+\nCue: .+\nRemember: .+/s.test(note)) throw new Error(`${lang}: note ${i + 1} lacks the Time, Say, Students, Cue, Remember lines`);
+  });
   // The notes are the presenter's, so they may name what the deck must not show; check the slides only.
   const text = html.replace(/<script type="application\/json" id="speaker-notes">[\s\S]*?<\/script>/, "");
   for (const pattern of BANNED) {

@@ -2,83 +2,51 @@ import type { ReactNode } from "react";
 import "./hero-links.css";
 
 /**
- * "The links": the scene of Workshop 05 (audit preparation), drawn from the
- * first screen of its demo. Eight requests on the left, eight files on the
- * right, a line from each request to the file whose name fits. A band sweeps
- * down the rows: the four tests run. Two links hold, four turn dashed (WEAK)
- * and two break apart (GAP), and each failing file gets an accent frame and a
- * mark on the test it failed. A fitting name is not evidence.
+ * "The links": the scene of Workshop 05 (audit preparation). Story: four days,
+ * thirteen questions, one door. Four day tiles fill one after the other and a
+ * fifth, outlined tile waits. Thirteen sheets stand in rows of 5, 4 and 4; a
+ * thin bar scans across them and leaves a mark on ten (the gaps). Two sheets
+ * stay plain, one carries a small outlined corner (weak). Then someone knocks,
+ * the door on the right opens, and a new sheet slides in under the old one:
+ * fix forward, the old one stays.
  *
- * Meaning sits in shape (solid, dashed, broken), never in colour alone, and no
- * word is drawn. Pure SVG with class names, no id, no gradient, no filter, no
- * script. hero-links.css holds the colours (scene tokens) and plays the story
- * under `prefers-reduced-motion: no-preference` only; the base styles are the
- * finished still frame. One viewBox (600 x 500).
+ * Meaning sits in shape (plain, outlined corner, cross), never in colour alone,
+ * and no word or number is drawn. Pure SVG with class names, no id, no
+ * gradient, no filter, no script. hero-links.css holds the colours (scene
+ * tokens) and plays the story under `prefers-reduced-motion: no-preference`
+ * only; the base styles are the finished still frame. One viewBox (600 x 500).
  */
 
-const ROW_Y = [102, 144, 186, 228, 270, 312, 354, 396] as const;
-const REQUEST = { x: 56, w: 118, h: 26 } as const;
-const FILE = { x: 388, w: 156, h: 30 } as const;
-const LINK = { from: REQUEST.x + REQUEST.w, to: FILE.x } as const;
-/** Label bar lengths on the request tabs and the file cards, so the rows do not look stamped. */
-const REQUEST_BAR = [64, 52, 70, 58, 48, 66, 54, 60] as const;
-const FILE_BAR = [96, 110, 84, 118, 102, 90, 108, 120] as const;
-/** The four test ticks under each link. */
-const TICK = { x: 246, step: 18, w: 11, h: 6, dy: 9 } as const;
+const TILE = { x: 66, y: 60, w: 84, h: 38, gap: 12 } as const;
+const SHEET = { w: 62, h: 60 } as const;
+const ROW_Y = [126, 202, 278] as const;
+const ROW_X = [60, 98, 98] as const;
+const ROW_COUNT = [5, 4, 4] as const;
+const STEP = 76;
+/** Length of the one text bar on each sheet, so the sheets do not look stamped. */
+const BAR = [38, 28, 42, 32, 40, 30, 36, 44, 26, 40, 34, 30, 38] as const;
 
-type Outcome = { readonly row: number; readonly kind: "weak" | "gap"; readonly failsAt: number };
-
-/** The demo's naive run: R2 QUOTE, R3 SCOPE, R4 SCOPE, R8 APPROVAL turn WEAK; R5 and R7 fail QUOTE and break. */
-const OUTCOMES: readonly Outcome[] = [
-  { row: 1, kind: "weak", failsAt: 3 },
-  { row: 2, kind: "weak", failsAt: 2 },
-  { row: 3, kind: "weak", failsAt: 2 },
-  { row: 4, kind: "gap", failsAt: 3 },
-  { row: 6, kind: "gap", failsAt: 3 },
-  { row: 7, kind: "weak", failsAt: 1 },
-];
-/** Where a broken link opens. */
-const GAP = { from: 262, to: 300 } as const;
-
-const DUST: readonly (readonly [number, number, number])[] = [
-  [40, 60, 2.4],
-  [300, 54, 2.2],
-  [566, 74, 2.8],
-  [578, 440, 2.4],
-  [292, 452, 2.2],
-  [30, 446, 2.6],
+/** Sheet index (row-major, 0 to 12) of the two covered ones and the weak one. */
+const COVERED: readonly number[] = [1, 7];
+const WEAK = 4;
+/** The ten gap sheets in five groups of two, in the order the scan bar passes them. */
+const MARKER_GROUPS: readonly (readonly [number, number])[] = [
+  [0, 5],
+  [9, 6],
+  [10, 2],
+  [11, 3],
+  [8, 12],
 ];
 
-const linkPath = ROW_Y.map((y) => `M${LINK.from} ${y}H${LINK.to}`).join("");
+type Spot = { readonly index: number; readonly x: number; readonly y: number };
 
-function Failure({ outcome }: { readonly outcome: Outcome }): ReactNode {
-  const y = ROW_Y[outcome.row] as number;
-  return (
-    <g className={`hk-fail hk-fail-${outcome.row + 1}`}>
-      {/* Paper over the solid link, then the dashed or the broken one. */}
-      <path d={`M${LINK.from + 2} ${y}H${LINK.to - 2}`} className="hk-erase" />
-      {outcome.kind === "weak" ? (
-        <path d={`M${LINK.from} ${y}H${LINK.to}`} className="hk-weak" />
-      ) : (
-        <path d={`M${LINK.from} ${y}H${GAP.from}M${GAP.to} ${y}H${LINK.to}`} className="hk-gap" />
-      )}
-      {outcome.kind === "gap" ? <path d={`M${GAP.from + 10} ${y - 9}L${GAP.to - 10} ${y + 9}`} className="hk-gap-cut" /> : null}
-      {/* The tests after the failing one never ran: hollow. The failing one: the accent. */}
-      {[0, 1, 2, 3].map((test) =>
-        test >= outcome.failsAt ? (
-          <rect
-            key={test}
-            x={TICK.x + test * TICK.step}
-            y={y + TICK.dy}
-            width={TICK.w}
-            height={TICK.h}
-            className={test === outcome.failsAt ? "hk-tick-fail" : "hk-tick-open"}
-          />
-        ) : null,
-      )}
-      <rect x={FILE.x} y={y - FILE.h / 2} width={FILE.w} height={FILE.h} className="hk-file-flag" />
-    </g>
-  );
+const SHEETS: readonly Spot[] = ROW_COUNT.flatMap((count, row) =>
+  Array.from({ length: count }, (_, col) => ({ x: (ROW_X[row] as number) + col * STEP, y: ROW_Y[row] as number })),
+).map((spot, index) => ({ ...spot, index }));
+
+function Cross({ spot }: { readonly spot: Spot }): ReactNode {
+  const { x, y } = spot;
+  return <path d={`M${x + 20} ${y + 24}L${x + 42} ${y + 46}M${x + 42} ${y + 24}L${x + 20} ${y + 46}`} className="hk-x" />;
 }
 
 export function LinksScene(): ReactNode {
@@ -91,39 +59,80 @@ export function LinksScene(): ReactNode {
       preserveAspectRatio="xMidYMid meet"
       className="hk-root block size-full"
     >
-      {/* Far layer: a little dust. */}
-      <g className="hk-far">
-        {DUST.map(([x, y, r]) => (
-          <circle key={`${x}-${y}`} cx={x} cy={y} r={r} className="hk-dust" />
+      {/* Top: four days fill one after the other; the fifth tile is the visit. */}
+      <g className="hk-links">
+        {[0, 1, 2, 3, 4].map((day) => (
+          <rect
+            key={day}
+            x={TILE.x + day * (TILE.w + TILE.gap)}
+            y={TILE.y}
+            width={TILE.w}
+            height={TILE.h}
+            className={day === 4 ? "hk-tile hk-tile-last" : "hk-tile"}
+          />
+        ))}
+        {[0, 1, 2, 3].map((day) => (
+          <rect
+            key={day}
+            x={TILE.x + day * (TILE.w + TILE.gap)}
+            y={TILE.y}
+            width={TILE.w}
+            height={TILE.h}
+            className={`hk-day hk-day-${day + 1}`}
+          />
         ))}
       </g>
 
-      {/* Mid layer: the requests and the files. */}
-      <g className="hk-cards">
-        {ROW_Y.map((y, index) => (
-          <g key={y}>
-            <rect x={REQUEST.x} y={y - REQUEST.h / 2} width={REQUEST.w} height={REQUEST.h} className="hk-request" />
-            <rect x={REQUEST.x + 8} y={y - 6} width="12" height="12" className="hk-id" />
-            <path d={`M${REQUEST.x + 30} ${y}H${REQUEST.x + 30 + REQUEST_BAR[index]}`} className="hk-bar" />
-            <rect x={FILE.x} y={y - FILE.h / 2} width={FILE.w} height={FILE.h} className="hk-file" />
-            <path d={`M${FILE.x + 12} ${y}H${FILE.x + 12 + FILE_BAR[index]}`} className="hk-bar hk-bar-mono" />
-            {[0, 1, 2, 3].map((test) => (
-              <rect key={test} x={TICK.x + test * TICK.step} y={y + TICK.dy} width={TICK.w} height={TICK.h} className="hk-tick" />
-            ))}
+      {/* Middle: thirteen sheets, one line of text on each. */}
+      <g className="hk-sheets">
+        {SHEETS.map((spot) => (
+          <g key={spot.index}>
+            <rect
+              x={spot.x}
+              y={spot.y}
+              width={SHEET.w}
+              height={SHEET.h}
+              className={COVERED.includes(spot.index) ? "hk-sheet hk-sheet-plain" : "hk-sheet"}
+            />
+            <path d={`M${spot.x + 10} ${spot.y + 12}H${spot.x + 10 + (BAR[spot.index] as number)}`} className="hk-bar" />
+            {spot.index === WEAK ? (
+              <rect x={spot.x + SHEET.w - 22} y={spot.y + SHEET.h - 22} width="12" height="12" className="hk-weak" />
+            ) : null}
           </g>
         ))}
       </g>
 
-      {/* Near layer: every request is linked to the file whose name fits. */}
-      <path d={linkPath} pathLength={1} className="hk-links" />
-
-      {/* The four tests sweep the rows. */}
-      <rect x="40" y={(ROW_Y[0] as number) - 21} width="520" height="42" className="hk-scan" />
-
-      {/* What the tests leave: two hold, four weak, two broken. */}
-      {OUTCOMES.map((outcome) => (
-        <Failure key={outcome.row} outcome={outcome} />
+      {/* Ten gaps, marked in five groups of two as the bar passes. */}
+      {MARKER_GROUPS.map((pair, group) => (
+        <g key={group} className={`hk-fail hk-fail-${group + 1}`}>
+          {pair.map((index) => (
+            <Cross key={index} spot={SHEETS[index] as Spot} />
+          ))}
+        </g>
       ))}
+
+      {/* The scan bar. */}
+      <rect x="50" y="112" width="6" height="238" className="hk-scan" />
+
+      {/* Right: the doorway, the door and the knocks. */}
+      <rect x="462" y="126" width="86" height="212" className="hk-doorway" />
+      <g className="hk-far">
+        <rect x="466" y="130" width="78" height="204" className="hk-door" />
+        <circle cx="530" cy="232" r="5" className="hk-knob" />
+      </g>
+      <g className="hk-knock">
+        <path d="M444 204Q452 232 444 260" className="hk-arc" />
+        <path d="M436 190Q448 232 436 274" className="hk-arc" />
+        <path d="M428 176Q444 232 428 288" className="hk-arc" />
+      </g>
+
+      {/* Bottom: the old paper stays, the new one slides in beside it. */}
+      <rect x="60" y="372" width="56" height="64" className="hk-paper-old" />
+      <path d="M70 388H104M70 400H96" className="hk-bar" />
+      <g className="hk-new">
+        <rect x="132" y="372" width="56" height="64" className="hk-paper-new" />
+        <path d="M142 388H176M142 400H168" className="hk-bar" />
+      </g>
     </svg>
   );
 }

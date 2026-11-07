@@ -1,101 +1,149 @@
-# Answers
-Fictional training material. Compare facts and statuses, not wording. Where you and Claude differ, the file decides.
+Fictional training material, invented for the exercise. Not legal advice.
 
-## Step 1: the index
-7 of 11 files pass PERIOD and APPROVAL.
+# Answer key
 
-| File | Type | Date (kind) | Approved or owned by | PERIOD | APPROVAL |
-|---|---|---|---|---|---|
-| system-list_2026-09.csv | REGISTER | 2026-09-02 approved | Managing Director; owner IT lead | pass | pass |
-| subprocessors_2026-09.csv | REGISTER | 2026-09-05 updated | IT lead | pass | pass |
-| ai-use-rule_v1.md | POLICY | 2026-10-01 approved | Managing Director | FAIL | pass |
-| vendor-page_claude_2026-06-15.md | STATEMENT | page 2026-06-15, printed 2026-10-06 | Anthropic (issuer) | pass | pass |
-| access-review_2026-08-14.csv | RECORD | 2026-08-14 done, 2026-08-17 approved | IT lead; approved by Managing Director | pass | pass |
-| training-records_2026.csv | RECORD | 2026-11-02 exported | HR lead | pass | pass |
-| incident-log_2026.csv | RECORD | last entry 2026-10-12 | IT lead | pass | pass |
-| backup-report_2026-10.txt | RECORD | 2026-11-01 generated | backup system; owner IT lead | pass | pass |
-| it-notes_2026-10-06.md | STATEMENT | 2026-10-06 written | "Not reviewed by anyone" | pass | FAIL |
-| infosec-policy_v3_FINAL.md | POLICY | 2024-03-12 approved, review due March 2025 | Managing Director | FAIL | pass |
-| infosec-policy_v4_DRAFT.md | POLICY | 2026-09-18 edited | "Approved by: (open)" | FAIL | FAIL |
+Predict first, then check. The wording of an AI run will differ from this key. The numbers must not.
 
-A recent date alone does not pass PERIOD. The AI rule is valid only from 1 October 2026, leaving 295 days without a rule. Version 4 has an editing date, but no approval or review date.
+## Step 1
 
-Watch for: an approver given to v4; "FINAL" read as current; a date taken from a file name; the vendor page marked unapproved (vendor plus page date count); a person's name where rule 13 asks for a role.
+Expected: 13 rows, 5 columns, no names. A paper that the files do not name is NOT IN FILES. Owners are roles.
 
-## Step 2: the eight requests
-| Item | File | Quote | Failing test | Status |
+| Line | Article | Paper | Owner | Where it lives |
 |---|---|---|---|---|
-| R1 | system-list | "United States (see vendor-page_claude_2026-06-15.md)" | none | COVERED |
-| R2 | subprocessors | "Anthropic,Claude Team,United States,accepted online 2026-09-01,," | QUOTE for two parts: last review and transfer basis empty | GAP |
-| R3 | ai-use-rule | "Valid from 2026-10-01." | PERIOD: 10 Dec 2025 to 30 Sep 2026 (295 days) has no rule; it-notes report a free chatbot until September | GAP |
-| R4 | access-review | "Review of administrator accounts in Servicepult" | SCOPE: 1 of 4 systems, three have no review | GAP |
-| R5 | training-records | "Staff on 2026-11-01: 120." | not met: 26 rows, E014 twice, 25 of 120 = 20.8%; 95% needs 114 | GAP |
-| R6 | incident-log | "INC-02,2026-05-07 09:40,Tannwald" and "2026-05-08 16:10" | none: told after 30.5 hours | COVERED |
-| R7 | backup-report | "Restore test: not done in 2026." | not met | GAP |
-| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | PERIOD (v3 old; v4 no approval or review date), APPROVAL (v4) | WEAK |
+| L01 | ZRO Art. 15(2),(3) | written contract with a copy mark | office manager | contracts folder in the office, contracts_register_2026.csv |
+| L02 | ZRO Art. 13(3),(7) | registration M1/M2 | office manager | print-outs from the Employment Agency, registration_M1M2_2026.csv |
+| L03 | Law on Records Art. 8(1) | employee record | office manager | employee_records_2026.csv |
+| L04 | ZRO Art. 116(8) | attendance sheet | office manager | attendance_2026-11.csv |
+| L05 | ZRO Art. 117(2) | list of overtime hours | office manager | overtime_weekly_2026.csv |
+| L06 | ZRO Art. 117(6) (offence listed in Art. 265(1)) | overtime notice to the labour inspector | office manager | overtime_notices_folder.txt |
+| L07 | ZRO Art. 117(5), 110(2) | pay calculation with an overtime line | outside accountant | payroll_lines_2026-07_to_10.csv |
+| L08 | ZRO Art. 109(2),(3) | pay run dates | outside accountant | payroll_runs_2026.csv |
+| L09 | ZRO Art. 137(1),(4) | leave decision | office manager | leave_decisions_2026.csv and absences_2026.csv |
+| L10 | ZBZR Art. 11(1) | safety statement | NOT IN FILES (the index gives no job title for the holder of the binder) | the binder, safety_statement_2019.md |
+| L11 | ZBZR Art. 11(2) | opinion of the employee representative | NOT IN FILES (no owner in the index) | one line inside safety_statement_2019.md; no separate paper in the index |
+| L12 | ZBZR Art. 22(1) | medical exam slip | office manager | slips from the health centre, medical_exams.csv (dates only) |
+| L13 | ZBZR (training of new workers; the article number is confirmed before print) | safety training proof | office manager | training_proofs_2026.csv |
 
-Count: 2 COVERED, 1 WEAK, 5 GAP.
+## Step 2
 
-WEAK means a file answers every part but is out of date, a draft or not approved (R8). A part with no evidence at all is GAP: two empty register fields (R2), 295 days without a rule (R3), three systems without a review (R4). The item takes the status of its weakest part, as in Workshop 04.
+Rows read, per file:
 
-R1 asks which systems store or process your data now. The free chatbot that it-notes mentions until September belongs to R3, not to R1.
+| File | Rows read |
+|---|---|
+| contracts_register_2026.csv | 24 |
+| registration_M1M2_2026.csv | 24 |
+| employee_records_2026.csv | 24 |
+| attendance_2026-11.csv | 432 |
+| overtime_weekly_2026.csv | 34 |
+| payroll_runs_2026.csv | 10 |
+| payroll_lines_2026-07_to_10.csv | 96 |
+| leave_decisions_2026.csv | 21 |
+| absences_2026.csv | 1 |
+| medical_exams.csv | 24 |
+| training_proofs_2026.csv | 3 |
+| Total | 693 |
 
-R1 is COVERED and still bad news: the system list proves that Claude Team stores Tannwald request text in the US, and clause 7 requires written notice and EU/EEA storage unless Tannwald agrees in writing. COVERED means proven, not good. R1 asks for a fact, where the data is, so proof of bad news is COVERED. R5 and R7 ask that something is met; their records show it is not, so they are GAP.
+Findings:
 
-R6 is COVERED for the incidents in the log. it-notes mention a free chatbot that agents used until September to word replies. Whether Tannwald data went into it, and whether that is an incident Tannwald must hear about under section 6.2, is the Managing Director's decision, not Claude's. If it is, R6 becomes GAP.
-
-The R7 question: no. A policy says what should happen. Only a record shows that it happened, and this record says it did not. The same holds for R4 and "Administrator access is reviewed every quarter".
-
-Where Claude goes wrong on this folder, and the rule that stops it:
-- R7 or R4 COVERED from the policy: rule 4.
-- R8 COVERED from v4 because it is the newest: rule 7.
-- R5 "26 staff" or a share without code: rule 11.
-- R1 marked WEAK because the answer is unwelcome: rule 9.
-- "ISO 27001 A.x.x" or a GDPR article that is in no file: rule 12.
-- A quote that is not in the file: rule 10.
-
-Where your status differs, find the rule number in project-instructions.md that decides it.
-
-## Step 3: gaps and reply
-Gap list: R8 (WEAK); R2, R3, R4, R5, R7 (GAP). Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8. Needed by 2 December 2026.
-By 25 November the reply goes out with R1, R6 and the gap list with dates; the missing documents follow by 2 December, eight days before the audit.
-
-Example email (R7), filled from templates/gap-request.md:
-
-```
-Subject: Tannwald audit on 10 December 2026, R7: restore test record needed by 2 December 2026
-
-Hello Goran,
-
-for the Tannwald audit on 10 December 2026, item R7 asks for:
-"A restore test of your backups from the last 12 months, with its result"
-
-What we have: backup-report_2026-10.txt, dated 1 November 2026.
-It fails QUOTE: the record says "Restore test: not done in 2026." and no other file shows one.
-
-What closes it: a restore test record (date, data restored, result, who), dated on or after 10 December 2025, made by the IT lead, covering the Servicepult export and the file share.
-
-Please send it by 2 December 2026. If it does not exist, write "does not exist". That answer helps too: we then report the item as open, plan it, and give Tannwald a date.
-
-Thank you,
-[name]
-```
-
-Draft reply check:
-| # | Sentence | Verdict | Evidence |
+| Id | Line | Rule | Number |
 |---|---|---|---|
-| 1 | All staff trained in data protection and AI | DELETE | training-records: 25 of 120 |
-| 2 | Admin access reviewed every quarter | DELETE | one review, 2026-08-14, Servicepult only |
-| 3 | Backups tested regularly | DELETE | "Restore test: not done in 2026." |
-| 4 | Your data stays in the EU | DELETE | system-list: Claude Team, United States |
+| F1 | L02 | Registration filed later than the day before the first shift (Art. 13(7)) | E-05 filed 2026-03-05, due 2026-03-01: 4 days after the due date, 3 days after the first shift (2026-03-02) |
+| F2 | L06 | Overtime weeks without a notice to the inspector (Art. 117(6)) | E-07 and E-08: 17 weeks each, 0 notices for 2026 |
+| F3 | L05 | Overtime above 8 hours a week (Art. 117(2)) | E-07: 9 h in 17 of 17 weeks, 153 h in total |
+| F4 | L07 | Overtime hours without an overtime line in the pay calculation (Art. 117(5)) | E-07 and E-08: 8 pay lines (4 months each) |
+| F5 | L04 | Attendance rows with a tick and without start and end (Art. 116(8)) | E-12 and E-13: 20 person-days (2026-11-02 to 2026-11-13, 10 each) |
+| F6 | L08 | Pay later than 15 days after the end of the period (Art. 109(2)) | Period ending 2026-09-30: paid 2026-10-19, limit 2026-10-15, 4 days late |
+| F7 | L09 | Leave decision missing or under 20 days, owed after 6 months (Art. 137) | 23 owed, 21 decisions: E-11 and E-19 missing, E-14 has 18 days |
+| F8 | L03 | Empty fields in the employee record (Law on Records Art. 8) | 3 incomplete records, 7 empty cells (E-04 two, E-15 three, E-21 two) |
+| F9 | L12 | Medical exam older than 24 months on 2026-11-27 (ZBZR Art. 22(1)) | E-02, E-06, E-10, E-16: last exam 2024-09-12, 76 days past 24 months |
+| F10 | L10 | Job title of the register missing from the safety statement (ZBZR Art. 11(1)) | 10 titles in the register, 8 in the statement: 2 missing (order picker, forklift operator) |
 
-Sample reply (your wording will differ):
-```
-Dear Ms Keller,
-We submit R1, the system list approved on 2 September 2026, and R6, the incident log. It records notice of INC-02 after 30.5 hours.
-R2 lacks Anthropic's last review and transfer basis. R3 lacks an approved rule before 1 October 2026. R4 lacks administrator reviews for three systems. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. R8 lacks a current approved policy.
-By 2 December we will provide missing evidence or, where it does not exist, an owner and completion date. These are commitments, not completed controls.
-Claude Team stores data in the USA. Clause 7 requires prior written notice and written consent to storage outside the EU/EEA. Our folder contains neither. We request your instructions before further use.
-Dragan Ilievski
-```
-The reply must not say "all staff", "every quarter", "tested regularly", "stays in the EU" or "compliant". Anything that admits a contract point (clause 7) is the managing director's decision, with legal advice if you have it.
+What to say:
+
+- F1: say that it breaches Art. 13(7) and that the inspector decides the measure. E-05 had a contract, so the Art. 265(1) case of no contract and no registration does not fit.
+- F6: say that a late pay date arguably falls under Art. 265 in DIT practice and that the inspector decides. This is a point for the practitioner.
+- F8: say that the fine is for not keeping the record, not for incomplete content. Expect minutes, a warning and a time to complete it.
+
+Checked, no problem (near misses, each with its reason):
+
+| Id | Line | Who | Why it clears |
+|---|---|---|---|
+| D1 | L02 | E-22 | Filed 2026-05-29 for a start on 2026-06-01: before the day before the start. |
+| D2 | L05 | E-08 | 7 h a week is below the 8 h limit. |
+| D3 | L09 | E-09 | Exactly 20 days meets the minimum of 20. |
+| D4 | L08 | whole firm | The October period was paid 2026-11-16. Day 15 is a weekend day, so the limit moves to Mon 16 Nov. |
+| D5 | L12 | E-03 | Last exam 2024-12-03, valid until 2026-12-03: within 24 months on 2026-11-27. |
+| D6 | L09 | E-22 | No leave decision yet: the full right of 20 days arises after 6 months, on 2026-12-01 (Art. 139). A proportional right before that exists and is outside the kit: ask the practitioner. |
+| D7 | L13 | E-05, E-19, E-22 | Each training date is on or before the hire date. |
+| D8 | L04 | E-07 | Six rows without times carry the code ABS and match absences_2026.csv. |
+
+Two wrong answers, side by side:
+
+| | Over-flagging | Under-flagging |
+|---|---|---|
+| Findings | 12 | 9 |
+| What went wrong | Adds D2 (E-08 at 7 h) and D3 (E-09 at exactly 20 days), which are fine | Misses F6, the September pay that was late |
+
+Count: 10 findings, 8 checked, no problem.
+
+## Step 3
+
+Status per line, with a quote from the file. The weakest part counts.
+
+| Line | Status | What fails | Quote | Reading |
+|---|---|---|---|---|
+| L01 | COVERED | nothing | "E-05,sales adviser,shop,2026-03-02,40,yes" | All 24 rows say yes. Nothing to find (invented, no problem planted). |
+| L02 | GAP | PERIOD, the record shows the rule broken | "E-05,sales adviser,shop,2026-03-02,40,yes" and "E-05,2026-03-05" | E-05 was filed 4 days after the due date. The record shows the rule broken. Twin: E-22 filed in time (D1). |
+| L03 | GAP | SCOPE | "Mogila,,,T03" | Three records have empty fields: SCOPE fails, the cells are missing. The fine is for not keeping the record, not for incomplete content. |
+| L04 | GAP | QUOTE | "E-12,2026-11-02,,,x," | E-12 has a tick and no start or end. E-12 and E-13 together: 20 person-days. E-07's six rows carry the code ABS and clear (D8). |
+| L05 | GAP | PERIOD, the record shows the rule broken | "E-07,2026-07-06,9" | E-07 works 9 h every week. The record shows the rule broken. E-08 at 7 h is fine (D2). |
+| L06 | GAP | QUOTE, PERIOD, APPROVAL | "Signed by:" and "2026: (empty)" | One notice in the folder, from 2019, with an empty signature field. No notice for 2026. QUOTE, PERIOD and APPROVAL fail. |
+| L07 | GAP | SCOPE | "E-07,2026-07,166," | The overtime column is empty: the pay line of E-07 has no overtime line, the same for E-08. 8 lines in all. |
+| L08 | GAP | the record shows the rule broken | "2026-09-30,2026-10-19" | The September period was paid 2026-10-19, the limit was 2026-10-15. The October period is on time (D4). |
+| L09 | GAP | SCOPE, the record shows the rule broken | "E-14,18,2026-01-06" | E-11 and E-19 have no decision, E-14 has 18 days. SCOPE fails and the record shows the rule broken. E-09 at exactly 20 and E-22 not yet owed clear (D3, D6). |
+| L10 | GAP | SCOPE | "Dated: 2019-03-14" | The statement lists 8 positions, the register has 10. Order picker and forklift operator are missing. |
+| L11 | WEAK | PERIOD | "Opinion of the employee representative: on file for this text, dated 2019-03-20" and "Last change to the workplace: hall racking and forklift work were added in 2023." | The opinion is dated 2019, the workplace changed in 2023. PERIOD fails. Nobody is missing and the rule is not shown broken, so WEAK. A new dated opinion closes it. |
+| L12 | GAP | the record shows the rule broken | "E-02,2024-09-12" | Four people have 2024-09-12, 76 days past 24 months on 2026-11-27. E-03 is valid until 2026-12-03 (D5). |
+| L13 | COVERED | nothing | "E-19,2025-12-01,2025-11-28" | Three hires, three proofs, each on or before the hire date (D7). |
+
+New papers that close the WEAK and GAP lines (never a change to an old paper). Today is Thu 26 Nov 2026.
+
+| Line | New paper | Owner | Day |
+|---|---|---|---|
+| L02 | Note with the facts of E-05's registration (filed 2026-03-05), and a check that every new hire is registered before the first shift from now on | office manager | Thu 26 Nov |
+| L03 | New dated entries with the missing data for E-04, E-15 and E-21. The old entries stay as they are | office manager | Thu 26 Nov, entries when the data is in hand |
+| L04 | Note that E-12 and E-13 have ticks only for 2 to 13 Nov, and a sheet with start and end every day from now on. Times are never filled in afterwards | office manager | Thu 26 Nov |
+| L05 | Written decision that overtime above 8 hours stops or moves to shifts, from the next week | director | Thu 26 Nov |
+| L06 | Overtime notice to the labour inspector for E-07 and E-08, dated the day it is signed. The 17 past weeks stay without a notice | director | Thu 26 Nov |
+| L07 | Note to the outside accountant: from the next pay run overtime stands on its own line. The 8 old lines stay as they are | outside accountant | Thu 26 Nov |
+| L08 | Note on the September pay (4 days late), and a pay calendar that follows Art. 109 | director with the outside accountant | Thu 26 Nov |
+| L09 | New leave decisions for E-11 and E-19, and a new decision of at least 20 days for E-14, each dated the day it is signed | director | Thu 26 Nov |
+| L10 | New safety statement text that names order picker and forklift operator | director with the external safety service | Thu 26 Nov, start |
+| L11 | New dated opinion of the employee representative on the new text | director | after the new text is written |
+| L12 | Referral dated today for E-02, E-06, E-10 and E-16, and the new exam slips when they exist | office manager | Thu 26 Nov |
+
+L01 and L13 need no new paper. Every signature line stays empty until a named person signs.
+
+Sample briefing for the person who is present (at most 150 words):
+
+> Answer only what is asked. Name the paper. If there is no paper, say: there is no such paper, we are writing it today. Do not guess times or dates. Do not sign minutes that do not match what happened; write your reason beside the signature (ZIN Art. 54, 65).
+
+Count: 2 COVERED, 1 WEAK, 10 GAP.
+
+## The clock
+
+The notice came on 2026-11-23 (Mon). The visit is on 2026-11-27 at 09:00: 4 calendar days after the notice, with 3 working days between (Tue, Wed, Thu). Today in the exercise is Thu 26 Nov.
+
+| Event | Rule | Date |
+|---|---|---|
+| Notice | the letter of the labour inspectorate | 2026-11-23 |
+| Visit | named in the notice | 2026-11-27, 09:00 |
+| Papers asked for | 3 calendar days after the written request (ZIN Art. 53(1)) | not known on Thu 26 Nov; the invented request of the visit day says Mon 2026-11-30 |
+| Act | at the latest 8 days after the day the minutes are drawn up (ZIN Art. 68) | not known until the minutes exist |
+| Appeal | within 15 days of receipt, it does not stop the act (ZIN Art. 70) | not known until the act arrives |
+
+The regular notice is at least 3 working days before the start (ZIN Art. 57), with exceptions, and the inspectorate's own law can differ. Whether the day of the notice and the day of the visit count is not settled in our sources: ask the practitioner. The papers clock counts calendar days. The clock.csv of Step 3 holds only the notice date, the visit date and the rule "papers: 3 calendar days after the written request".
+
+## How this key was made
+
+Computed from the kit files by a script, then checked by a second script. An AI run will differ in wording. The numbers must not.

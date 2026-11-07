@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<!-- w05-icons.svg: the five line icons the engine sprite lacks (door, notebook, clock, coin, drawer) plus a building site.
+     Same drawing rules as icons.svg: 24 x 24, stroked in currentColor, width set by .ico in engine.css.
+     Use: <svg class="ico" aria-hidden="true"><use href="./lib/w05-icons.svg#w05-door"/></svg>. -->
+<symbol id="w05-door" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3.5 21h17"/><circle cx="14.5" cy="12.5" r=".9"/></symbol>
+<symbol id="w05-notebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18"/><path d="M12.5 8h3.5M12.5 12h3.5"/></symbol>
+<symbol id="w05-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12.5" r="8"/><path d="M12 8v4.8l3 1.7"/><path d="M9.5 2.8h5"/></symbol>
+<symbol id="w05-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.2"/><path d="M12 9.6v4.8"/></symbol>
+<symbol id="w05-drawer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 12h17"/><path d="M10 8h4M10 16h4"/></symbol>
+<symbol id="w05-site" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V9l6-4 6 4v12"/><path d="M10 21v-5h4v5"/><path d="M12 5V2.5M12 2.5h4.5"/></symbol>
+</svg>

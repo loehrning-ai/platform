@@ -51,7 +51,7 @@ export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
   "geschaeftsberichte-mit-ki-lesen": "trace",
   "datenbereitschaft-fuer-ki": "mend",
   "esg-berichte-mit-ki": "weave",
-  // Workshop 05 shows its demo's first screen: eight links by name, the four tests, two hold.
+  // Workshop 05 shows its demo: four days, thirteen questions, one door.
   "audit-vorbereitung-mit-ki": "links",
   // Workshop 06 shows its demo: three offers meet in one basis, the bars stack and change order.
   "angebote-mit-ki-vergleichen": "converge",

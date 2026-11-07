@@ -19,7 +19,7 @@ const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
   "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip":
     "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
   "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip": "/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-  "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip": "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+  "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip": "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
 };
 
 /** Kits that carry both languages in one zip: the material is labelled in the page's language. */

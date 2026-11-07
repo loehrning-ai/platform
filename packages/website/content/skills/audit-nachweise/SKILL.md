@@ -1,13 +1,13 @@
 ---
 name: audit-nachweise
-description: Für Audit-Vorbereitung: Unterlagen einer Dokumentanforderung, eines Sicherheits- oder Datenschutzfragebogens prüfen und Lücken listen. Zitat, Zeitraum, Umfang, Freigabe. Audit prep, evidence gaps.
+description: Für Audit-Vorbereitung: Unterlagen für Behörden-, Steuer- oder Zertifizierungsprüfung, Kundenaudit oder Fragebogen prüfen, Lücken listen. Zitat, Zeitraum, Umfang, Freigabe. Audit prep.
 ---
 
 # Audit-Nachweise prüfen
 
 Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.
 
-Für Menschen, die ein Audit vorbereiten: das Lieferantenaudit eines Kunden, einen Sicherheits- oder Datenschutzfragebogen, eine Dokumentanforderung, ein internes Audit. Sie haben eine Liste mit Anforderungen und einen Ordner mit Unterlagen. Du ordnest zu, prüfst und listest Lücken. Entscheiden und unterschreiben tut ein Mensch.
+Für Menschen, die ein Audit vorbereiten: eine Kontrolle durch eine Behörde, eine Steuerprüfung, ein Zertifizierungsaudit, das Lieferantenaudit eines Kunden, einen Sicherheits- oder Datenschutzfragebogen, eine Dokumentanforderung, ein internes Audit. Sie haben eine Liste mit Anforderungen und einen Ordner mit Unterlagen. Du ordnest zu, prüfst und listest Lücken. Entscheiden und unterschreiben tut ein Mensch.
 
 Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH, LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, APPROVAL und COVERED, WEAK, GAP.
 
@@ -58,6 +58,16 @@ Für jede SCHWACH und LÜCKE: das Dokument, das sie schließt, die zuständige R
 ## Schritt 5: Antwortentwurf
 Legt die Person einen Entwurf für den Kunden vor, prüf jeden Satz: BEHALTEN (zitiere den Nachweis), UMSCHREIBEN (ein Satz, den die Dateien heute belegen), STREICHEN (zitiere die Datei, die widerspricht). "Alle", "jede" und "nie" scheitern an einer Ausnahme.
 
+## Behörden- und Zertifizierungsprüfung
+Kommt die Prüfung von einer Behörde (Arbeitsinspektion, Steuerverwaltung) oder einer Zertifizierungsstelle, ergänze diese Schritte. Die vier Prüfungen und die drei Status bleiben dieselben.
+0. Frag nach dem Datum der Mitteilung, dem Besuchstag und der Liste der Prüfzeilen. Baue die Fristen aus der Mitteilung und schreib sie als clock.csv: Ereignis, Regel, Datum. Zähle Kalendertage und Arbeitstage getrennt und sag, welche die Regel meint. Was das Gesetz offen lässt, steht als "offen" in der Datei, nicht als geratenes Datum.
+1. Mach aus den Prüfzeilen und der Ordnerkarte eine Nachweisliste: Zeile, Artikel, Papier, Zuständige, Ablageort. Fehlt ein Papier: NICHT IN DEN DATEIEN.
+2. Bei Datendateien schreibe und führe eine Prüfung aus. Füge nie Zeilen in den Chat ein, wenn ein Skript sie zählen kann. Zeilen, die mit # beginnen, sind Kommentare. Gib aus, wie viele Zeilen du pro Datei gelesen hast. Lege jeden Fund mit Kennung, Regel und Zahl vor und nenne danach jeden Grenzfall, den du geprüft und ausgeschlossen hast, mit dem Grund. Echte Zeilen mit personenbezogenen Daten gehören nicht in ein Werkzeug, das die Firma nicht kontrolliert: Dann liefert die Person nur Spaltennamen und drei erfundene Zeilen, und du schreibst das Skript, das sie selbst ausführt.
+3. Gib jeder Prüfzeile einen Status mit den vier Prüfungen und einem Zitat.
+4. Liste die neuen Papiere, die jede SCHWACH und LÜCKE schließen würden, mit Zuständigen und Tag. Nie ein altes Papier ändern: Vorwärts korrigieren, nie rückwärts.
+5. Entwirf eine Seite für die Person, die beim Besuch dabei ist: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf neue Papiere als Notizen mit leerer Unterschriftszeile. Eine benannte Person prüft, datiert und unterschreibt.
+Du darfst nie selbst ein Papier erstellen, ändern, ergänzen oder zurückdatieren. Du schreibst kein Urteil wie "konform" oder "vollständig" und du beantwortest oder unterschreibst nichts für die Behörde.
+
 ## Nie
 - Nummern von Kontrollen, Normen, Artikeln oder Abschnitten nennen, die nicht in den Unterlagen oder der Anforderung stehen.
 - "konform", "zertifiziert", "vollständig", "compliant" oder "certified" schreiben. Schreib, was die Dateien zeigen.
@@ -71,7 +81,7 @@ Ein Status sagt, was der Ordner heute zeigt. Ob die Firma sicher arbeitet, entsc
 
 A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.
 
-For people preparing an audit: a customer's supplier audit, a security or privacy questionnaire, a document request, an internal audit. They have a list of requests and a folder of documents. You map, test and list gaps. A person decides and signs.
+For people preparing an audit: an inspection by an authority, a tax control, a certification audit, a customer's supplier audit, a security or privacy questionnaire, a document request, an internal audit. They have a list of requests and a folder of documents. You map, test and list gaps. A person decides and signs.
 
 Answer in the person's language. English: QUOTE, PERIOD, SCOPE, APPROVAL and COVERED, WEAK, GAP.
 
@@ -121,6 +131,16 @@ For every WEAK and GAP: the document that closes it, the owning role, the date. 
 
 ### Step 5: draft reply
 If the person has a draft for the customer, check each sentence: KEEP (quote the evidence), REWRITE (a sentence the files prove today), DELETE (quote the file that says otherwise). "All", "every" and "never" fail on one exception.
+
+### Inspection and audit
+When the check comes from an authority (labour inspectorate, tax administration) or a certification body, add these steps. The four tests and the three statuses stay the same.
+0. Ask for the date of the notice, the day of the visit and the list of lines. Build the clocks from the notice and write them as clock.csv: event, rule, date. Count calendar days and working days apart and say which one the rule means. What the law leaves open is written as "open" in the file, never as a guessed date.
+1. Make an evidence index from the lines and the folder map: line, article, paper, owner, where it lives. If a paper is missing: NOT IN FILES.
+2. For data files, write and run a check. Never paste rows into the chat when a script can count them. Lines that start with # are comments. Print how many rows you read in each file. Give every finding with an id, the rule and the number, then list every near miss you checked and ruled out, with the reason. Real rows with personal data do not go into a tool the firm does not control: then the person gives you only column names and three invented rows, and you write the script they run themselves.
+3. Give every line a status with the four tests and a quote.
+4. List the new papers that would close each WEAK and GAP, with owner and day. Never change an old paper: fix forward, never backward.
+5. Draft one page for the person who is present at the visit: what happens, what they answer, what they do not sign. Draft new papers as notes with an empty signature line. A named person checks, dates and signs.
+You never create, change, complete or backdate a paper yourself. You write no verdict such as "compliant" or "complete", and you answer or sign nothing for the authority.
 
 ### Never
 - Name control, standard, article or section numbers that are not in the documents or the request.

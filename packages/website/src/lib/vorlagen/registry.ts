@@ -173,24 +173,27 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/nachweisregister-vorlage.csv" },
     },
   },
+  // Workshop 05 take-home: the note for a new paper (never a change to an old record). The German file is
+  // byte-identical to vorlagen/neues-papier.md in gradba-audit-kit-de.zip, the English file to
+  // templates/new-paper-note.md in gradba-audit-kit.zip.
   {
-    slug: "luecken-anfrage",
+    slug: "neues-papier",
     kind: "template",
     files: {
-      de: "luecken-anfrage.md",
-      en: "en/luecken-anfrage.md",
+      de: "neues-papier.md",
+      en: "en/neues-papier.md",
     },
     downloadNames: {
-      de: "luecken-anfrage.md",
-      en: "luecken-anfrage.en.md",
+      de: "neues-papier.md",
+      en: "neues-papier.en.md",
     },
     hostPaths: {
       de: "/demos/audit-vorbereitung-mit-ki",
       en: "/en/demos/audit-vorbereitung-mit-ki",
     },
     inKit: {
-      zip: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-      paths: { en: "vardar-audit-kit/templates/gap-request.md" },
+      zip: "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
+      paths: { en: "gradba-audit-kit/templates/new-paper-note.md" },
     },
   },
   // Workshop 06 take-home: the comparison basis and the negotiation email, the German files byte-identical

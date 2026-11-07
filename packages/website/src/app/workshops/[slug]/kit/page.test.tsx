@@ -62,8 +62,8 @@ describe("workshop kit page route", () => {
   it("renders the audit workshop kit through the same route, in both locales", async () => {
     const auditProps = { params: Promise.resolve({ slug: "audit-vorbereitung-mit-ki" }) };
     for (const [locale, canonical, zip] of [
-      ["de", "/workshops/audit-vorbereitung-mit-ki/kit", "vardar-audit-kit-de.zip"],
-      ["en", "/en/workshops/audit-vorbereitung-mit-ki/kit", "vardar-audit-kit.zip"],
+      ["de", "/workshops/audit-vorbereitung-mit-ki/kit", "gradba-audit-kit-de.zip"],
+      ["en", "/en/workshops/audit-vorbereitung-mit-ki/kit", "gradba-audit-kit.zip"],
     ] as const) {
       getRequestLocaleMock.mockResolvedValue(locale);
       const metadata = await generateMetadata(auditProps);

@@ -172,7 +172,7 @@ describe("<KitPage>", () => {
         workshop.kit!.steps.map((step, index) => `${index + 1}${step.title}`),
       );
       expect(screen.getByRole("heading", { name: workshop.kit!.stepsHeading })).toBeInTheDocument();
-      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["19", "3", "13"]);
+      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["34", "3", "13"]);
       expect(document.querySelectorAll("[data-kit-rules] ol > li")).toHaveLength(4);
       unmount();
     }

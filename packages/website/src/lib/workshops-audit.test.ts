@@ -6,8 +6,8 @@ import { AUDIT_WORKSHOP } from "./workshops-audit";
 
 const slug = "audit-vorbereitung-mit-ki";
 const root = resolve(process.cwd(), "public", "workshops", slug);
-const zipPath = resolve(root, "vardar-audit-kit.zip");
-const zipPathDe = resolve(root, "vardar-audit-kit-de.zip");
+const zipPath = resolve(root, "gradba-audit-kit.zip");
+const zipPathDe = resolve(root, "gradba-audit-kit-de.zip");
 const kitSource = resolve(process.cwd(), "../../scripts/workshop05/kit");
 const kitSourceDe = resolve(process.cwd(), "../../scripts/workshop05/kit-de");
 const instructions = readFileSync(resolve(kitSource, "project-instructions.md"), "utf8");
@@ -24,9 +24,12 @@ const KIT_TOP = [
   "START-HERE.md",
   "ANSWERS.md",
   "project-instructions.md",
-  "request_tannwald.md",
-  "draft-reply.md",
+  "CHANGELOG.md",
+  "notice_DIT_2026-11-23.md",
+  "checklists/",
   "folder/",
+  "cases/",
+  "inspector/",
   "templates/",
   "claude/",
 ];
@@ -35,17 +38,35 @@ const KIT_TOP_DE = [
   "START-HIER.md",
   "LOESUNGEN.md",
   "projektanweisungen.md",
-  "request_tannwald.md",
-  "draft-reply.md",
+  "AENDERUNGEN.md",
+  "mitteilung_DIT_2026-11-23.md",
+  "listen/",
   "ordner/",
+  "faelle/",
+  "inspektor/",
   "vorlagen/",
   "claude/",
 ];
 
+/** The deck's main slides in order: their kind (the registry activity) and their minutes. */
+const DECK_ACTIVITY = ["listen", "listen", "vote", "listen", "vote", "vote", "vote", "listen", "listen", "listen", "listen", "listen", "vote", "do", "do", "listen", "write", "vote", "listen", "listen", "vote", "vote", "vote", "vote", "write", "vote"];
+const DECK_MINUTES = [1, 2, 2, 2, 3, 3, 3, 3, 3, 1, 3, 3, 3, 5, 7, 4, 6, 4, 2, 3, 3, 4, 4, 2, 6, 8];
+const DECK_FILE = { de: "slides.html", en: "en/slides.html" } as const;
+
+/** The main slides of a built deck edition: label and minutes, read from its sections. */
+function deckSlides(locale: "de" | "en"): { label: string; minutes: number }[] {
+  const html = readFileSync(resolve(root, DECK_FILE[locale]), "utf8");
+  const unescape = (text: string) => text.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  return [...html.matchAll(/<section class="slide[^"]*" id="[^"]+" data-kind="main" data-label="([^"]*)" data-seconds="(\d+)"/g)].map((match) => ({
+    label: unescape(match[1]),
+    minutes: Number(match[2]) / 60,
+  }));
+}
+
 /** Per locale: the zip, its root folder, its top-level entries, its instructions, start file and key. */
 const EDITION = {
-  de: { zip: zipPathDe, root: "vardar-audit-kit-de/", top: KIT_TOP_DE, instructions: instructionsDe, start: startHier, key: loesungen, instructionsFile: "projektanweisungen.md" },
-  en: { zip: zipPath, root: "vardar-audit-kit/", top: KIT_TOP, instructions, start: startHere, key: answers, instructionsFile: "project-instructions.md" },
+  de: { zip: zipPathDe, root: "gradba-audit-kit-de/", top: KIT_TOP_DE, instructions: instructionsDe, start: startHier, key: loesungen, instructionsFile: "projektanweisungen.md" },
+  en: { zip: zipPath, root: "gradba-audit-kit/", top: KIT_TOP, instructions, start: startHere, key: answers, instructionsFile: "project-instructions.md" },
 } as const;
 
 /** Every string of the workshop data, for the copy checks. */
@@ -82,40 +103,59 @@ function zipNames(path: string): string[] {
 
 describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   it("carries the title, teaser and question of the audit workshop", () => {
-    expect(en.title).toBe("Audit Preparation with AI: Organize Evidence and Find Gaps");
-    expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
-    // The teaser starts with the practice company and its audit request.
-    expect(en.summary).toMatch(/^Vardar Works.+eleven files.+eight customer audit requirements/);
-    expect(de.summary).toMatch(/^Vardar Works.+elf Dateien.+acht Anforderungen/);
+    expect(en.title).toBe("Audit Preparation with AI: Four Days Until the Inspection");
+    expect(de.title).toBe("Audit-Vorbereitung mit KI: Vier Tage bis zur Kontrolle");
+    // The teaser names the three real checks, the four days and the papers prepared with AI.
+    expect(en.summary).toMatch(/^Three real kinds of checks.+four days.+papers with AI/);
+    expect(de.summary).toMatch(/^Drei echte Kontrollen.+vier Tagen.+Papiere mit KI/);
     for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
-    // The lede says who works in Claude (Tim) and what the room does (it predicts).
-    expect(de.lede).toMatch(/Tim.+live in Claude.+Raum/);
-    expect(en.lede).toMatch(/Tim.+live in Claude.+room/);
+    // The lede opens with the letter on Monday.
+    expect(de.lede).toMatch(/^Am Montag kommt ein Brief/);
+    expect(en.lede).toMatch(/^On Monday a letter arrives/);
     for (const workshop of both) {
+      expect(workshop.description.length).toBeLessThanOrEqual(160);
       expect(workshop.stageExplainer.body).toContain("Claude");
       expect(workshop.stageExplainer.body).toContain("Codex");
+      expect(workshop.needs.join(" ")).toContain("Claude");
+      expect(workshop.needs.join(" ")).toContain("Codex");
+      expect(workshop.stageExplainer.facts).toHaveLength(3);
     }
-    // The question is the deck's "Heute" question, word for word.
-    expect(en.question).toBe("Which item is proven, which document is missing?");
-    expect(de.question).toBe("Welche Anforderung ist belegt, welches Dokument fehlt?");
+    expect(de.stageExplainer.facts).toEqual(["34 Dateien", "3 Schritte", "13 Fragen"]);
+    expect(en.stageExplainer.facts).toEqual(["34 files", "3 steps", "13 questions"]);
+    // The question is the deck's two hands-up prompts and its close, word for word.
+    expect(en.question).toBe("Which check could come to you, and would your papers hold up?");
+    expect(de.question).toBe("Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?");
+    expect(de.caseStudy.companyName).toBe("Gradba-Pro DOOEL");
+    expect(en.caseStudy.companyName).toBe("Gradba-Pro DOOEL");
+    expect(en.caseStudy.metrics.map((metric) => metric.value)).toEqual(["13", "10", "8", "4"]);
+    expect(de.steps).toHaveLength(5);
+    expect(en.steps).toHaveLength(5);
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("05");
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-29");
+      expect(workshop.provenance.reviewedAt).toBe("2026-11-07");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.caseStudy.decisionQuestion).toBe(workshop.question);
       expect(workshop.outcomes).toHaveLength(3);
       expect(workshop.accessNote.split(/(?<=\.)\s+/)).toHaveLength(2);
-      expect(workshop.caseStudy.narrative.split(/(?<=\.)\s+/)).toHaveLength(3);
+      // A day number such as "23. November" is not a sentence end.
+      expect(workshop.caseStudy.narrative.split(/(?<=\.)(?<!\b\d{1,2}\.)\s+/)).toHaveLength(3);
     }
   });
 
-  it("has the deck plan's sixteen agenda blocks in both locales, adding up to 90", () => {
-    const minutes = [1, 3, 1, 3, 4, 3, 3, 4, 6, 3, 13, 20, 5, 10, 6, 5];
-    for (const workshop of both) {
+  it("has one agenda block per main slide of the deck, equal in label, minutes and activity, adding up to 90", () => {
+    for (const locale of ["de", "en"] as const) {
+      const workshop = AUDIT_WORKSHOP[locale];
+      const slides = deckSlides(locale);
+      expect(slides).toHaveLength(26);
       expect(workshop.agendaSource).toBe("deck");
-      expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
+      expect(workshop.agenda).toHaveLength(26);
+      expect(workshop.agenda.map((item) => item.label)).toEqual(slides.map((slide) => slide.label));
+      expect(workshop.agenda.map((item) => item.minutes)).toEqual(slides.map((slide) => slide.minutes));
+      expect(workshop.agenda.map((item) => item.minutes)).toEqual(DECK_MINUTES);
+      expect(workshop.agenda.map((item) => item.activity)).toEqual(DECK_ACTIVITY);
+      expect(workshop.agenda.reduce((sum, item) => sum + item.minutes, 0)).toBe(90);
       expect(workshop.minutesLive).toBe(90);
       expect(workshop.minutesSelfStudy).toBe(60);
       expect(workshop.agenda.every((item) => item.mode === undefined && item.description === undefined)).toBe(true);
@@ -128,8 +168,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       ["deck", "during"],
       ["kit", "after"],
     ]);
-    expect(en.materials[1]?.href).toBe(`/workshops/${slug}/vardar-audit-kit.zip`);
-    expect(de.materials[1]?.href).toBe(`/workshops/${slug}/vardar-audit-kit-de.zip`);
+    expect(en.materials[1]?.href).toBe(`/workshops/${slug}/gradba-audit-kit.zip`);
+    expect(de.materials[1]?.href).toBe(`/workshops/${slug}/gradba-audit-kit-de.zip`);
     for (const workshop of both) {
       const size = statSync(EDITION[workshop === de ? "de" : "en"].zip).size;
       expect(workshop.materials[1]?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
@@ -155,11 +195,11 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(en.kit?.stats.find((stat) => stat.label === "rules")?.value).toBe(String(ruleCount));
   });
 
-  it.each(["de", "en"] as const)("matches the %s kit: 19 files, three steps, the statuses of the key", (locale) => {
+  it.each(["de", "en"] as const)("matches the %s kit: 34 files, 11 entries, three steps, the statuses of the key", (locale) => {
     const edition = EDITION[locale];
     const workshop = AUDIT_WORKSHOP[locale];
     const names = zipNames(edition.zip).filter((name) => !name.endsWith("/"));
-    expect(names).toHaveLength(19);
+    expect(names).toHaveLength(34);
     expect(names.every((name) => name.startsWith(edition.root))).toBe(true);
     const top = new Set(names.map((name) => {
       const rest = name.slice(edition.root.length);
@@ -171,7 +211,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect([...edition.start.matchAll(locale === "de" ? /^## Schritt \d/gm : /^## Step \d/gm)]).toHaveLength(3);
     const kit = workshop.kit!;
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
-    expect(kit.stats.map((stat) => stat.value)).toEqual(["19", "3", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
+    expect(kit.stats.map((stat) => stat.value)).toEqual(["34", "3", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
     // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
     expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined]);
@@ -184,8 +224,10 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     for (const item of kit.contents) expect(count(item.description), item.description).toBeLessThanOrEqual(6);
     expect(count(kit.fictionalNote)).toBeLessThanOrEqual(25);
     // The key prints the same tallies the strips show.
-    expect(edition.key).toMatch(locale === "de" ? /\b7 von 11\b/ : /\b7 of 11\b/);
-    expect(edition.key).toMatch(locale === "de" ? /2 BELEGT, 1 SCHWACH, 5 LÜCKE/ : /2 COVERED, 1 WEAK, 5 GAP/);
+    expect(edition.key).toMatch(locale === "de" ? /Zählung: 10 Funde, 8 geprüft ohne Befund\./ : /Count: 10 findings, 8 checked, no problem\./);
+    expect(edition.key).toMatch(locale === "de" ? /Zählung: 2 BELEGT, 1 SCHWACH, 10 LÜCKE\./ : /Count: 2 COVERED, 1 WEAK, 10 GAP\./);
+    expect(kit.steps[1]?.output).toMatch(locale === "de" ? /10 Funde und 8 geprüft ohne Befund/ : /10 findings and 8 checked with no problem/);
+    expect(kit.steps[2]?.output).toMatch(locale === "de" ? /2 BELEGT, 1 SCHWACH, 10 LÜCKE/ : /2 COVERED, 1 WEAK, 10 GAP/);
   });
 
   it("keeps the copy plain: no urgency, no boss, no score, no compliance claim", () => {

@@ -1,5 +1,8 @@
-/* fonts.css: the two typefaces of Workshop 05 (Typing 400 and 700, JetBrains Mono), self-hosted in ../assets/fonts. */
+/* fonts.css: the two typefaces of Workshop 05 (Typing 400 and 700, JetBrains Mono), self-hosted in ../assets/fonts.
+   Typing Cyrillic carries the Macedonian letters (U+0400 to U+04FF) for the quoted lines (.qd); the Latin files keep the rest. */
 @font-face{font-family:'Typing';font-weight:400;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Regular.woff2') format('woff2')}
 @font-face{font-family:'Typing';font-weight:500 800;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Bold.woff2') format('woff2')}
+@font-face{font-family:'Typing Cyrillic';font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0400-04FF;src:url('../assets/fonts/Typing-Cyr-2026-Regular.woff2') format('woff2')}
+@font-face{font-family:'Typing Cyrillic';font-weight:500 800;font-style:normal;font-display:swap;unicode-range:U+0400-04FF;src:url('../assets/fonts/Typing-Cyr-2026-Bold.woff2') format('woff2')}
 @font-face{font-family:'JetBrains Mono';font-weight:100 800;font-style:normal;font-display:swap;src:url('../assets/fonts/JetBrainsMono-var.woff2') format('woff2')}
 :root{--sans:'Typing',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace}

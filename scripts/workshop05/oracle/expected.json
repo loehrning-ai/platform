@@ -1,0 +1,320 @@
+{
+  "seed": 2611,
+  "checkDate": "2026-11-27",
+  "rowsRead": 693,
+  "rowsByFile": {
+    "contracts_register_2026.csv": 24,
+    "registration_M1M2_2026.csv": 24,
+    "employee_records_2026.csv": 24,
+    "attendance_2026-11.csv": 432,
+    "overtime_weekly_2026.csv": 34,
+    "payroll_runs_2026.csv": 10,
+    "payroll_lines_2026-07_to_10.csv": 96,
+    "leave_decisions_2026.csv": 21,
+    "absences_2026.csv": 1,
+    "medical_exams.csv": 24,
+    "training_proofs_2026.csv": 3
+  },
+  "lines": [
+    {
+      "id": "L01",
+      "status": "COVERED"
+    },
+    {
+      "id": "L02",
+      "status": "GAP"
+    },
+    {
+      "id": "L03",
+      "status": "GAP"
+    },
+    {
+      "id": "L04",
+      "status": "GAP"
+    },
+    {
+      "id": "L05",
+      "status": "GAP"
+    },
+    {
+      "id": "L06",
+      "status": "GAP"
+    },
+    {
+      "id": "L07",
+      "status": "GAP"
+    },
+    {
+      "id": "L08",
+      "status": "GAP"
+    },
+    {
+      "id": "L09",
+      "status": "GAP"
+    },
+    {
+      "id": "L10",
+      "status": "GAP"
+    },
+    {
+      "id": "L11",
+      "status": "WEAK"
+    },
+    {
+      "id": "L12",
+      "status": "GAP"
+    },
+    {
+      "id": "L13",
+      "status": "COVERED"
+    }
+  ],
+  "tally": {
+    "covered": 2,
+    "weak": 1,
+    "gap": 10
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "line": "L02",
+      "people": [
+        "E-05"
+      ],
+      "number": 4,
+      "unit": "days after the due date"
+    },
+    {
+      "id": "F2",
+      "line": "L06",
+      "people": [
+        "E-07",
+        "E-08"
+      ],
+      "number": 17,
+      "unit": "weeks without a notice"
+    },
+    {
+      "id": "F3",
+      "line": "L05",
+      "people": [
+        "E-07"
+      ],
+      "number": 153,
+      "unit": "hours"
+    },
+    {
+      "id": "F4",
+      "line": "L07",
+      "people": [
+        "E-07",
+        "E-08"
+      ],
+      "number": 8,
+      "unit": "pay lines"
+    },
+    {
+      "id": "F5",
+      "line": "L04",
+      "people": [
+        "E-12",
+        "E-13"
+      ],
+      "number": 20,
+      "unit": "person-days"
+    },
+    {
+      "id": "F6",
+      "line": "L08",
+      "people": [],
+      "number": 4,
+      "unit": "days late"
+    },
+    {
+      "id": "F7",
+      "line": "L09",
+      "people": [
+        "E-11",
+        "E-14",
+        "E-19"
+      ],
+      "number": 3,
+      "unit": "people"
+    },
+    {
+      "id": "F8",
+      "line": "L03",
+      "people": [
+        "E-04",
+        "E-15",
+        "E-21"
+      ],
+      "number": 7,
+      "unit": "empty cells"
+    },
+    {
+      "id": "F9",
+      "line": "L12",
+      "people": [
+        "E-02",
+        "E-06",
+        "E-10",
+        "E-16"
+      ],
+      "number": 76,
+      "unit": "days past 24 months"
+    },
+    {
+      "id": "F10",
+      "line": "L10",
+      "people": [],
+      "number": 2,
+      "unit": "positions missing"
+    }
+  ],
+  "decoys": [
+    {
+      "id": "D1",
+      "line": "L02",
+      "people": [
+        "E-22"
+      ]
+    },
+    {
+      "id": "D2",
+      "line": "L05",
+      "people": [
+        "E-08"
+      ]
+    },
+    {
+      "id": "D3",
+      "line": "L09",
+      "people": [
+        "E-09"
+      ]
+    },
+    {
+      "id": "D4",
+      "line": "L08",
+      "people": []
+    },
+    {
+      "id": "D5",
+      "line": "L12",
+      "people": [
+        "E-03"
+      ]
+    },
+    {
+      "id": "D6",
+      "line": "L09",
+      "people": [
+        "E-22"
+      ]
+    },
+    {
+      "id": "D7",
+      "line": "L13",
+      "people": [
+        "E-05",
+        "E-19",
+        "E-22"
+      ]
+    },
+    {
+      "id": "D8",
+      "line": "L04",
+      "people": [
+        "E-07"
+      ]
+    }
+  ],
+  "warnings": 0,
+  "wrong": {
+    "over": 12,
+    "under": 9
+  },
+  "peopleInFindings": 15,
+  "overtime": {
+    "E-07": {
+      "weeks": 17,
+      "weeksAboveCap": 17,
+      "hours": 153,
+      "perWeek": [9]
+    },
+    "E-08": {
+      "weeks": 17,
+      "weeksAboveCap": 0,
+      "hours": 119,
+      "perWeek": [7]
+    }
+  },
+  "days": {
+    "notice": "2026-11-23",
+    "visit": "2026-11-27",
+    "calendar": 4,
+    "workingBetween": 3,
+    "papersDue": "2026-11-30"
+  },
+  "matrix": {
+    "lines": 13,
+    "people": 24,
+    "lineIds": [
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06",
+      "L07",
+      "L08",
+      "L09",
+      "L10",
+      "L11",
+      "L12",
+      "L13"
+    ],
+    "personIds": [
+      "E-01",
+      "E-02",
+      "E-03",
+      "E-04",
+      "E-05",
+      "E-06",
+      "E-07",
+      "E-08",
+      "E-09",
+      "E-10",
+      "E-11",
+      "E-12",
+      "E-13",
+      "E-14",
+      "E-15",
+      "E-16",
+      "E-17",
+      "E-18",
+      "E-19",
+      "E-20",
+      "E-21",
+      "E-22",
+      "E-23",
+      "E-24"
+    ],
+    "cells": [
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,0,2,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,2,0,1,0,0,1,0,0,0,0,1,0,0,2,0,0],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,1,2,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0]
+    ]
+  }
+}

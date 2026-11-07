@@ -1,0 +1,190 @@
+/* w05-fx.css: the Workshop 05 effects. Linked after deck.css on slides.html and en/slides.html only.
+   Every motion is a pure function of --p (0 to 1), which lib/scenes.js writes on each [data-step] element and which
+   descendants inherit. Only transform, opacity, stroke-dashoffset and colour change; no blur behind surfaces, no new data-fx value.
+   End states: under prefers-reduced-motion and with ?preview=1 the engine renders --p = 1 and html.w05-final removes
+   every transition and animation, so each class shows its end state at once.
+   Sections: 1 tokens and type, 2 the eight classes of the spec, 3 clock, 4 days, 5 gates, 6 matrix, 7 end states. */
+
+/* 1 ── tokens and type ───────────────────────────────────────────────── */
+:root{--w05-amber:#D9A441;--w05-green:#1F4A38;--w05-hair:rgba(18,18,18,.14);--w05-soft:rgba(18,18,18,.06);--w05-accent-soft:rgba(183,58,21,.10)}
+
+/* quoted Macedonian: the Cyrillic subset first (lib/fonts.css), the Latin Typing files for digits and punctuation */
+.qd,.qd *{font-family:'Typing Cyrillic','Typing',system-ui,-apple-system,'Segoe UI','Noto Sans','Arial',sans-serif}
+
+@property --w05-o{syntax:'<number>';inherits:true;initial-value:0}
+
+/* 2 ── the eight classes ─────────────────────────────────────────────── */
+
+/* w05-ring: a 2 px Mennige ring scales .6 to 1.6 and fades .7 to 0, once, while --p runs (element carries fx pop). */
+.w05-ring{position:relative}
+.w05-ring::after{content:"";position:absolute;inset:-3px;border:2px solid var(--accent,#B73A15);border-radius:inherit;pointer-events:none;
+  transform:scale(calc(.6 + var(--p,1)));opacity:calc(.7 * (1 - var(--p,1)))}
+
+/* w05-sweep: the scan bar. Fill the offset parent (or the grid area, see .w05-mx); a 3 px line runs the full width while
+   --p runs, with a soft trail behind it. At --p 1 it is gone. */
+.w05-sweep{position:absolute;inset:0;overflow:hidden;pointer-events:none;container-type:size}
+.w05-sweep::before,.w05-sweep::after{content:"";position:absolute;top:0;bottom:0;left:0}
+.w05-sweep::before{width:3px;background:var(--accent,#B73A15);transform:translateX(calc(var(--p,1) * 100cqw));
+  opacity:min(1,calc(var(--p,1) * 20),calc((1 - var(--p,1)) * 20));box-shadow:-46px 0 54px -18px rgba(183,58,21,.34)}
+.w05-sweep::after{width:200px;background:var(--w05-accent-soft);transform:translateX(calc(var(--p,1) * 100cqw - 100%));
+  opacity:min(1,calc(var(--p,1) * 20),calc((1 - var(--p,1)) * 20))}
+
+/* w05-ghost: the old value that returns (Mennige, stays; .w05-ghost--ink is the grey of S13 and S26). On a wrapper with
+   data-poll-show the engine writes --share on each child [data-value]: the child is the old share drawn as a bar. */
+html .w05-ghost[data-step]{opacity:calc(.6 * min(1,var(--p,1)));transform:translateY(calc((1 - min(1,var(--p,1))) * 6px));color:var(--accent,#B73A15)}
+html .w05-ghost--ink[data-step]{opacity:calc(.3 * min(1,var(--p,1)));color:var(--ink,#121212)}
+.w05-ghost [data-value]{display:block;background:currentColor;transform:scaleX(var(--share,0));transform-origin:left center;transition:transform 520ms var(--e-spring,cubic-bezier(.32,.72,0,1))}
+
+/* w05-knock: three arcs round the cover numeral (children i x 3, staggered by p windows of the host's --p; host data-fx none). */
+.w05-knock{position:relative;display:inline-block}
+.w05-knock > i{position:absolute;inset:-9% -6%;border:5px solid transparent;border-top-color:var(--accent,#B73A15);border-right-color:var(--accent,#B73A15);border-radius:50%;
+  pointer-events:none;transform:rotate(-45deg) scale(.5);opacity:0}
+.w05-knock > i:nth-child(1){--k:0;--l:clamp(0,calc((var(--p,1) - 0) * 2.6),1);transform:rotate(-45deg) scale(calc(.5 + .8 * var(--l)));opacity:calc(min(var(--l) * 4,(1 - var(--l)) * 2.2))}
+.w05-knock > i:nth-child(2){--l:clamp(0,calc((var(--p,1) - .16) * 2.6),1);transform:rotate(-45deg) scale(calc(.5 + .8 * var(--l)));opacity:calc(min(var(--l) * 4,(1 - var(--l)) * 2.2))}
+.w05-knock > i:nth-child(3){--l:clamp(0,calc((var(--p,1) - .32) * 2.6),1);transform:rotate(-45deg) scale(calc(.5 + .8 * var(--l)));opacity:calc(min(var(--l) * 4,(1 - var(--l)) * 2.2))}
+
+/* w05-swing: a door on its left hinge, rotateY 0 to -68deg (host data-fx none, data-keep so the closed door shows at --p 0). */
+.w05-swing{transform-origin:left center;position:relative}
+html .w05-swing[data-step]{transform:perspective(1500px) rotateY(calc(var(--p,1) * -68deg));transform-origin:left center;opacity:1}
+html .w05-swing[data-step][data-off]{visibility:visible}
+.w05-swing::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink,#121212);opacity:calc(.16 * var(--p,1));pointer-events:none}
+.w05-swing-wrap{perspective:1500px}
+
+/* w05-unfold: a letter or an A4 sheet unfolds from its top edge (host data-fx none). */
+html .w05-unfold[data-step]{transform:scaleY(var(--p,1));transform-origin:top center;opacity:min(1,calc(var(--p,1) * 6))}
+
+/* w05-days4: four hard-edge day blocks (i x 4) fill left to right from --p of #w05-cover-days; the fifth (span.w05-days4__27,
+   outlined with a Mennige edge, holds the SVG numeral 27) appears when the four are full. */
+html .w05-days4[data-step]{opacity:1;transform:none}
+html .w05-days4[data-step][data-off]{visibility:visible}
+.w05-days4{display:flex;gap:18px;align-items:stretch}
+.w05-days4 > i{position:relative;flex:1 1 0;min-width:0;min-height:1em;background:var(--w05-soft);overflow:hidden;border-radius:2px}
+.w05-days4 > i:nth-child(-n+4)::before{content:"";position:absolute;inset:0;background:var(--ink,#121212);transform-origin:left center}
+.w05-days4 > i:nth-child(1)::before{transform:scaleX(clamp(0,calc(var(--p,1) * 4),1))}
+.w05-days4 > i:nth-child(2)::before{transform:scaleX(clamp(0,calc(var(--p,1) * 4 - 1),1))}
+.w05-days4 > i:nth-child(3)::before{transform:scaleX(clamp(0,calc(var(--p,1) * 4 - 2),1))}
+.w05-days4 > i:nth-child(4)::before{transform:scaleX(clamp(0,calc(var(--p,1) * 4 - 3),1))}
+.w05-days4 > .w05-days4__27{flex:1 1 0;min-width:0;background:transparent;box-shadow:inset 0 0 0 3px var(--accent,#B73A15);display:grid;place-items:center;color:var(--accent,#B73A15);
+  opacity:clamp(0,calc(var(--p,1) * 6 - 4.2),1);transform:scale(calc(.9 + .1 * clamp(0,calc(var(--p,1) * 6 - 4.2),1)))}
+.w05-days4 > .w05-days4__27 svg{width:70%;height:70%;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+
+/* w05-dots: a 10 x 10 field of i. The plain field is grey; the overlay fields --hot, --ink and --ring sit on top of it (same grid)
+   and show only their [data-cell] dots once the engine's data-fill n has put data-on on them (the first n cells). Inside
+   a field the S04 dots are .w05-dot (grey), .is-fade (they leave through the engine's data-out) and .is-me (the one dot,
+   Mennige with a ring). Dots that carry their own data-step are driven by the engine and get no transition here. */
+.w05-dots{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:14px;aspect-ratio:1/1;align-content:stretch}
+.w05-dots > i{display:block;border-radius:50%;background:rgba(18,18,18,.14)}
+.w05-dots > i:not([data-step]){transition:transform 260ms var(--e-spring,cubic-bezier(.32,.72,0,1)),background-color 200ms,box-shadow 200ms}
+.w05-dots > .is-me{background:var(--accent,#B73A15);box-shadow:0 0 0 5px var(--w05-accent-soft)}
+.w05-dots--hot > i,.w05-dots--ink > i,.w05-dots--ring > i{background:transparent;transform:scale(.6)}
+.w05-dots--hot > i[data-on],.w05-dots--ink > i[data-on],.w05-dots--ring > i[data-on]{transform:scale(1)}
+.w05-dots--hot > i[data-on]{background:var(--accent,#B73A15)}
+.w05-dots--ink > i[data-on]{background:var(--ink,#121212)}
+.w05-dots--ring > i[data-on]{box-shadow:inset 0 0 0 3px var(--ink,#121212)}
+html .w05-dots[data-step][data-off]{visibility:visible}
+
+/* 3 ── the clock (slide clock) ───────────────────────────────────────── */
+/* w05-clock.js writes state attributes on the calendar cells [data-day] of the strip and custom properties on [data-clock]:
+   --vi (index of the picked day), --w05-n (number of days), and --k on each lit cell (its place among the lit ones, a 70 ms
+   stagger). The rules are :where() defaults with no specificity: deck.css wins wherever it states the same thing.
+   Marker: one column wide; it moves by (100% + the strip gap, set as --cal-gap) per day. Bar: the full-length bar from the
+   first day to the last, drawn as far as the picked day. */
+:where([data-clock] .cal__d){transition:background-color 320ms var(--e-spring,ease),box-shadow 320ms var(--e-spring,ease),opacity 320ms,transform 420ms var(--e-spring,ease);transition-delay:calc(var(--k,0) * 70ms)}
+:where([data-clock] .cal__d[data-role="notice"]){background:var(--ink,#121212);color:#FFFDF8}
+:where([data-clock] .cal__d[data-between]){background:var(--w05-accent-soft);box-shadow:inset 0 0 0 2px var(--accent,#B73A15);transform:translateY(-6px)}
+:where([data-clock] .cal__d[data-picked]){box-shadow:inset 0 0 0 4px var(--accent,#B73A15),0 0 0 6px var(--w05-accent-soft)}
+:where([data-clock] .cal__d[data-after]){opacity:.32}
+:where([data-clock] .cal__marker){transform:translateX(calc(var(--vi,0) * (100% + var(--cal-gap,0px))));transition:transform 600ms var(--e-spring,ease)}
+:where([data-clock] [data-clock-bar]){transform-origin:left center;transform:scaleX(calc(var(--vi,0) / (var(--w05-n,5) - 1)));transition:transform 600ms var(--e-spring,ease)}
+/* the complaint visit: the notice bar dissolves, the chip goes quiet (the engine's line fx owns the bar's own transform) */
+html [data-clock][data-mode="extra"] .clock__rule[data-step]{opacity:0;transition:opacity 420ms}
+:where([data-clock] [data-clock-chip][data-verdict="none"]){visibility:hidden}
+
+/* 4 ── audit days (slide isosheet) ───────────────────────────────────── */
+.w05-days{position:relative;display:grid;gap:30px}
+.w05-days__bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end}
+.w05-days__marker{grid-column:1;grid-row:1;justify-self:end;position:relative;display:inline-flex;align-items:center;height:2.1em;padding:0 1em;border-radius:999px;background:var(--accent,#B73A15);color:#fff;
+  font:700 20px/1 var(--mono,monospace);white-space:nowrap}
+.w05-days__marker::after{content:"";position:absolute;left:50%;top:100%;width:16px;height:10px;margin-left:-8px;background:var(--accent,#B73A15);clip-path:polygon(0 0,100% 0,50% 100%)}
+.w05-days__band{grid-row:2;appearance:none;cursor:pointer;height:84px;padding:0 24px;border:0;border-radius:20px;background:var(--e-glass-strong,#FFFDF8);box-shadow:inset 0 0 0 1.5px var(--w05-hair),var(--e-lift-sm,none);
+  color:var(--ink,#121212);font:700 26px/1.1 var(--sans,sans-serif);transition:transform 160ms,background-color 220ms,color 220ms}
+.w05-days__band:hover{transform:translateY(-1px)}
+.w05-days__band:active{transform:scale(.98)}
+.w05-days__band[data-sel]{background:var(--ink,#121212);color:#FFFDF8;box-shadow:none}
+.w05-days__tiles{display:flex;gap:18px;margin:0;padding:0;list-style:none;counter-reset:w05day}
+.w05-days__tile{position:relative;flex:1 1 0;min-width:0;aspect-ratio:1/1.1;max-width:190px;border-radius:18px;counter-increment:w05day;
+  box-shadow:inset 0 0 0 2px var(--w05-hair);background:transparent;opacity:.55;transform:scale(.96);
+  transition:transform 420ms var(--e-spring,ease),opacity 260ms,background-color 260ms,box-shadow 260ms;transition-delay:calc(var(--i,0) * 55ms)}
+.w05-days__tile[data-planned]{box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.w05-days__tile::after{content:counter(w05day);position:absolute;inset:0;display:grid;place-items:center;font:700 64px/1 var(--mono,monospace);color:var(--muted,rgba(18,18,18,.4));opacity:.5}
+.w05-days__tile[data-on]{background:var(--ink,#121212);box-shadow:none;opacity:1;transform:translateY(-8px) scale(1)}
+.w05-days__tile[data-on]::before{content:"";position:absolute;left:0;right:0;top:0;height:22%;border-radius:18px 18px 0 0;background:var(--accent,#B73A15)}
+.w05-days__tile[data-on]::after{color:#FFFDF8;opacity:1;padding-top:14%}
+.w05-days__out{font:700 120px/.9 var(--mono,monospace);font-variant-numeric:tabular-nums}
+
+/* 5 ── the data gates (slide ladder) ─────────────────────────────────── */
+.w05-gates{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.w05-gate{--w05-o:0;--c:clamp(0,calc(var(--p,1) * 1.7 - var(--i,0) * .22),1);position:relative;appearance:none;cursor:pointer;display:grid;align-content:space-between;justify-items:start;gap:18px;
+  min-height:230px;padding:28px 26px 56px;border:0;border-radius:24px;background:var(--e-glass-strong,#FFFDF8);box-shadow:inset 0 0 0 1.5px var(--w05-hair),var(--e-lift-sm,none);
+  color:var(--ink,#121212);text-align:left;font:700 27px/1.15 var(--sans,sans-serif);transition:--w05-o 560ms var(--e-spring,cubic-bezier(.32,.72,0,1)),box-shadow 300ms}
+.w05-gate[data-open]{--w05-o:1;box-shadow:inset 0 0 0 2px var(--w05-green)}
+.w05-gate__lock{position:relative;width:46px;height:34px;margin-top:20px;border-radius:7px;background:var(--ink,#121212)}
+.w05-gate__lock::before{content:"";position:absolute;left:8px;bottom:100%;width:30px;height:24px;border:5px solid var(--ink,#121212);border-bottom:0;border-radius:15px 15px 0 0;
+  transform-origin:left bottom;transform:translateY(calc(var(--w05-o) * -9px)) rotate(calc(var(--w05-o) * -26deg))}
+.w05-gate[data-open] .w05-gate__lock{background:var(--w05-green)}
+.w05-gate[data-open] .w05-gate__lock::before{border-color:var(--w05-green)}
+/* the barrier arm: level and full width when closed; open, it stands up on its right end as a short post (78 degrees);
+   at entry it comes down as --p runs */
+.w05-gate::after{content:"";position:absolute;left:22px;right:22px;bottom:22px;height:14px;border-radius:7px;background:var(--accent,#B73A15);transform-origin:right center;
+  --e:calc(1 - var(--c) + var(--c) * var(--w05-o));transform:rotate(calc(78deg * var(--e))) scaleX(calc(1 - .84 * var(--e)))}
+.w05-gate[data-open]::after{background:var(--w05-green)}
+.w05-cloud{--k:0;position:relative;width:440px;height:230px;margin-inline:auto;color:#D9D2C5;transition:color 400ms}
+.w05-cloud::before{content:"";position:absolute;inset:0;background:currentColor;
+  -webkit-mask:var(--w05-cloud-shape) center/contain no-repeat;mask:var(--w05-cloud-shape) center/contain no-repeat;
+  --w05-cloud-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 110'%3E%3Cpath d='M48 100A30 30 0 0 1 45 40A44 44 0 0 1 128 30A36 36 0 0 1 170 66A22 22 0 0 1 168 100Z'/%3E%3C/svg%3E")}
+.w05-cloud::after{content:"";position:absolute;inset:0;background:var(--accent,#B73A15);opacity:0;transform:scale(1);-webkit-mask:var(--w05-cloud-shape) center/contain no-repeat;mask:var(--w05-cloud-shape) center/contain no-repeat;
+  --w05-cloud-shape:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 110'%3E%3Cpath d='M48 100A30 30 0 0 1 45 40A44 44 0 0 1 128 30A36 36 0 0 1 170 66A22 22 0 0 1 168 100Z'/%3E%3C/svg%3E")}
+.w05-cloud[data-open-count="1"]{--k:1;color:#D2C5B3}
+.w05-cloud[data-open-count="2"]{--k:2;color:#D1B396}
+.w05-cloud[data-open-count="3"]{--k:3;color:#D69977}
+.w05-cloud[data-lit],.w05-cloud[data-open-count="4"]{--k:4;color:var(--accent,#B73A15)}
+.w05-cloud[data-lit]::after{animation:w05-lit 1500ms ease-out 1}
+@keyframes w05-lit{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(1.35)}}
+
+/* 6 ── the X-ray (slide xray) ────────────────────────────────────────── */
+/* The plot keeps the aspect ratio of the canvas drawing (936 x 780 in lib/w05-matrix.js LAYOUT; a test checks both). */
+.w05-mx__plot{position:relative;width:100%;aspect-ratio:936/780}
+.w05-mx__canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.w05-mx__plot > .w05-sweep{inset:calc(150 / 780 * 100%) 0 0 calc(96 / 936 * 100%)}
+.w05-mx__flags,.w05-mx__pulses{position:absolute;inset:0}
+.w05-mx__pulses{pointer-events:none}
+.w05-mx__ph{display:none}
+.w05-mx__flag{--s:clamp(0,calc(var(--p,1) * 1.9 - var(--i,0) * .09),1);position:absolute;display:block;width:24px;height:24px;margin:0;padding:0;border:0;background:none;cursor:pointer;
+  transform:translate(-50%,-50%) scale(var(--s));opacity:min(1,calc(var(--s) * 3))}
+.w05-mx__n{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink,#121212);color:#FFFDF8;font:700 12px/1 var(--mono,monospace);
+  box-shadow:0 0 0 2px rgba(255,253,248,.9);transition:transform 160ms var(--e-spring,ease)}
+.w05-mx__flag[data-tone="amber"] .w05-mx__n{background:var(--w05-amber);color:var(--ink,#121212)}
+.w05-mx__flag:hover .w05-mx__n,.w05-mx__flag:focus-visible .w05-mx__n{transform:scale(1.18)}
+.w05-mx__flag[data-new] .w05-mx__n{animation:w05-flag-in 900ms var(--e-spring,ease) 1}
+@keyframes w05-flag-in{0%{transform:scale(.2);box-shadow:0 0 0 0 rgba(183,58,21,.6)}60%{transform:scale(1.25);box-shadow:0 0 0 14px rgba(183,58,21,0)}100%{transform:scale(1);box-shadow:0 0 0 2px rgba(255,253,248,.9)}}
+.w05-mx__tip{position:absolute;top:50%;z-index:5;display:none;width:330px;padding:12px 14px;border-radius:14px;background:#FFFEFB;box-shadow:0 0 0 1px var(--w05-hair),var(--e-lift-sm,0 8px 24px rgba(18,18,18,.18));
+  color:var(--ink,#121212);font:500 16px/1.35 var(--sans,sans-serif);text-align:left;transform:translateY(-50%)}
+.w05-mx__flag[data-side="right"] .w05-mx__tip{left:calc(100% + 12px)}
+.w05-mx__flag[data-side="left"] .w05-mx__tip{right:calc(100% + 12px)}
+.w05-mx__flag:hover .w05-mx__tip,.w05-mx__flag:focus-visible .w05-mx__tip{display:block}
+.w05-mx__tipline{display:block}
+.w05-mx__tipline b{margin-right:.5em;font:700 13px/1 var(--mono,monospace);letter-spacing:.06em;text-transform:uppercase;color:var(--accent,#B73A15)}
+.w05-mx__pulse{position:absolute;border-radius:5px;box-shadow:0 0 0 2px var(--accent,#B73A15);animation:w05-mx-pulse 1100ms ease-out 2}
+@keyframes w05-mx-pulse{0%{transform:scale(1);opacity:.95}100%{transform:scale(1.45,1.9);opacity:0}}
+/* what-if lines: shown only for their state (0 base, 1 to 3) */
+[data-mx-show]:not([data-mx-on]){display:none}
+.w05-mx__whatifs button{appearance:none;cursor:pointer}
+.w05-mx__whatifs button[aria-pressed="true"]{background:var(--ink,#121212);color:#FFFDF8}
+
+/* 7 ── end states ────────────────────────────────────────────────────── */
+html.w05-final [data-clock] *,html.w05-final .w05-days *,html.w05-final .w05-gates *,html.w05-final .w05-gate,html.w05-final .w05-cloud,html.w05-final .w05-cloud::after,
+html.w05-final .w05-dots *,html.w05-final .w05-mx__flag *,html.w05-final .w05-mx__pulse,html.w05-final .w05-ghost{transition:none!important;animation:none!important}
+@media (prefers-reduced-motion:reduce){
+  [data-clock] *,.w05-days *,.w05-gates *,.w05-gate,.w05-cloud,.w05-cloud::after,.w05-dots *,.w05-mx__flag *,.w05-mx__pulse,.w05-ghost{transition:none!important;animation:none!important}
+  .w05-mx__pulses{display:none}
+}

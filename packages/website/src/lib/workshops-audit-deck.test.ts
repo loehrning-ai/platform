@@ -2,13 +2,14 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildModel } from "./demo-cases/audit-vorbereitung-mit-ki/model";
+import { COPY } from "./demo-cases/audit-vorbereitung-mit-ki/copy";
 
 /**
- * The Workshop 05 deck (both editions) tells the kit's and the demo's story: every quoted
- * line is in its kit file, every prompt is START-HERE.md's block, the reality run and the
- * tally are the demo's model, and the numbers on the slides are the kit's numbers.
- * Built by scripts/workshop05/deck-src/build.mjs; `--check` there catches drift.
+ * The Workshop 05 deck (both editions) tells the kit's and the demo's story: 26 main slides for 90 minutes and five
+ * appendix slides outside the arrow path, the ten scripts in the designed order, every prompt is START-HERE.md's block,
+ * every quote that names a kit file is in that file, no Claude result is shown as recorded, and the numbers on the
+ * slides are the kit's numbers. Built by scripts/workshop05/deck-src/build.mjs (`--check` there catches drift); the
+ * word counts and the polls are held by scripts/__tests__/workshop05-*.test.mjs.
  */
 
 const root = resolve(process.cwd(), "public", "workshops", "audit-vorbereitung-mit-ki");
@@ -17,140 +18,138 @@ const kitDirDe = resolve(process.cwd(), "../../scripts/workshop05/kit-de");
 const kit = (file: string) => readFileSync(resolve(kitDir, file), "utf8");
 const kitDe = (file: string) => readFileSync(resolve(kitDirDe, file), "utf8");
 const flat = (text: string) => text.replace(/\s+/g, " ").trim();
+const expected = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/workshop05/oracle/expected.json"), "utf8")) as {
+  rowsRead: number;
+  tally: { covered: number; weak: number; gap: number };
+  findings: unknown[];
+  decoys: unknown[];
+};
+
+const MAIN_IDS = ["cover", "doors", "papers", "letter", "clock", "plan", "ghost", "neighbour", "table", "drawer", "tests", "status", "forward", "step1", "step2", "xray", "step3", "ladder", "judge", "visit", "after", "taxsheet", "isosheet", "notmeasured", "transfer", "close"];
+const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js", "w05-clock.js", "w05-matrix.js", "w05-days.js", "w05-gates.js"];
 
 const EDITIONS = [
-  { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, share: "20,8", other: ["COVERED", "WEAK", "GAP"] },
-  { lang: "en", file: "en/slides.html", deckId: "audit-vorbereitung-mit-ki:en", start: () => kit("START-HERE.md"), status: { covered: "COVERED", weak: "WEAK", gap: "GAP" }, share: "20.8", other: ["BELEGT", "SCHWACH", "LÜCKE"] },
+  { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, other: ["COVERED", "WEAK", "GAP"], cover: "erfundener Fall", frame: "noch nicht aufgezeichnet" },
+  { lang: "en", file: "en/slides.html", deckId: "audit-vorbereitung-mit-ki:en", start: () => kit("START-HERE.md"), status: { covered: "COVERED", weak: "WEAK", gap: "GAP" }, other: ["BELEGT", "SCHWACH", "LÜCKE"], cover: "invented case", frame: "not recorded yet" },
 ] as const;
 
 const parse = (file: string) => new DOMParser().parseFromString(readFileSync(resolve(root, file), "utf8"), "text/html");
-const model = buildModel();
 
 describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   const doc = parse(edition.file);
   const sections = Array.from(doc.querySelectorAll("deck-stage > section"));
   const main = sections.filter((section) => section.getAttribute("data-kind") === "main");
 
-  it("has sixteen main slides for 90 minutes and three appendix slides outside the arrow path", () => {
+  it("has 26 main slides for 90 minutes and five appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
     expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
-    expect(main).toHaveLength(16);
+    expect(main.map((section) => section.id)).toEqual(MAIN_IDS);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
-    expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3"]);
+    expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3", "a4", "a5"]);
     const notes = JSON.parse(doc.getElementById("speaker-notes")?.textContent ?? "[]") as string[];
     expect(notes).toHaveLength(sections.length);
+    expect(notes).toHaveLength(31);
     for (const note of notes) for (const line of ["Time:", "Say:", "Students:", "Cue:", "Remember:"]) expect(note).toContain(line);
   });
 
-  it("loads the shared key contract, then the engine runtime, scenes and globe", () => {
+  it("loads the shared key contract, the engine runtime, scenes and globe, then the five W05 scripts in order", () => {
     const scripts = Array.from(doc.querySelectorAll("script[src]")).map((script) => script.getAttribute("src"));
     const up = edition.lang === "de" ? "./" : "../";
-    expect(scripts).toEqual([`${up}lib/deck-keys.js`, `${up}lib/deck-stage.js`, `${up}lib/scenes.js`, `${up}lib/geo.js`, `${up}lib/globe.js`]);
+    expect(scripts).toEqual(SCRIPTS.map((name) => `${up}lib/${name}`));
+    expect(Array.from(doc.querySelectorAll("script:not([src])")).every((script) => script.getAttribute("type") === "application/json")).toBe(true);
+    const sheets = Array.from(doc.querySelectorAll('link[rel="stylesheet"]')).map((link) => (link.getAttribute("href") ?? "").split("/").pop());
+    expect(sheets).toEqual(["fonts.css", "engine.css", "deck.css", "w05-fx.css"]);
   });
 
-  it("establishes the invented company before the host and distinguishes Tim's live run from the slide sample", () => {
-    expect(main.slice(0, 4).map((section) => section.id)).toEqual(["cover", "company", "host", "case"]);
+  it("opens on the invented case and names the one company, never the old one", () => {
     const opening = flat(doc.getElementById("cover")?.textContent ?? "");
-    expect(opening).toContain("Vardar");
-    expect(opening).toContain("Tannwald");
-    expect(opening).toContain(edition.lang === "de" ? "acht Nachweise" : "eight documents");
-    expect(doc.querySelector("#project .now--live")?.textContent).toContain(edition.lang === "de" ? "Folie: Muster" : "Slide: sample");
+    expect(opening).toContain(edition.cover);
+    const letter = flat(doc.getElementById("letter")?.textContent ?? "");
+    expect(letter).toContain("Gradba-Pro");
+    expect(flat(doc.body.textContent ?? "")).not.toMatch(/vardar|tannwald/i);
+    const html = readFileSync(resolve(root, edition.file), "utf8");
+    expect(html).not.toMatch(/vardar|tannwald/i);
   });
 
-  it("locates capabilities in Settings and keeps them out of the replicated sidebar", () => {
-    expect(doc.querySelectorAll(".cw-side .cw-toggle")).toHaveLength(0);
-    const settings = doc.querySelector("#project .proj__capability")?.textContent ?? "";
-    expect(settings).toContain("Settings > Capabilities");
-    expect(settings).toContain("Create and edit files");
-    expect(flat(doc.querySelector("#project .file__meta")?.textContent ?? "")).toBe("11 " + (edition.lang === "de" ? "Dateien" : "files"));
+  it("has the clock on the notice date of the kit and the visit as a date, never a weekday", () => {
+    expect(doc.querySelector("#clock [data-clock]")?.getAttribute("data-notice")).toBe("2026-11-23");
+    const notice = kit("notice_DIT_2026-11-23.md");
+    expect(notice).toContain("27 November 2026");
+    const text = flat(doc.body.textContent ?? "");
+    expect(text).not.toMatch(/\b(friday|freitag)\b/i);
   });
 
-  it("quotes only lines that are in the kit, word for word", () => {
-    const quotes = Array.from(doc.querySelectorAll(".q"));
-    expect(quotes.length).toBeGreaterThan(10);
-    for (const quote of quotes) {
-      const file = quote.getAttribute("data-file");
-      expect(file, flat(quote.textContent ?? "")).toBeTruthy();
-      expect(flat(kit(file as string)), `${file}: ${flat(quote.textContent ?? "")}`).toContain(flat(quote.textContent ?? ""));
+  it("quotes only lines that are in the kit file they name, word for word", () => {
+    const named = Array.from(doc.querySelectorAll("[data-file]"));
+    for (const quote of named) {
+      const file = quote.getAttribute("data-file") as string;
+      expect(flat(kit(file)), `${file}: ${flat(quote.textContent ?? "")}`).toContain(flat(quote.textContent ?? ""));
+    }
+    // Law and court quotes are in their own language and carry a translation; they are not kit text.
+    const originals = Array.from(doc.querySelectorAll("#table .qd, #papers .qd, #judge .qd"));
+    expect(originals.length).toBeGreaterThan(0);
+    for (const original of originals) {
+      const text = flat(original.textContent ?? "");
+      expect(/[\u0400-\u04FF]/.test(text) || original.getAttribute("lang") === "en", text).toBe(true);
     }
   });
 
   it("shows the prompts exactly as the start file of its kit edition has them", () => {
     const startHere = flat(edition.start());
     const prompts = Array.from(doc.querySelectorAll(".prompt-body"));
-    expect(prompts.length).toBeGreaterThanOrEqual(3);
+    expect(prompts).toHaveLength(3);
+    expect(prompts.map((prompt) => prompt.closest("section")?.id)).toEqual(["step1", "step2", "step3"]);
     for (const prompt of prompts) expect(startHere).toContain(flat(prompt.textContent ?? ""));
   });
 
-  it("runs the demo's reality run: the same files, failed tests, statuses and tally", () => {
-    const rows = Array.from(doc.querySelectorAll('#mission-2 [data-links="run"] .lk-row'));
-    expect(rows.map((row) => row.getAttribute("data-item"))).toEqual(model.rows.map((row) => row.item.id));
-    expect(rows.map((row) => row.getAttribute("data-status"))).toEqual(model.rows.map((row) => row.status));
-    expect(rows.map((row) => row.getAttribute("data-fails-at") || null)).toEqual(model.rows.map((row) => row.failsAt));
-    expect(rows.map((row) => (row.querySelector(".lk-file .fname")?.textContent ?? "").replace(/\s+/g, ""))).toEqual(model.rows.map((row) => row.item.naive));
-    const tally = Array.from(doc.querySelectorAll("#mission-2 [data-tally] > span")).map((cell) => flat(cell.textContent ?? "").replace(/(\D)(\d)/, "$1 $2"));
-    expect(tally).toEqual([
-      `${edition.status.covered} ${model.tally.covered}`,
-      `${edition.status.weak} ${model.tally.weak}`,
-      `${edition.status.gap} ${model.tally.gap}`,
-    ]);
-    expect(doc.querySelector("[data-result-title]")?.getAttribute("data-covered")).toBe(String(model.tally.covered));
+  it("shows no Claude result as recorded: three empty frames, no recording folder", () => {
+    for (const id of ["step1", "step2", "step3"]) expect(flat(doc.getElementById(id)?.textContent ?? "")).toContain(edition.frame);
+    const html = readFileSync(resolve(root, edition.file), "utf8");
+    expect(html).not.toMatch(/claude-runs/);
   });
 
-  it("shows the R7 candidates failing exactly the tests the demo's model fails", () => {
-    const cands = Array.from(doc.querySelectorAll("#mission-2 .cand"));
-    expect(cands.map((cand) => cand.getAttribute("data-file"))).toEqual(model.r7.map((result) => result.doc.file));
-    expect(cands.map((cand) => (cand.getAttribute("data-failed") ?? "").split(" "))).toEqual(model.r7.map((result) => [...result.failed]));
-  });
-
-  it("carries the kit's numbers", () => {
-    const text = flat(doc.body.textContent ?? "");
-    // The index uses the full PERIOD rule, including the AI rule's 295 uncovered days.
-    for (const needle of ["7/ 11", "25", "120", edition.share, "114", "89", "295"]) expect(text, needle).toContain(needle);
+  it("carries the kit's numbers: rows read, findings, checked cells and the status tally", () => {
+    const counts = (id: string) => Array.from(doc.querySelectorAll(`#${id} [data-count]`)).map((node) => Number((node.getAttribute("data-count") ?? "").split(",")[1]));
+    expect(counts("xray")).toEqual([expected.rowsRead, expected.findings.length, expected.decoys.length]);
+    expect(counts("step3")).toEqual([expected.tally.covered, expected.tally.weak, expected.tally.gap]);
+    expect(expected.rowsRead).toBe(693);
+    expect(flat(doc.getElementById("xray")?.textContent ?? "")).toContain(String(expected.rowsRead));
   });
 
   it("speaks one language for the statuses and none of the banned words", () => {
     const chips = Array.from(doc.querySelectorAll(".chip")).map((chip) => flat(chip.textContent ?? ""));
     expect(chips.length).toBeGreaterThan(0);
-    for (const chip of chips) expect(Object.values(edition.status)).toContain(chip);
+    const statuses = Object.values(edition.status) as string[];
+    expect(chips.filter((chip) => statuses.includes(chip)).length).toBeGreaterThan(0);
     for (const word of edition.other) expect(chips).not.toContain(word);
     const html = readFileSync(resolve(root, edition.file), "utf8");
-    expect(html).not.toMatch(/[‒-―]/);
-    expect(html).not.toMatch(/\b(countdown|stamp|stempel|urgent|dringend)\b/i);
-    expect(html).not.toMatch(/\/Users\/|\/private\//);
+    expect(html).not.toMatch(/[‒-―→]/);
+    expect(html).not.toMatch(/\b(countdown|stamp|stempel|urgent|dringend|deadline|konform\w*|compliant)\b/i);
+    expect(html).not.toMatch(/\/Users\/|\/private\/|mavengence/i);
   });
 });
 
 /**
- * One objective, one status rule, one quote rule: the deck's "four" slide, the demo's tool
- * beat, the kit's START-HERE.md and the skill carry the same three sentences, so the room,
- * the phone and the visitor's own Claude learn the same thing.
+ * One objective, one status rule, one quote rule: the demo's tool card, the kit's START-HERE.md (lines 2 to 4) and the
+ * skill carry the same three sentences, so the room, the phone and the visitor's own Claude learn the same thing.
  */
-describe("W05 objective lockstep", async () => {
-  const { COPY } = await import("./demo-cases/audit-vorbereitung-mit-ki/copy");
-  const deckCopy = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/workshop05/deck-src/deck-copy.json"), "utf8")) as Record<
-    "de" | "en",
-    { four: { objective: string; tool: readonly string[] } }
-  >;
+describe("W05 objective lockstep", () => {
   const skill = readFileSync(resolve(process.cwd(), "content/skills/audit-nachweise/SKILL.md"), "utf8");
-  const startHere = flat(kit("START-HERE.md"));
+  const startLines = (text: string) => text.split("\n").slice(1, 4).map((line) => line.trim());
 
-  it.each(["de", "en"] as const)("the demo's %s tool beat says the deck's objective, status rule and quote rule word for word", (lang) => {
-    const four = deckCopy[lang].four;
-    expect(COPY[lang].objective).toBe(four.objective);
-    expect(COPY[lang].tool.status).toBe(four.tool[1]);
-    expect(COPY[lang].tool.rule).toBe(four.tool[2]);
-    expect(flat(readFileSync(resolve(root, lang === "de" ? "slides.html" : "en/slides.html"), "utf8"))).toContain(four.objective);
+  it.each([
+    { lang: "de" as const, start: () => kitDe("START-HIER.md") },
+    { lang: "en" as const, start: () => kit("START-HERE.md") },
+  ])("START-HERE lines 2 to 4 are the demo's $lang objective, status rule and quote rule word for word", ({ lang, start }) => {
+    expect(startLines(start())).toEqual([COPY[lang].objective, COPY[lang].tool.status, COPY[lang].tool.rule]);
   });
 
-  it("the kit and the skill carry the same sentences", () => {
-    const en = deckCopy.en.four;
-    for (const line of [en.objective, en.tool[1], en.tool[2]]) expect(startHere).toContain(line);
-    const de = deckCopy.de.four;
-    for (const line of [de.objective, de.tool[1], de.tool[2]]) expect(flat(kitDe("START-HIER.md"))).toContain(line);
-    expect(skill).toContain(de.objective);
-    expect(skill).toContain(en.objective);
-    expect(skill).toContain(deckCopy.de.four.tool[2]);
-    expect(skill).toContain(en.tool[2]);
+  it("the skill opens with the German objective and carries the quote rule in both languages", () => {
+    const body = skill.slice(skill.indexOf("\n# "));
+    const first = flat(body.slice(body.indexOf("\n", 1) + 1).trimStart().split(/\n\s*\n/)[0] ?? "");
+    expect(first).toBe(COPY.de.objective);
+    expect(flat(skill)).toContain(COPY.en.objective);
+    expect(flat(skill)).toContain(COPY.de.tool.rule);
+    expect(flat(skill)).toContain(COPY.en.tool.rule);
   });
 });
