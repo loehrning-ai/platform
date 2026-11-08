@@ -18,9 +18,11 @@ Gradba-Pro DOOEL, Bitola, 24 staff (E-01 to E-24). Everything here is invented f
 | safety statement | the person with the binder (no job title is given) | safety_statement_2019.md |
 | safety training proofs | office manager (E-02) | training_proofs_2026.csv |
 
-Registers are as of 25 Nov 2026 and each is kept by the owner named in this table. The dates inside the rows are the dates of the paper itself.
+Registers were last updated on 25 Nov 2026 and each is kept by the owner named in this table. The dates inside the rows are the dates of the paper itself.
 
 ## Company facts
+
+Last labour inspection: spring 2024 (invented). Nobody has opened the binders since.
 
 Last change to the workplace: hall racking and forklift work were added in 2023.
 

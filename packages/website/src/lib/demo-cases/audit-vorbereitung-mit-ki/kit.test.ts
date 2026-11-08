@@ -19,8 +19,8 @@ describe("W05 kit lockstep", () => {
   it("kit.ts holds every kit file byte for byte, except the start files", () => {
     const en = walk(KIT_DIR).map((path) => relative(KIT_DIR, path)).filter((file) => file !== "START-HERE.md");
     const de = walk(KIT_DIR_DE).map((path) => relative(KIT_DIR_DE, path)).filter((file) => file !== "START-HIER.md");
-    expect(en).toHaveLength(32);
-    expect(de).toHaveLength(32);
+    expect(en).toHaveLength(34);
+    expect(de).toHaveLength(34);
     expect(Object.keys(KIT_TEXT).sort()).toEqual([...en, ...de.map((file) => `de/${file}`)].sort());
     for (const file of Object.keys(KIT_TEXT)) {
       const source = file.startsWith("de/") ? join(KIT_DIR_DE, file.slice(3)) : join(KIT_DIR, file);

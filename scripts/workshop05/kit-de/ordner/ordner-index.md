@@ -18,9 +18,11 @@ Gradba-Pro DOOEL, Bitola, 24 Beschäftigte (E-01 bis E-24). Alles hier ist für 
 | Sicherheitserklärung | die Person mit dem Aktenordner (eine Berufsbezeichnung ist nicht angegeben) | sicherheitserklaerung_2019.md |
 | Nachweise der Sicherheitsunterweisung | Büroleiterin (E-02) | training_proofs_2026.csv |
 
-Die Register gelten mit Stand 25. Nov. 2026, und jedes führt die zuständige Rolle aus dieser Tabelle. Die Daten in den Zeilen sind die Daten des Papiers selbst.
+Die Register wurden zuletzt am 25. Nov. 2026 aktualisiert, und jedes führt die zuständige Rolle aus dieser Tabelle. Die Daten in den Zeilen sind die Daten des Papiers selbst.
 
 ## Fakten zur Firma
+
+Letzte Arbeitsinspektion: Frühjahr 2024 (erfunden). Seitdem hat niemand die Ordner geöffnet.
 
 Letzte Änderung am Arbeitsplatz: Regalanbau in der Halle und Staplerarbeit kamen 2023 dazu.
 

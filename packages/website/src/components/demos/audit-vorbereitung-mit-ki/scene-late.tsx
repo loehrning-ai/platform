@@ -19,7 +19,7 @@ export function lateNote(fmt: Fmt, model: Model): string {
   });
 }
 
-/** Scene 5: the pay date that was late. Changing it leaves the old value visible; the honest way is a new dated paper. */
+/** Scene 6: the pay date that was late. Changing it leaves the old value visible; the honest way is a new dated paper. */
 export function LateStage({ fmt, model, step }: { readonly fmt: Fmt; readonly model: Model; readonly step: LateStep }) {
   const { copy } = fmt;
   const { pay } = model;
@@ -50,50 +50,6 @@ export function LateStage({ fmt, model, step }: { readonly fmt: Fmt; readonly mo
             {lateNote(fmt, model)}
           </pre>
         </section>
-      ) : null}
-    </div>
-  );
-}
-
-/** Scene 6: which columns of the employee records go to an AI tool, and the level that follows from it. */
-export function LevelStage({ fmt, model, picked, onToggle }: { readonly fmt: Fmt; readonly model: Model; readonly picked: ReadonlySet<string>; readonly onToggle: (id: string) => void }) {
-  const { copy } = fmt;
-  const level = picked.size === 0 ? 3 : 4;
-  return (
-    <div className="w05-level" data-w05-level={level}>
-      <p className="w05-lead">{fmt.t(copy.level.lead, { n: model.columns.length })}</p>
-      {picked.size > 0 ? (
-        <p className="w05-chips" data-w05-selected="">
-          <GlasChip kind="status">{fmt.t(copy.level.selected, { n: picked.size, total: model.columns.length })}</GlasChip>
-        </p>
-      ) : null}
-      <div className="w05-columns" role="group" aria-label={copy.level.group}>
-        {model.columns.map((column) => (
-          <GlasChip key={column.id} kind="filter" selected={picked.has(column.id)} onClick={() => onToggle(column.id)}>
-            {column.meaning}
-          </GlasChip>
-        ))}
-      </div>
-      <ol className="w05-levels">
-        {copy.level.levels.map((name, index) => (
-          <li key={name} className="w05-levels-item" data-active={index + 1 === level ? "" : undefined} data-here={index === 1 ? "" : undefined}>
-            <span className="w05-levels-n">{fmt.t(copy.level.levelLabel, { n: index + 1 })}</span> {name}
-            {index === 1 ? <span className="w05-hint"> {copy.level.here}</span> : null}
-          </li>
-        ))}
-      </ol>
-      {level === 4 ? (
-        <div className="w05-gates" data-w05-gates="">
-          <p className="w05-label">{copy.level.gatesLead}</p>
-          <ul>
-            {copy.level.gates.map((gate, index) => (
-              <li key={gate}>
-                <strong>{gate}</strong> {copy.level.gatesGloss[index]}
-              </li>
-            ))}
-          </ul>
-          <p className="w05-hint">{copy.level.health}</p>
-        </div>
       ) : null}
     </div>
   );

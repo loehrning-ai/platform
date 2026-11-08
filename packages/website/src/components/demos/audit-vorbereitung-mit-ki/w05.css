@@ -1,9 +1,10 @@
 /*
  * W05 "Audit-Vorbereitung mit KI" on the v4 stage. Every rule sits under .w05
  * (static-privacy.test.ts); the glass itself (dock, chips, buttons, segmented
- * control) is glas.css, so nothing here blurs or selects a glass class. The
- * cards are content on the field: opaque Bogen with a hairline, so text never
- * depends on what is behind it. One accent: Mennige.
+ * control) is glas.css, so nothing here blurs the glass; the one glass rule below only recolours a
+ * picked chip. The cards are content on the field: opaque Bogen with a hairline, so text never
+ * depends on what is behind it. One accent: Mennige. No dark fill anywhere: ink is for text and for
+ * lines of 1 to 2 px, so a picked chip and a finding cell are light with an outline.
  */
 
 .w05 {
@@ -15,6 +16,8 @@
   --w05-mennige: #97300f;
   --w05-mennige-line: #b73a15;
   --w05-mennige-soft: rgb(183 58 21 / 0.1);
+  --w05-mennige-mid: rgb(183 58 21 / 0.28);
+  --w05-sage-200: #c8d8cb;
   --w05-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
@@ -69,7 +72,6 @@
 .w05 .w05-paper,
 .w05 .w05-sheet-card,
 .w05 .w05-lens,
-.w05 .w05-gates,
 .w05 .w05-own-paper {
   border: 1px solid var(--w05-line);
   border-radius: 12px;
@@ -382,7 +384,8 @@
   transition: background-color 0.2s ease;
 }
 .w05 .w05-cell[data-code="1"] {
-  background: var(--w05-mennige-line);
+  border: 1.5px solid var(--w05-mennige-line);
+  background: var(--w05-mennige-mid);
 }
 .w05 .w05-cell[data-code="2"] {
   border: 1.5px solid var(--w05-ink);
@@ -417,7 +420,7 @@
   font-weight: 700;
 }
 
-/* Scene 5: the late edit. */
+/* Scene 6: the late edit. */
 .w05 .w05-late {
   display: grid;
   gap: 10px;
@@ -435,49 +438,63 @@
   text-decoration-color: var(--w05-mennige-line);
 }
 
-/* Scene 6: columns and levels. */
-.w05 .w05-level {
+/* Scene 5: the register on one of three dates. Soft sage and hairlines only, no dark fill. */
+.w05 .w05-register {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
-.w05 .w05-columns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.w05 .w05-reg-counts {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 1fr));
+  margin: 0;
 }
-.w05 .w05-levels {
+.w05 .w05-reg-counts .w05-count dd {
+  font-size: 2.25rem;
+}
+.w05 .w05-reg-counts .w05-count[data-w05-register-count="expired"] dd,
+.w05 .w05-reg-counts .w05-count[data-w05-register-count="missing"] dd {
+  color: var(--w05-mennige);
+}
+.w05 .w05-reg-counts .w05-count[data-zero] dd {
+  color: var(--w05-ink-2);
+}
+.w05 .w05-reg-lists {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 8px;
+}
+.w05 .w05-reg-list {
+  display: grid;
+  align-content: start;
   gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--w05-line);
+  border-radius: 12px;
+  background: var(--w05-bogen);
+  animation: w05-day-in 0.4s ease both;
+  animation-delay: calc(var(--k, 0) * 140ms);
+}
+.w05 .w05-reg-list h3 {
+  margin: 0;
+}
+.w05 .w05-reg-entries {
+  display: grid;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.w05 .w05-levels-item {
-  padding: 8px 10px;
-  border: 1px solid var(--w05-line);
-  border-radius: 10px;
-  background: var(--w05-bogen);
+.w05 .w05-reg-entry {
+  font-family: var(--w05-mono);
   font-size: 0.8125rem;
+  overflow-wrap: anywhere;
 }
-.w05 .w05-levels-item[data-active] {
-  border-color: var(--w05-mennige-line);
-  background: var(--w05-mennige-soft);
-  font-weight: 700;
-}
-.w05 .w05-levels-n {
-  font-weight: 700;
-}
-.w05 .w05-gates {
-  display: grid;
-  gap: 6px;
-  padding: 10px 12px;
-  font-size: 0.8125rem;
-}
-.w05 .w05-gates ul {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  padding-left: 1.1rem;
+
+/* A chip the visitor picked is a light sage chip with an ink outline, never a filled dark pill. */
+.w05 .w05-guess [data-selected],
+.w05 .w05-focus [data-selected] {
+  background-color: var(--w05-sage-200);
+  color: var(--w05-ink);
+  box-shadow: inset 0 0 0 2px var(--w05-ink);
 }
 
 /* Scene 7: the visitor's own papers. */
@@ -672,6 +689,9 @@
   .w05 .w05-card,
   .w05 .w05-cell {
     transition: none;
+  }
+  .w05 .w05-reg-list {
+    animation: none;
   }
   .w05 .w05-card {
     transform: none;

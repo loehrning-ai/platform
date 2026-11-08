@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /**
- * Checks the Workshop 05 kit ("Audit Preparation with AI: Four Days Until the Inspection") against
- * itself and against the independent recount. It holds the tree (34 files per edition, 11 top-level
+ * Checks the Workshop 05 kit ("Audit Preparation with AI: Organize Evidence and Find Gaps") against
+ * itself and against the independent recount. It holds the tree (36 files per edition, 11 top-level
  * entries, the two roots), a label on every file, the two comment lines of every CSV, the row counts of
- * the folder (693 rows read), the three step headings, the five-line block of the start file, rules 4 to
- * 7 of the project instructions, the numbers and the quotes of the answer key (every quote found again
- * in its file), English and German parity, the one allowed external URL, the banned words and dashes,
- * the clock, both zips under the 120 KB cap, and the recount of oracle/recount.mjs against
- * oracle/expected.json. Exit code 1 when anything drifts.
+ * the folder (693 rows read), the four step headings and their verbatim prompts, the five-line block of
+ * the start file, rules 4 to 7 of the project instructions, the numbers and the quotes of the answer
+ * key (every quote found again in its file), the register of Step 4 (oracle, recount, expected.json and
+ * both answer keys agree), English and German parity, the one allowed external URL, the banned words and
+ * dashes, the word that recordings must not hold, the clock, both zips under the 120 KB cap, and the
+ * recount of oracle/recount.mjs against oracle/expected.json. Exit code 1 when anything drifts.
  *
  * Usage (from the repository root): node scripts/workshop05/verify-kit.mjs
  */
@@ -30,7 +31,7 @@ import {
   kitEntriesDe,
 } from "./build-kit.mjs";
 import { compareWithExpected, recount } from "./oracle/recount.mjs";
-import { analyse } from "./oracle/oracle.mjs";
+import { analyse, askKeyLine, askPerson, buildRegister, registerSummary, REGISTER_TODAY } from "./oracle/oracle.mjs";
 import { loadKitFiles } from "./oracle/load.mjs";
 import { expectedText } from "./oracle/write-expected.mjs";
 
@@ -61,7 +62,7 @@ expect("filesDe", walk(KIT_DE).sort(), [...KIT_FILES_DE].sort());
 expect("zipNames", [ZIP_NAME, ZIP_NAME_DE], ["gradba-audit-kit.zip", "gradba-audit-kit-de.zip"]);
 const entriesEn = kitEntries();
 const entriesDe = kitEntriesDe();
-expect("filesWithSkill", [entriesEn.length, entriesDe.length], [34, 34]);
+expect("filesWithSkill", [entriesEn.length, entriesDe.length], [36, 36]);
 expect("topLevelEntries", [new Set(entriesEn.map(([file]) => file.split("/")[0])).size, new Set(entriesDe.map(([file]) => file.split("/")[0])).size], [11, 11]);
 const skillSource = readFileSync(path.join(WEBSITE, "content/skills/audit-nachweise/SKILL.md"), "utf8");
 expect("skillInBothKits", [entriesEn, entriesDe].map((entries) => entries.find(([file]) => file === "claude/audit-nachweise/SKILL.md")?.[1].toString("utf8") === skillSource), [true, true]);
@@ -90,8 +91,22 @@ for (const [archive, root] of [
   [zipDe, `${KIT_NAME_DE}/`],
 ]) {
   const members = zipMembers(archive);
-  expect(`zipMembers ${root}`, [members.length, members.every((name) => name.startsWith(root))], [34, true]);
+  expect(`zipMembers ${root}`, [members.length, members.every((name) => name.startsWith(root))], [36, true]);
 }
+
+// The shared recording test forbids one lowercase word in every recorded file (SPEC-2 4.3). The count over
+// everything that can go into a workspace, and over the prompts of the start file, must be 0 in both editions.
+const RECORDED = (file) => /^(folder|ordner|checklists|listen|templates|vorlagen)\//.test(file) || ["cases/case-A-labour.md", "faelle/fall-A-arbeit.md", "project-instructions.md", "projektanweisungen.md", "notice_DIT_2026-11-23.md", "mitteilung_DIT_2026-11-23.md"].includes(file);
+const forbidden = ["sig", "nature"].join("");
+const recordedText = (entries, startFile) => [
+  ...entries.filter(([file]) => RECORDED(file)).map(([, bytes]) => bytes.toString("utf8")),
+  ...[...entries.find(([file]) => file === startFile)[1].toString("utf8").matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]),
+];
+expect(
+  "recordedFilesWithForbiddenWord",
+  [recordedText(entriesEn, "START-HERE.md"), recordedText(entriesDe, "START-HIER.md")].map((texts) => texts.filter((text) => text.toLowerCase().includes(forbidden)).length),
+  [0, 0],
+);
 
 // 2. Labels, comment lines, style, words, URLs.
 const ALLOWED_URL = "https://privacy.claude.com/en/articles/7996890";
@@ -138,51 +153,113 @@ const COUNTS = {
 expect("rowCounts", Object.fromEntries(Object.keys(COUNTS).map((name) => [name, rows(read(`folder/${name}`)).length])), COUNTS);
 expect("rowsRead", Object.values(COUNTS).reduce((sum, n) => sum + n, 0), 693);
 for (const name of Object.keys(COUNTS)) if (read(`folder/${name}`) !== readDe(`ordner/${name}`)) fail(`${name}: the CSV bytes differ between the editions`);
-for (const name of ["evidence-index.csv", "clock.csv", "sample-rows_attendance.csv"]) if (read(`templates/${name}`) !== readDe(`vorlagen/${name}`)) fail(`${name}: the template bytes differ between the editions`);
+for (const name of ["evidence-index.csv", "clock.csv", "sample-rows_attendance.csv", "register.csv"]) if (read(`templates/${name}`) !== readDe(`vorlagen/${name}`)) fail(`${name}: the template bytes differ between the editions`);
 expect("evidenceIndexHeader", [read("templates/evidence-index.csv").split("\n")[2], rows(read("templates/evidence-index.csv")).length], ["line_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due", 0]);
 expect("clockHeader", [read("templates/clock.csv").split("\n")[2], rows(read("templates/clock.csv")).length], ["event,rule,date", 1]);
 expect("clockExampleRow", read("templates/clock.csv").split("\n")[3].startsWith("example"), true);
 expect("sampleRows", [read("templates/sample-rows_attendance.csv").split("\n")[2], rows(read("templates/sample-rows_attendance.csv")).map((line) => line.split(",")[0])], ["id,date,start,end,tick,code", ["X-01", "X-02", "X-03"]]);
+expect("registerTemplate", [read("templates/register.csv").split("\n").slice(0, 2), read("templates/register.csv").split("\n")[2], rows(read("templates/register.csv")).length], [
+  ["# Fictional training material, invented for the exercise.", "# Erfundenes Übungsmaterial, für die Übung erfunden."],
+  "person_id,paper,date,valid_until,owner,where,approved_by",
+  0,
+]);
 expect("folderFiles", [FOLDER_FILES.length, FOLDER_FILES_DE.length], [14, 14]);
 
 // 4. The start files: the five-line block (the pinned COPY strings), three steps, the optional block, one marker.
+// The top block: the disclaimer, a heading and the three rule lines (the pinned COPY strings); the set-up line that opens the Project follows the set-up heading.
 const BLOCK = {
   en: [
     "Fictional training material, invented for the exercise. Not legal advice.",
+    "## The rules in one minute",
     "A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.",
     "COVERED, WEAK or GAP. A file out of date or unapproved: WEAK. A part without evidence, or the record shows “not met”: GAP. The weakest part counts.",
     "No quote, no COVERED. A policy shows intent; only a record shows practice.",
-    "Open Claude, make a Project, paste project-instructions.md, add checklists/ and folder/. These files are invented, so this is Level 2 of the data ladder. Your own firm later: Level 3, only column names and 3 invented rows.",
   ],
   de: [
     "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.",
+    "## Die Regeln in einer Minute",
     "Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.",
     "BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt.",
     "Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.",
-    "Öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein, füge listen/ und ordner/ hinzu. Diese Dateien sind erfunden, das ist also Stufe 2 der Datenleiter. Eigene Firma später: Stufe 3, nur Spaltennamen und 3 erfundene Zeilen.",
   ],
 };
-const INTRO = { en: ["## What you do", "## Set up once"], de: ["## Was du tust", "## Einmal einrichten"] };
+const SETUP_FIRST = {
+  en: "Open Claude, make a Project, paste project-instructions.md, add checklists/ and folder/. These files are invented, so this is Level 2 of the data ladder. Your own firm later: Level 3, only column names and 3 invented rows.",
+  de: "Öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein, füge listen/ und ordner/ hinzu. Diese Dateien sind erfunden, das ist also Stufe 2 der Datenleiter. Eigene Firma später: Stufe 3, nur Spaltennamen und 3 erfundene Zeilen.",
+};
+const INTRO = { en: ["## The rules in one minute", "## What you do", "## Set up once"], de: ["## Die Regeln in einer Minute", "## Was du tust", "## Einmal einrichten"] };
+const SKILL_HEADING = { en: "## Optional: install the skill", de: "## Freiwillig: den Skill einrichten" };
+// The verbatim texts of Step 4 and the answer-length sentences (design: SPEC-2 section 4.4).
+const STEP4 = {
+  en: {
+    first:
+      "Build the register. Read folder-index.md and the CSV files in the folder. Skip the lines that start with #. Make register.csv with the columns of templates/register.csv and one row per person and paper. Papers: contract, registration, medical-exam (valid 24 months), leave-decision (only for people with 6 months of service on 26 Nov 2026), overtime-notice (for every person with overtime weeks) and safety-statement (one row for the firm, person_id FIRM). Take the owner from folder-index.md. Where a paper is missing, write MISSING in the date column. Where no file names an approver, write NOT IN FILES. Use ids, no names, and no health content, dates only. Then write check.py. It reads register.csv and prints three lists for today: expired, expiring in the next 60 days, missing. Run it with today's date, 26 Nov 2026. Answer in 16 lines at most: the three counts, then the first five rows of register.csv.",
+    second: "Look at register.csv. Which papers are on file for E-07, which one is missing, and who owns each? Answer from register.csv only, in 8 lines at most. If a row is not there, say NOT IN FILES.",
+    then: "Then ask the register:",
+    month: "Every month: see templates/monthly-check.md.",
+    noCode: "No code tool in your plan, or it is switched off? Ask Claude for check.py and run it on your own computer.",
+    ends: [
+      ["Answer with the table only.", 0],
+      ["Answer in 16 lines at most.", 1],
+      ["Answer with one line per question: line id, status, at most 8 words why. The rest goes in the files. At most 16 lines.", 2],
+    ],
+    intro: "In four steps Claude helps you build a table, run a check, write a plan and build a register.",
+    setup: "Add cases/case-A-labour.md and templates/register.csv to the Project as well.",
+    signOff: "Leave every sign-off line empty.",
+    line: "Write plain sentences. Use no dashes or arrows. Say sign-off line where a person signs.",
+  },
+  de: {
+    first:
+      "Baue das Register. Lies ordner-index.md und die CSV-Dateien im Ordner. Überspringe die Zeilen, die mit # beginnen. Mach register.csv mit den Spalten aus vorlagen/register.csv und einer Zeile pro Person und Papier. Papiere: contract, registration, medical-exam (gültig 24 Monate), leave-decision (nur für Personen mit 6 Monaten Betriebszugehörigkeit am 26. Nov. 2026), overtime-notice (für jede Person mit Überstundenwochen) und safety-statement (eine Zeile für die Firma, person_id FIRM). Nimm die Zuständigkeit aus ordner-index.md. Fehlt ein Papier, schreib MISSING in die Spalte date. Nennt keine Datei eine freigebende Person, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen, und keine Gesundheitsinhalte, nur Daten. Schreibe dann check.py. Es liest register.csv und gibt für heute drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Führe es mit dem heutigen Datum aus, 26. Nov. 2026. Antworte in höchstens 16 Zeilen: die drei Zahlen, dann die ersten fünf Zeilen von register.csv.",
+    second: "Sieh dir register.csv an. Welche Papiere liegen für E-07 vor, welches fehlt, und wer ist jeweils zuständig? Antworte nur aus register.csv, in höchstens 8 Zeilen. Fehlt eine Zeile, sag NICHT IN DATEIEN.",
+    then: "Dann frag das Register:",
+    month: "Jeden Monat: siehe vorlagen/monatscheck.md.",
+    noCode: "Kein Code-Werkzeug im Tarif oder ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus.",
+    ends: [
+      ["Antworte nur mit der Tabelle.", 0],
+      ["Antworte in höchstens 16 Zeilen.", 1],
+      ["Antworte mit einer Zeile pro Frage: Zeilen-Id, Status, höchstens 8 Wörter Grund. Alles andere kommt in die Dateien. Höchstens 16 Zeilen.", 2],
+    ],
+    intro: "In vier Schritten hilft dir Claude, eine Tabelle zu bauen, einen Check laufen zu lassen, einen Plan zu schreiben und ein Register zu bauen.",
+    setup: "Füge faelle/fall-A-arbeit.md und vorlagen/register.csv ebenfalls zum Projekt hinzu.",
+    signOff: "Lass jede Unterschriftszeile leer.",
+    line: "Schreibe einfache Sätze. Nimm keine Gedankenstriche und keine Pfeile. Sag Zeile für die Freigabe, wo eine Person unterschreibt.",
+  },
+};
 for (const [locale, text, start, step, after, marker] of [
   ["en", read("START-HERE.md"), "START-HERE.md", "Step", "## After the visit (optional)", "<!-- claude-ui:en -->"],
   ["de", readDe("START-HIER.md"), "START-HIER.md", "Schritt", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
 ]) {
-  expect(`${start} block`, text.split("\n").slice(0, 5), BLOCK[locale]);
-  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, after]);
-  // The install text of the skill sits in the set-up section, above Step 1, and the file ends with the after-visit block.
-  expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(INTRO[locale][1]) && text.indexOf(marker) < text.indexOf(`## ${step} 1`)], [1, true]);
+  expect(`${start} block`, text.slice(0, text.indexOf(INTRO[locale][1])).split("\n").filter((line) => line !== ""), BLOCK[locale]);
+  expect(`${start} set-up opens the Project`, text.split(`${INTRO[locale][2]}\n\n`)[1]?.split("\n")[0], SETUP_FIRST[locale]);
+  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, `## ${step} 4`, after, SKILL_HEADING[locale]]);
+  // The install text of the skill is the last section (optional); the file ends with its one marker line.
+  expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(SKILL_HEADING[locale]), text.trimEnd().endsWith(marker)], [1, true, true]);
   const prompts = [...text.matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]);
-  expect(`${start} prompts`, prompts.length, 3);
-  expect(`${start} prompt words`, prompts.map((prompt) => prompt.split(/\s+/).length <= 150), [true, true, true]);
+  expect(`${start} prompts`, prompts.length, 5);
+  expect(`${start} prompt words`, prompts.map((prompt) => prompt.split(/\s+/).length <= 150), [true, true, true, true, true]);
+  const v = STEP4[locale];
+  expect(`${start} step 4 prompts`, [prompts[3], prompts[4]], [v.first, v.second]);
+  expect(`${start} step 4 words`, [v.first.split(/\s+/).length, v.second.split(/\s+/).length], locale === "en" ? [149, 37] : [145, 32]);
+  for (const [sentence, index] of v.ends) if (!prompts[index].endsWith(sentence)) fail(`${start}: prompt ${index + 1} must end with "${sentence}"`);
+  if (!prompts[2].includes(v.signOff)) fail(`${start}: the Step 3 prompt must say "${v.signOff}"`);
+  for (const needle of [v.then, v.month, v.noCode, v.intro, v.setup]) if (!text.includes(needle)) fail(`${start} lacks "${needle}"`);
+  if (text.split(v.noCode).length - 1 !== 2) fail(`${start}: the no-code-tool sentence must stand in Step 2 and in Step 4`);
 }
 // The room minutes are the deck's slots; the desk minutes are an estimate and the file says so.
 const timeLines = (text) => [...text.matchAll(/^(?:In the room|Im Raum) (\d+)(?: minutes| Minuten)\. (?:At your desk about|Am Schreibtisch etwa) (\d+), (?:our estimate, not measured|unsere Schätzung, nicht gemessen)\./gm)].map((match) => [Number(match[1]), Number(match[2])]);
-expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[5, 20], [7, 20], [6, 30]], [[5, 20], [7, 20], [6, 30]]]);
+expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[6, 20], [9, 20], [9, 30], [12, 20]], [[6, 20], [9, 20], [9, 30], [12, 20]]]);
 for (const [text, word] of [
   [read("START-HERE.md"), "Predict first, then check ANSWERS.md."],
   [readDe("START-HIER.md"), "Sag es voraus, dann prüf es in LOESUNGEN.md."],
-]) if (text.split(word).length - 1 !== 3) fail(`a start file must say "${word}" in each of the three steps`);
-if (!read("START-HERE.md").includes("skip the lines that start with #")) fail("Step 2 must say that lines starting with # are skipped");
+]) if (text.split(word).length - 1 !== 4) fail(`a start file must say "${word}" in each of the four steps`);
+if (!read("START-HERE.md").includes("skipping CSV lines that start with #")) fail("Step 2 must say that lines starting with # are skipped");
+// The prompt-to-checker contract (recordings/check-take.mjs reads exactly these words): the closing totals line of Step 2,
+// the status rule and the open papers date of Step 3, the firm id of Step 4.
+for (const [file, texts] of [
+  ["START-HERE.md", ["End with one totals line: rows read, findings, near misses checked.", "GAP: someone has no paper, or the record shows the rule broken. WEAK: the paper is there, only date or approval fails.", "the papers' date left open (the inspector sets it on the visit day)", "person_id FIRM"]],
+  ["START-HIER.md", ["Schließe mit einer Zeile Summen: Zeilen gelesen, Funde, Grenzfälle geprüft.", "LÜCKE: für jemanden fehlt das Papier, oder der Nachweis zeigt die Regel verletzt. SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmt nicht.", "lass das Datum der Papiere offen (der Inspektor setzt es am Besuchstag)", "person_id FIRM"]],
+]) for (const needle of texts) if (!(file === "START-HERE.md" ? read(file) : readDe(file)).includes(needle)) fail(`${file} lacks "${needle}"`);
 // The skill: where to get it and what the kit holds (the kit has the folder, not a zip).
 for (const [text, needle] of [
   [read("START-HERE.md"), "loehrning.ai/skills/audit-nachweise.zip"],
@@ -197,6 +274,9 @@ const rulesEn = rulesOf(read("project-instructions.md"));
 const rulesDe = rulesOf(readDe("projektanweisungen.md"));
 expect("ruleNumbers", [rulesEn.map(([n]) => n), rulesDe.map(([n]) => n)], [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]]);
 expect("ruleWords", [rulesEn.slice(3, 7).map(([, text]) => text.split(":")[0]), rulesDe.slice(3, 7).map(([, text]) => text.split(":")[0])], [["QUOTE", "PERIOD", "SCOPE", "APPROVAL"], ["ZITAT", "ZEITRAUM", "UMFANG", "FREIGABE"]]);
+for (const [name, text, locale] of [["project-instructions.md", read("project-instructions.md"), "en"], ["projektanweisungen.md", readDe("projektanweisungen.md"), "de"]]) {
+  expect(`${name} last line`, text.trimEnd().split("\n").at(-1), STEP4[locale].line);
+}
 const registryFile = path.join(WEBSITE, "src/lib/workshops-audit-kit.ts");
 if (existsSync(registryFile)) {
   const registry = readFileSync(registryFile, "utf8");
@@ -227,9 +307,14 @@ const KEYS = [
   {
     locale: "en",
     text: read("ANSWERS.md"),
-    steps: ["## Step 1", "## Step 2", "## Step 3", "## The clock"],
+    steps: ["## Step 1", "## Step 2", "## Step 3", "## Step 4", "## The clock"],
     count2: "Count: 10 findings, 8 checked, no problem.",
     count3: "Count: 2 COVERED, 1 WEAK, 10 GAP.",
+    count4: "Count: 98 rows, 4 expired, 1 expiring, 4 missing.",
+    total: "Total",
+    approver: "NOT IN FILES in approved_by",
+    leaveNote: ["ZRO Art. 139", "ZRO Art. 140", "teaching choice, not settled law"],
+    laterSentence: "An AI run will differ in wording. The counts must not.",
     sentences: ["Answer only what is asked", "there is no such paper, we are writing it today", "Do not sign minutes that do not match"],
     folderText: FOLDER_FILES.map((file) => read(`folder/${file}`)).join("\n"),
     quote: /"([^"]+)"/g,
@@ -238,9 +323,14 @@ const KEYS = [
   {
     locale: "de",
     text: readDe("LOESUNGEN.md"),
-    steps: ["## Schritt 1", "## Schritt 2", "## Schritt 3", "## Die Fristen"],
+    steps: ["## Schritt 1", "## Schritt 2", "## Schritt 3", "## Schritt 4", "## Die Fristen"],
     count2: "Zählung: 10 Funde, 8 geprüft ohne Befund.",
     count3: "Zählung: 2 BELEGT, 1 SCHWACH, 10 LÜCKE.",
+    count4: "Zählung: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen.",
+    total: "Summe",
+    approver: "NICHT IN DATEIEN in approved_by",
+    leaveNote: ["ZRO Art. 139", "ZRO Art. 140", "Entscheidung für die Übung, kein geklärtes Recht"],
+    laterSentence: "Ein KI-Lauf weicht in der Formulierung ab. Die Zahlen dürfen es nicht.",
     sentences: ["Beantworte nur, was gefragt wird", "dieses Papier gibt es nicht, wir schreiben es heute", "Unterschreibe kein Protokoll, das nicht stimmt"],
     folderText: FOLDER_FILES_DE.map((file) => readDe(`ordner/${file}`)).join("\n"),
     quote: /„([^“]+)“/g,
@@ -253,13 +343,15 @@ for (const key of KEYS) {
   const name = locale === "en" ? "ANSWERS.md" : "LOESUNGEN.md";
   if (!text.includes(key.count2)) fail(`${name} lacks "${key.count2}"`);
   if (!text.includes(key.count3)) fail(`${name} lacks "${key.count3}"`);
+  if (!text.includes(key.count4)) fail(`${name} lacks "${key.count4}"`);
   for (const sentence of key.sentences) if (!text.includes(sentence)) fail(`${name} lacks the briefing sentence "${sentence}"`);
   const briefing = /^> (.*)$/m.exec(text)?.[1] ?? "";
   expect(`${name} briefing words`, briefing.split(/\s+/).length <= 150, true);
-  const [s1, s2, s3, clock] = key.steps;
+  const [s1, s2, s3, s4, clock] = key.steps;
   const step1 = section(text, s1, s2);
   const step2 = section(text, s2, s3);
-  const step3 = section(text, s3, clock);
+  const step3 = section(text, s3, s4);
+  const step4 = section(text, s4, clock);
   const rowsOfTable = (block, pattern) => block.split("\n").filter((line) => pattern.test(line));
   const lineRows = rowsOfTable(step1, /^\| L\d\d \|/);
   expect(`${name} step 1 rows`, [lineRows.length, lineRows.every((row) => row.split("|").length === 7)], [13, true]);
@@ -286,6 +378,20 @@ for (const key of KEYS) {
     for (const quote of quotes) if (!key.folderText.includes(quote)) fail(`${name}: ${id} quote "${quote}" is not word for word in the folder`);
   }
   expect(`${name} statuses equal the oracle`, Object.fromEntries(analysis.lines.map((line) => [line.id, ["COVERED", "WEAK", "GAP"].indexOf(line.status)])), statusByLine[locale]);
+  // Step 4: the register. Every number of the section is the oracle's, and the recount agrees (checked above).
+  const reg = buildRegister(loadKitFiles(), REGISTER_TODAY);
+  const e07 = askPerson(reg, "E-07");
+  const countLine = locale === "en" ? `Count: ${reg.rows.length} rows, ${reg.expired.length} expired, ${reg.expiring.length} expiring, ${reg.missing.length} missing.` : `Zählung: ${reg.rows.length} Zeilen, ${reg.expired.length} abgelaufen, ${reg.expiring.length} läuft ab, ${reg.missing.length} fehlen.`;
+  if (!step4.includes(countLine)) fail(`${name}: step 4 must say "${countLine}"`);
+  if (!step4.includes(registerSummary(reg, locale))) fail(`${name}: step 4 must hold the summary line "${registerSummary(reg, locale)}"`);
+  if (!step4.includes(askKeyLine(e07, locale))) fail(`${name}: step 4 must hold the key line "${askKeyLine(e07, locale)}"`);
+  const paperRows = rowsOfTable(step4, /^\| (contract|registration|medical-exam|leave-decision|overtime-notice|safety-statement) \|/);
+  expect(`${name} step 4 papers`, Object.fromEntries(paperRows.map((row) => row.split("|").slice(1, 3).map((cell) => cell.trim()))), Object.fromEntries(Object.entries(reg.byPaper).map(([paper, n]) => [paper, String(n)])));
+  if (!new RegExp(`\\| ${key.total} \\| ${reg.rows.length} \\|`).test(step4)) fail(`${name}: the papers of step 4 must add up to ${reg.rows.length}`);
+  for (const entry of [...reg.expired, ...reg.expiring, ...reg.missing]) if (!step4.includes(entry.id)) fail(`${name}: step 4 must name ${entry.id}`);
+  for (const sentence of [key.approver, ...key.leaveNote, key.laterSentence, "2027-01-05", "2027-03-01"]) if (!step4.includes(sentence)) fail(`${name}: step 4 lacks "${sentence}"`);
+  for (const entry of reg.expiring) if (!step4.includes(entry.validUntil)) fail(`${name}: step 4 must print ${entry.validUntil}`);
+  if (/\b(sent|signed|approved) (it|the|a)\b/i.test(step4) && locale === "en") fail(`${name}: the sample of step 4 must not say that the AI sent, signed or approved something`);
   const newPapers = rowsOfTable(step3, /^\| L\d\d \| (?!COVERED|WEAK|GAP|BELEGT|SCHWACH|LÜCKE)/);
   expect(`${name} new papers`, newPapers.map((row) => row.split("|")[1].trim()), ["L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12"]);
   const clockText = section(text, clock);
@@ -303,8 +409,10 @@ const mustHave = [
   ["templates/new-paper-note.md", ["Signed by: ______", "The old paper stays untouched."]],
   ["templates/comment-on-minutes.md", ["at most four sentences", "Signed by: ______"]],
   ["notice_DIT_2026-11-23.md", ["22-0487/1", "27 November 2026, 09:00", "ZIN Art. 57, 54, 55", "ZIN is the general law since 1 Jan 2026", "Name one employee"]],
-  ["CHANGELOG.md", ["## 2026-11-07", "Rebuilt for workshop 5"]],
-  ["cases/case-A-labour.md", ["## Bottlenecks", "Sourced:", "This kit's story (invented)", "read on 2026-11-07", "Not legal advice"]],
+  ["CHANGELOG.md", ["## 2026-11-08", "## 2026-11-07", "Rebuilt for workshop 5", "Added Step 4"]],
+  ["cases/case-A-labour.md", ["## Bottlenecks", "## How often it comes and how it starts", "5,664 regular inspections in 2025 divided by 73,310 active enterprises in 2024 is, on paper, about one regular inspection a year for every 13 active enterprises. It is not the chance for one firm.", "Gradba-Pro was last inspected in spring 2024. Normally nobody opens the binders.", "Sourced:", "This kit's story (invented)", "read on 2026-11-07", "Not legal advice"]],
+  ["folder/folder-index.md", ["Last labour inspection: spring 2024 (invented). Nobody has opened the binders since."]],
+  ["templates/monthly-check.md", ["Once a month, on a fixed day, one named person does this.", "Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only.", "Never change an old row to hide a gap.", "a small database such as SQLite", "Dates only, no health content."]],
   ["cases/case-B-tax.md", ["Sourced:", "This kit's story (invented)", "ZDP Art. 47(2)", "Size thresholds unverified", "single vendors only, not a market average"]],
   ["cases/case-C-iso.md", ["Sourced:", "This kit's story (invented)", "IAF MD 5:2023", "not a certifier's tariff and not a market average"]],
 ];
@@ -313,8 +421,10 @@ for (const [file, needles] of [
   ["inspektor/verlangen_unterlagen_2026-11-27.md", ["Am Tag des Besuchs öffnen.", "Mo 30. November 2026", "ZIN Art. 53(1)", "E-02"]],
   ["inspektor/protokoll_beispiel_2026-11-27.md", ["Nach Schritt 3 öffnen.", "E-12", "erlässt einen Bescheid mit einer Frist zur Behebung"]],
   ["vorlagen/uebertragungsblatt.md", ["1. Wer prüft", "6. Dein Satz", "Stufe 4"]],
-  ["AENDERUNGEN.md", ["## 2026-11-07"]],
-  ["faelle/fall-A-arbeit.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)"]],
+  ["AENDERUNGEN.md", ["## 2026-11-08", "## 2026-11-07"]],
+  ["faelle/fall-A-arbeit.md", ["## Wie oft sie kommt und wie sie beginnt", "5.664 reguläre Inspektionen 2025, geteilt durch 73.310 aktive Unternehmen 2024, ergibt auf dem Papier etwa eine reguläre Inspektion im Jahr auf 13 aktive Unternehmen. Das ist nicht die Chance für eine einzelne Firma.", "Gradba-Pro wurde zuletzt im Frühjahr 2024 kontrolliert.", "Belegt:", "Die Geschichte dieses Kits (erfunden)"]],
+  ["ordner/ordner-index.md", ["Letzte Arbeitsinspektion: Frühjahr 2024 (erfunden). Seitdem hat niemand die Ordner geöffnet."]],
+  ["vorlagen/monatscheck.md", ["Einmal im Monat, an einem festen Tag, macht das eine benannte Person.", "Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro zuständiger Rolle. Nur ein Entwurf.", "Ändere nie eine alte Zeile, um eine Lücke zu verstecken.", "einer kleinen Datenbank wie SQLite", "Nur Daten, keine Gesundheitsinhalte."]],
   ["faelle/fall-B-steuer.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "Größenschwellen ungeprüft"]],
   ["faelle/fall-C-iso.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "IAF MD 5:2023"]],
 ]) for (const needle of needles) if (!readDe(file).includes(needle)) fail(`kit-de/${file} lacks "${needle}"`);

@@ -10,7 +10,8 @@ import { LINE_FILES, lineList, type LineDef } from "./lines";
 import { addDays } from "./dates";
 import { NOTICE_WORKING_DAYS } from "./clock-rule";
 import { kitText } from "./kit";
-import { analyseKit, daysBetween, FILE_NAMES, NOTICE_DATE, CHECK_DATE, weekdayOf, type LineId, type OracleResult } from "./oracle";
+import { analyseKit, daysBetween, FILE_NAMES, NOTICE_DATE, CHECK_DATE, REGISTER_EXPIRING_DAYS, weekdayOf, type LineId, type OracleResult } from "./oracle";
+import { registerDays, type RegisterDay } from "./register";
 
 export type ModelLocale = "de" | "en";
 
@@ -80,11 +81,6 @@ export interface PayRow {
   readonly daysLate: number;
 }
 
-export interface RecordColumn {
-  readonly id: string;
-  readonly meaning: string;
-}
-
 export interface Model {
   readonly locale: ModelLocale;
   readonly lines: readonly ModelLine[];
@@ -107,7 +103,10 @@ export interface Model {
   readonly attendance: PaperView;
   readonly statement: PaperView;
   readonly pay: PayRow;
-  readonly columns: readonly RecordColumn[];
+  /** The register on each of its three dates, in the order the beat offers them. */
+  readonly register: readonly RegisterDay[];
+  /** A paper counts as expiring when it runs out within this many days. */
+  readonly expiringDays: number;
   /** The new-paper note of the kit, as the visitor takes it home. */
   readonly noteTemplate: string;
   readonly wrong: { readonly over: number; readonly under: number };
@@ -119,14 +118,12 @@ const EDITION = {
     folder: (name: string) => `folder/${name}`,
     note: "templates/new-paper-note.md",
     statement: "folder/safety_statement_2019.md",
-    index: "folder/folder-index.md",
     names: { notices: "overtime_notices_folder.txt", statement: "safety_statement_2019.md", index: "folder-index.md" },
   },
   de: {
     folder: (name: string) => `de/ordner/${name}`,
     note: "de/vorlagen/neues-papier.md",
     statement: "de/ordner/sicherheitserklaerung_2019.md",
-    index: "de/ordner/ordner-index.md",
     names: { notices: "meldungen_ueberstunden_ordner.txt", statement: "sicherheitserklaerung_2019.md", index: "ordner-index.md" },
   },
 } as const;
@@ -154,16 +151,6 @@ function clockCases(): readonly ClockCase[] {
     const { calendar, workingBetween, papersDue } = daysBetween(NOTICE_DATE, visit);
     return { visit, weekday: visit === CHECK_DATE ? null : clockWeekday(visit), calendar, workingBetween, papersDue, papersDueWeekday: clockWeekday(papersDue), papersDueOnWorkday: weekdayOf(papersDue) >= 1 && weekdayOf(papersDue) <= 5 };
   });
-}
-
-function recordColumns(locale: ModelLocale): readonly RecordColumn[] {
-  const index = kitText(EDITION[locale].index);
-  const legend = index.slice(index.search(/^## (Legend|Legende)/m));
-  return legend
-    .split("\n")
-    .map((line) => /^\| (f\d\d) \| (.+) \|$/.exec(line))
-    .filter((match): match is RegExpExecArray => match !== null)
-    .map((match) => ({ id: match[1] as string, meaning: (match[2] as string).replace(/\s*\(.*\)\s*$/, "") }));
 }
 
 function attendancePaper(locale: ModelLocale, result: OracleResult): PaperView {
@@ -230,7 +217,8 @@ export function buildModel(locale: ModelLocale, result: OracleResult = analyseKi
     attendance: attendancePaper(locale, result),
     statement: statementPaper(locale),
     pay: payRow(locale, result),
-    columns: recordColumns(locale),
+    register: registerDays(),
+    expiringDays: REGISTER_EXPIRING_DAYS,
     noteTemplate: kitText(EDITION[locale].note),
     wrong: result.wrong,
   };

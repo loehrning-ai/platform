@@ -1,0 +1,2112 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-chain-1",
+  "slug": "audit-vorbereitung-mit-ki",
+  "locale": "en",
+  "prompt_id": "chain",
+  "take": 1,
+  "recorded_at": "2026-11-08T15:57:09Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.319",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands",
+    "--append-system-prompt",
+    "<project-instructions>"
+  ],
+  "prompt": "Read the three checklist excerpts. Make a table with one row per checklist question: line id, article, the paper that answers it, its owner, where it lives (use folder-index.md). Do not open the folder files yet. If a paper is not in the files, write NOT IN FILES. Use ids, no names. Answer with the table only.",
+  "kit_zip": "public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
+  "kit_files": [
+    {
+      "name": "cases/case-A-labour.md",
+      "path": "gradba-audit-kit/cases/case-A-labour.md",
+      "bytes": 5815,
+      "sha256": "5c4c1ce4a217c804f8009c8a77a5e7ecdee43cda867752ad23886c8faf2fc145"
+    },
+    {
+      "name": "checklists/checklist_labour_excerpt.md",
+      "path": "gradba-audit-kit/checklists/checklist_labour_excerpt.md",
+      "bytes": 2055,
+      "sha256": "0ff03e5bba0e37cbfe7bfef03a219f8a43d9e4b054cfaf2d5595711f00fc54c6"
+    },
+    {
+      "name": "checklists/checklist_records_excerpt.md",
+      "path": "gradba-audit-kit/checklists/checklist_records_excerpt.md",
+      "bytes": 419,
+      "sha256": "88777057727324731936c60176785a89d390a57604790ce432a51eb2f28534d8"
+    },
+    {
+      "name": "checklists/checklist_safety_excerpt.md",
+      "path": "gradba-audit-kit/checklists/checklist_safety_excerpt.md",
+      "bytes": 1307,
+      "sha256": "6ba918f646a4f8aad475eda980d5d9c43937af3d371532d5f9278d89bb8459b5"
+    },
+    {
+      "name": "folder/absences_2026.csv",
+      "path": "gradba-audit-kit/folder/absences_2026.csv",
+      "bytes": 168,
+      "sha256": "22c2a412549929eb782a8fd4ae5a702843fff145064a78f492a73dc433e663ac"
+    },
+    {
+      "name": "folder/attendance_2026-11.csv",
+      "path": "gradba-audit-kit/folder/attendance_2026-11.csv",
+      "bytes": 12880,
+      "sha256": "14fe32bf347e3eac60d1171fb6ae7a9bf24e113da2b1e1573100f381c1a9b83c"
+    },
+    {
+      "name": "folder/contracts_register_2026.csv",
+      "path": "gradba-audit-kit/folder/contracts_register_2026.csv",
+      "bytes": 1190,
+      "sha256": "b63cbd5c2d633fdcee32558ae31f8871d68ad3d3fae76551027f8e3286fd6ad8"
+    },
+    {
+      "name": "folder/employee_records_2026.csv",
+      "path": "gradba-audit-kit/folder/employee_records_2026.csv",
+      "bytes": 3512,
+      "sha256": "e6e76f7cc6560669facbcc381004770f7dd5b64b276dea9e34c14c8113874f4b"
+    },
+    {
+      "name": "folder/folder-index.md",
+      "path": "gradba-audit-kit/folder/folder-index.md",
+      "bytes": 2987,
+      "sha256": "09378d25f92947e589b7512f364daa618c3a65b875734fb2461d5c6265b0faa1"
+    },
+    {
+      "name": "folder/leave_decisions_2026.csv",
+      "path": "gradba-audit-kit/folder/leave_decisions_2026.csv",
+      "bytes": 535,
+      "sha256": "382ab7b4b9d632bcc1b0d292543e172c09578a91ca40944dd2ef6ed6de5b7a3a"
+    },
+    {
+      "name": "folder/medical_exams.csv",
+      "path": "gradba-audit-kit/folder/medical_exams.csv",
+      "bytes": 516,
+      "sha256": "5be40c99760d62560b085ff798e77cc55ff36ef1d7e1a86c20ebe1016a1f27f7"
+    },
+    {
+      "name": "folder/overtime_notices_folder.txt",
+      "path": "gradba-audit-kit/folder/overtime_notices_folder.txt",
+      "bytes": 310,
+      "sha256": "8f0c46bba88f659b743fce9f86de2bafb9ec359f557e9329fc81b7392dc3ceec"
+    },
+    {
+      "name": "folder/overtime_weekly_2026.csv",
+      "path": "gradba-audit-kit/folder/overtime_weekly_2026.csv",
+      "bytes": 755,
+      "sha256": "c0942e2078cc3fe88df4da31314637b82f09989bba130989f79a4f2f1b254170"
+    },
+    {
+      "name": "folder/payroll_lines_2026-07_to_10.csv",
+      "path": "gradba-audit-kit/folder/payroll_lines_2026-07_to_10.csv",
+      "bytes": 1971,
+      "sha256": "1038d5e56c7089e9d0b2bb7d742e0aceca48761d99abce2b8327f932cecee87e"
+    },
+    {
+      "name": "folder/payroll_runs_2026.csv",
+      "path": "gradba-audit-kit/folder/payroll_runs_2026.csv",
+      "bytes": 354,
+      "sha256": "1b416fc24cdc7684d6d10e9bfac7b169b27dea0a76a84ac4b84d47e5600630fc"
+    },
+    {
+      "name": "folder/registration_M1M2_2026.csv",
+      "path": "gradba-audit-kit/folder/registration_M1M2_2026.csv",
+      "bytes": 512,
+      "sha256": "762d96863676c02146f82d63c45adcd2be11c15c14c2b76f2365520466701494"
+    },
+    {
+      "name": "folder/safety_statement_2019.md",
+      "path": "gradba-audit-kit/folder/safety_statement_2019.md",
+      "bytes": 617,
+      "sha256": "958b770969cef33183fc7198fbc29b33daafa682501937fb785017f1be64e7a9"
+    },
+    {
+      "name": "folder/training_proofs_2026.csv",
+      "path": "gradba-audit-kit/folder/training_proofs_2026.csv",
+      "bytes": 222,
+      "sha256": "4efc22dfbe7ab9bef63701c14da988213a71c85393c8b9d9d465a74ef6c71378"
+    },
+    {
+      "name": "notice_DIT_2026-11-23.md",
+      "path": "gradba-audit-kit/notice_DIT_2026-11-23.md",
+      "bytes": 766,
+      "sha256": "ee6b59d32e61b54a807fe500c56e30c217c78c7b75beb7233164da7a20492db0"
+    },
+    {
+      "name": "templates/clock.csv",
+      "path": "gradba-audit-kit/templates/clock.csv",
+      "bytes": 206,
+      "sha256": "f38e6f63c32f61f291d5bcf6022e1349b5a5a71a6a8501d92f7182cd4a247ebb"
+    },
+    {
+      "name": "templates/evidence-index.csv",
+      "path": "gradba-audit-kit/templates/evidence-index.csv",
+      "bytes": 199,
+      "sha256": "d7f0d7ea12ab6afbaddb65396a47a4a075a5fbc2849b0589103167d0e796d8f2"
+    },
+    {
+      "name": "templates/new-paper-note.md",
+      "path": "gradba-audit-kit/templates/new-paper-note.md",
+      "bytes": 531,
+      "sha256": "b39e7d391b34897e62ce9b83989176657b5a287297f5f2977d1ca60f49e5519d"
+    }
+  ],
+  "instructions": {
+    "name": "project-instructions.md",
+    "path": "gradba-audit-kit/project-instructions.md",
+    "bytes": 2363,
+    "sha256": "88fd5d3791703d14dd69afba65185f277a06c00c195c32ce43d48d8dc85cb8af"
+  },
+  "skill": null,
+  "skill_name": "audit-nachweise",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 5184,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | grep -v '/.claude/' | sort",
+        "description": "List project files"
+      }
+    },
+    {
+      "t_ms": 9634,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 14620,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in checklists/*.md folder/folder-index.md; do echo \"=== $f\"; cat \"$f\"; done",
+        "description": "Read checklists and folder index"
+      }
+    },
+    {
+      "t_ms": 15372,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 24151,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": "| Line id"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": " | Article | Paper that"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": " answers it | Owner |"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": " Where it lives |\n|"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": "---|---|---|---|"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": "---|\n| L01 |"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": " ZRO Art. "
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": "15(2),(3) |"
+    },
+    {
+      "t_ms": 24152,
+      "kind": "text",
+      "chunk": " contracts | office manager ("
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "E-02) | contracts"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": " folder in the office, listed"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": " in contracts_register_2"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "026.csv |\n| L"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "02 | ZRO"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": " Art. 13(3),("
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "7) | registration M1/"
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "M2 | office manager ("
+    },
+    {
+      "t_ms": 24153,
+      "kind": "text",
+      "chunk": "E-02) | print outs"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": " from the Employment Agency"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": ", listed in registration_M"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": "1M2_2026.cs"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": "v |\n| L03 |"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": " Law on Records Art."
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": " 8(1) | employee"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": " records | office manager (E-"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": "02) | employee_records_"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": "2026.csv |\n|"
+    },
+    {
+      "t_ms": 24154,
+      "kind": "text",
+      "chunk": " L04 | ZRO"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " Art. 116(8)"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " | attendance sheets |"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " office manager (E-02)"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " | attendance_2026-"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": "11.csv |\n| L"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": "05 | ZRO"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " Art. 117(2) |"
+    },
+    {
+      "t_ms": 24155,
+      "kind": "text",
+      "chunk": " overtime hours | office man"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "ager (E-02) | over"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "time_weekly_2"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "026.csv |\n| L"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "06 | ZRO"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": " Art. 117(6) ("
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "offence listed in Art."
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": " 265(1)) | over"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "time notices | office manager"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": " (E-02) | the fol"
+    },
+    {
+      "t_ms": 24156,
+      "kind": "text",
+      "chunk": "der listing overtime_not"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "ices_folder.txt |"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "\n| L07 | Z"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "RO Art. 117("
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "5), 110(2) |"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": " payroll ("
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "pay calculation lines)"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": " | the outside accountant |"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": " the accountant's files, list"
+    },
+    {
+      "t_ms": 24157,
+      "kind": "text",
+      "chunk": "ed in payroll_lines"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "_2026-07_to_"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "10.csv |\n| L"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "08 | ZRO"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": " Art. 109(2),("
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "3) | payroll ("
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "pay runs) | the out"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "side accountant | the account"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "ant's files, listed in pay"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "roll_runs_2026"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": ".csv |\n| L09"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": " | ZRO Art"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": ". 137(1),(4"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": ") | leave decisions |"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": " office manager (E-02)"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": " | leave_decisions_"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": "2026.csv, absences"
+    },
+    {
+      "t_ms": 24158,
+      "kind": "text",
+      "chunk": " in absences_2026.cs"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": "v |\n| L10 |"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": " ZBZR Art."
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": " 11(1) | safety"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": " statement,"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": " chec"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": "ked against cont"
+    },
+    {
+      "t_ms": 24159,
+      "kind": "text",
+      "chunk": "racts | the person with the bin"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": "der (no job title is given);"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": " cont"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": "racts:"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": " office manager (E-02)"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": " | safety_statement_2"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": "019.md; contracts_"
+    },
+    {
+      "t_ms": 24160,
+      "kind": "text",
+      "chunk": "register_2026.csv |"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": "\n| L11 | Z"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": "BZR Art. 11"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": "(2) | opinion of"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": " the employee representative: NO"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": "T IN FILES | N"
+    },
+    {
+      "t_ms": 24161,
+      "kind": "text",
+      "chunk": "OT IN FILES |"
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": " NOT IN FILES"
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": " |\n| L12 | "
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": "ZBZR Art. "
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": "22(1) | health papers"
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": " | office manager (E-02"
+    },
+    {
+      "t_ms": 24162,
+      "kind": "text",
+      "chunk": ") | slips from the health cent"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": "re, listed in medical_"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": "exams.csv (dates"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": " only) |\n| L13 "
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": "| "
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": "ZBZR,"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": " article N"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": "OT IN FILES |"
+    },
+    {
+      "t_ms": 24163,
+      "kind": "text",
+      "chunk": " safety training proofs | office"
+    },
+    {
+      "t_ms": 24164,
+      "kind": "text",
+      "chunk": " manager (E-02) |"
+    },
+    {
+      "t_ms": 24164,
+      "kind": "text",
+      "chunk": " training_proofs_2026"
+    },
+    {
+      "t_ms": 24164,
+      "kind": "text",
+      "chunk": ".csv |"
+    }
+  ],
+  "final_text": "| Line id | Article | Paper that answers it | Owner | Where it lives |\n|---|---|---|---|---|\n| L01 | ZRO Art. 15(2),(3) | contracts | office manager (E-02) | contracts folder in the office, listed in contracts_register_2026.csv |\n| L02 | ZRO Art. 13(3),(7) | registration M1/M2 | office manager (E-02) | print outs from the Employment Agency, listed in registration_M1M2_2026.csv |\n| L03 | Law on Records Art. 8(1) | employee records | office manager (E-02) | employee_records_2026.csv |\n| L04 | ZRO Art. 116(8) | attendance sheets | office manager (E-02) | attendance_2026-11.csv |\n| L05 | ZRO Art. 117(2) | overtime hours | office manager (E-02) | overtime_weekly_2026.csv |\n| L06 | ZRO Art. 117(6) (offence listed in Art. 265(1)) | overtime notices | office manager (E-02) | the folder listing overtime_notices_folder.txt |\n| L07 | ZRO Art. 117(5), 110(2) | payroll (pay calculation lines) | the outside accountant | the accountant's files, listed in payroll_lines_2026-07_to_10.csv |\n| L08 | ZRO Art. 109(2),(3) | payroll (pay runs) | the outside accountant | the accountant's files, listed in payroll_runs_2026.csv |\n| L09 | ZRO Art. 137(1),(4) | leave decisions | office manager (E-02) | leave_decisions_2026.csv, absences in absences_2026.csv |\n| L10 | ZBZR Art. 11(1) | safety statement, checked against contracts | the person with the binder (no job title is given); contracts: office manager (E-02) | safety_statement_2019.md; contracts_register_2026.csv |\n| L11 | ZBZR Art. 11(2) | opinion of the employee representative: NOT IN FILES | NOT IN FILES | NOT IN FILES |\n| L12 | ZBZR Art. 22(1) | health papers | office manager (E-02) | slips from the health centre, listed in medical_exams.csv (dates only) |\n| L13 | ZBZR, article NOT IN FILES | safety training proofs | office manager (E-02) | training_proofs_2026.csv |",
+  "stats": {
+    "duration_ms": 22143,
+    "duration_api_ms": 16815,
+    "ttft_ms": 3148,
+    "num_turns": 3,
+    "output_tokens": 1243
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Write and run a check on the folder's CSV, txt and md files, skipping CSV lines that start with #. Print how many rows you read in each file. For every finding print id, rule and number: filing later than the day before the first shift; overtime weeks above 8 hours; overtime weeks without a notice; pay lines without an overtime line; attendance rows without start and end; pay later than 15 days after the period (a free day moves it); leave decisions missing or under 20 days (owed after 6 months); empty record fields; exams older than 24 months on 27 Nov 2026; job titles missing from the safety statement; training given later than the hire date. Then list each near miss you ruled out and why. End with one totals line: rows read, findings, near misses checked. Change no file. Answer in 16 lines at most.",
+      "timeline": [
+        {
+          "t_ms": 6437,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd folder && for f in *.csv *.txt safety_statement_2019.md; do echo \"=== $f ($(wc -l <$f) lines)\"; head -40 \"$f\"; done; cat ../cases/case-A-labour.md ../notice_DIT_2026-11-23.md | head -80",
+            "description": "Inspect folder files and case notes"
+          }
+        },
+        {
+          "t_ms": 9728,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 55583,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "mkdir -p \"$TMPDIR/chk\" && cat > \"$TMPDIR/chk/check.py\" <<'EOF'\nimport csv,sys,os\nfrom datetime import date,timedelta as td\nD=sys.argv[1]; CHECK=date(2026,11,27); P=date.fromisoformat\nrows={}\ndef rd(n):\n    with open(os.path.join(D,n),encoding='utf-8') as f:\n        r=list(csv.DictReader([l for l in f if not l.startswith('#')]))\n    rows[n]=len(r); return r\ndef txt(n):\n    with open(os.path.join(D,n),encoding='utf-8') as f: L=f.read().splitlines()\n    rows[n]=len(L); return L\ncon=rd('contracts_register_2026.csv'); reg={r['id']:P(r['date_filed']) for r in rd('registration_M1M2_2026.csv')}\not=rd('overtime_weekly_2026.csv'); pl=rd('payroll_lines_2026-07_to_10.csv'); att=rd('attendance_2026-11.csv')\nruns=rd('payroll_runs_2026.csv'); lv={r['id']:int(r['days']) for r in rd('leave_decisions_2026.csv')}\nrd('absences_2026.csv'); er=rd('employee_records_2026.csv'); med=rd('medical_exams.csv'); tr=rd('training_proofs_2026.csv')\nnotes=txt('overtime_notices_folder.txt'); ss=txt('safety_statement_2019.md')\nstart={r['id']:P(r['start_date']) for r in con}; F=[]; N=[]\ndef f(i,rule,n,d): F.append(f\"{i} | {rule} | {n} | {d}\")\nlate=[i for i in start if i not in reg or reg[i]>start[i]-td(1)]\neq=[i for i in start if reg.get(i)==start[i]-td(1)]\nif late: f('L02','M1/M2 filed by the day before start',len(late),','.join(f\"{i} filed {reg[i]} start {start[i]}\" for i in late))\nN+= [f\"L02 {i} filed exactly the day before start, passes\" for i in eq]\nover=[r for r in ot if float(r['overtime_hours'])>8]\nif over: f('L05','overtime at most 8 h a week',len({r['id'] for r in over}),f\"{len(over)} weeks of {','.join(sorted({r['overtime_hours']+'h' for r in over}))} for {','.join(sorted({r['id'] for r in over}))}\")\nnear=sorted({(r['id'],r['overtime_hours']) for r in ot if 7<=float(r['overtime_hours'])<=8})\nN+= [f\"L05 {i} {h} h every week, under 8, passes\" for i,h in near]\nsigned=[l for l in notes if '|' in l and l[:4].isdigit() and l[:4]=='2026' and not l.rstrip().endswith('Signed by:')]\nif ot and not signed: f('L06','signed written notice for each overtime period',len({r['id'] for r in ot}),f\"{len(ot)} weeks in 2026, no 2026 notice; the 2019 notice has a blank sign-off line\")\nnol=[r for r in pl if r['overtime_line_hours'].strip()=='' ]\notm={(r['id'],r['week_start'][:7]) for r in ot if float(r['overtime_hours'])>0}\nif nol: f('L07','overtime on its own pay line',len({r['id'] for r in nol}),f\"{len(nol)} pay lines blank for {','.join(sorted({r['id'] for r in nol}))}; months with overtime and blank line: {sum((r['id'],r['month']) in otm for r in nol)}\")\nmiss=[r for r in att if not (r['start'] and r['end']) and r['code']!='ABS']\nabs_=[r for r in att if r['code']]\nif miss: f('L04','start and end for every working day',len({r['id'] for r in miss}),f\"{len(miss)} rows tick only for {','.join(sorted({r['id'] for r in miss}))}\")\nif abs_: N.append(f\"L04 {len(abs_)} rows coded {','.join(sorted({r['code'] for r in abs_}))} for {','.join(sorted({r['id'] for r in abs_}))}, absence not a working day, passes\")\ndef lim(pe):\n    d=pe+td(15)\n    while d.weekday()>=5: d+=td(1)\n    return d\nlp=[r for r in runs if P(r['pay_date'])>lim(P(r['period_end']))]\nif lp: f('L08','pay within 15 days, free day moves it',len(lp),'; '.join(f\"period {r['period_end']} paid {r['pay_date']} limit {lim(P(r['period_end']))}\" for r in lp))\nN+= [f\"L08 period {r['period_end']}: day 15 is {(P(r['period_end'])+td(15)).strftime('%a')}, limit moves to {lim(P(r['period_end']))}, paid {r['pay_date']}, passes (weekends only, holiday list NOT IN FILES)\" for r in runs if (P(r['period_end'])+td(15)).weekday()>=5 and r not in lp]\ndef m6(s):\n    y,m=s.year,s.month+6; y+=(m-1)//12; m=(m-1)%12+1; return date(y,m,min(s.day,28))\nowed=[i for i in start if m6(start[i])<=CHECK]\nlb=[i for i in owed if lv.get(i,0)<20]\nif lb: f('L09','leave decision of at least 20 days after 6 months',len(lb),','.join(f\"{i} {'missing' if i not in lv else str(lv[i])+' days'}\" for i in lb))\nN+= [f\"L09 {i} starts {start[i]}, 6 months reached {m6(start[i])}, after the check date, not yet owed\" for i in start if m6(start[i])>CHECK]\nN+= [f\"L09 {i} exactly 20 days, passes\" for i in lv if lv[i]==20]\nemp=[(r['id'],k) for r in er for k in r if k!='id' and not r[k].strip()]\nif emp: f('L03','all 22 fields filled',len({i for i,_ in emp}),f\"{len(emp)} empty fields: \"+','.join(f\"{i} {k}\" for i,k in emp))\nc24=date(2024,11,27)\nold=[r['id'] for r in med if P(r['last_exam_date'])<c24]\nif old: f('L12','last exam at most 24 months old on 27 Nov 2026',len(old),f\"{','.join(old)} last exam {','.join(sorted({r['last_exam_date'] for r in med if r['id'] in old}))}\")\nN+= [f\"L12 {r['id']} exam {r['last_exam_date']}, {(P(r['last_exam_date'])-c24).days} days inside 24 months, passes\" for r in med if c24<=P(r['last_exam_date'])<c24+td(31)]\ntitles={l[2:].strip() for l in ss if l.startswith('- ')}\nmt=sorted({r['role'] for r in con}-titles)\nif mt: f('L10','safety statement names every job position',len(mt),f\"{','.join(mt)} missing ({sum(r['role'] in mt for r in con)} workers); {len({r['role'] for r in con})} titles in register\")\nnh=[i for i in start if start[i]>CHECK-td(365)]; td_={r['id']:r for r in tr}\nlt=[i for i in nh if i not in td_ or P(td_[i]['training_date'])>start[i]]\nif lt: f('L13','training on or before hire date',len(lt),','.join(lt))\nN+= [f\"L13 {i} trained on the hire day {start[i]}, passes\" for i in nh if i in td_ and P(td_[i]['training_date'])==start[i]]\nprint(\"ROWS \"+'; '.join(f\"{k} {v}\" for k,v in rows.items()))\nprint(\"FINDINGS (id | rule | number | detail)\"); [print(x) for x in F]\nprint(\"NEAR MISSES\"); [print(x) for x in N]\ncsvrows=sum(v for k,v in rows.items() if k.endswith('.csv'))\nprint(f\"TOTALS rows read {csvrows} (CSV data rows; plus {rows['overtime_notices_folder.txt']} txt and {rows['safety_statement_2019.md']} md lines), findings {len(F)}, near misses checked {len(N)}\")\nEOF\npython3 -I \"$TMPDIR/chk/check.py\" \"$PWD\"",
+            "description": "Run read-only compliance check on folder files"
+          }
+        },
+        {
+          "t_ms": 55925,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "Rows read: cont"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "racts 24, M"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "1/M2 24, over"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "time "
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "34, p"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "ay lines 96, attend"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "ance 432, pay runs"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": " 10, leave 21,"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": " absences 1, records 24"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": ", ex"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "ams 24, training 3;"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": " I"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": " also read the txt ("
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": "5 lines) and the md"
+        },
+        {
+          "t_ms": 67476,
+          "kind": "text",
+          "chunk": " (26 lines) but"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " did"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " not count them as rows."
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": "\nL02 |"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " M1/M2 filed"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " later"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " than the day before the"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " first shift | 1 |"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": " E"
+        },
+        {
+          "t_ms": 67477,
+          "kind": "text",
+          "chunk": "-05 was filed 2"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": "026-03-05 but started"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": " 2026-03-02."
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": "\nL05 | over"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": "time above 8 hours"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": " a week | 1 | E"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": "-07 wor"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": "ked 9 hours in each"
+        },
+        {
+          "t_ms": 67478,
+          "kind": "text",
+          "chunk": " of 17 weeks."
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": "\nL06 | no notice"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " for an overtime week"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " | 2 | E-07"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " and E-08 have"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " 34 overtime wee"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": "ks in 2026 and"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " there"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " is no 2026 notice"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": ";"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " the 2019 notice has"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": " a blank sign-off line"
+        },
+        {
+          "t_ms": 67479,
+          "kind": "text",
+          "chunk": ".\nL07 | pay"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " line has"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " no overtime line | 2"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " | E-07 and E"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "-08 have 8 p"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "ay lines with a blank over"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "time line, and all 8"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " fall in months with overt"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "ime.\nL04 | att"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "endance row without start and end |"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " 2 | E-12 "
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "and E-13 have 20"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " rows with only a tick"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": ".\nL08 | pay"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " later than 15 days after the"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " period | 1 | The period"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": " ending 2026-09-"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "30 was paid 2026"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "-10-19, but the lim"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "it was 2026-10-"
+        },
+        {
+          "t_ms": 67482,
+          "kind": "text",
+          "chunk": "15.\nL09 | le"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "ave decision missing or under "
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "20 days | 3 |"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " E-11 and E-19"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " have no decision, and E"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "-14 has"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " 18 days.\nL03"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " | empty record field | "
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "3 | 7 f"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "ields are empty: E-04"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " f05 "
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "and f06, E-15 "
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "f04,"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " f15 and f21, E"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "-21 f13 and f"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "19.\nL12 | ex"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "am older than 24 months on"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": " 27 Nov 2"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "026 | 4 | E"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "-02, E-06, E"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "-10 and E-16 "
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "had their last exam on 2"
+        },
+        {
+          "t_ms": 67483,
+          "kind": "text",
+          "chunk": "024-09-12.\nL"
+        },
+        {
+          "t_ms": 67484,
+          "kind": "text",
+          "chunk": "10 | job title missing from"
+        },
+        {
+          "t_ms": 67484,
+          "kind": "text",
+          "chunk": " the safety statement | 2"
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": " |"
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": " Order picker and forklift oper"
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": "ator are missing, which"
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": " aff"
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": "ects 8 workers."
+        },
+        {
+          "t_ms": 67485,
+          "kind": "text",
+          "chunk": "\nL13 | training later"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " than the hire date | 0"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " | No finding."
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "\nNear misses ruled out ("
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "1"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "to 4): E-08 "
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "has 7 over"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "time hours every week, under"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " the lim"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "it of 8. E-07"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " has 6 rows co"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": "ded ABS, which"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " are absence"
+        },
+        {
+          "t_ms": 67486,
+          "kind": "text",
+          "chunk": " days, not working days. For"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": " the period"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": " ending 2026-10-"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": "31, day 15 is"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": " a Sunday, so the"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": " limit moves to 2026"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": "-11-16,"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": " and p"
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": "ay came on that day ("
+        },
+        {
+          "t_ms": 67487,
+          "kind": "text",
+          "chunk": "I"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " mo"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "ved the"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " limit for weekends only;"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " a holiday list is NO"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "T IN FILES)."
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "\nNear misses ruled out"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " (5 to 8): E"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "-22 re"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "aches 6 months of"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " service on 2026-12-"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "01, after the check date, so"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " leave is not y"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "et owed. E-09 "
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "has exactly 20 days"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "."
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": " E-03's ex"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "am of 2024-12-"
+        },
+        {
+          "t_ms": 67489,
+          "kind": "text",
+          "chunk": "03 is 6 days in"
+        },
+        {
+          "t_ms": 67510,
+          "kind": "text",
+          "chunk": "side the 24 months. E"
+        },
+        {
+          "t_ms": 67560,
+          "kind": "text",
+          "chunk": "-05 and E-22 "
+        },
+        {
+          "t_ms": 67616,
+          "kind": "text",
+          "chunk": "were trained on their"
+        },
+        {
+          "t_ms": 67732,
+          "kind": "text",
+          "chunk": " hire day, which the"
+        },
+        {
+          "t_ms": 67732,
+          "kind": "text",
+          "chunk": " rule allows.\nTot"
+        },
+        {
+          "t_ms": 67748,
+          "kind": "text",
+          "chunk": "als: "
+        },
+        {
+          "t_ms": 67796,
+          "kind": "text",
+          "chunk": "693 rows read, 10"
+        },
+        {
+          "t_ms": 67846,
+          "kind": "text",
+          "chunk": " findings, 8 near"
+        },
+        {
+          "t_ms": 67896,
+          "kind": "text",
+          "chunk": " misses checked. The"
+        },
+        {
+          "t_ms": 67948,
+          "kind": "text",
+          "chunk": " script "
+        },
+        {
+          "t_ms": 67996,
+          "kind": "text",
+          "chunk": "ran from"
+        },
+        {
+          "t_ms": 68048,
+          "kind": "text",
+          "chunk": " my"
+        },
+        {
+          "t_ms": 68099,
+          "kind": "text",
+          "chunk": " temp folder,"
+        },
+        {
+          "t_ms": 68157,
+          "kind": "text",
+          "chunk": " and no file was"
+        },
+        {
+          "t_ms": 68257,
+          "kind": "text",
+          "chunk": " changed."
+        }
+      ],
+      "final_text": "Rows read: contracts 24, M1/M2 24, overtime 34, pay lines 96, attendance 432, pay runs 10, leave 21, absences 1, records 24, exams 24, training 3; I also read the txt (5 lines) and the md (26 lines) but did not count them as rows.\nL02 | M1/M2 filed later than the day before the first shift | 1 | E-05 was filed 2026-03-05 but started 2026-03-02.\nL05 | overtime above 8 hours a week | 1 | E-07 worked 9 hours in each of 17 weeks.\nL06 | no notice for an overtime week | 2 | E-07 and E-08 have 34 overtime weeks in 2026 and there is no 2026 notice; the 2019 notice has a blank sign-off line.\nL07 | pay line has no overtime line | 2 | E-07 and E-08 have 8 pay lines with a blank overtime line, and all 8 fall in months with overtime.\nL04 | attendance row without start and end | 2 | E-12 and E-13 have 20 rows with only a tick.\nL08 | pay later than 15 days after the period | 1 | The period ending 2026-09-30 was paid 2026-10-19, but the limit was 2026-10-15.\nL09 | leave decision missing or under 20 days | 3 | E-11 and E-19 have no decision, and E-14 has 18 days.\nL03 | empty record field | 3 | 7 fields are empty: E-04 f05 and f06, E-15 f04, f15 and f21, E-21 f13 and f19.\nL12 | exam older than 24 months on 27 Nov 2026 | 4 | E-02, E-06, E-10 and E-16 had their last exam on 2024-09-12.\nL10 | job title missing from the safety statement | 2 | Order picker and forklift operator are missing, which affects 8 workers.\nL13 | training later than the hire date | 0 | No finding.\nNear misses ruled out (1 to 4): E-08 has 7 overtime hours every week, under the limit of 8. E-07 has 6 rows coded ABS, which are absence days, not working days. For the period ending 2026-10-31, day 15 is a Sunday, so the limit moves to 2026-11-16, and pay came on that day (I moved the limit for weekends only; a holiday list is NOT IN FILES).\nNear misses ruled out (5 to 8): E-22 reaches 6 months of service on 2026-12-01, after the check date, so leave is not yet owed. E-09 has exactly 20 days. E-03's exam of 2024-12-03 is 6 days inside the 24 months. E-05 and E-22 were trained on their hire day, which the rule allows.\nTotals: 693 rows read, 10 findings, 8 near misses checked. The script ran from my temp folder, and no file was changed.",
+      "stats": {
+        "duration_ms": 67179,
+        "duration_api_ms": 80385,
+        "ttft_ms": 4254,
+        "num_turns": 3,
+        "output_tokens": 5817
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    },
+    {
+      "prompt": "Give every question COVERED, WEAK or GAP with the four tests and a quote. GAP: someone has no paper, or the record shows the rule broken. WEAK: the paper is there, only date or approval fails. For each WEAK and GAP name the new paper that closes it (never a change to an old one), its owner by role and day; today is 26 Nov 2026. Fill templates/evidence-index.csv. Write templates/clock.csv from the notice, the papers' date left open (the inspector sets it on the visit day). Write one page for the person present on 27 Nov: what happens, what they answer, what they do not sign. Draft new paper notes for E-11 and E-19 (leave) and the overtime notice from templates/new-paper-note.md. Leave every sign-off line empty. Answer with one line per question: line id, status, at most 8 words why. The rest goes in the files. At most 16 lines.",
+      "timeline": [
+        {
+          "t_ms": 3931,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd templates && for f in *; do echo \"=== $f\"; cat \"$f\"; done",
+            "description": "Read the templates"
+          }
+        },
+        {
+          "t_ms": 6585,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 80494,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd .. && mkdir -p drafts && cat > \"$TMPDIR/chk/fill.py\" <<'EOF'\nimport csv,sys,os\nfrom datetime import date,timedelta as td\nW=sys.argv[1]; F=lambda *p: os.path.join(W,*p)\ndef has(path,q):\n    with open(F(path),encoding='utf-8') as f: return q in f.read()\nN=date(2026,11,23); V=date(2026,11,27)\nwd=[N+td(i) for i in range(1,4)]; print('notice',N.strftime('%a'),'working days between',[d.isoformat() for d in wd if d.weekday()<5],'visit',V.strftime('%a'))\nT='2026-11-26'\nrows=[\n('L01','ZRO Art. 15(2),(3)','contracts register','office manager (E-02)','contracts folder in the office; contracts_register_2026.csv',[('folder/contracts_register_2026.csv','E-01,director,office,2022-12-26,40,yes')],'pass, no time limit in the line','pass, 24 of 24 rows say yes','pass, owner E-02, registers updated 25 Nov 2026','COVERED','',''),\n('L02','ZRO Art. 13(3),(7)','registration M1/M2','office manager (E-02)','registration_M1M2_2026.csv',[('folder/registration_M1M2_2026.csv','E-05,2026-03-05'),('folder/contracts_register_2026.csv','E-05,sales adviser,shop,2026-03-02')],'fail, E-05 filed 3 days after start','pass, 24 of 24 have a filing','pass, owner E-02','GAP','new dated statement on the late filing of E-05, kept with the print-out; signed by office manager (E-02)',T),\n('L03','Law on Records Art. 8(1)','employee records','office manager (E-02)','employee_records_2026.csv',[('folder/employee_records_2026.csv','E-04,9984509341952,1975,MK,Mogila,,,T03')],'not tested, no time limit in the line','fail, 7 empty fields for E-04, E-15, E-21','pass, owner E-02','GAP','new dated supplement sheet with the 7 missing fields for E-04, E-15, E-21; office manager (E-02)',T),\n('L04','ZRO Art. 116(8)','attendance sheets','office manager (E-02)','attendance_2026-11.csv',[('folder/attendance_2026-11.csv','E-12,2026-11-02,,,x,')],'fail, 20 working days with tick only','fail, E-12 and E-13 have no start and end','pass, owner E-02','GAP','new attendance sheet with start and end from the first shift on 27 Nov for E-12, E-13, plus a dated statement on the ticked days; office manager (E-02)',T),\n('L05','ZRO Art. 117(2)','overtime hours','office manager (E-02)','overtime_weekly_2026.csv',[('folder/overtime_weekly_2026.csv','E-07,2026-07-06,9')],'fail, 17 weeks of 9 h for E-07','pass, all overtime workers listed','pass, owner E-02','GAP','new dated overtime plan with at most 8 h a week for E-07; office manager (E-02), signed by the person authorised for the firm (role NOT IN FILES)',T),\n('L06','ZRO Art. 117(6), 265(1)','overtime notices','office manager (E-02)','overtime_notices_folder.txt',[('folder/overtime_notices_folder.txt','2026: (empty)'),('folder/overtime_notices_folder.txt','Signed by:')],'fail, no notice for 34 weeks in 2026','fail, E-07 and E-08 have no notice','fail, 2019 sign-off line blank','GAP','new overtime notice dated 26 Nov 2026 (draft in drafts/), office manager (E-02)',T),\n('L07','ZRO Art. 117(5), 110(2)','payroll lines','the outside accountant','payroll_lines_2026-07_to_10.csv',[('folder/payroll_lines_2026-07_to_10.csv','E-07,2026-07,166,')],'fail, 8 monthly lines Jul to Oct','fail, E-07 and E-08 blank overtime line','pass, owner the outside accountant','GAP','new dated pay calculation supplement for E-07, E-08 Jul to Oct with an own overtime line; the outside accountant',T),\n('L08','ZRO Art. 109(2),(3)','payroll runs','the outside accountant','payroll_runs_2026.csv',[('folder/payroll_runs_2026.csv','2026-09-30,2026-10-19')],'fail, paid 2026-10-19, limit 2026-10-15','pass, all 10 periods listed','pass, owner the outside accountant','GAP','new dated statement on the late September pay and a pay calendar with each limit; the outside accountant',T),\n('L09','ZRO Art. 137(1),(4)','leave decisions','office manager (E-02)','leave_decisions_2026.csv',[('folder/leave_decisions_2026.csv','E-14,18,2026-01-06')],'pass, decisions dated Jan to Sep 2026','fail, E-11 and E-19 none, E-14 18 days','pass, owner E-02','GAP','new leave decisions for E-11, E-19 (drafts in drafts/) and E-14 with at least 20 days; office manager (E-02)',T),\n('L10','ZBZR Art. 11(1)','safety statement','the person with the binder (no job title is given)','safety_statement_2019.md',[('folder/safety_statement_2019.md','The titles use the same words as the contracts register.'),('folder/contracts_register_2026.csv','E-07,order picker,hall'),('folder/contracts_register_2026.csv','E-20,forklift operator,hall')],'fail, dated 2019-03-14, before the 2023 change','fail, order picker and forklift operator missing (8 workers)','fail, no signer named','GAP','new safety statement naming all 10 titles; the person with the binder with the external OSH service','start 2026-11-26, end NOT IN FILES'),\n('L11','ZBZR Art. 11(2)','opinion of the employee representative','NOT IN FILES','safety_statement_2019.md',[('folder/safety_statement_2019.md','Opinion of the employee representative: on file for this text, dated 2019-03-20'),('folder/folder-index.md','Last change to the workplace: hall racking and forklift work were added in 2023.')],'fail, 2019-03-20 is before the 2023 change','pass, one opinion covers the text','fail, no named person','WEAK','new dated opinion of the employee representative on the new safety statement; employee representative (who is NOT IN FILES)','after L10, NOT IN FILES'),\n('L12','ZBZR Art. 22(1)','health papers','office manager (E-02)','medical_exams.csv',[('folder/medical_exams.csv','E-02,2024-09-12')],'fail, 4 exams older than 24 months','fail, E-02, E-06, E-10, E-16','pass, owner E-02','GAP','new exam slips from the health centre for E-02, E-06, E-10, E-16; office manager (E-02) books','booking 2026-11-26, exam date NOT IN FILES'),\n('L13','ZBZR, article NOT IN FILES','safety training proofs','office manager (E-02)','training_proofs_2026.csv',[('folder/training_proofs_2026.csv','E-19,2025-12-01,2025-11-28'),('folder/training_proofs_2026.csv','E-05,2026-03-02,2026-03-02'),('folder/training_proofs_2026.csv','E-22,2026-06-01,2026-06-01')],'pass, training on or before hire','pass, E-05, E-19, E-22 are the 3 new hires','pass, owner E-02, registers updated 25 Nov 2026','COVERED','',''),\n]\nbad=[(r[0],q) for r in rows for p,q in r[5] if not has(p,q)]\nprint('quotes not found:',bad)\nei=F('templates','evidence-index.csv')\nwith open(ei,encoding='utf-8') as f: head=[l for l in f if l.startswith('#')]\nwith open(ei,'w',encoding='utf-8',newline='') as f:\n    f.writelines(head); w=csv.writer(f)\n    w.writerow('line_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due'.split(','))\n    for r in rows: w.writerow(list(r[:5])+[' / '.join(f'\"{q}\" ({os.path.basename(p)})' for p,q in r[5])]+list(r[6:]))\nck=F('templates','clock.csv')\nwith open(ck,encoding='utf-8') as f: head=[l for l in f if l.startswith('#')]\nc=[('notice of a regular inspection received','date of the notice 22-0487/1','2026-11-23'),\n('name one employee present','notice: before the visit','2026-11-26'),\n('visit','notice: 27 November 2026 09:00','2026-11-27'),\n('notice period met','at least 3 working days, ZIN Art. 57(2),(3); working days between: '+' '.join(d.isoformat() for d in wd if d.weekday()<5),'2026-11-26'),\n('papers the inspector asks for','within 3 calendar days of the written request, ZIN Art. 53(1); the inspector can set the time, Art. 55','open, set on the visit day'),\n('documents taken','at most 15 days against a receipt, ZIN Art. 52(3)','open'),\n('act','at the latest 8 days after the minutes, ZIN Art. 68; if minutes on 27 Nov',(V+td(8)).isoformat()),\n('appeal','within 15 days of receipt of the act, ZIN Art. 70','open'),\n('labour fine halved','paid within 8 days of issue, not for a safety fine','open')]\nwith open(ck,'w',encoding='utf-8',newline='') as f:\n    f.writelines(head); w=csv.writer(f); w.writerow(['event','rule','date']); w.writerows(c)\nprint('written')\nEOF\npython3 -I \"$TMPDIR/chk/fill.py\" \"$PWD\"",
+            "description": "Verify quotes and fill evidence index and clock"
+          }
+        },
+        {
+          "t_ms": 80686,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 92960,
+          "kind": "tool_use",
+          "tool": "Write",
+          "input": {
+            "file_path": "drafts/briefing_person_present_2026-11-27.md",
+            "content": "Fictional training material, invented for the exercise. Not legal advice.\n\n# One page for the person present on 27 November 2026\n\nWritten on: 2026-11-26. The person present is named by the firm (NOT IN FILES who it is).\n\n## What happens\n1. The labour inspector, sometimes two (labour and safety), comes at 09:00 under notice 22-0487/1 of 2026-11-23 with three checklists: labour, safety at work, records.\n2. You may go with the inspector, get a copy of each checklist and add a reasoned comment (ZIN Art. 54, 65).\n3. The minutes are written on the spot and signed by both sides (ZIN Art. 65).\n4. Papers the inspector asks for in writing are due within 3 calendar days of the request, or by the time the inspector sets (ZIN Art. 53(1), 55). Write the date of each request on templates/clock.csv.\n5. Documents taken away: at most 15 days, and only against a receipt (ZIN Art. 52(3)). Ask for the receipt.\n6. The act comes at the latest 8 days after the minutes (ZIN Art. 68). An appeal runs 15 days from receipt and does not stop the act (Art. 70).\n\n## What you answer\n1. Show templates/evidence-index.csv and the paper it names. Answer only from the papers.\n2. Say plainly where the file shows a gap. Our own check found: one late M1/M2 filing (E-05), 7 empty record fields, tick-only attendance for 2 drivers, 17 weeks above 8 hours overtime (E-07), no 2026 overtime notice, no own overtime pay line for 2 workers, the September pay late, 3 leave decisions missing or short, 4 exams older than 24 months, 2 job titles missing from the safety statement, and a 2019 representative opinion older than the 2023 change.\n3. Where a new paper dated 26 Nov 2026 exists, show it as a new paper. Say the old paper was left as it was.\n4. If you do not know (for example real hours worked, who signs for the firm, who is the safety designee), say \"I do not know, I will find out\" and write the question down. Do not guess.\n\n## What you do not sign\n1. Minutes that do not match the facts. You may refuse and give your reason in writing (ZIN Art. 54, 65).\n2. Any paper with a date other than the day it is signed. No backdating, no change to an old record.\n3. The drafts in drafts/ for someone else. Each one counts only when the named owner dates and signs it.\n4. A receipt that does not list each document taken.\n\nSign-off line (person present, after reading): ______\n"
+          }
+        },
+        {
+          "t_ms": 92969,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 97154,
+          "kind": "tool_use",
+          "tool": "Write",
+          "input": {
+            "file_path": "drafts/new-paper-note_leave_E-11.md",
+            "content": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Decision on annual leave for 2026, worker E-11\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: leave_decisions_2026.csv has no row for E-11.\nWhat is known today: E-11 started on 2024-04-01 (contracts_register_2026.csv), so 6 months of service were reached on 2024-10-01. The record shows a leave entitlement of 20 days in field f18 (employee_records_2026.csv). No absence of E-11 is listed (absences_2026.csv).\nWhat is not known: the leave days E-11 has already taken in 2026, and the role that signs leave decisions for the firm.\nNext step: a written decision giving E-11 at least 20 working days of annual leave for 2026, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+          }
+        },
+        {
+          "t_ms": 97161,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 100827,
+          "kind": "tool_use",
+          "tool": "Write",
+          "input": {
+            "file_path": "drafts/new-paper-note_leave_E-19.md",
+            "content": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Decision on annual leave for 2026, worker E-19\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: leave_decisions_2026.csv has no row for E-19.\nWhat is known today: E-19 started on 2025-12-01 (contracts_register_2026.csv), so 6 months of service were reached on 2026-06-01. The record shows a leave entitlement of 20 days in field f18 (employee_records_2026.csv). No absence of E-19 is listed (absences_2026.csv).\nWhat is not known: the leave days E-19 has already taken in 2026, and the role that signs leave decisions for the firm.\nNext step: a written decision giving E-19 at least 20 working days of annual leave for 2026, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+          }
+        },
+        {
+          "t_ms": 100866,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 106224,
+          "kind": "tool_use",
+          "tool": "Write",
+          "input": {
+            "file_path": "drafts/new-paper-note_overtime_notice.md",
+            "content": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Written notice to the labour inspector on overtime in 2026 (ZRO Art. 117(6))\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: the notice folder lists \"2026: (empty)\", and its only notice, of 2019, has a blank sign-off line (overtime_notices_folder.txt).\nWhat is known today: E-07 worked 9 overtime hours in each of 17 weeks and E-08 worked 7 overtime hours in each of 17 weeks, in the weeks starting 2026-07-06 to 2026-10-26 (overtime_weekly_2026.csv). Both are order pickers in the hall (contracts_register_2026.csv). The 9 hours of E-07 are above the 8 hour weekly limit; this notice reports that fact and does not make it lawful.\nWhat is not known: whether any overtime was worked after the week starting 2026-10-26, and whether a notice was sent and not filed.\nNext step: send this notice, dated the day it is signed, to the labour inspector, and from now give a notice before each overtime period, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+          }
+        },
+        {
+          "t_ms": 106231,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 113252,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 113254,
+          "kind": "text",
+          "chunk": "L01 COV"
+        },
+        {
+          "t_ms": 113254,
+          "kind": "text",
+          "chunk": "ERED: all 24 have"
+        },
+        {
+          "t_ms": 113254,
+          "kind": "text",
+          "chunk": " cont"
+        },
+        {
+          "t_ms": 113254,
+          "kind": "text",
+          "chunk": "racts, each"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": " cop"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": "y handed over.\nL02"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": " GAP: E-05"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": "'s"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": " M1/M2 was fil"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": "ed after the start.\nL03"
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": " GAP: "
+        },
+        {
+          "t_ms": 113255,
+          "kind": "text",
+          "chunk": "7 f"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": "ields empty for"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": " E-04, E-15,"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": " E-21.\nL04 "
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": "GAP: E-12 "
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": "and E-13 att"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": "endance shows only ticks"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": ".\nL05 GAP"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": ": E-07 had 9"
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": " overtime hours in "
+        },
+        {
+          "t_ms": 113256,
+          "kind": "text",
+          "chunk": "17 weeks.\nL"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "06 GAP: no "
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "2026 not"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "ice; "
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "2019 not"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "ice is"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": " unsigned.\nL07"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": " GAP: E-07"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": " and E-08 have no"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": " overtime pay line."
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": "\nL08 GAP: September"
+        },
+        {
+          "t_ms": 113257,
+          "kind": "text",
+          "chunk": " pay came"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " after"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " the 15 day limit."
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "\nL09 GAP:"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " E-11 and E-19"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " have no decision; E-"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "14 has 18 days."
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "\nL10 GAP:"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " order picker and forklift oper"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "ator are"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " missing.\nL11 W"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "EAK: the 2019"
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": " opinion predates the "
+        },
+        {
+          "t_ms": 113258,
+          "kind": "text",
+          "chunk": "2023 change, and its"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " signer is unnamed."
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": "\nL12 GAP:"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " four exams are older than 24"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " months.\nL13 CO"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": "VERED: all"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " three new hires were trained by"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " their"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " hire day"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": ".\nAll qu"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": "otes were chec"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": "ked against"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " the files and"
+        },
+        {
+          "t_ms": 113259,
+          "kind": "text",
+          "chunk": " found."
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " I filled `templates/ev"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": "idence-index.csv`"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " and `templates/clock."
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": "csv`. The papers'"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " date there"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " is \"open, set on the vis"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": "it day\".\nThe one page for"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " the person present and"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " the three dra"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": "ft notes ("
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": "E-11, E-19,"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " overtime notice) are in"
+        },
+        {
+          "t_ms": 113260,
+          "kind": "text",
+          "chunk": " a"
+        },
+        {
+          "t_ms": 113261,
+          "kind": "text",
+          "chunk": " new `"
+        },
+        {
+          "t_ms": 113261,
+          "kind": "text",
+          "chunk": "drafts/` folder."
+        },
+        {
+          "t_ms": 113261,
+          "kind": "text",
+          "chunk": " Every sign-off line is"
+        },
+        {
+          "t_ms": 113261,
+          "kind": "text",
+          "chunk": " empty and"
+        },
+        {
+          "t_ms": 113261,
+          "kind": "text",
+          "chunk": " no folder file was changed."
+        }
+      ],
+      "final_text": "L01 COVERED: all 24 have contracts, each copy handed over.\nL02 GAP: E-05's M1/M2 was filed after the start.\nL03 GAP: 7 fields empty for E-04, E-15, E-21.\nL04 GAP: E-12 and E-13 attendance shows only ticks.\nL05 GAP: E-07 had 9 overtime hours in 17 weeks.\nL06 GAP: no 2026 notice; 2019 notice is unsigned.\nL07 GAP: E-07 and E-08 have no overtime pay line.\nL08 GAP: September pay came after the 15 day limit.\nL09 GAP: E-11 and E-19 have no decision; E-14 has 18 days.\nL10 GAP: order picker and forklift operator are missing.\nL11 WEAK: the 2019 opinion predates the 2023 change, and its signer is unnamed.\nL12 GAP: four exams are older than 24 months.\nL13 COVERED: all three new hires were trained by their hire day.\nAll quotes were checked against the files and found. I filled `templates/evidence-index.csv` and `templates/clock.csv`. The papers' date there is \"open, set on the visit day\".\nThe one page for the person present and the three draft notes (E-11, E-19, overtime notice) are in a new `drafts/` folder. Every sign-off line is empty and no folder file was changed.",
+      "stats": {
+        "duration_ms": 112587,
+        "duration_api_ms": 190008,
+        "ttft_ms": 3232,
+        "num_turns": 7,
+        "output_tokens": 11195
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "briefing_person_present_2026-11-27.md",
+      "path": "drafts/briefing_person_present_2026-11-27.md",
+      "bytes": 2356,
+      "sha256": "8a9ec92abaab8ba643e1563059fd16559d8ded6944309783a5ff291b62de532d",
+      "stored_as": "en-chain-1.briefing_person_present_2026-11-27.md",
+      "text": "Fictional training material, invented for the exercise. Not legal advice.\n\n# One page for the person present on 27 November 2026\n\nWritten on: 2026-11-26. The person present is named by the firm (NOT IN FILES who it is).\n\n## What happens\n1. The labour inspector, sometimes two (labour and safety), comes at 09:00 under notice 22-0487/1 of 2026-11-23 with three checklists: labour, safety at work, records.\n2. You may go with the inspector, get a copy of each checklist and add a reasoned comment (ZIN Art. 54, 65).\n3. The minutes are written on the spot and signed by both sides (ZIN Art. 65).\n4. Papers the inspector asks for in writing are due within 3 calendar days of the request, or by the time the inspector sets (ZIN Art. 53(1), 55). Write the date of each request on templates/clock.csv.\n5. Documents taken away: at most 15 days, and only against a receipt (ZIN Art. 52(3)). Ask for the receipt.\n6. The act comes at the latest 8 days after the minutes (ZIN Art. 68). An appeal runs 15 days from receipt and does not stop the act (Art. 70).\n\n## What you answer\n1. Show templates/evidence-index.csv and the paper it names. Answer only from the papers.\n2. Say plainly where the file shows a gap. Our own check found: one late M1/M2 filing (E-05), 7 empty record fields, tick-only attendance for 2 drivers, 17 weeks above 8 hours overtime (E-07), no 2026 overtime notice, no own overtime pay line for 2 workers, the September pay late, 3 leave decisions missing or short, 4 exams older than 24 months, 2 job titles missing from the safety statement, and a 2019 representative opinion older than the 2023 change.\n3. Where a new paper dated 26 Nov 2026 exists, show it as a new paper. Say the old paper was left as it was.\n4. If you do not know (for example real hours worked, who signs for the firm, who is the safety designee), say \"I do not know, I will find out\" and write the question down. Do not guess.\n\n## What you do not sign\n1. Minutes that do not match the facts. You may refuse and give your reason in writing (ZIN Art. 54, 65).\n2. Any paper with a date other than the day it is signed. No backdating, no change to an old record.\n3. The drafts in drafts/ for someone else. Each one counts only when the named owner dates and signs it.\n4. A receipt that does not list each document taken.\n\nSign-off line (person present, after reading): ______\n"
+    },
+    {
+      "name": "new-paper-note_leave_E-11.md",
+      "path": "drafts/new-paper-note_leave_E-11.md",
+      "bytes": 968,
+      "sha256": "3fd9ef864b02f35b06d41d61e97eb6e925d8bfdcd9fd4f7deccb94c4e0d0e3b7",
+      "stored_as": "en-chain-1.new-paper-note_leave_E-11.md",
+      "text": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Decision on annual leave for 2026, worker E-11\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: leave_decisions_2026.csv has no row for E-11.\nWhat is known today: E-11 started on 2024-04-01 (contracts_register_2026.csv), so 6 months of service were reached on 2024-10-01. The record shows a leave entitlement of 20 days in field f18 (employee_records_2026.csv). No absence of E-11 is listed (absences_2026.csv).\nWhat is not known: the leave days E-11 has already taken in 2026, and the role that signs leave decisions for the firm.\nNext step: a written decision giving E-11 at least 20 working days of annual leave for 2026, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+    },
+    {
+      "name": "new-paper-note_leave_E-19.md",
+      "path": "drafts/new-paper-note_leave_E-19.md",
+      "bytes": 968,
+      "sha256": "66851ee8f6558704c774b8aa1628b135133545949e3d9c00fa76fa57aecf58b0",
+      "stored_as": "en-chain-1.new-paper-note_leave_E-19.md",
+      "text": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Decision on annual leave for 2026, worker E-19\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: leave_decisions_2026.csv has no row for E-19.\nWhat is known today: E-19 started on 2025-12-01 (contracts_register_2026.csv), so 6 months of service were reached on 2026-06-01. The record shows a leave entitlement of 20 days in field f18 (employee_records_2026.csv). No absence of E-19 is listed (absences_2026.csv).\nWhat is not known: the leave days E-19 has already taken in 2026, and the role that signs leave decisions for the firm.\nNext step: a written decision giving E-19 at least 20 working days of annual leave for 2026, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+    },
+    {
+      "name": "new-paper-note_overtime_notice.md",
+      "path": "drafts/new-paper-note_overtime_notice.md",
+      "bytes": 1246,
+      "sha256": "93d02a9d2b658ee66eb273b969a1ef42024b65c0ecb50f8d96851ed6e5d0bea8",
+      "stored_as": "en-chain-1.new-paper-note_overtime_notice.md",
+      "text": "Fictional training material, invented for the exercise. Not legal advice.\n\nNew paper note. This is a draft form: it becomes a paper only when a named person dates and signs it.\n\nTitle: Written notice to the labour inspector on overtime in 2026 (ZRO Art. 117(6))\nWritten on: 2026-11-26\nBy: office manager (E-02)\n\nWhat was missing: the notice folder lists \"2026: (empty)\", and its only notice, of 2019, has a blank sign-off line (overtime_notices_folder.txt).\nWhat is known today: E-07 worked 9 overtime hours in each of 17 weeks and E-08 worked 7 overtime hours in each of 17 weeks, in the weeks starting 2026-07-06 to 2026-10-26 (overtime_weekly_2026.csv). Both are order pickers in the hall (contracts_register_2026.csv). The 9 hours of E-07 are above the 8 hour weekly limit; this notice reports that fact and does not make it lawful.\nWhat is not known: whether any overtime was worked after the week starting 2026-10-26, and whether a notice was sent and not filed.\nNext step: send this notice, dated the day it is signed, to the labour inspector, and from now give a notice before each overtime period, owner office manager (E-02), by 2026-11-26.\n\nThe old paper stays untouched. This note is a new paper with today's date.\n\nSigned by: ______\n"
+    },
+    {
+      "name": "clock.csv",
+      "path": "templates/clock.csv",
+      "bytes": 930,
+      "sha256": "e1a94ac53147c12c17c465c489ea8ab1bd70d8effaf126d41e85644ba72b1546",
+      "stored_as": "en-chain-1.clock.csv",
+      "text": "# Fictional training material, invented for the exercise.\n# Erfundenes Übungsmaterial, für die Übung erfunden.\nevent,rule,date\r\nnotice of a regular inspection received,date of the notice 22-0487/1,2026-11-23\r\nname one employee present,notice: before the visit,2026-11-26\r\nvisit,notice: 27 November 2026 09:00,2026-11-27\r\nnotice period met,\"at least 3 working days, ZIN Art. 57(2),(3); working days between: 2026-11-24 2026-11-25 2026-11-26\",2026-11-26\r\npapers the inspector asks for,\"within 3 calendar days of the written request, ZIN Art. 53(1); the inspector can set the time, Art. 55\",\"open, set on the visit day\"\r\ndocuments taken,\"at most 15 days against a receipt, ZIN Art. 52(3)\",open\r\nact,\"at the latest 8 days after the minutes, ZIN Art. 68; if minutes on 27 Nov\",2026-12-05\r\nappeal,\"within 15 days of receipt of the act, ZIN Art. 70\",open\r\nlabour fine halved,\"paid within 8 days of issue, not for a safety fine\",open\r\n"
+    },
+    {
+      "name": "evidence-index.csv",
+      "path": "templates/evidence-index.csv",
+      "bytes": 5620,
+      "sha256": "9c6ceed1930f1bf5f20df370376e7bffd7c6b143a8de005ae3ea813672b97d8f",
+      "stored_as": "en-chain-1.evidence-index.csv",
+      "text": "# Fictional training material, invented for the exercise.\n# Erfundenes Übungsmaterial, für die Übung erfunden.\nline_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due\r\nL01,\"ZRO Art. 15(2),(3)\",contracts register,office manager (E-02),contracts folder in the office; contracts_register_2026.csv,\"\"\"E-01,director,office,2022-12-26,40,yes\"\" (contracts_register_2026.csv)\",\"pass, no time limit in the line\",\"pass, 24 of 24 rows say yes\",\"pass, owner E-02, registers updated 25 Nov 2026\",COVERED,,\r\nL02,\"ZRO Art. 13(3),(7)\",registration M1/M2,office manager (E-02),registration_M1M2_2026.csv,\"\"\"E-05,2026-03-05\"\" (registration_M1M2_2026.csv) / \"\"E-05,sales adviser,shop,2026-03-02\"\" (contracts_register_2026.csv)\",\"fail, E-05 filed 3 days after start\",\"pass, 24 of 24 have a filing\",\"pass, owner E-02\",GAP,\"new dated statement on the late filing of E-05, kept with the print-out; signed by office manager (E-02)\",2026-11-26\r\nL03,Law on Records Art. 8(1),employee records,office manager (E-02),employee_records_2026.csv,\"\"\"E-04,9984509341952,1975,MK,Mogila,,,T03\"\" (employee_records_2026.csv)\",\"not tested, no time limit in the line\",\"fail, 7 empty fields for E-04, E-15, E-21\",\"pass, owner E-02\",GAP,\"new dated supplement sheet with the 7 missing fields for E-04, E-15, E-21; office manager (E-02)\",2026-11-26\r\nL04,ZRO Art. 116(8),attendance sheets,office manager (E-02),attendance_2026-11.csv,\"\"\"E-12,2026-11-02,,,x,\"\" (attendance_2026-11.csv)\",\"fail, 20 working days with tick only\",\"fail, E-12 and E-13 have no start and end\",\"pass, owner E-02\",GAP,\"new attendance sheet with start and end from the first shift on 27 Nov for E-12, E-13, plus a dated statement on the ticked days; office manager (E-02)\",2026-11-26\r\nL05,ZRO Art. 117(2),overtime hours,office manager (E-02),overtime_weekly_2026.csv,\"\"\"E-07,2026-07-06,9\"\" (overtime_weekly_2026.csv)\",\"fail, 17 weeks of 9 h for E-07\",\"pass, all overtime workers listed\",\"pass, owner E-02\",GAP,\"new dated overtime plan with at most 8 h a week for E-07; office manager (E-02), signed by the person authorised for the firm (role NOT IN FILES)\",2026-11-26\r\nL06,\"ZRO Art. 117(6), 265(1)\",overtime notices,office manager (E-02),overtime_notices_folder.txt,\"\"\"2026: (empty)\"\" (overtime_notices_folder.txt) / \"\"Signed by:\"\" (overtime_notices_folder.txt)\",\"fail, no notice for 34 weeks in 2026\",\"fail, E-07 and E-08 have no notice\",\"fail, 2019 sign-off line blank\",GAP,\"new overtime notice dated 26 Nov 2026 (draft in drafts/), office manager (E-02)\",2026-11-26\r\nL07,\"ZRO Art. 117(5), 110(2)\",payroll lines,the outside accountant,payroll_lines_2026-07_to_10.csv,\"\"\"E-07,2026-07,166,\"\" (payroll_lines_2026-07_to_10.csv)\",\"fail, 8 monthly lines Jul to Oct\",\"fail, E-07 and E-08 blank overtime line\",\"pass, owner the outside accountant\",GAP,\"new dated pay calculation supplement for E-07, E-08 Jul to Oct with an own overtime line; the outside accountant\",2026-11-26\r\nL08,\"ZRO Art. 109(2),(3)\",payroll runs,the outside accountant,payroll_runs_2026.csv,\"\"\"2026-09-30,2026-10-19\"\" (payroll_runs_2026.csv)\",\"fail, paid 2026-10-19, limit 2026-10-15\",\"pass, all 10 periods listed\",\"pass, owner the outside accountant\",GAP,new dated statement on the late September pay and a pay calendar with each limit; the outside accountant,2026-11-26\r\nL09,\"ZRO Art. 137(1),(4)\",leave decisions,office manager (E-02),leave_decisions_2026.csv,\"\"\"E-14,18,2026-01-06\"\" (leave_decisions_2026.csv)\",\"pass, decisions dated Jan to Sep 2026\",\"fail, E-11 and E-19 none, E-14 18 days\",\"pass, owner E-02\",GAP,\"new leave decisions for E-11, E-19 (drafts in drafts/) and E-14 with at least 20 days; office manager (E-02)\",2026-11-26\r\nL10,ZBZR Art. 11(1),safety statement,the person with the binder (no job title is given),safety_statement_2019.md,\"\"\"The titles use the same words as the contracts register.\"\" (safety_statement_2019.md) / \"\"E-07,order picker,hall\"\" (contracts_register_2026.csv) / \"\"E-20,forklift operator,hall\"\" (contracts_register_2026.csv)\",\"fail, dated 2019-03-14, before the 2023 change\",\"fail, order picker and forklift operator missing (8 workers)\",\"fail, no signer named\",GAP,new safety statement naming all 10 titles; the person with the binder with the external OSH service,\"start 2026-11-26, end NOT IN FILES\"\r\nL11,ZBZR Art. 11(2),opinion of the employee representative,NOT IN FILES,safety_statement_2019.md,\"\"\"Opinion of the employee representative: on file for this text, dated 2019-03-20\"\" (safety_statement_2019.md) / \"\"Last change to the workplace: hall racking and forklift work were added in 2023.\"\" (folder-index.md)\",\"fail, 2019-03-20 is before the 2023 change\",\"pass, one opinion covers the text\",\"fail, no named person\",WEAK,new dated opinion of the employee representative on the new safety statement; employee representative (who is NOT IN FILES),\"after L10, NOT IN FILES\"\r\nL12,ZBZR Art. 22(1),health papers,office manager (E-02),medical_exams.csv,\"\"\"E-02,2024-09-12\"\" (medical_exams.csv)\",\"fail, 4 exams older than 24 months\",\"fail, E-02, E-06, E-10, E-16\",\"pass, owner E-02\",GAP,\"new exam slips from the health centre for E-02, E-06, E-10, E-16; office manager (E-02) books\",\"booking 2026-11-26, exam date NOT IN FILES\"\r\nL13,\"ZBZR, article NOT IN FILES\",safety training proofs,office manager (E-02),training_proofs_2026.csv,\"\"\"E-19,2025-12-01,2025-11-28\"\" (training_proofs_2026.csv) / \"\"E-05,2026-03-02,2026-03-02\"\" (training_proofs_2026.csv) / \"\"E-22,2026-06-01,2026-06-01\"\" (training_proofs_2026.csv)\",\"pass, training on or before hire\",\"pass, E-05, E-19, E-22 are the 3 new hires\",\"pass, owner E-02, registers updated 25 Nov 2026\",COVERED,,\r\n"
+    }
+  ],
+  "edited": false
+}

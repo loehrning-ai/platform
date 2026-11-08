@@ -98,6 +98,38 @@ describe("W05 demo scenes", () => {
   });
 
   for (const locale of ["de", "en"] as const) {
+    it(`${locale}: the register counts the three dates as the oracle does and shows ids only`, () => {
+      const model = buildModel(locale);
+      const { container } = mount(locale);
+      act(() => clock.start());
+      go("register");
+      const radios = [...container.querySelectorAll('[role="radio"]')] as HTMLElement[];
+      expect(radios).toHaveLength(3);
+      radios.forEach((radio, index) => {
+        fireEvent.click(radio);
+        const day = model.register[index];
+        const stage = container.querySelector("[data-w05-register]");
+        expect(stage?.getAttribute("data-w05-register"), `${locale} ${index}`).toBe(day?.date);
+        expect(stage?.getAttribute("data-w05-register-state")).toBe("done");
+        const read = (count: string) => container.querySelector(`[data-w05-register-count="${count}"] dd`)?.textContent;
+        expect([read("rows"), read("expired"), read("expiring"), read("missing")]).toEqual([day?.rows, day?.expired.length, day?.expiring.length, day?.missing.length].map(String));
+        const result = container.querySelector("[data-w05-register-result]")?.textContent ?? "";
+        expect(result).toContain(String(day?.rows));
+        expect(result).not.toMatch(/\{\w+\}/);
+        const lists = container.querySelector(".w05-reg-lists")?.textContent ?? "";
+        for (const entry of [...(day?.expired ?? []), ...(day?.missing ?? [])]) expect(lists).toContain(entry.id);
+        expect(lists).not.toMatch(/[a-z]\. [A-Z][a-z]+ [A-Z][a-z]+/);
+      });
+      expect(container.querySelector("[data-w05-register-note]")?.textContent).toBe(COPY[locale].register.note);
+      // The result sentence of the exercise day is the literal line of the beat.
+      fireEvent.click(radios[0] as HTMLElement);
+      expect(container.querySelector("[data-w05-register-result]")?.textContent).toBe(
+        locale === "de" ? "98 Zeilen, 4 abgelaufen, 1 laufen ab, 4 fehlen." : "98 rows, 4 expired, 1 expiring, 4 missing.",
+      );
+    });
+  }
+
+  for (const locale of ["de", "en"] as const) {
     it(`${locale}: the clock reads short, unclear, fits for 25, 26 and 27 and prints no weekend date and no doubled stop`, () => {
       const { container } = mount(locale);
       act(() => clock.start());

@@ -1,7 +1,7 @@
 import type { TileMotion, Track } from "@/lib/demo-tiles/types";
 
 /*
- * W05 "Vier Tage", hub miniature motion. Every question starts linked to a
+ * W05 "Ordner und Register", hub miniature motion. Every question starts linked to a
  * paper (solid lines, 13/13). A test bar sweeps down row by row: where a test
  * fails the solid line gives way to a dashed one (weak), where the record
  * shows the rule broken the line gives way to a broken one (gap). Then the

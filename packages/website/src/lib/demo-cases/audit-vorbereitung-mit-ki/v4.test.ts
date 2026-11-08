@@ -22,7 +22,8 @@ import { SCENE } from "./claude-runs";
 vi.mock("server-only", () => ({}));
 
 const ROOT = join(__dirname, "../../../../../../scripts/workshop05");
-const startLines = (file: string) => readFileSync(join(ROOT, file), "utf8").split("\n");
+// The disclaimer, then the three rule lines under the heading "The rules in one minute"; blank lines and headings are skipped.
+const startLines = (file: string) => readFileSync(join(ROOT, file), "utf8").split("\n").filter((line) => line.trim() !== "" && !line.startsWith("## "));
 
 describe("beats and intro", () => {
   it("pass the v4 contract", () => {
@@ -31,6 +32,16 @@ describe("beats and intro", () => {
     expect(SHELL).toBe("v4");
     expect(TAKEHOME_IN_STAGE).toBe(true);
     expect(SCENE).toBeNull();
+  });
+
+  it("run in the order of the demo and replace the data level beat by the register", () => {
+    expect(BEATS.map((beat) => beat.id)).toEqual(["ordner", "uhr", "pruefungen", "roentgen", "register", "nachtrag", "ordner-eigen", "mitnehmen"]);
+    expect(BEATS.filter((beat) => beat.kind === "apply").map((beat) => beat.id)).toEqual(["register", "nachtrag"]);
+    const register = BEATS.find((beat) => beat.id === "register");
+    expect(register?.label).toEqual({ de: "Register bauen", en: "Build register" });
+    expect(register?.seconds).toBe(1.2);
+    expect(SCENE_MINUTES.register).toBe(1.5);
+    expect(SCENE_MINUTES.uhr).toBe(0.5);
   });
 
   it("name no kit file and add up to the minutes of the scenes", () => {
@@ -103,7 +114,8 @@ describe("the model the stage draws", () => {
       expect(model.checked).toBe(8);
       expect(model.people).toHaveLength(24);
       expect(model.cells).toHaveLength(13);
-      expect(model.columns.length).toBeGreaterThan(10);
+      expect(model.register).toHaveLength(3);
+      expect(model.expiringDays).toBe(60);
       expect(model.pay.daysLate).toBe(4);
       expect(model.wrong).toEqual({ over: 12, under: 9 });
     });

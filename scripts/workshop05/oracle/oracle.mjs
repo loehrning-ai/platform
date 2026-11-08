@@ -509,3 +509,186 @@ export function whatIf(files, kind) {
 export function counter(result) {
   return result.findings.length + result.warnings.length;
 }
+
+// ================================================================ the register (Step 4)
+// The register is a working file, never a record: one row per person and paper, dates only, ids not
+// names. Step 4 runs on "today" 26 Nov 2026 (one day before the visit); the checks of Steps 1 to 3 keep
+// CHECK_DATE. buildRegister and askPerson are pure like analyse(); recount.mjs re-implements both
+// without importing this file.
+
+/** The "today" of Step 4 and of the whole kit's exercise. */
+export const REGISTER_TODAY = "2026-11-26";
+/** The three dates of the register: the exercise day, and two later days the demo shows. */
+export const REGISTER_DATES = ["2026-11-26", "2027-01-05", "2027-03-01"];
+export const REGISTER_COLUMNS = ["person_id", "paper", "date", "valid_until", "owner", "where", "approved_by"];
+/** Fixed paper ids, the same in both editions and in recorded takes. */
+export const REGISTER_PAPERS = ["contract", "registration", "medical-exam", "leave-decision", "overtime-notice", "safety-statement"];
+export const REGISTER_MISSING = "MISSING";
+export const REGISTER_NOT_IN_FILES = "NOT IN FILES";
+export const REGISTER_EXPIRING_DAYS = 60;
+const FILE_OF_PAPER = {
+  contract: "contracts",
+  registration: "registration",
+  "medical-exam": "exams",
+  "leave-decision": "leave",
+  "overtime-notice": "notices",
+  "safety-statement": "statement",
+};
+const INDEX_ROW_OF_PAPER = {
+  contracts: "contract",
+  "registration M1/M2": "registration",
+  "health papers": "medical-exam",
+  "leave decisions": "leave-decision",
+  "overtime notices": "overtime-notice",
+  "safety statement": "safety-statement",
+};
+
+/** Owner by role per paper, read from the table of folder-index.md (a parenthesis such as "(E-02)" is cut off). */
+function ownersFromIndex(text) {
+  const owners = {};
+  for (const line of text.split("\n")) {
+    const cells = line.split("|").map((cell) => cell.trim());
+    const paper = INDEX_ROW_OF_PAPER[cells[1]];
+    if (paper) owners[paper] = cells[2].replace(/\s*\(.*\)\s*$/, "");
+  }
+  for (const paper of REGISTER_PAPERS) if (!owners[paper]) throw new Error(`oracle: folder-index.md names no owner for ${paper}`);
+  return owners;
+}
+
+/**
+ * The register on a day: rows (ordered by paper, then person id), the count per paper and the three lists.
+ * Rules: medical-exam is valid 24 months (valid_until = date plus 24 months); leave-decision has a row for
+ * everybody with 6 months of service on that day (and for anybody with a decision); overtime-notice has a
+ * row for everybody with overtime weeks; safety-statement is one row for the firm (FIRM). A paper that
+ * the files do not hold has MISSING in the date column. approved_by is NOT IN FILES in every row.
+ * expired: valid_until before the day; expiring: valid_until on the day or in the next 60 days.
+ */
+export function buildRegister(files, today = REGISTER_TODAY) {
+  const get = (key) => files[FILE_NAMES[key]];
+  const now = toDay(today);
+  const owner = ownersFromIndex(get("index"));
+  const contracts = table(get("contracts"));
+  const people = contracts.map((r) => r.id).sort();
+  const start = Object.fromEntries(contracts.map((r) => [r.id, r.start_date]));
+  const dateOf = {
+    contract: Object.fromEntries(contracts.map((r) => [r.id, r.start_date])),
+    registration: Object.fromEntries(table(get("registration")).map((r) => [r.id, r.date_filed])),
+    "medical-exam": Object.fromEntries(table(get("exams")).map((r) => [r.id, r.last_exam_date])),
+    "leave-decision": Object.fromEntries(table(get("leave")).map((r) => [r.id, r.decision_date])),
+  };
+  const overtimePeople = uniq(table(get("overtime")).map((r) => r.id)).sort();
+  const notices = get("notices")
+    .split("\n")
+    .map((line) => line.match(/^(\d{4}-\d{2}-\d{2}) \| ([^|]*) \| ([^|]*) \| Signed by:(.*)$/))
+    .filter(Boolean)
+    .map((m) => ({ date: m[1], ids: m[2].match(/E-\d\d/g) ?? [], signed: m[4].trim() !== "" }));
+  const noticeDate = (id) => notices.filter((n) => n.signed && n.ids.includes(id)).map((n) => n.date).sort().pop();
+  const statementDate = (get("statement").match(/^Dated: (\d{4}-\d{2}-\d{2})/m) ?? [])[1];
+  if (!statementDate) throw new Error("oracle: the safety statement has no date line");
+
+  const owed = (id) => toDay(addMonths(start[id], LEAVE_AFTER_MONTHS)) <= now;
+  const who = {
+    contract: people,
+    registration: people,
+    "medical-exam": people,
+    "leave-decision": people.filter((id) => owed(id) || dateOf["leave-decision"][id] !== undefined),
+    "overtime-notice": overtimePeople,
+    "safety-statement": ["FIRM"],
+  };
+  const rows = [];
+  for (const paper of REGISTER_PAPERS) {
+    for (const id of who[paper]) {
+      const date = paper === "overtime-notice" ? noticeDate(id) : paper === "safety-statement" ? statementDate : dateOf[paper][id];
+      rows.push({
+        person_id: id,
+        paper,
+        date: date ?? REGISTER_MISSING,
+        valid_until: paper === "medical-exam" && date ? addMonths(date, EXAM_MONTHS) : "",
+        owner: owner[paper],
+        where: FILE_NAMES[FILE_OF_PAPER[paper]],
+        approved_by: REGISTER_NOT_IN_FILES,
+      });
+    }
+  }
+  const byPaper = Object.fromEntries(REGISTER_PAPERS.map((paper) => [paper, rows.filter((r) => r.paper === paper).length]));
+  const entry = (r) => ({ id: r.person_id, paper: r.paper, ...(r.valid_until ? { validUntil: r.valid_until } : {}) });
+  const dated = rows.filter((r) => r.valid_until !== "");
+  return {
+    today,
+    rows,
+    byPaper,
+    expired: dated.filter((r) => toDay(r.valid_until) < now).map(entry),
+    expiring: dated.filter((r) => toDay(r.valid_until) >= now && toDay(r.valid_until) - now <= REGISTER_EXPIRING_DAYS).map(entry),
+    missing: rows.filter((r) => r.date === REGISTER_MISSING).map(entry),
+  };
+}
+
+/**
+ * The German edition names three folder files differently (the CSV files keep one name in both editions). A register row
+ * names the file as the learner's own folder does, so the German deck and the German answer agree.
+ */
+export const DE_FILE_NAMES = {
+  "overtime_notices_folder.txt": "meldungen_ueberstunden_ordner.txt",
+  "safety_statement_2019.md": "sicherheitserklaerung_2019.md",
+  "folder-index.md": "ordner-index.md",
+};
+
+/** The file name of a register row in one edition ("en" keeps the name the oracle holds). */
+export function registerFileName(name, locale = "en") {
+  return locale === "de" ? (DE_FILE_NAMES[name] ?? name) : name;
+}
+
+/** The second prompt of Step 4: what is on file for one person, what is missing, who owns each paper. */
+export function askPerson(register, id) {
+  const papers = register.rows
+    .filter((r) => r.person_id === id)
+    .map((r) => ({ paper: r.paper, date: r.date, owner: r.owner, onFile: r.date !== REGISTER_MISSING }));
+  return {
+    id,
+    onFile: papers.filter((p) => p.onFile).length,
+    missing: papers.filter((p) => !p.onFile).length,
+    missingPapers: papers.filter((p) => !p.onFile).map((p) => p.paper),
+    papers,
+  };
+}
+
+/** The literal summary line of Step 4: the take, the key line, the answer key and expected.json hold the same words. */
+export function registerSummary(register, locale = "en") {
+  const counts = [register.rows.length, register.expired.length, register.expiring.length, register.missing.length];
+  return locale === "de"
+    ? `register.csv: ${counts[0]} Zeilen, ${counts[1]} abgelaufen, ${counts[2]} läuft ab, ${counts[3]} fehlen`
+    : `register.csv: ${counts[0]} rows, ${counts[1]} expired, ${counts[2]} expiring, ${counts[3]} missing`;
+}
+
+/** The literal key line under the second prompt of Step 4. */
+export function askKeyLine(answer, locale = "en") {
+  return locale === "de" ? `Schlüssel: ${answer.onFile} vorhanden, ${answer.missing} fehlt.` : `Key: ${answer.onFile} on file, ${answer.missing} missing.`;
+}
+
+/** The register as CSV text: the header and one line per row (no comment lines, a run writes it this way). */
+export function registerCsv(register) {
+  return `${[REGISTER_COLUMNS.join(","), ...register.rows.map((r) => REGISTER_COLUMNS.map((c) => r[c]).join(","))].join("\n")}\n`;
+}
+
+/** The register block of expected.json. */
+export function registerExpected(files) {
+  const main = buildRegister(files, REGISTER_TODAY);
+  const e07 = askPerson(main, "E-07");
+  const byDate = Object.fromEntries(
+    REGISTER_DATES.map((day) => {
+      const r = buildRegister(files, day);
+      return [day, { rows: r.rows.length, expired: r.expired.length, expiring: r.expiring.length, missing: r.missing.length, expiringIds: r.expiring.map((x) => x.id) }];
+    }),
+  );
+  return {
+    today: REGISTER_TODAY,
+    rows: main.rows.length,
+    byPaper: main.byPaper,
+    expired: main.expired,
+    expiring: main.expiring,
+    missing: main.missing,
+    summary: { en: registerSummary(main, "en"), de: registerSummary(main, "de") },
+    askE07: { onFile: e07.onFile, missing: e07.missing, missingPaper: e07.missingPapers[0] },
+    byDate,
+  };
+}

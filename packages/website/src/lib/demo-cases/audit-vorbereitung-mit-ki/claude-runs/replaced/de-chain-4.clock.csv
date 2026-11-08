@@ -1,0 +1,11 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+event,rule,date
+Mitteilung erhalten (Aktenzeichen 22-0487/1),Datum der Mitteilung,2026-11-23
+Anwesende beschäftigte Person benennen,Mitteilung: vor dem Besuch eine anwesende Person nennen,2026-11-26
+Besuch der Inspektion,"Mitteilung: 27. November 2026 09:00 Uhr; mindestens 3 Arbeitstage nach der Mitteilung (ZIN Art. 57(2),(3))",2026-11-27
+Verlangte Papiere liefern,3 Kalendertage nach dem schriftlichen Verlangen (ZIN Art. 53(1)); Inspektor kann eigene Frist setzen (Art. 55),
+Mitgenommene Unterlagen zurück,höchstens 15 Tage gegen Quittung (ZIN Art. 52(3)),
+Bescheid,spätestens 8 Tage nach dem Tag des Protokolls (ZIN Art. 68),
+Widerspruch,15 Tage nach Erhalt des Bescheids; hemmt den Bescheid nicht (ZIN Art. 70),
+Arbeitsstrafe zur Hälfte,Zahlung binnen 8 Tagen nach Erlass; nicht im Arbeitsschutz,

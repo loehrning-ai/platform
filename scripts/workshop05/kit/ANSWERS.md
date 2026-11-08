@@ -130,11 +130,57 @@ New papers that close the WEAK and GAP lines (never a change to an old paper). T
 
 L01 and L13 need no new paper. Every signature line stays empty until a named person signs.
 
+Check by hand after the run: every sign-off line in the files Claude wrote is empty, and templates/clock.csv leaves the papers' date open (the inspector sets it on the visit day). If Claude filled one in, delete it. This is where the rule "a named person signs" becomes a step you do yourself.
+
 Sample briefing for the person who is present (at most 150 words):
 
 > Answer only what is asked. Name the paper. If there is no paper, say: there is no such paper, we are writing it today. Do not guess times or dates. Do not sign minutes that do not match what happened; write your reason beside the signature (ZIN Art. 54, 65).
 
 Count: 2 COVERED, 1 WEAK, 10 GAP.
+
+## Step 4
+
+Today is Thu 26 Nov 2026. Expected: a register.csv with 7 columns and 98 rows, a check.py and three lists. The register is a working file, never a record. It holds ids and dates only: no names, no health content, no pay values.
+
+| Paper | Rows | Date taken from | Valid until | Owner |
+|---|---|---|---|---|
+| contract | 24 | start_date in contracts_register_2026.csv | empty | office manager |
+| registration | 24 | date_filed in registration_M1M2_2026.csv | empty | office manager |
+| medical-exam | 24 | last_exam_date in medical_exams.csv | date plus 24 months | office manager |
+| leave-decision | 23 | decision_date in leave_decisions_2026.csv | empty | office manager |
+| overtime-notice | 2 | no signed notice for 2026, so MISSING | empty | office manager |
+| safety-statement | 1 | Dated: 2019-03-14 in safety_statement_2019.md (person id FIRM) | empty | the person with the binder |
+| Total | 98 | | | |
+
+The three lists for 26 Nov 2026:
+
+| List | Count | Who and what |
+|---|---|---|
+| Expired | 4 | E-02, E-06, E-10, E-16: medical-exam, valid until 2026-09-12 |
+| Expiring in the next 60 days | 1 | E-03: medical-exam, valid until 2026-12-03 |
+| Missing | 4 | E-11 and E-19: leave-decision. E-07 and E-08: overtime-notice |
+
+Count: 98 rows, 4 expired, 1 expiring, 4 missing.
+
+The summary line of a run reads: register.csv: 98 rows, 4 expired, 1 expiring, 4 missing
+
+Second prompt, which papers are on file for E-07: 4 on file (contract, registration, medical-exam, leave-decision), 1 missing (overtime-notice). The owner of each of the five papers is the office manager.
+
+Key: 4 on file, 1 missing.
+
+Every row has NOT IN FILES in approved_by, because no kit file names a person who approves a paper. That is the lesson of the register: the firm decides who approves.
+
+E-22 has no leave-decision row under this kit's rule. A decision is due once the full right starts after 6 months (ZRO Art. 139), and a proportional right exists before that (ZRO Art. 140). The 6-month rule is a teaching choice, not settled law: ask the practitioner. E-22 reaches 6 months on 2026-12-01.
+
+The same register on two later days:
+
+| Day | Rows | Expired | Expiring in the next 60 days | Missing |
+|---|---|---|---|---|
+| 2026-11-26 | 98 | 4 | 1 (E-03) | 4 |
+| 2027-01-05 | 99 | 5 | 2 (E-17, E-22) | 5 |
+| 2027-03-01 | 99 | 5 | 3 (E-17, E-20, E-22) | 5 |
+
+On 2027-01-05 E-22 is owed a leave decision and has none, so the row count and the missing list grow by one. An AI run will differ in wording. The counts must not.
 
 ## The clock
 

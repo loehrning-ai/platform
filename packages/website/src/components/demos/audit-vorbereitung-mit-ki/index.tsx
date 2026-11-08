@@ -1,7 +1,7 @@
 /*
  * DEMO · /demos/audit-vorbereitung-mit-ki (and /en/demos/audit-vorbereitung-mit-ki)
  * Workshop 05 "Audit-Vorbereitung mit KI" on the v4 shell (Glas): the case
- * "Four days", an invented firm in Bitola and the thirteen questions of the
+ * "Folder and register", an invented firm in Bitola and the thirteen questions of the
  * labour inspector. Server component: it picks the locale pack, computes the
  * model from the kit with the oracle (plain data, so the browser never loads
  * the kit or the oracle) and builds the take-home links, then renders the

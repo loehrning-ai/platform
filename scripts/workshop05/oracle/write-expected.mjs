@@ -8,14 +8,14 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { analyse } from "./oracle.mjs";
+import { analyse, registerExpected } from "./oracle.mjs";
 import { loadKitFiles } from "./load.mjs";
 import { SEED } from "./plan.mjs";
 
 const TARGET = path.join(path.dirname(fileURLToPath(import.meta.url)), "expected.json");
 
 /** The schema of expected.json: what the demo port and the tests compare against. */
-export function expectedFrom(result) {
+export function expectedFrom(result, files) {
   return {
     seed: SEED,
     checkDate: result.checkDate,
@@ -37,11 +37,14 @@ export function expectedFrom(result) {
       personIds: result.matrix.personIds,
       cells: result.matrix.cells,
     },
+    // Step 4: the register on 26 Nov 2026, the answer to the second prompt and the two later dates.
+    register: registerExpected(files),
   };
 }
 
 export function expectedText() {
-  return `${JSON.stringify(expectedFrom(analyse(loadKitFiles())), null, 2).replace(/\[\s+((?:-?\d+,\s+)*-?\d+)\s+\]/g, (_m, a) => `[${a.replace(/\s+/g, "")}]`)}\n`;
+  const files = loadKitFiles();
+  return `${JSON.stringify(expectedFrom(analyse(files), files), null, 2).replace(/\[\s+((?:-?\d+,\s+)*-?\d+)\s+\]/g, (_m, a) => `[${a.replace(/\s+/g, "")}]`)}\n`;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

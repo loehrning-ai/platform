@@ -15,6 +15,7 @@ function flaggedTokens(line) {
 test("kit file paths in recordings are not secrets", () => {
   for (const line of [
     '      "path": "vardar-audit-kit-de/ordner/infosec-policy_v3_FINAL.md",',
+    '      "path": "gradba-audit-kit/folder/registration_M1M2_2026.csv",',
     '    "source": "crvena-zemja-nachweisprobe/nachreichung/rechnung-EL-25-09.png",',
     "cat P/R6_Vorfaelle/incident-log_2026_extract-Tannwald.csv &",
     "write evidence_pack/00_evidence-index_INTERNAL.md << EOF",

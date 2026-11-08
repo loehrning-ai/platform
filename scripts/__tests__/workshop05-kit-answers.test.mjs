@@ -1,7 +1,8 @@
 /**
  * Workshop 05 answer key: the Count lines of ANSWERS.md and LOESUNGEN.md, the status per line equal in
- * both editions and equal to the oracle, the pinned lines 2 to 4 of the start block, the three
- * briefing sentences, and every quote of the key found word for word in the folder.
+ * both editions and equal to the oracle, the three pinned rule lines of the start file, the three
+ * briefing sentences, every quote of the key found word for word in the folder, and the Count line, the
+ * summary line and the E-07 key line of Step 4 (the register).
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -9,14 +10,15 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { FOLDER_FILES, FOLDER_FILES_DE } from "../workshop05/build-kit.mjs";
-import { analyse } from "../workshop05/oracle/oracle.mjs";
+import { analyse, askKeyLine, askPerson, buildRegister, registerSummary } from "../workshop05/oracle/oracle.mjs";
 import { loadKitFiles } from "../workshop05/oracle/load.mjs";
 
 const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../workshop05");
 const text = (dir, file) => readFileSync(path.join(HERE, dir, file), "utf8");
 const result = analyse(loadKitFiles());
+const register = buildRegister(loadKitFiles());
 
-// The pinned COPY strings of the demo (lines 2 to 4 of the start block, verbatim).
+// The pinned COPY strings of the demo (the three rule lines under the heading of the start file, verbatim).
 const COPY = {
   en: [
     "A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.",
@@ -38,10 +40,11 @@ const EDITIONS = [
     words: ["COVERED", "WEAK", "GAP"],
     count2: "Count: 10 findings, 8 checked, no problem.",
     count3: "Count: 2 COVERED, 1 WEAK, 10 GAP.",
+    count4: "Count: 98 rows, 4 expired, 1 expiring, 4 missing.",
     sentences: ["Answer only what is asked", "there is no such paper, we are writing it today", "Do not sign minutes that do not match"],
     folder: FOLDER_FILES.map((file) => text("kit/folder", file)).join("\n"),
     quote: /"([^"]+)"/g,
-    steps: ["## Step 1", "## Step 2", "## Step 3", "## The clock"],
+    steps: ["## Step 1", "## Step 2", "## Step 3", "## Step 4", "## The clock"],
   },
   {
     locale: "de",
@@ -50,10 +53,11 @@ const EDITIONS = [
     words: ["BELEGT", "SCHWACH", "LÜCKE"],
     count2: "Zählung: 10 Funde, 8 geprüft ohne Befund.",
     count3: "Zählung: 2 BELEGT, 1 SCHWACH, 10 LÜCKE.",
+    count4: "Zählung: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen.",
     sentences: ["Beantworte nur, was gefragt wird", "dieses Papier gibt es nicht, wir schreiben es heute", "Unterschreibe kein Protokoll, das nicht stimmt"],
     folder: FOLDER_FILES_DE.map((file) => text("kit-de/ordner", file)).join("\n"),
     quote: /„([^“]+)“/g,
-    steps: ["## Schritt 1", "## Schritt 2", "## Schritt 3", "## Die Fristen"],
+    steps: ["## Schritt 1", "## Schritt 2", "## Schritt 3", "## Schritt 4", "## Die Fristen"],
   },
 ];
 
@@ -81,8 +85,10 @@ for (const edition of EDITIONS) {
     assert.deepEqual(byLine, Object.fromEntries(result.lines.map((line) => [line.id, ["COVERED", "WEAK", "GAP"].indexOf(line.status)])));
   });
 
-  test(`${edition.locale}: the start block lines 2 to 4 equal the pinned COPY strings`, () => {
-    assert.deepEqual(edition.start.split("\n").slice(1, 4), COPY[edition.locale]);
+  test(`${edition.locale}: the three rule lines under the heading of the start file equal the pinned COPY strings`, () => {
+    const lines = edition.start.split("\n").filter((line) => line !== "");
+    assert.match(lines[1], /^## (The rules in one minute|Die Regeln in einer Minute)$/);
+    assert.deepEqual(lines.slice(2, 5), COPY[edition.locale]);
   });
 
   test(`${edition.locale}: the three briefing sentences are in the key`, () => {
@@ -96,6 +102,28 @@ for (const edition of EDITIONS) {
       assert.ok(quotes.length > 0, `${id} has no quote`);
       for (const quote of quotes) assert.ok(edition.folder.includes(quote), `${id}: ${quote}`);
     }
+  });
+}
+
+for (const edition of EDITIONS) {
+  const step4 = edition.key.slice(edition.key.indexOf(edition.steps[3]), edition.key.indexOf(edition.steps[4]));
+
+  test(`${edition.locale}: Step 4 holds the Count line, the summary line and the E-07 key line of the oracle`, () => {
+    assert.ok(step4.includes(edition.count4), edition.count4);
+    assert.ok(step4.includes(registerSummary(register, edition.locale)));
+    assert.ok(step4.includes(askKeyLine(askPerson(register, "E-07"), edition.locale)));
+    assert.equal(register.rows.length, 98);
+  });
+
+  test(`${edition.locale}: Step 4 names the six paper counts and every person of the three lists`, () => {
+    const counts = Object.fromEntries(
+      step4
+        .split("\n")
+        .filter((line) => /^\| (contract|registration|medical-exam|leave-decision|overtime-notice|safety-statement) \|/.test(line))
+        .map((line) => line.split("|").slice(1, 3).map((cell) => cell.trim())),
+    );
+    assert.deepEqual(counts, { contract: "24", registration: "24", "medical-exam": "24", "leave-decision": "23", "overtime-notice": "2", "safety-statement": "1" });
+    for (const entry of [...register.expired, ...register.expiring, ...register.missing]) assert.ok(step4.includes(entry.id), entry.id);
   });
 }
 

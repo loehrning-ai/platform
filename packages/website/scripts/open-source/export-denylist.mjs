@@ -568,7 +568,8 @@ export function hasBase64SecretShape(token) {
  * is 40+ characters of mixed case and digits, so the base64 heuristic would
  * flag it. It is exempt only when it has a folder separator, is followed at
  * once by a file extension, and every piece between "/", "-" and "_" is a
- * plain word, a number, or a word with trailing digits, at most 16 characters.
+ * plain word, a number, a word with trailing digits, or two or three
+ * letter-digit pairs such as "M1M2", at most 16 characters.
  * A random base64 secret switches character class inside almost every piece,
  * so it does not pass; explicit credential patterns are still checked.
  */
@@ -581,7 +582,7 @@ export function isReadableRelativeFilePath(token, after) {
       (piece) =>
         piece.length > 0 &&
         piece.length <= 16 &&
-        /^(?:[a-z]+[0-9]*|[A-Z]+[0-9]*|[A-Z][a-z]+[0-9]*|[0-9]+)$/.test(piece),
+        /^(?:[a-z]+[0-9]*|[A-Z]+[0-9]*|[A-Z][a-z]+[0-9]*|(?:[A-Z][0-9]+){2,3}|[0-9]+)$/.test(piece),
     );
 }
 

@@ -22,7 +22,7 @@ Books and accounting documents, invoices in and out with the VAT records, annual
 ## Bottlenecks
 Sourced: missing or unreliable books are punished twice, by a fine and by an estimate that is not in favour of the taxpayer (ZDP Art. 76). UJP may inspect existing data on devices that hold a storage medium, make a faithful copy and rebuild changed and deleted data (ZDP Art. 60-a(1),(2)).
 This kit's story (invented): cash register data and books that live with an outside accountant.
-Not measured: the calendar length of a control. About 30 inspector hours per control (2025, derived from 118,659 hours and 4,003 controls).
+Not measured: the calendar length of a control.
 
 ## Cost and what the law leaves open
 - ZDP fines, legal entity: EUR 300 to 1,000 (micro) up to EUR 3,000 to 10,000 (large); responsible person EUR 50 to 500. ZRGP Art. 21b: EUR 600 to 1,000 (micro), 1,500 to 2,000 (small), 3,000 to 6,000 (medium), 4,000 to 10,000 (large). Size thresholds unverified.

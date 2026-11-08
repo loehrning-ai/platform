@@ -6,7 +6,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { analyse, analyseKit, counter, daysBetween, kitFolderFiles, whatIf, WHAT_IFS, type OracleResult } from "./oracle";
+import { analyse, analyseKit, buildRegister, counter, daysBetween, kitFolderFiles, REGISTER_DATES, REGISTER_TODAY, whatIf, WHAT_IFS, type OracleResult } from "./oracle";
+import { registerDays } from "./register";
 
 const EXPECTED = JSON.parse(readFileSync(join(__dirname, "../../../../../../scripts/workshop05/oracle/expected.json"), "utf8"));
 
@@ -33,7 +34,7 @@ describe("W05 oracle port", () => {
   const result = analyseKit();
 
   it("reproduces expected.json from the kit files", () => {
-    const { seed: _seed, ...rest } = EXPECTED;
+    const { seed: _seed, register: _register, ...rest } = EXPECTED;
     expect(project(result)).toEqual(rest);
   });
 
@@ -62,5 +63,47 @@ describe("W05 oracle port", () => {
       return [kind, counter(analyse(run.files, run.options))];
     }));
     expect(counters).toEqual({ "e08-nine-hours": 11, "ticks-filled": 10, "no-free-day-move": 11 });
+  });
+
+  it("builds the register of expected.json for the exercise day", () => {
+    const register = buildRegister(kitFolderFiles(), REGISTER_TODAY);
+    const expected = EXPECTED.register;
+    expect(register.today).toBe(expected.today);
+    expect(register.rows).toHaveLength(expected.rows);
+    expect(register.byPaper).toEqual(expected.byPaper);
+    expect(register.expired).toEqual(expected.expired);
+    expect(register.expiring).toEqual(expected.expiring);
+    expect(register.missing).toEqual(expected.missing);
+  });
+
+  it("counts the register on the three dates of the demo as expected.json does", () => {
+    expect([...REGISTER_DATES]).toEqual(Object.keys(EXPECTED.register.byDate));
+    const days = registerDays();
+    expect(days.map((day) => day.date)).toEqual([...REGISTER_DATES]);
+    for (const day of days) {
+      const expected = EXPECTED.register.byDate[day.date];
+      expect({ rows: day.rows, expired: day.expired.length, expiring: day.expiring.length, missing: day.missing.length }, day.date).toEqual({
+        rows: expected.rows,
+        expired: expected.expired,
+        expiring: expected.expiring,
+        missing: expected.missing,
+      });
+      expect(day.expiring.map((entry) => entry.id), day.date).toEqual(expected.expiringIds);
+    }
+  });
+
+  it("pins the register numbers of the case", () => {
+    const [today, january, march] = registerDays();
+    expect([today?.rows, today?.expired.length, today?.expiring.length, today?.missing.length]).toEqual([98, 4, 1, 4]);
+    expect([january?.rows, january?.expired.length, january?.expiring.length, january?.missing.length]).toEqual([99, 5, 2, 5]);
+    expect([march?.rows, march?.expired.length, march?.expiring.length, march?.missing.length]).toEqual([99, 5, 3, 5]);
+    expect(today?.expired.map((entry) => entry.id)).toEqual(["E-02", "E-06", "E-10", "E-16"]);
+    expect(today?.missing.map((entry) => `${entry.id} ${entry.paper}`)).toEqual(["E-11 leave-decision", "E-19 leave-decision", "E-07 overtime-notice", "E-08 overtime-notice"]);
+  });
+
+  it("lists ids only: no register entry carries a name", () => {
+    for (const day of registerDays()) {
+      for (const entry of [...day.expired, ...day.expiring, ...day.missing]) expect(entry.id).toMatch(/^E-\d\d$/);
+    }
   });
 });

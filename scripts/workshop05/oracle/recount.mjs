@@ -3,7 +3,8 @@
  * An independent second implementation of the Workshop 05 check. It does NOT import oracle.mjs: it has
  * its own CSV splitter, counts days as Date.UTC differences, and reads the thresholds (25, 8, 15, 20,
  * 6, 24, 10) and the year of the last change to the workplace (2023) out of the checklist rule
- * sentences with regular expressions. recount() returns a compact result; compareWithExpected() sets it
+ * sentences with regular expressions. For Step 4 it counts the register again (recountRegister, recountAsk).
+ * recount() returns a compact result; compareWithExpected() sets it
  * against expected.json (the committed output of the oracle). Exit code 1 when they differ.
  *
  *   node scripts/workshop05/oracle/recount.mjs
@@ -90,6 +91,85 @@ function rules() {
 const CLOSE_CALL_DAYS = 3;
 const EXAM_SOON_DAYS = 30;
 const NEW_HIRE_MONTHS = 12;
+
+// ---- Step 4: the register, counted a second way (no import of oracle.mjs)
+const REGISTER_DAYS = ["2026-11-26", "2027-01-05", "2027-03-01"];
+export const REGISTER_COLUMNS = ["person_id", "paper", "date", "valid_until", "owner", "where", "approved_by"];
+
+/** Owner by role per paper, from the folder index: the matching row, the second cell, a parenthesis cut off. */
+function indexOwners() {
+  const patterns = [
+    ["contract", /^contracts$/],
+    ["registration", /^registration/],
+    ["medical-exam", /^health papers$/],
+    ["leave-decision", /^leave decisions$/],
+    ["overtime-notice", /^overtime notices$/],
+    ["safety-statement", /^safety statement$/],
+  ];
+  const owners = new Map();
+  for (const line of slurp("folder/folder-index.md").split("\n")) {
+    if (!line.startsWith("| ")) continue;
+    const [name, who] = line.split("|").slice(1).map((c) => c.trim());
+    for (const [paper, pattern] of patterns) if (pattern.test(name)) owners.set(paper, who.replace(/\s*\([^)]*\)\s*$/, ""));
+  }
+  if (owners.size !== patterns.length) throw new Error("recount: the folder index does not name six owners");
+  return owners;
+}
+
+/** The register on a day as CSV lines plus the counts; the rules of the answer key, written again. */
+export function recountRegister(day) {
+  const today = num(day);
+  const owners = indexOwners();
+  const staff = rowsOf("contracts_register_2026.csv");
+  const ids = staff.map((r) => r.get("id")).sort();
+  const startOf = new Map(staff.map((r) => [r.get("id"), r.get("start_date")]));
+  const column = (name, from) => new Map(rowsOf(name).map((r) => [r.get("id"), r.get(from)]));
+  const registered = column("registration_M1M2_2026.csv", "date_filed");
+  const examined = column("medical_exams.csv", "last_exam_date");
+  const decided = column("leave_decisions_2026.csv", "decision_date");
+  const worked = [...new Set(rowsOf("overtime_weekly_2026.csv").map((r) => r.get("id")))].sort();
+  const noticeLines = slurp("folder/overtime_notices_folder.txt")
+    .split("\n")
+    .filter((l) => /^\d{4}-\d{2}-\d{2} \|/.test(l))
+    .map((l) => l.split("|").map((c) => c.trim()));
+  const signedNotice = (id) =>
+    noticeLines
+      .filter(([, who, , sign]) => who.includes(id) && sign.replace(/^Signed by:\s*/, "") !== "")
+      .map(([date]) => date)
+      .sort()
+      .at(-1);
+  const dated = /^Dated: (\d{4}-\d{2}-\d{2})/m.exec(slurp("folder/safety_statement_2019.md"));
+  if (!dated) throw new Error("recount: no date in the safety statement");
+  const hasSixMonths = (id) => plusMonths(startOf.get(id), 6) <= today;
+
+  const lines = [];
+  const counts = new Map();
+  const expired = [];
+  const expiring = [];
+  const missing = [];
+  const put = (id, paper, date, file) => {
+    const until = paper === "medical-exam" && date ? iso(plusMonths(date, 24)) : "";
+    lines.push([id, paper, date ?? "MISSING", until, owners.get(paper), file, "NOT IN FILES"].join(","));
+    counts.set(paper, (counts.get(paper) ?? 0) + 1);
+    if (!date) missing.push(`${id} ${paper}`);
+    if (until && num(until) < today) expired.push(`${id} ${paper} ${until}`);
+    else if (until && num(until) - today <= 60) expiring.push(`${id} ${paper} ${until}`);
+  };
+  for (const id of ids) put(id, "contract", startOf.get(id), "contracts_register_2026.csv");
+  for (const id of ids) put(id, "registration", registered.get(id), "registration_M1M2_2026.csv");
+  for (const id of ids) put(id, "medical-exam", examined.get(id), "medical_exams.csv");
+  for (const id of ids.filter((x) => hasSixMonths(x) || decided.has(x))) put(id, "leave-decision", decided.get(id), "leave_decisions_2026.csv");
+  for (const id of worked) put(id, "overtime-notice", signedNotice(id), "overtime_notices_folder.txt");
+  put("FIRM", "safety-statement", dated[1], "safety_statement_2019.md");
+  return { lines, rows: lines.length, byPaper: Object.fromEntries(counts), expired, expiring, missing };
+}
+
+/** What is on file and what is missing for one person, out of the CSV lines of a recount. */
+export function recountAsk(register, id) {
+  const mine = register.lines.map((l) => l.split(",")).filter((cells) => cells[0] === id);
+  const gone = mine.filter((cells) => cells[2] === "MISSING");
+  return { onFile: mine.length - gone.length, missing: gone.length, missingPaper: gone[0]?.[1] };
+}
 
 export function recount() {
   const R = rules();
@@ -276,6 +356,23 @@ export function recount() {
     calendarDays: visit - num(NOTICE),
     workingDaysBetween: between,
     papersDue: iso(visit + 3),
+    register: (() => {
+      const main = recountRegister(REGISTER_DAYS[0]);
+      return {
+        rows: main.rows,
+        byPaper: main.byPaper,
+        expired: main.expired,
+        expiring: main.expiring,
+        missing: main.missing,
+        askE07: recountAsk(main, "E-07"),
+        byDate: Object.fromEntries(
+          REGISTER_DAYS.map((d) => {
+            const r = recountRegister(d);
+            return [d, { rows: r.rows, expired: r.expired.length, expiring: r.expiring.length, missing: r.missing.length, expiringIds: r.expiring.map((x) => x.split(" ")[0]) }];
+          }),
+        ),
+      };
+    })(),
   };
 }
 
@@ -310,6 +407,15 @@ export function compareWithExpected(rc, expected) {
   eq("calendarDays", rc.calendarDays, expected.days.calendar);
   eq("workingDaysBetween", rc.workingDaysBetween, expected.days.workingBetween);
   eq("papersDue", rc.papersDue, expected.days.papersDue);
+  const reg = expected.register;
+  const key = (x) => [x.id, x.paper, x.validUntil].filter(Boolean).join(" ");
+  eq("register rows", rc.register.rows, reg.rows);
+  eq("register byPaper", rc.register.byPaper, reg.byPaper);
+  eq("register expired", rc.register.expired, reg.expired.map(key));
+  eq("register expiring", rc.register.expiring, reg.expiring.map(key));
+  eq("register missing", rc.register.missing, reg.missing.map(key));
+  eq("register askE07", rc.register.askE07, reg.askE07);
+  eq("register byDate", rc.register.byDate, reg.byDate);
   return diffs;
 }
 

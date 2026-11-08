@@ -49,8 +49,8 @@ const KIT_TOP_DE = [
 ];
 
 /** The deck's main slides in order: their kind (the registry activity) and their minutes. */
-const DECK_ACTIVITY = ["listen", "listen", "vote", "listen", "vote", "vote", "vote", "listen", "listen", "listen", "listen", "listen", "vote", "do", "do", "listen", "write", "vote", "listen", "listen", "vote", "vote", "vote", "vote", "write", "vote"];
-const DECK_MINUTES = [1, 2, 2, 2, 3, 3, 3, 3, 3, 1, 3, 3, 3, 5, 7, 4, 6, 4, 2, 3, 3, 4, 4, 2, 6, 8];
+const DECK_ACTIVITY = ["listen", "listen", "vote", "listen", "vote", "do", "do", "do", "vote", "do", "vote", "do", "vote", "write", "vote"];
+const DECK_MINUTES = [1, 3, 4, 5, 9, 5, 6, 9, 5, 9, 6, 12, 4, 8, 4];
 const DECK_FILE = { de: "slides.html", en: "en/slides.html" } as const;
 
 /** The main slides of a built deck edition: label and minutes, read from its sections. */
@@ -103,12 +103,13 @@ function zipNames(path: string): string[] {
 
 describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   it("carries the title, teaser and question of the audit workshop", () => {
-    expect(en.title).toBe("Audit Preparation with AI: Four Days Until the Inspection");
-    expect(de.title).toBe("Audit-Vorbereitung mit KI: Vier Tage bis zur Kontrolle");
-    // The teaser names the three real checks, the four days and the papers prepared with AI.
-    // Three kinds of checks, not three real inspections that happened.
-    expect(en.summary).toMatch(/^Three kinds of checks in North Macedonia.+four days.+papers with AI/);
-    expect(de.summary).toMatch(/^Drei Arten von Kontrollen in Nordmazedonien.+vier Tagen.+Papiere mit KI/);
+    expect(en.title).toBe("Audit Preparation with AI: Organize Evidence and Find Gaps");
+    expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
+    // The head before the colon is the plakat head; the old story title lives only inside the story.
+    for (const workshop of both) expect(workshop.title).not.toMatch(/Vier Tage bis zur Kontrolle|Four Days Until/i);
+    // The teaser names the invented firm, the papers organized with AI and the register.
+    expect(en.summary).toMatch(/^An invented firm gets a visit.+papers with AI.+register/);
+    expect(de.summary).toMatch(/^Eine erfundene Firma bekommt Besuch.+Papiere mit KI.+Register/);
     for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
     // The lede opens with the letter on Monday.
     expect(de.lede).toMatch(/^Am Montag kommt ein Brief/);
@@ -116,13 +117,13 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     for (const workshop of both) {
       expect(workshop.description.length).toBeLessThanOrEqual(160);
       expect(workshop.stageExplainer.body).toContain("Claude");
-      expect(workshop.stageExplainer.body).toContain("Codex");
+      expect(workshop.stageExplainer.body).toMatch(/90/);
       expect(workshop.needs.join(" ")).toContain("Claude");
-      expect(workshop.needs.join(" ")).toContain("Codex");
+      expect(workshop.needs.join(" ")).not.toContain("Codex");
       expect(workshop.stageExplainer.facts).toHaveLength(3);
     }
-    expect(de.stageExplainer.facts).toEqual(["34 Dateien", "3 Schritte", "13 Fragen"]);
-    expect(en.stageExplainer.facts).toEqual(["34 files", "3 steps", "13 questions"]);
+    expect(de.stageExplainer.facts).toEqual(["36 Dateien", "4 Schritte", "13 Fragen"]);
+    expect(en.stageExplainer.facts).toEqual(["36 files", "4 steps", "13 questions"]);
     // The question is the deck's two hands-up prompts and its close, word for word.
     expect(en.question).toBe("Which check could come to you, and would your papers hold up?");
     expect(de.question).toBe("Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?");
@@ -149,19 +150,27 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = AUDIT_WORKSHOP[locale];
       const slides = deckSlides(locale);
-      expect(slides).toHaveLength(26);
+      expect(slides).toHaveLength(15);
       expect(workshop.agendaSource).toBe("deck");
-      expect(workshop.agenda).toHaveLength(26);
+      expect(workshop.agenda).toHaveLength(15);
       expect(workshop.agenda.map((item) => item.label)).toEqual(slides.map((slide) => slide.label));
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(slides.map((slide) => slide.minutes));
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(DECK_MINUTES);
       expect(workshop.agenda.map((item) => item.activity)).toEqual(DECK_ACTIVITY);
       expect(workshop.agenda.reduce((sum, item) => sum + item.minutes, 0)).toBe(90);
       expect(workshop.minutesLive).toBe(90);
-      expect(workshop.minutesSelfStudy).toBe(60);
+      expect(workshop.minutesSelfStudy).toBe(90);
       expect(workshop.agenda.every((item) => item.mode === undefined && item.description === undefined)).toBe(true);
     }
     expect(de.agenda.map((item) => item.activity)).toEqual(en.agenda.map((item) => item.activity));
+    // The room never listens for more than 15 minutes in a row; the longest run is the story, 5 minutes.
+    let run = 0;
+    let longest = 0;
+    for (const item of en.agenda) {
+      run = item.activity === "listen" ? run + item.minutes : 0;
+      longest = Math.max(longest, run);
+    }
+    expect(longest).toBeLessThanOrEqual(5);
   });
 
   it("lists the deck and the kit, and the kit's size is measured", () => {
@@ -199,11 +208,11 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(de.kit?.rulesHeading).toMatch(/Regeln 4 bis 7 von 13/);
   });
 
-  it.each(["de", "en"] as const)("matches the %s kit: 34 files, 11 entries, three steps, the statuses of the key", (locale) => {
+  it.each(["de", "en"] as const)("matches the %s kit: 36 files, 11 entries, four steps, the statuses and the register of the key", (locale) => {
     const edition = EDITION[locale];
     const workshop = AUDIT_WORKSHOP[locale];
     const names = zipNames(edition.zip).filter((name) => !name.endsWith("/"));
-    expect(names).toHaveLength(34);
+    expect(names).toHaveLength(36);
     expect(names.every((name) => name.startsWith(edition.root))).toBe(true);
     const top = new Set(names.map((name) => {
       const rest = name.slice(edition.root.length);
@@ -212,18 +221,19 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect([...top].sort()).toEqual([...edition.top].sort());
     expect(names).toContain(`${edition.root}claude/audit-nachweise/SKILL.md`);
     expect(readZipText(new Uint8Array(readFileSync(edition.zip)), `${edition.root}${edition.instructionsFile}`)).toBe(edition.instructions);
-    expect([...edition.start.matchAll(locale === "de" ? /^## Schritt \d/gm : /^## Step \d/gm)]).toHaveLength(3);
+    expect([...edition.start.matchAll(locale === "de" ? /^## Schritt \d/gm : /^## Step \d/gm)]).toHaveLength(4);
     const kit = workshop.kit!;
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
-    expect(kit.stats.map((stat) => stat.value)).toEqual(["34", "3", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
+    expect(kit.stats.map((stat) => stat.value)).toEqual(["36", "4", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
     // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
-    expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined]);
+    expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined, undefined]);
     expect(kit.steps[0]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
     expect(kit.steps[1]?.note).toMatch(locale === "de" ? /Sag es zuerst voraus/ : /Predict first/);
     const count = (text: string) => text.split(/\s+/).filter(Boolean).length;
+    // The register line of step 4 is the literal summary line of the key and the deck: DE needs 11 words.
     for (const step of kit.steps) {
-      for (const line of [step.input, step.action, step.output]) expect(count(line), line).toBeLessThanOrEqual(10);
+      for (const line of [step.input, step.action, step.output]) expect(count(line), line).toBeLessThanOrEqual(step.tag.endsWith("4") ? 11 : 10);
     }
     for (const item of kit.contents) expect(count(item.description), item.description).toBeLessThanOrEqual(6);
     expect(count(kit.fictionalNote)).toBeLessThanOrEqual(25);
@@ -233,7 +243,13 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     // The near-miss list of a run is not stable, so the page promises the key's 8 as a floor.
     expect(kit.steps[1]?.output).toMatch(locale === "de" ? /10 Funde und mindestens 8 geprüft ohne Befund/ : /10 findings and at least 8 checked with no problem/);
     expect(kit.steps[2]?.output).toMatch(locale === "de" ? /2 BELEGT, 1 SCHWACH, 10 LÜCKE/ : /2 COVERED, 1 WEAK, 10 GAP/);
-  });
+    // Step 4 prints the register's three counts exactly as the key and the deck do.
+    const registerLine = locale === "de" ? "register.csv mit 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen" : "register.csv with 98 rows, 4 expired, 1 expiring, 4 missing";
+    expect(kit.steps[3]?.output).toBe(registerLine);
+    expect(edition.key).toContain(locale === "de" ? "Zählung: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen." : "Count: 98 rows, 4 expired, 1 expiring, 4 missing.");
+    expect(kit.steps[3]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
+    expect(kit.stepsHeading).toBe(locale === "de" ? "Vier Schritte" : "Four steps");
+    expect(kit.contents.find((item) => item.name === (locale === "de" ? "START-HIER.md" : "START-HERE.md"))?.description).toMatch(locale === "de" ? /vier Prompts/ : /four prompts/);  });
 
   it("keeps the copy plain: no urgency, no boss, no score, no compliance claim", () => {
     const text = strings(both).join("\n");

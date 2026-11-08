@@ -19,6 +19,8 @@ export interface Fmt {
   day(iso: string, weekday: number | null): string;
   /** A day with its month in short form, for a choice button. */
   short(iso: string, weekday: number | null): string;
+  /** A day, the short month and the year, for a choice button: "26 Nov 2026" or "26. Nov. 2026". */
+  dayYear(iso: string): string;
   list(ids: readonly string[]): string;
   status(status: Status): string;
   /** The sentence of one finding, from its template and the oracle's numbers. */
@@ -50,6 +52,7 @@ export function formatter(copy: W05Copy): Fmt {
     date,
     weekday: weekdayWord,
     day: (iso, weekday) => (weekday === null ? String(parts(iso).day) : `${weekdayWord(weekday)} ${parts(iso).day}`),
+    dayYear: (iso) => `${shortDate(iso)} ${parts(iso).year}`,
     short: (iso, weekday) => (weekday === null ? shortDate(iso) : `${weekdayWord(weekday)} ${shortDate(iso)}`),
     list: (ids) => ids.join(", "),
     status: (status) => copy.status[status],

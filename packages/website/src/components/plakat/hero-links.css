@@ -16,7 +16,7 @@
 }
 .hk-tile { fill: var(--hk-paper); stroke: var(--hk-ink); stroke-width: 2.5; }
 .hk-tile-last { stroke: var(--hk-mid); stroke-width: 4; }
-.hk-day { fill: var(--hk-ink); }
+.hk-day { fill: var(--hk-mid); }
 .hk-sheet { fill: var(--hk-paper); stroke: var(--hk-ink); stroke-width: 2.5; }
 .hk-sheet-plain { stroke-width: 3.5; }
 .hk-bar { fill: none; stroke: var(--hk-ink); stroke-width: 6; stroke-linecap: butt; opacity: 0.32; }

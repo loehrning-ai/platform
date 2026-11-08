@@ -1,5 +1,6 @@
 /**
- * Workshop 05 deck, the words rule. Reads the BUILT pages (slides.html, en/slides.html), not deck-copy.json.
+ * Workshop 05 deck, the words rule. Reads the BUILT pages (slides.html, en/slides.html), not deck-copy.json, and builds the
+ * two chip variants of a recorded take in memory from synthetic recordings (fixture-takes.mjs).
  * For every main slide and every press state it counts the visible tokens (a token holds a letter or a digit; the classes
  * qd, qd-gloss, prompt-body, fig, out and focus are exempt; poll counters and numerals count), and asserts:
  *  - at most 25 per press state, in both languages, and the exact counts the deck was designed to (the printed counts);
@@ -10,8 +11,10 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { BANNED } from "../workshop05/deck-src/build.mjs";
+import { BANNED, buildEdition } from "../workshop05/deck-src/build.mjs";
 import { countDeck } from "../workshop05/deck-src/count-words.mjs";
+import { deckData } from "../workshop05/deck-src/data.mjs";
+import { fixtureTakes } from "../workshop05/deck-src/fixture-takes.mjs";
 import {
   LANGS,
   classesOf,
@@ -19,6 +22,7 @@ import {
   mainSlides,
   notesOf,
   readPage,
+  showsAt,
   slidesOf,
   stepsOf,
   tokensIn,
@@ -26,30 +30,28 @@ import {
   withoutNotes,
 } from "../workshop05/deck-src/deck-html.mjs";
 
-const ids = ["cover", "doors", "papers", "letter", "clock", "plan", "ghost", "neighbour", "table", "drawer", "tests", "status", "forward", "step1", "step2", "xray", "step3", "ladder", "judge", "visit", "after", "taxsheet", "isosheet", "notmeasured", "transfer", "close"];
+const ids = ["cover", "today", "why", "we", "letter", "kit", "step1", "step2", "tests", "step3", "ladder", "register", "other", "own", "close"];
 
-/** The counted words per press state of each main slide (the deck's design numbers; the rule is in the header). */
+/** The counted words per press state of each main slide (SPEC-2 2.3; the rule is in the header). A null is a press that shows a
+ *  recorded take: its count depends on the chip variant and is asserted by the fixture tests below. */
 const COUNTS = {
   en: {
-    cover: [11], doors: [2, 13, 25, 25], papers: [4, 1, 2, 9, 15, 5], letter: [13, 17, 20, 25, 23],
-    clock: [9, 25, 22, 24], plan: [7, 16, 22, 24, 21], ghost: [10, 10, 19, 24], neighbour: [10, 12, 16, 25, 19],
-    table: [16, 18, 25], drawer: [5, 21, 24], tests: [23, 25, 24], status: [5, 9, 15, 21],
-    forward: [4, 6, 6, 6, 22, 23], step1: [14, 25, 23], step2: [5, 23, 17, 15, 23], xray: [11, 9, 11, 15, 23, 24],
-    step3: [5, 23, 20, 16, 22, 23], ladder: [22, 25, 23, 22, 24, 20], judge: [14, 19, 24],
-    visit: [13, 12, 21, 17, 20, 25, 17], after: [15, 10, 19, 18], taxsheet: [25, 19, 23, 13, 25, 17, 23, 17],
-    isosheet: [25, 21, 24, 25, 18, 22], notmeasured: [6, 15], transfer: [5, 12, 14, 16, 18, 21, 24],
-    close: [25, 11, 5, 6],
+    cover: [12], today: [1, 1, 18, 24], why: [11, 11, 11, 11, 11, 19, 11, 19], we: [13, 16, 25, 24, 25],
+    letter: [7, 25, 22, 20, 25, 19, 18, 22], kit: [2, 2, 2, 24], step1: [17, 25, null], step2: [17, 19, null],
+    tests: [7, 7, 11, 23, 17], step3: [17, null, 14, 22], ladder: [6, 6, 6, 22, 25, 11],
+    register: [23, 17, null, 10, 17, 12, null, 22], other: [5, 20, 20], own: [5, 5, 17, 20, 24], close: [6, 24, 18],
   },
   de: {
-    cover: [10], doors: [2, 11, 23, 25], papers: [5, 1, 2, 7, 14, 4], letter: [12, 16, 19, 24, 19],
-    clock: [9, 25, 22, 23], plan: [8, 16, 22, 24, 21], ghost: [8, 8, 18, 23], neighbour: [9, 11, 15, 23, 19],
-    table: [17, 19, 25], drawer: [5, 20, 22], tests: [23, 21, 24], status: [5, 10, 16, 22],
-    forward: [5, 7, 7, 7, 23, 25], step1: [13, 24, 19], step2: [6, 24, 17, 17, 21], xray: [8, 6, 8, 12, 19, 19],
-    step3: [5, 23, 19, 16, 21, 21], ladder: [23, 24, 21, 18, 22, 18], judge: [14, 20, 23],
-    visit: [11, 10, 17, 15, 18, 23, 16], after: [15, 10, 15, 17], taxsheet: [23, 16, 24, 14, 25, 13, 22, 14],
-    isosheet: [25, 20, 22, 25, 17, 21], notmeasured: [5, 13], transfer: [5, 11, 13, 16, 18, 21, 24],
-    close: [23, 10, 3, 4],
+    cover: [10], today: [1, 1, 17, 23], why: [8, 8, 8, 8, 8, 19, 8, 15], we: [11, 16, 24, 25, 25],
+    letter: [7, 24, 22, 19, 25, 17, 13, 23], kit: [2, 2, 2, 22], step1: [16, 25, null], step2: [18, 20, null],
+    tests: [7, 7, 11, 22, 14], step3: [16, null, 14, 20], ladder: [5, 5, 5, 22, 25, 8],
+    register: [22, 16, null, 9, 18, 13, null, 24], other: [5, 19, 19], own: [5, 5, 16, 20, 21], close: [6, 24, 21],
   },
+};
+/** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
+const TAKE_COUNTS = {
+  en: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 17, 6: 17 } },
+  de: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 18, 6: 16 } },
 };
 
 const GLOSS_CAP = { en: 12, de: 14 };
@@ -60,13 +62,28 @@ const slide = (lang, id) => {
   return found;
 };
 const textAt = (lang, id, k) => countDeck(pages[lang]).find((s) => s.id === id).states[k].join(" ");
+/** Every visible word at a press, figure cells and recorded lines included (a qualifier may sit in a label on the drawing). */
+function visibleTextAt(html, id, k) {
+  const section = slidesOf(html).find((x) => x.attrs.id === id);
+  const out = [];
+  const walk = (n) => {
+    if (n.text !== undefined) return void out.push(n.text);
+    if (!n.tag || ["svg", "script", "style"].includes(n.tag) || !showsAt(n, k)) return;
+    (n.children ?? []).forEach(walk);
+  };
+  (section.children ?? []).forEach(walk);
+  return out.join(" ").replace(/\s+/g, " ");
+}
+/** Recorded lines are real model output: outside the banned-word and dash scans (our own copy is not). */
+const withoutTakes = (html) => html.replace(/<(p|tr)\b[^>]*data-take="[^"]*"[^>]*>[\s\S]*?<\/\1>/g, "");
+const counted = (html) => Object.fromEntries(countDeck(html).filter((x) => x.kind === "main").map((s) => [s.id, s.states.map((t) => t.length)]));
 
 for (const lang of LANGS) {
-  test(`${lang}: 26 main slides in the designed order, then five appendix slides`, () => {
+  test(`${lang}: 15 main slides in the designed order, then four appendix slides`, () => {
     const all = slidesOf(pages[lang]);
     assert.deepEqual(mainSlides(pages[lang]).map((s) => s.attrs.id), ids);
-    assert.deepEqual(all.slice(26).map((s) => s.attrs.id), ["a1", "a2", "a3", "a4", "a5"]);
-    assert.ok(all.slice(26).every((s) => s.attrs["data-kind"] === "appendix"));
+    assert.deepEqual(all.slice(15).map((s) => s.attrs.id), ["a1", "a2", "a3", "a4"]);
+    assert.ok(all.slice(15).every((s) => s.attrs["data-kind"] === "appendix"));
   });
 
   test(`${lang}: at most 25 counted words in every press state of every main slide`, () => {
@@ -76,9 +93,33 @@ for (const lang of LANGS) {
   });
 
   test(`${lang}: the counted words per press state are the designed counts, slide by slide`, () => {
-    const counted = Object.fromEntries(countDeck(pages[lang]).filter((x) => x.kind === "main").map((s) => [s.id, s.states.map((t) => t.length)]));
-    assert.deepEqual(Object.keys(counted), ids);
-    for (const id of ids) assert.deepEqual(counted[id], COUNTS[lang][id], `${lang} ${id}`);
+    const got = counted(pages[lang]);
+    assert.deepEqual(Object.keys(got), ids);
+    for (const id of ids) {
+      const want = COUNTS[lang][id];
+      assert.equal(got[id].length, want.length, `${lang} ${id}: press count`);
+      want.forEach((n, k) => {
+        if (n === null) return;
+        assert.equal(got[id][k], n, `${lang} ${id} press ${k}`);
+      });
+    }
+  });
+
+  test(`${lang}: both chip variants of a recorded take stay within 25 counted words and the designed counts`, () => {
+    const d = deckData(lang);
+    const same = counted(buildEdition(lang, d, fixtureTakes(lang, { d })));
+    const differs = counted(buildEdition(lang, d, fixtureTakes(lang, { d, differs: true })));
+    for (const [id, presses] of Object.entries(TAKE_COUNTS[lang])) {
+      for (const [k, printed] of Object.entries(presses)) {
+        assert.equal(same[id][k], printed, `${lang} ${id} press ${k}: the take that matches the key`);
+        assert.ok(differs[id][k] <= 25, `${lang} ${id} press ${k}: ${differs[id][k]} words when the take differs from the key`);
+      }
+    }
+    for (const html of [counted(buildEdition(lang, d, fixtureTakes(lang, { d })))]) {
+      for (const [id, states] of Object.entries(html)) states.forEach((n, k) => assert.ok(n <= 25, `${lang} ${id} press ${k}: ${n}`));
+    }
+    // outside the take presses nothing changes
+    for (const id of ids) COUNTS[lang][id].forEach((n, k) => n !== null && assert.equal(same[id][k], n, `${lang} ${id} press ${k} with takes`));
   });
 
   test(`${lang}: appendix slides have at most 60 counted words`, () => {
@@ -88,28 +129,32 @@ for (const lang of LANGS) {
   });
 
   test(`${lang}: exempt classes keep their caps (gloss, prompt, figure cells, output lines, focus)`, () => {
-    for (const section of slidesOf(pages[lang])) {
-      const id = section.attrs.id;
-      const main = section.attrs["data-kind"] === "main";
-      let promptsSeen = 0;
-      for (let k = 0; k <= stepsOf(section); k += 1) {
-        for (const g of visibleMatches(section, k, (n) => hasClass(n, "qd-gloss"))) {
-          assert.ok(tokensIn(g).length <= GLOSS_CAP[lang], `${lang} ${id} press ${k}: gloss of ${tokensIn(g).length} words`);
+    for (const html of [pages[lang], buildEdition(lang, deckData(lang), fixtureTakes(lang))]) {
+      for (const section of slidesOf(html)) {
+        const id = section.attrs.id;
+        const main = section.attrs["data-kind"] === "main";
+        let promptsSeen = 0;
+        for (let k = 0; k <= stepsOf(section); k += 1) {
+          for (const g of visibleMatches(section, k, (n) => hasClass(n, "qd-gloss"))) {
+            assert.ok(tokensIn(g).length <= GLOSS_CAP[lang], `${lang} ${id} press ${k}: gloss of ${tokensIn(g).length} words`);
+          }
+          const prompts = visibleMatches(section, k, (n) => hasClass(n, "prompt-body"));
+          promptsSeen = Math.max(promptsSeen, prompts.length);
+          for (const p of prompts) assert.ok(tokensIn(p).length <= 150, `${lang} ${id}: prompt of ${tokensIn(p).length} words`);
+          const figs = visibleMatches(section, k, (n) => hasClass(n, "fig"));
+          assert.ok(figs.length <= 15, `${lang} ${id} press ${k}: ${figs.length} figure cells`);
+          const outs = visibleMatches(section, k, (n) => hasClass(n, "out"));
+          // a recorded answer is at most 16 recorded lines; a line longer than 16 words is shown as several rows of at most 16 words
+          for (const o of outs) assert.ok(tokensIn(o).length <= 16, `${lang} ${id} press ${k}: output line of ${tokensIn(o).length} words`);
+          const lines = new Set(outs.map((o) => o.attrs["data-line"]).filter(Boolean));
+          assert.ok(lines.size <= 16, `${lang} ${id} press ${k}: ${lines.size} recorded lines`);
+          for (const f of visibleMatches(section, k, (n) => hasClass(n, "focus"))) {
+            assert.ok(tokensIn(f).length <= 12, `${lang} ${id} press ${k}: focus text of ${tokensIn(f).length} words`);
+          }
         }
-        const prompts = visibleMatches(section, k, (n) => hasClass(n, "prompt-body"));
-        promptsSeen = Math.max(promptsSeen, prompts.length);
-        for (const p of prompts) assert.ok(tokensIn(p).length <= 150, `${lang} ${id}: prompt of ${tokensIn(p).length} words`);
-        const figs = visibleMatches(section, k, (n) => hasClass(n, "fig"));
-        assert.ok(figs.length <= 15, `${lang} ${id} press ${k}: ${figs.length} figure cells`);
-        const outs = visibleMatches(section, k, (n) => hasClass(n, "out"));
-        assert.ok(outs.length <= 16, `${lang} ${id} press ${k}: ${outs.length} output lines`);
-        for (const o of outs) assert.ok(tokensIn(o).length <= 16, `${lang} ${id} press ${k}: output line of ${tokensIn(o).length} words`);
-        for (const f of visibleMatches(section, k, (n) => hasClass(n, "focus"))) {
-          assert.ok(tokensIn(f).length <= 12, `${lang} ${id} press ${k}: focus text of ${tokensIn(f).length} words`);
-        }
+        assert.ok(promptsSeen <= 1, `${lang} ${id}: ${promptsSeen} prompt cards at once`);
+        if (!main) assert.equal(promptsSeen, 0);
       }
-      assert.ok(promptsSeen <= 1, `${lang} ${id}: ${promptsSeen} prompt cards at once`);
-      if (!main) assert.equal(promptsSeen, 0);
     }
   });
 
@@ -117,7 +162,6 @@ for (const lang of LANGS) {
     for (const section of slidesOf(pages[lang])) {
       const id = section.attrs.id;
       const everywhere = (match) => visibleMatches(section, stepsOf(section), match, { nested: true });
-      // A source tag or a gloss is its own element and must not sit inside a focus extra or be one.
       const walk = (node, inFocus) => {
         if (!node.tag) return;
         const here = inFocus || hasClass(node, "focus");
@@ -125,15 +169,12 @@ for (const lang of LANGS) {
         for (const child of node.children ?? []) walk(child, here);
       };
       walk(section, false);
-      // Every quoted line in another language than the page has its translation in the same main slide. The appendix
-      // tables name laws by their Macedonian title in a row that already says what the law is.
       if (section.attrs["data-kind"] === "main") {
         const quotes = everywhere((n) => hasClass(n, "qd"));
         const foreign = quotes.filter((q) => (q.attrs.lang ? q.attrs.lang !== lang : /[\u0400-\u04FF]/.test(tokensIn(q).join(" "))));
         const glosses = everywhere((n) => hasClass(n, "qd-gloss"));
         if (foreign.length > 0) assert.ok(glosses.length >= 1, `${lang} ${id}: a foreign quote without a translation`);
       }
-      // Nothing that carries the word invented may be a focus extra.
       for (const f of visibleMatches(section, stepsOf(section), (n) => hasClass(n, "focus"), { nested: true })) {
         assert.doesNotMatch(tokensIn(f).join(" "), /invented|erfunden|\b(19|20)\d\d\b/i, `${lang} ${id}: a qualifier inside a focus extra`);
       }
@@ -142,60 +183,60 @@ for (const lang of LANGS) {
 
   test(`${lang}: the numbers carry their qualifier in visible text`, () => {
     const en = lang === "en";
-    const must = (id, k, pattern, what) => assert.match(textAt(lang, id, k), pattern, `${lang} ${id} press ${k}: ${what}`);
-    must("doors", 1, /2024/, "31 building site visits carry their year");
-    must("doors", 2, /2025/, "214 businesses carry their year");
-    must("letter", 0, en ? /invented/ : /erfunden/, "the company is labelled invented");
-    must("letter", 3, /2022/, "84 of 100 firms carry the survey year");
-    must("neighbour", 0, /2025/, "the DIT counts carry the report year");
-    must("neighbour", 0, /April 2026/, "the report carries its version date");
-    must("ghost", 2, en ? /size assumed/ : /Größe angenommen/, "the fine carries its assumption");
-    must("ghost", 2, /ZIN Art\. 83/, "the fine carries its article");
-    must("taxsheet", 0, /2023/, "the survey share carries its year");
-    must("taxsheet", 5, en ? /2025, derived/ : /2025, errechnet/, "the inspector hours are marked derived");
-    must("taxsheet", 6, en ? /2025, derived/ : /2025, errechnet/, "the payment order is marked derived");
-    must("isosheet", 3, /2024/, "the consultancy price carries its year");
-    must("isosheet", 3, en ? /advert/ : /Werbung/, "the consultancy price carries its source");
-    must("step3", 3, en ? /invented/ : /erfunden/, "the visit date is labelled invented");
-    must("step2", 3, en ? /invented example, not a recording/ : /erfundenes Beispiel, keine Aufzeichnung/, "the example is labelled");
-    for (let k = 0; k <= 5; k += 1) {
-      must("xray", k, en ? /Script result, not a Claude run\./ : /Skript-Ergebnis, kein Claude-Lauf\./, "the script output says what it is");
-    }
-    must("step3", 2, en ? /Computed from the kit/ : /Aus dem Kit gerechnet/, "the tally says it is computed");
-    must("step1", 1, en ? /computed from the kit/ : /aus dem Kit gerechnet/i, "the expected table says it is computed");
+    const must = (id, k, pattern, what) => assert.match(visibleTextAt(pages[lang], id, k), pattern, `${lang} ${id} press ${k}: ${what}`);
+    must("cover", 0, en ? /invented/ : /erfunden/, "the case is labelled invented");
+    must("why", 1, /2025/, "the 26,484 inspections carry their year");
+    must("why", 1, /DIT/, "the 26,484 inspections carry their source");
+    must("why", 5, en ? /Own calculation/ : /Eigene Rechnung/, "the 54 of 100 is marked as our own calculation");
+    must("why", 2, /2024/, "the 31 inspections carry their year");
+    must("why", 1, /2023/, "the data exchange carries its year");
+    must("we", 0, en ? /invented/ : /erfunden/, "the firm is labelled invented");
+    must("we", 3, en ? /own calculation/ : /eigene Rechnung/, "one inspection per 13 firms is marked as our own calculation");
+    must("we", 3, /2024/, "the firm count carries its year");
+    must("letter", 0, en ? /invented/ : /erfunden/, "the letter case is labelled invented");
+    must("letter", 3, /Law on Inspection Supervision|Gesetz über die Inspektionsaufsicht/, "the three working days carry their law");
+    must("letter", 7, /Art\. 83/, "the fine carries its article");
+    must("tests", 0, en ? /invented/ : /erfunden/, "the example row is labelled invented");
+    must("other", 0, /2025/, "the sources carry their years");
+    must("register", 3, en ? /Dates only/ : /Nur Daten/, "the register says it holds dates, no health content");
+    must("other", 2, /2022/, "the filing guide carries its year");
+    const html = withoutTakes(pages[lang]);
+    assert.match(html, en ? /Gradba audit \(invented\)/ : /Gradba-Audit \(erfunden\)/, "the Claude window is labelled as an invented case");
   });
 
-  test(`${lang}: no AI answer is shown as recorded, the empty frame says so`, () => {
+  test(`${lang}: no recorded answer is shown without a take: the empty frame says so, or the take carries its chip`, () => {
+    const html = pages[lang];
     const frame = lang === "en" ? /Your Claude result: not recorded yet\./ : /Dein Claude-Ergebnis: noch nicht aufgezeichnet\./;
-    assert.match(textAt(lang, "step1", 2), frame);
-    assert.match(textAt(lang, "step2", 4), frame);
-    assert.match(textAt(lang, "step3", 4), frame);
-    const html = withoutNotes(pages[lang]);
-    assert.doesNotMatch(html, /claude-runs|recorded run|Aufzeichnung vom|recorded on/i);
+    const chip = lang === "en" ? /recorded \d{1,2} \w+ \d{4}, / : /aufgezeichnet \d\d\.\d\d\.\d{4}, /;
+    for (const [id, k] of [["step1", 2], ["step2", 2], ["step3", 1], ["register", 2], ["register", 6]]) {
+      const section = slide(lang, id);
+      const hasTake = /"data-take":"/.test(JSON.stringify(section));
+      assert.match(visibleTextAt(html, id, k), hasTake ? chip : frame, `${lang} ${id} press ${k}`);
+    }
+    assert.doesNotMatch(withoutTakes(html), /claude-runs|Aufzeichnung vom/i);
   });
 
   test(`${lang}: no banned word, no dash character and no arrow on slides or in notes, real umlauts`, () => {
-    const html = pages[lang];
-    const slides = withoutNotes(html);
-    for (const pattern of BANNED) {
-      const hit = pattern.exec(slides);
-      assert.equal(hit, null, `${lang}: banned ${JSON.stringify(hit?.[0])} on a slide`);
+    for (const html of [pages[lang], buildEdition(lang, deckData(lang), fixtureTakes(lang))]) {
+      const slides = withoutTakes(withoutNotes(html));
+      for (const pattern of BANNED) {
+        const hit = pattern.exec(slides);
+        assert.equal(hit, null, `${lang}: banned ${JSON.stringify(hit?.[0])} on a slide`);
+      }
+      assert.doesNotMatch(withoutTakes(html), /[‒-―−→]/, `${lang}: a dash or an arrow in slides or notes`);
+      for (const note of notesOf(html)) {
+        for (const pattern of BANNED) assert.equal(pattern.exec(note), null, `${lang}: banned ${JSON.stringify(pattern.exec(note)?.[0])} in note ${note.slice(0, 30)}`);
+      }
+      if (lang === "de") {
+        // file names of the kit are what they are (AENDERUNGEN.md): only prose is checked
+        const text = slides.replace(/<[^>]+>/g, " ").replace(/\b[\w-]+\.(md|csv|py|zip|txt)\b/g, " ");
+        assert.doesNotMatch(text, /\b(fuer|ueber|Pruefung\w*|Aenderung\w*|Loehr|Gebuehr\w*|Aerzt\w*|Uebung\w*|Buero\w*|Groesse|koennen|moechte|muessen|waehrend)\b/i, "an ASCII substitute for an umlaut");
+      }
+      assert.doesNotMatch(html, /\/Users\/|\/private\/|mavengence|facilitator\/|CLAUDE\.md|vardar|tannwald|Vier Tage bis zur Kontrolle/i);
     }
-    assert.doesNotMatch(html, /[‒-―−→]/, `${lang}: a dash or an arrow in slides or notes`);
-    // The notes obey the same bans as the slides.
-    for (const note of notesOf(html)) {
-      for (const pattern of BANNED) assert.equal(pattern.exec(note), null, `${lang}: banned ${JSON.stringify(pattern.exec(note)?.[0])} in note ${note.slice(0, 30)}`);
-    }
-    if (lang === "de") {
-      const text = slides.replace(/<[^>]+>/g, " ");
-      assert.doesNotMatch(text, /\b(fuer|ueber|Pruefung\w*|Aenderung\w*|Loehr|Gebuehr\w*|Aerzt\w*|Uebung\w*|Buero\w*|Groesse|koennen|moechte|muessen|waehrend)\b/i, "an ASCII substitute for an umlaut");
-    }
-    assert.doesNotMatch(html, /\/Users\/|\/private\/|mavengence|facilitator\/|CLAUDE\.md|vardar|tannwald/i);
   });
 
   test(`${lang}: the class lists of exempt elements never hide counted text behind an exempt wrapper`, () => {
-    // An exempt class is for quotes, translations, prompt cards, figure cells, script output and focus extras only:
-    // a poll button or a counter inside one would escape the count.
     for (const section of slidesOf(pages[lang])) {
       const walk = (node, exempt) => {
         if (!node.tag) return;

@@ -149,3 +149,28 @@ describe("hero-links.css", () => {
     expect(scanOpacity.map((d) => d.value)).toEqual(["0"]);
   });
 });
+
+describe("no ink fill (visual law V1/V2)", () => {
+  /** Ink fills that stay: the doorway wash is 0.14 alpha, the scan bar is 6 px wide, the knob is a 10 px dot. */
+  const ALLOWED_INK_FILL = new Set([".hk-doorway", ".hk-scan", ".hk-knob"]);
+
+  it("fills no surface with ink or a near black in hero-links.css, apart from the three small marks", () => {
+    ROOT.walkRules((rule: Rule) => {
+      if ((rule.parent as Container).type === "atrule" && (rule.parent as AtRule).name === "keyframes") return;
+      rule.walkDecls(/^(?:fill|background(?:-color)?)$/, (declaration) => {
+        if (!/var\(--hk-ink\)|#000|black|#121212/.test(declaration.value)) return;
+        for (const selector of rule.selectors) expect(ALLOWED_INK_FILL.has(selector.trim()), `${selector}: ${declaration.prop}`).toBe(true);
+      });
+    });
+  });
+
+  it("paints the four day tiles in the mid tone, not in ink", () => {
+    const day = declarations((d) => d.prop === "fill" && (d.parent as Rule).selector === ".hk-day" && !inside(d.parent as Container, NO_PREFERENCE));
+    expect(day.map((d) => d.value)).toEqual(["var(--hk-mid)"]);
+  });
+
+  it("sets no inline or attribute fill in the scene source", () => {
+    expect(SOURCE).not.toMatch(/\bfill=["'](?:#|black|var\(--hk-ink)/);
+    expect(SOURCE).not.toMatch(/\bfill=/);
+  });
+});

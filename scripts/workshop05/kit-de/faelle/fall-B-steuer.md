@@ -22,7 +22,7 @@ Bücher und Buchhaltungsbelege, Rechnungen ein und aus mit den Mehrwertsteuer-Au
 ## Engpässe
 Belegt: Fehlende oder unzuverlässige Bücher werden doppelt bestraft, mit einer Strafe und mit einer Schätzung, die nicht zugunsten des Steuerpflichtigen ausfällt (ZDP Art. 76). Das UJP darf vorhandene Daten auf Geräten mit einem Speichermedium einsehen, eine getreue Kopie ziehen und geänderte und gelöschte Daten wiederherstellen (ZDP Art. 60-a(1),(2)).
 Die Geschichte dieses Kits (erfunden): Kassendaten und Bücher, die bei einer externen Buchhaltung liegen.
-Nicht gemessen: die Dauer einer Prüfung in Kalendertagen. Etwa 30 Inspektorenstunden pro Prüfung (2025, errechnet aus 118.659 Stunden und 4.003 Prüfungen).
+Nicht gemessen: die Dauer einer Prüfung in Kalendertagen.
 
 ## Kosten und was das Gesetz offen lässt
 - ZDP-Strafen, juristische Person: 300 bis 1.000 Euro (Kleinstbetrieb) bis 3.000 bis 10.000 Euro (groß); verantwortliche Person 50 bis 500 Euro. ZRGP Art. 21b: 600 bis 1.000 Euro (Kleinstbetrieb), 1.500 bis 2.000 (klein), 3.000 bis 6.000 (mittel), 4.000 bis 10.000 (groß). Größenschwellen ungeprüft.

@@ -23,6 +23,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { deckData } from "./data.mjs";
 import { MAIN_TOTAL as SLIDES_TOTAL, SLIDES, esc, renderSlides } from "./slides.mjs";
+import { fill } from "./motion.mjs";
+import { loadTakes } from "./take.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "../../..");
@@ -34,11 +36,11 @@ const PRESENTERS = { de: "presenter.html", en: "en/presenter.html" };
 const ROOT = { de: "./", en: "../" };
 export const DECK_IDS = { de: SLUG, en: `${SLUG}:en` };
 export const MAIN_SECONDS = 5400;
-export const MAIN_SLIDES = 26;
-/** The page counter "NN / 26" is written by slides.mjs; both copies of the number must agree. */
-export const MAIN_TOTAL = 26;
-/** 26 main slides and 5 appendix slides: one note each, in slide order. */
-export const NOTES_TOTAL = 31;
+export const MAIN_SLIDES = 15;
+/** The page counter "NN / 15" is written by slides.mjs; both copies of the number must agree. */
+export const MAIN_TOTAL = 15;
+/** 15 main slides and 4 appendix slides: one note each, in slide order. */
+export const NOTES_TOTAL = 19;
 
 /** Words a deck must never show on a slide (the shared copy lint covers the rest; this is the deck's own floor). */
 export const BANNED = [
@@ -63,11 +65,11 @@ function copyFor(lang) {
 }
 
 /** One edition's page; written with "./" paths, moved one folder up for the English edition. */
-export function buildEdition(lang, d = deckData(lang)) {
+export function buildEdition(lang, d = deckData(lang), takes = loadTakes(lang)) {
   const c = copyFor(lang);
   if (SLIDES_TOTAL !== MAIN_TOTAL) throw new Error(`slides.mjs counts ${SLIDES_TOTAL} main slides, build.mjs ${MAIN_TOTAL}`);
   if (c.notes.length !== NOTES_TOTAL || c.notes.length !== SLIDES.length) throw new Error(`${lang}: ${c.notes.length} notes for ${SLIDES.length} slides (want ${NOTES_TOTAL})`);
-  const sections = renderSlides(c, d);
+  const sections = renderSlides(c, d, takes);
   const other = lang === "de" ? "en" : "de";
   const html = `<!doctype html>
 <html lang="${lang}" data-theme="light" data-deck-id="${DECK_IDS[lang]}">
@@ -94,15 +96,11 @@ export function buildEdition(lang, d = deckData(lang)) {
 ${sections.join("\n")}
 </deck-stage>
 </main>
-<script type="application/json" id="speaker-notes">${JSON.stringify(c.notes).replace(/</g, "\\u003c")}</script>
+<script type="application/json" id="speaker-notes">${JSON.stringify(c.notes.map((note) => fill(note, d.vars))).replace(/</g, "\\u003c")}</script>
 <script src="./lib/scenes.js"></script>
 <script src="./lib/geo.js"></script>
 <script src="./lib/globe.js"></script>
 <script src="./lib/w05-tally.js"></script>
-<script src="./lib/w05-clock.js"></script>
-<script src="./lib/w05-matrix.js"></script>
-<script src="./lib/w05-days.js"></script>
-<script src="./lib/w05-gates.js"></script>
 </body>
 </html>
 `;
@@ -199,12 +197,14 @@ function check(lang, html, sections) {
     if (!/^(\d\d|a\d) · .+\nTime: .+\nSay: .+\nStudents: .+\nCue: .+\nRemember: .+/s.test(note)) throw new Error(`${lang}: note ${i + 1} lacks the Time, Say, Students, Cue, Remember lines`);
   });
   // The notes are the presenter's, so they may name what the deck must not show; check the slides only.
-  const text = html.replace(/<script type="application\/json" id="speaker-notes">[\s\S]*?<\/script>/, "");
+  // Recorded lines (data-take) are real model output, never edited: they are outside the banned-word scan (our own copy is not).
+  const withoutTakes = html.replace(/<(p|tr)\b[^>]*data-take="[^"]*"[^>]*>[\s\S]*?<\/\1>/g, "");
+  const text = withoutTakes.replace(/<script type="application\/json" id="speaker-notes">[\s\S]*?<\/script>/, "");
   for (const pattern of BANNED) {
     const hit = pattern.exec(text);
     if (hit) throw new Error(`${lang}: banned ${JSON.stringify(hit[0])} near ${JSON.stringify(text.slice(Math.max(0, hit.index - 60), hit.index + 40))}`);
   }
-  if (/[\u2012-\u2015]/.test(html)) throw new Error(`${lang}: a dash in the notes`);
+  if (/[\u2012-\u2015]/.test(withoutTakes)) throw new Error(`${lang}: a dash on a slide or in the notes`);
   for (const needle of ["/Users/", "/private/", "mavengence", "facilitator/", "CLAUDE.md"]) {
     if (html.toLowerCase().includes(needle.toLowerCase())) throw new Error(`${lang}: internal string ${needle}`);
   }

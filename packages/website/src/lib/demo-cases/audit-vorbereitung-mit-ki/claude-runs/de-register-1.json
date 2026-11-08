@@ -1,0 +1,1155 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-register-1",
+  "slug": "audit-vorbereitung-mit-ki",
+  "locale": "de",
+  "prompt_id": "register",
+  "take": 1,
+  "recorded_at": "2026-11-08T16:03:13Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.319",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands",
+    "--append-system-prompt",
+    "<project-instructions>"
+  ],
+  "prompt": "Baue das Register. Lies ordner-index.md und die CSV-Dateien im Ordner. Überspringe die Zeilen, die mit # beginnen. Mach register.csv mit den Spalten aus vorlagen/register.csv und einer Zeile pro Person und Papier. Papiere: contract, registration, medical-exam (gültig 24 Monate), leave-decision (nur für Personen mit 6 Monaten Betriebszugehörigkeit am 26. Nov. 2026), overtime-notice (für jede Person mit Überstundenwochen) und safety-statement (eine Zeile für die Firma, person_id FIRM). Nimm die Zuständigkeit aus ordner-index.md. Fehlt ein Papier, schreib MISSING in die Spalte date. Nennt keine Datei eine freigebende Person, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen, und keine Gesundheitsinhalte, nur Daten. Schreibe dann check.py. Es liest register.csv und gibt für heute drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Führe es mit dem heutigen Datum aus, 26. Nov. 2026. Antworte in höchstens 16 Zeilen: die drei Zahlen, dann die ersten fünf Zeilen von register.csv.",
+  "kit_zip": "public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip",
+  "kit_files": [
+    {
+      "name": "ordner/absences_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/absences_2026.csv",
+      "bytes": 168,
+      "sha256": "22c2a412549929eb782a8fd4ae5a702843fff145064a78f492a73dc433e663ac"
+    },
+    {
+      "name": "ordner/attendance_2026-11.csv",
+      "path": "gradba-audit-kit-de/ordner/attendance_2026-11.csv",
+      "bytes": 12880,
+      "sha256": "14fe32bf347e3eac60d1171fb6ae7a9bf24e113da2b1e1573100f381c1a9b83c"
+    },
+    {
+      "name": "ordner/contracts_register_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/contracts_register_2026.csv",
+      "bytes": 1190,
+      "sha256": "b63cbd5c2d633fdcee32558ae31f8871d68ad3d3fae76551027f8e3286fd6ad8"
+    },
+    {
+      "name": "ordner/employee_records_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/employee_records_2026.csv",
+      "bytes": 3512,
+      "sha256": "e6e76f7cc6560669facbcc381004770f7dd5b64b276dea9e34c14c8113874f4b"
+    },
+    {
+      "name": "ordner/leave_decisions_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/leave_decisions_2026.csv",
+      "bytes": 535,
+      "sha256": "382ab7b4b9d632bcc1b0d292543e172c09578a91ca40944dd2ef6ed6de5b7a3a"
+    },
+    {
+      "name": "ordner/medical_exams.csv",
+      "path": "gradba-audit-kit-de/ordner/medical_exams.csv",
+      "bytes": 516,
+      "sha256": "5be40c99760d62560b085ff798e77cc55ff36ef1d7e1a86c20ebe1016a1f27f7"
+    },
+    {
+      "name": "ordner/meldungen_ueberstunden_ordner.txt",
+      "path": "gradba-audit-kit-de/ordner/meldungen_ueberstunden_ordner.txt",
+      "bytes": 341,
+      "sha256": "ac8024d28e781198e932f276ec26f8ed070d6b47243e5d7edecac02ef34ba154"
+    },
+    {
+      "name": "ordner/ordner-index.md",
+      "path": "gradba-audit-kit-de/ordner/ordner-index.md",
+      "bytes": 3349,
+      "sha256": "dbb925015ca729d093157a6e90f964ffcddf5cb295b1092ab4197b529bc0e4c0"
+    },
+    {
+      "name": "ordner/overtime_weekly_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/overtime_weekly_2026.csv",
+      "bytes": 755,
+      "sha256": "c0942e2078cc3fe88df4da31314637b82f09989bba130989f79a4f2f1b254170"
+    },
+    {
+      "name": "ordner/payroll_lines_2026-07_to_10.csv",
+      "path": "gradba-audit-kit-de/ordner/payroll_lines_2026-07_to_10.csv",
+      "bytes": 1971,
+      "sha256": "1038d5e56c7089e9d0b2bb7d742e0aceca48761d99abce2b8327f932cecee87e"
+    },
+    {
+      "name": "ordner/payroll_runs_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/payroll_runs_2026.csv",
+      "bytes": 354,
+      "sha256": "1b416fc24cdc7684d6d10e9bfac7b169b27dea0a76a84ac4b84d47e5600630fc"
+    },
+    {
+      "name": "ordner/registration_M1M2_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/registration_M1M2_2026.csv",
+      "bytes": 512,
+      "sha256": "762d96863676c02146f82d63c45adcd2be11c15c14c2b76f2365520466701494"
+    },
+    {
+      "name": "ordner/sicherheitserklaerung_2019.md",
+      "path": "gradba-audit-kit-de/ordner/sicherheitserklaerung_2019.md",
+      "bytes": 693,
+      "sha256": "c8b26ad4974a7f1b5295093c5b6db7de149a9da4e828a213892026409914812e"
+    },
+    {
+      "name": "ordner/training_proofs_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/training_proofs_2026.csv",
+      "bytes": 222,
+      "sha256": "4efc22dfbe7ab9bef63701c14da988213a71c85393c8b9d9d465a74ef6c71378"
+    },
+    {
+      "name": "vorlagen/register.csv",
+      "path": "gradba-audit-kit-de/vorlagen/register.csv",
+      "bytes": 171,
+      "sha256": "1f97ff8839eb7d312e7fa14b13f4b6cc75695b150ba35775d2555166f03228f0"
+    }
+  ],
+  "instructions": {
+    "name": "projektanweisungen.md",
+    "path": "gradba-audit-kit-de/projektanweisungen.md",
+    "bytes": 2952,
+    "sha256": "bdd3cd6cf6d0fc27a2b808eb80c706e12a0ee458a258fb156b6684c30d187b00"
+  },
+  "skill": null,
+  "skill_name": "audit-nachweise",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 3766,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | head -100 && echo ---- && cat ordner-index.md && echo ---- && for f in $(find . -name \"*.csv\"); do echo \"== $f\"; cat \"$f\"; done",
+        "description": "List project files and show index and CSV contents"
+      }
+    },
+    {
+      "t_ms": 4764,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 8101,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat ordner/ordner-index.md; echo ----; cat vorlagen/register.csv; echo ----; cat ordner/meldungen_ueberstunden_ordner.txt; echo ----; cat ordner/sicherheitserklaerung_2019.md; echo; wc -l ordner/*.csv",
+        "description": "Show index, template, text documents, and CSV sizes"
+      }
+    },
+    {
+      "t_ms": 8239,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 11625,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd ordner && for f in contracts_register_2026.csv registration_M1M2_2026.csv medical_exams.csv leave_decisions_2026.csv overtime_weekly_2026.csv absences_2026.csv training_proofs_2026.csv; do echo \"== $f\"; cat $f; done; echo \"== employee cols\"; head -4 employee_records_2026.csv | cut -c1-400",
+        "description": "Show the relevant CSV files"
+      }
+    },
+    {
+      "t_ms": 11771,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 22968,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I -c \"\nimport csv\nrows=lambda f:[r for r in csv.DictReader(l for l in open(f) if not l.startswith('#'))]\nc={r['id']:r['start_date'] for r in rows('contracts_register_2026.csv')}\ne=rows('employee_records_2026.csv'); print(len(e))\nfor r in e:\n  if c.get(r['id'])!=r['f09']: print('diff',r['id'],r['f09'],c.get(r['id']))\n\"",
+        "description": "Compare start dates in personnel records with contract register"
+      }
+    },
+    {
+      "t_ms": 23113,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 25770,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 25770,
+      "kind": "text",
+      "chunk": "Die"
+    },
+    {
+      "t_ms": 25771,
+      "kind": "text",
+      "chunk": " E"
+    },
+    {
+      "t_ms": 25771,
+      "kind": "text",
+      "chunk": "intrittsdaten st"
+    },
+    {
+      "t_ms": 25771,
+      "kind": "text",
+      "chunk": "immen überein"
+    },
+    {
+      "t_ms": 25772,
+      "kind": "text",
+      "chunk": ". Jetzt ba"
+    },
+    {
+      "t_ms": 25772,
+      "kind": "text",
+      "chunk": "ue ich das"
+    },
+    {
+      "t_ms": 25772,
+      "kind": "text",
+      "chunk": " Register und check.py."
+    },
+    {
+      "t_ms": 39118,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd . && cat > build_register.py <<'EOF'\n# Baut register.csv aus den CSV-Dateien in ordner/. Zeilen mit # werden übersprungen.\nimport csv, datetime as dt\nD = \"ordner/\"\nSTICHTAG = dt.date(2026, 11, 26)\nNIF = \"NICHT IN DATEIEN\"\nOM = \"Büroleiterin (E-02)\"\ndef rows(f):\n    with open(D + f, encoding=\"utf-8\") as fh:\n        return list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\ndef d(s): return dt.date.fromisoformat(s)\ndef plus_months(x, m):\n    y, mo = divmod(x.month - 1 + m, 12)\n    return dt.date(x.year + y, mo + 1, x.day)\ndef six_months_before(x):\n    y, mo = divmod(x.month - 1 - 6, 12)\n    return dt.date(x.year + y, mo + 1, x.day)\n\ncontracts = rows(\"contracts_register_2026.csv\")\nreg = {r[\"id\"]: r[\"date_filed\"] for r in rows(\"registration_M1M2_2026.csv\")}\nmed = {r[\"id\"]: r[\"last_exam_date\"] for r in rows(\"medical_exams.csv\")}\nleave = {r[\"id\"]: r[\"decision_date\"] for r in rows(\"leave_decisions_2026.csv\")}\not_ids = sorted({r[\"id\"] for r in rows(\"overtime_weekly_2026.csv\") if float(r[\"overtime_hours\"]) > 0})\n# meldungen_ueberstunden_ordner.txt: Zeile \"2026: (leer)\", also keine Meldung 2026.\not_notice = {}\n\nout = []\nfor c in contracts:\n    pid = c[\"id\"]\n    out.append([pid, \"contract\", c[\"start_date\"], \"\", OM, \"Vertragsordner im Büro, contracts_register_2026.csv\", NIF])\n    out.append([pid, \"registration\", reg.get(pid, \"MISSING\"), \"\", OM, \"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\", NIF])\n    m = med.get(pid)\n    out.append([pid, \"medical-exam\", m or \"MISSING\", plus_months(d(m), 24).isoformat() if m else \"\", OM,\n                \"Zettel vom Gesundheitszentrum, medical_exams.csv\", NIF])\n    if d(c[\"start_date\"]) <= six_months_before(STICHTAG):\n        out.append([pid, \"leave-decision\", leave.get(pid, \"MISSING\"), \"\", OM, \"leave_decisions_2026.csv\", NIF])\n    if pid in ot_ids:\n        out.append([pid, \"overtime-notice\", ot_notice.get(pid, \"MISSING\"), \"\", OM, \"meldungen_ueberstunden_ordner.txt\", NIF])\nout.append([\"FIRM\", \"safety-statement\", \"2019-03-14\", \"\",\n            \"die Person mit dem Aktenordner (eine Berufsbezeichnung ist nicht angegeben)\", \"sicherheitserklaerung_2019.md\", NIF])\n\nwith open(\"register.csv\", \"w\", newline=\"\", encoding=\"utf-8\") as fh:\n    w = csv.writer(fh)\n    w.writerow([\"person_id\", \"paper\", \"date\", \"valid_until\", \"owner\", \"where\", \"approved_by\"])\n    w.writerows(out)\nprint(len(out), \"Zeilen\")\nEOF\ncat > check.py <<'EOF'\n# Liest register.csv und gibt drei Listen aus: abgelaufen, läuft in 60 Tagen ab, fehlt.\n# Aufruf: python3 check.py [JJJJ-MM-TT]   (ohne Datum gilt das Systemdatum)\nimport csv, sys, datetime as dt\nheute = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()\ngrenze = heute + dt.timedelta(days=60)\nabgelaufen, bald, fehlt = [], [], []\nwith open(\"register.csv\", encoding=\"utf-8\") as fh:\n    for r in csv.DictReader(l for l in fh if not l.startswith(\"#\")):\n        tag = f'{r[\"person_id\"]} {r[\"paper\"]}'\n        if r[\"date\"] == \"MISSING\":\n            fehlt.append(tag); continue\n        if r[\"valid_until\"]:\n            v = dt.date.fromisoformat(r[\"valid_until\"])\n            if v < heute: abgelaufen.append(f\"{tag} gültig bis {v}\")\n            elif v <= grenze: bald.append(f\"{tag} gültig bis {v}\")\nprint(f\"Stichtag {heute}\")\nfor name, liste in ((\"abgelaufen\", abgelaufen), (\"läuft in den nächsten 60 Tagen ab\", bald), (\"fehlt\", fehlt)):\n    print(f\"\\n{name}: {len(liste)}\")\n    for x in liste: print(\"  \" + x)\nEOF\npython3 -I build_register.py && python3 -I check.py 2026-11-26 && head -6 register.csv",
+        "description": "Build register.csv, write check.py and run it for 2026-11-26"
+      }
+    },
+    {
+      "t_ms": 39276,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "Ich habe register."
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "csv mit 98 "
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "Zeilen g"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "ebaut und check.py für"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": " den "
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "26. Nov. 2"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "026 ausgeführt"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": ". "
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "Erg"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "ebnis: **"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "4"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": " abgelaufen**"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": ", **1 läuft in"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": " den nächsten 60 "
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": "Tagen ab**"
+    },
+    {
+      "t_ms": 47438,
+      "kind": "text",
+      "chunk": ", **4 fehlen"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "**.\n\n-"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "Abgelaufen:"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "** die Gesundheit"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "su"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ntersuchung"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " von E-02, E-06"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": ", E-10 und E-"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "16. S"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ie war gültig bis "
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "2026-09-12."
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "\n- **Läuft b"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ald ab:** die G"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "esundheitsunters"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "uchung von E-03,"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " gültig bis 2026"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "-12-03.\n- **"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "Fehlt:** die"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " Überstundenmeld"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ung für"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " E-07 und E-08"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "und"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " der Urlaubsb"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "escheid für E-11 "
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "und E-19. Für"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "2026 steht in meld"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ungen_ueberstun"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "den_ordner.txt"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " nur „2026: (le"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "er)“.\n- **"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "Ze"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ile für die Freigabe"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": ":** In appro"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ved_by steht über"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "all NICHT IN D"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "ATEIE"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "N. Keine Datei"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " nennt eine Person,"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " die un"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "terschrieben hat."
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "\n- **Nicht in"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": " der Pr"
+    },
+    {
+      "t_ms": 47439,
+      "kind": "text",
+      "chunk": "üfung:**"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " Die Sicherheitser"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "klärung "
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ist von"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " 2019-03-14."
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " Sie nennt order"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " picker und forklift oper"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ator nicht. Ein"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "Ablaufdatum gib"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "t keine Dat"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ei an"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ", also pr"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "üft check.py sie n"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "icht.\n\nDie ers"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ten fünf Zeil"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "en von register.csv:"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "\n```\nperson_id,paper"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ",date,valid_until,"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "owner,where,approved_"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "by\nE-01,contract"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ",2022-12-26,"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ",Büroleiterin"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " (E-02),\"V"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ertragsordner im Bü"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ro, contracts_register_"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "2026.csv\",NIC"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "HT IN DATEI"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "EN\nE-01,regist"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ration,2022-12-16"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ",,Büroleiter"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "in (E-02),\""
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "Ausdrucke der"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " Arbeitsagentur"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": ", registration_M1M2"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "_2026.csv\",N"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "ICHT IN DATE"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "IEN\nE-01,"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "medical-exam,2026"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "-03-12,2028-"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "03-12,Bürole"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "iterin (E-02),"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "\"Zettel vom"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": " Gesundheitszentr"
+    },
+    {
+      "t_ms": 47440,
+      "kind": "text",
+      "chunk": "um, medical_exams."
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "csv\",NICHT I"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "N DATEIEN"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "\nE-01,leave-dec"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "ision,2026-02-25"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": ",,Büroleiter"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "in (E-02),leave"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "_decisions_2026."
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "csv,NICHT I"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "N DATEIEN"
+    },
+    {
+      "t_ms": 47441,
+      "kind": "text",
+      "chunk": "\n```"
+    }
+  ],
+  "final_text": "Ich habe register.csv mit 98 Zeilen gebaut und check.py für den 26. Nov. 2026 ausgeführt. Ergebnis: **4 abgelaufen**, **1 läuft in den nächsten 60 Tagen ab**, **4 fehlen**.\n\n- **Abgelaufen:** die Gesundheitsuntersuchung von E-02, E-06, E-10 und E-16. Sie war gültig bis 2026-09-12.\n- **Läuft bald ab:** die Gesundheitsuntersuchung von E-03, gültig bis 2026-12-03.\n- **Fehlt:** die Überstundenmeldung für E-07 und E-08 und der Urlaubsbescheid für E-11 und E-19. Für 2026 steht in meldungen_ueberstunden_ordner.txt nur „2026: (leer)“.\n- **Zeile für die Freigabe:** In approved_by steht überall NICHT IN DATEIEN. Keine Datei nennt eine Person, die unterschrieben hat.\n- **Nicht in der Prüfung:** Die Sicherheitserklärung ist von 2019-03-14. Sie nennt order picker und forklift operator nicht. Ein Ablaufdatum gibt keine Datei an, also prüft check.py sie nicht.\n\nDie ersten fünf Zeilen von register.csv:\n```\nperson_id,paper,date,valid_until,owner,where,approved_by\nE-01,contract,2022-12-26,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\nE-01,registration,2022-12-16,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\nE-01,medical-exam,2026-03-12,2028-03-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\nE-01,leave-decision,2026-02-25,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\n```",
+  "stats": {
+    "duration_ms": 47117,
+    "duration_api_ms": 45482,
+    "ttft_ms": 1705,
+    "num_turns": 6,
+    "output_tokens": 4597
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Sieh dir register.csv an. Welche Papiere liegen für E-07 vor, welches fehlt, und wer ist jeweils zuständig? Antworte nur aus register.csv, in höchstens 8 Zeilen. Fehlt eine Zeile, sag NICHT IN DATEIEN.",
+      "timeline": [
+        {
+          "t_ms": 3279,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "grep '^E-07,' register.csv",
+            "description": "Show register rows for E-07"
+          }
+        },
+        {
+          "t_ms": 4313,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 8151,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 8152,
+          "kind": "text",
+          "chunk": "In register.csv st"
+        },
+        {
+          "t_ms": 8152,
+          "kind": "text",
+          "chunk": "ehen für E-07 v"
+        },
+        {
+          "t_ms": 8152,
+          "kind": "text",
+          "chunk": "ier Papiere, und e"
+        },
+        {
+          "t_ms": 8152,
+          "kind": "text",
+          "chunk": "ines fehlt:"
+        },
+        {
+          "t_ms": 8153,
+          "kind": "text",
+          "chunk": "\n\n- **Li"
+        },
+        {
+          "t_ms": 8153,
+          "kind": "text",
+          "chunk": "egt"
+        },
+        {
+          "t_ms": 8153,
+          "kind": "text",
+          "chunk": " vor:** contract m"
+        },
+        {
+          "t_ms": 8153,
+          "kind": "text",
+          "chunk": "it date „"
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": "2015-11-09“."
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": " Zuständig ist die"
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": " Büroleiterin ("
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": "E-02).\n- **"
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": "Liegt vor:** regist"
+        },
+        {
+          "t_ms": 8154,
+          "kind": "text",
+          "chunk": "ration mit date „2015-"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": "11-05“. Zu"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": "ständig ist die Büro"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": "leiterin (E-02"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": ").\n- **Liegt"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": " vor:** medical-ex"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": "am mit date „2026-"
+        },
+        {
+          "t_ms": 8155,
+          "kind": "text",
+          "chunk": "02-11“, g"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": "ültig bis „2028-"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": "02-11“. Zu"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": "ständig ist die Büro"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": "leiterin (E-02"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": ").\n- **Liegt"
+        },
+        {
+          "t_ms": 8156,
+          "kind": "text",
+          "chunk": " vor:** leave-dec"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "ision mit date „2026-"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "02-06“. Zu"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "ständig ist die Büro"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "leiterin (E-02"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": ").\n- **Fehl"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "t:** overtime-not"
+        },
+        {
+          "t_ms": 8157,
+          "kind": "text",
+          "chunk": "ice, im Fe"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "ld date steht „MISS"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "ING“. Zuständig"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": " ist die Bürolei"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "terin (E-02)."
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "\n\nBei allen f"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "ünf Zeilen ste"
+        },
+        {
+          "t_ms": 8158,
+          "kind": "text",
+          "chunk": "ht im"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": " Feld approved_by „"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "NICHT IN DAT"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "EIE"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "N“. Für"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": " ke"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "ine d"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "ieser Zeilen g"
+        },
+        {
+          "t_ms": 8159,
+          "kind": "text",
+          "chunk": "ibt es also eine Fre"
+        },
+        {
+          "t_ms": 8160,
+          "kind": "text",
+          "chunk": "igabe."
+        }
+      ],
+      "final_text": "In register.csv stehen für E-07 vier Papiere, und eines fehlt:\n\n- **Liegt vor:** contract mit date „2015-11-09“. Zuständig ist die Büroleiterin (E-02).\n- **Liegt vor:** registration mit date „2015-11-05“. Zuständig ist die Büroleiterin (E-02).\n- **Liegt vor:** medical-exam mit date „2026-02-11“, gültig bis „2028-02-11“. Zuständig ist die Büroleiterin (E-02).\n- **Liegt vor:** leave-decision mit date „2026-02-06“. Zuständig ist die Büroleiterin (E-02).\n- **Fehlt:** overtime-notice, im Feld date steht „MISSING“. Zuständig ist die Büroleiterin (E-02).\n\nBei allen fünf Zeilen steht im Feld approved_by „NICHT IN DATEIEN“. Für keine dieser Zeilen gibt es also eine Freigabe.",
+      "stats": {
+        "duration_ms": 7814,
+        "duration_api_ms": 52104,
+        "ttft_ms": 2910,
+        "num_turns": 2,
+        "output_tokens": 487
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "build_register.py",
+      "path": "build_register.py",
+      "bytes": 2336,
+      "sha256": "3256c4f3d8673c649b1616634cabf7d3cc26cc566faafbdba751855aa029bb07",
+      "stored_as": "de-register-1.build_register.py",
+      "text": "# Baut register.csv aus den CSV-Dateien in ordner/. Zeilen mit # werden übersprungen.\nimport csv, datetime as dt\nD = \"ordner/\"\nSTICHTAG = dt.date(2026, 11, 26)\nNIF = \"NICHT IN DATEIEN\"\nOM = \"Büroleiterin (E-02)\"\ndef rows(f):\n    with open(D + f, encoding=\"utf-8\") as fh:\n        return list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\ndef d(s): return dt.date.fromisoformat(s)\ndef plus_months(x, m):\n    y, mo = divmod(x.month - 1 + m, 12)\n    return dt.date(x.year + y, mo + 1, x.day)\ndef six_months_before(x):\n    y, mo = divmod(x.month - 1 - 6, 12)\n    return dt.date(x.year + y, mo + 1, x.day)\n\ncontracts = rows(\"contracts_register_2026.csv\")\nreg = {r[\"id\"]: r[\"date_filed\"] for r in rows(\"registration_M1M2_2026.csv\")}\nmed = {r[\"id\"]: r[\"last_exam_date\"] for r in rows(\"medical_exams.csv\")}\nleave = {r[\"id\"]: r[\"decision_date\"] for r in rows(\"leave_decisions_2026.csv\")}\not_ids = sorted({r[\"id\"] for r in rows(\"overtime_weekly_2026.csv\") if float(r[\"overtime_hours\"]) > 0})\n# meldungen_ueberstunden_ordner.txt: Zeile \"2026: (leer)\", also keine Meldung 2026.\not_notice = {}\n\nout = []\nfor c in contracts:\n    pid = c[\"id\"]\n    out.append([pid, \"contract\", c[\"start_date\"], \"\", OM, \"Vertragsordner im Büro, contracts_register_2026.csv\", NIF])\n    out.append([pid, \"registration\", reg.get(pid, \"MISSING\"), \"\", OM, \"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\", NIF])\n    m = med.get(pid)\n    out.append([pid, \"medical-exam\", m or \"MISSING\", plus_months(d(m), 24).isoformat() if m else \"\", OM,\n                \"Zettel vom Gesundheitszentrum, medical_exams.csv\", NIF])\n    if d(c[\"start_date\"]) <= six_months_before(STICHTAG):\n        out.append([pid, \"leave-decision\", leave.get(pid, \"MISSING\"), \"\", OM, \"leave_decisions_2026.csv\", NIF])\n    if pid in ot_ids:\n        out.append([pid, \"overtime-notice\", ot_notice.get(pid, \"MISSING\"), \"\", OM, \"meldungen_ueberstunden_ordner.txt\", NIF])\nout.append([\"FIRM\", \"safety-statement\", \"2019-03-14\", \"\",\n            \"die Person mit dem Aktenordner (eine Berufsbezeichnung ist nicht angegeben)\", \"sicherheitserklaerung_2019.md\", NIF])\n\nwith open(\"register.csv\", \"w\", newline=\"\", encoding=\"utf-8\") as fh:\n    w = csv.writer(fh)\n    w.writerow([\"person_id\", \"paper\", \"date\", \"valid_until\", \"owner\", \"where\", \"approved_by\"])\n    w.writerows(out)\nprint(len(out), \"Zeilen\")\n"
+    },
+    {
+      "name": "check.py",
+      "path": "check.py",
+      "bytes": 1037,
+      "sha256": "a73fa850aa7791de0aef01dc6cb52c01522d692fb6d620fbbead25dfffe5a11a",
+      "stored_as": "de-register-1.check.py",
+      "text": "# Liest register.csv und gibt drei Listen aus: abgelaufen, läuft in 60 Tagen ab, fehlt.\n# Aufruf: python3 check.py [JJJJ-MM-TT]   (ohne Datum gilt das Systemdatum)\nimport csv, sys, datetime as dt\nheute = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()\ngrenze = heute + dt.timedelta(days=60)\nabgelaufen, bald, fehlt = [], [], []\nwith open(\"register.csv\", encoding=\"utf-8\") as fh:\n    for r in csv.DictReader(l for l in fh if not l.startswith(\"#\")):\n        tag = f'{r[\"person_id\"]} {r[\"paper\"]}'\n        if r[\"date\"] == \"MISSING\":\n            fehlt.append(tag); continue\n        if r[\"valid_until\"]:\n            v = dt.date.fromisoformat(r[\"valid_until\"])\n            if v < heute: abgelaufen.append(f\"{tag} gültig bis {v}\")\n            elif v <= grenze: bald.append(f\"{tag} gültig bis {v}\")\nprint(f\"Stichtag {heute}\")\nfor name, liste in ((\"abgelaufen\", abgelaufen), (\"läuft in den nächsten 60 Tagen ab\", bald), (\"fehlt\", fehlt)):\n    print(f\"\\n{name}: {len(liste)}\")\n    for x in liste: print(\"  \" + x)\n"
+    },
+    {
+      "name": "register.csv",
+      "path": "register.csv",
+      "bytes": 11696,
+      "sha256": "9f079ecd6d9af6d47d83b5962e03c614325af51f836a5956724664445369d611",
+      "stored_as": "de-register-1.register.csv",
+      "text": "person_id,paper,date,valid_until,owner,where,approved_by\r\nE-01,contract,2022-12-26,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-01,registration,2022-12-16,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-01,medical-exam,2026-03-12,2028-03-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-01,leave-decision,2026-02-25,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-02,contract,2021-04-12,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-02,registration,2021-04-05,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-02,medical-exam,2024-09-12,2026-09-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-02,leave-decision,2026-02-02,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-03,contract,2013-10-28,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-03,registration,2013-10-22,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-03,medical-exam,2024-12-03,2026-12-03,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-03,leave-decision,2026-01-02,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-04,contract,2021-08-16,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-04,registration,2021-08-10,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-04,medical-exam,2026-02-20,2028-02-20,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-04,leave-decision,2026-01-05,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-05,contract,2026-03-02,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-05,registration,2026-03-05,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-05,medical-exam,2026-07-23,2028-07-23,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-05,leave-decision,2026-09-03,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-06,contract,2019-09-30,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-06,registration,2019-09-23,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-06,medical-exam,2024-09-12,2026-09-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-06,leave-decision,2026-01-05,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-07,contract,2015-11-09,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-07,registration,2015-11-05,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-07,medical-exam,2026-02-11,2028-02-11,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-07,leave-decision,2026-02-06,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-07,overtime-notice,MISSING,,Büroleiterin (E-02),meldungen_ueberstunden_ordner.txt,NICHT IN DATEIEN\r\nE-08,contract,2024-03-04,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-08,registration,2024-02-23,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-08,medical-exam,2026-03-19,2028-03-19,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-08,leave-decision,2026-02-11,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-08,overtime-notice,MISSING,,Büroleiterin (E-02),meldungen_ueberstunden_ordner.txt,NICHT IN DATEIEN\r\nE-09,contract,2024-05-20,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-09,registration,2024-05-13,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-09,medical-exam,2026-06-22,2028-06-22,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-09,leave-decision,2026-01-08,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-10,contract,2021-01-25,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-10,registration,2021-01-18,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-10,medical-exam,2024-09-12,2026-09-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-10,leave-decision,2026-02-09,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-11,contract,2024-04-01,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-11,registration,2024-03-22,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-11,medical-exam,2026-05-11,2028-05-11,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-11,leave-decision,MISSING,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-12,contract,2021-01-04,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-12,registration,2020-12-31,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-12,medical-exam,2026-09-28,2028-09-28,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-12,leave-decision,2026-02-16,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-13,contract,2014-01-27,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-13,registration,2014-01-21,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-13,medical-exam,2026-05-12,2028-05-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-13,leave-decision,2026-01-26,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-14,contract,2023-09-04,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-14,registration,2023-08-29,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-14,medical-exam,2025-12-05,2027-12-05,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-14,leave-decision,2026-01-06,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-15,contract,2016-02-01,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-15,registration,2016-01-28,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-15,medical-exam,2025-05-02,2027-05-02,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-15,leave-decision,2026-02-16,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-16,contract,2022-12-19,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-16,registration,2022-12-09,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-16,medical-exam,2024-09-12,2026-09-12,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-16,leave-decision,2026-02-26,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-17,contract,2022-02-07,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-17,registration,2022-01-28,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-17,medical-exam,2025-03-03,2027-03-03,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-17,leave-decision,2026-02-04,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-18,contract,2021-01-11,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-18,registration,2020-12-31,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-18,medical-exam,2026-06-29,2028-06-29,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-18,leave-decision,2026-01-26,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-19,contract,2025-12-01,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-19,registration,2025-11-25,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-19,medical-exam,2026-05-22,2028-05-22,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-19,leave-decision,MISSING,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-20,contract,2018-05-14,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-20,registration,2018-05-10,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-20,medical-exam,2025-03-20,2027-03-20,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-20,leave-decision,2026-02-17,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-21,contract,2021-04-12,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-21,registration,2021-04-07,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-21,medical-exam,2026-10-05,2028-10-05,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-21,leave-decision,2026-02-17,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-22,contract,2026-06-01,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-22,registration,2026-05-29,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-22,medical-exam,2025-03-05,2027-03-05,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-23,contract,2020-10-26,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-23,registration,2020-10-19,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-23,medical-exam,2025-05-06,2027-05-06,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-23,leave-decision,2026-02-11,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nE-24,contract,2019-06-03,,Büroleiterin (E-02),\"Vertragsordner im Büro, contracts_register_2026.csv\",NICHT IN DATEIEN\r\nE-24,registration,2019-05-23,,Büroleiterin (E-02),\"Ausdrucke der Arbeitsagentur, registration_M1M2_2026.csv\",NICHT IN DATEIEN\r\nE-24,medical-exam,2025-08-25,2027-08-25,Büroleiterin (E-02),\"Zettel vom Gesundheitszentrum, medical_exams.csv\",NICHT IN DATEIEN\r\nE-24,leave-decision,2026-02-25,,Büroleiterin (E-02),leave_decisions_2026.csv,NICHT IN DATEIEN\r\nFIRM,safety-statement,2019-03-14,,die Person mit dem Aktenordner (eine Berufsbezeichnung ist nicht angegeben),sicherheitserklaerung_2019.md,NICHT IN DATEIEN\r\n"
+    }
+  ],
+  "edited": false
+}

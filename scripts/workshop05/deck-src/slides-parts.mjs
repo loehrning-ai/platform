@@ -1,84 +1,244 @@
 /**
- * Pieces shared by the slides of lane D2 (S14 to S26 and the appendix): the copyable prompt card, the empty frame
- * "Your Claude result: not recorded yet" with its three plain buttons, the poll button, and the key tables read from
- * the kit at build time. A factory over the helpers of slides.mjs (no import cycle). Nothing here is typed text: every
- * visible word comes from deck-copy.json, every number from data.mjs.
+ * Pieces the slides share: icons, poll buttons, the collapsed kit prompt, the Claude window replica and the recorded
+ * take (or, while no take is accepted, the labelled empty frame). Nothing here is typed copy: every visible word comes
+ * from deck-copy.json, every number from data.mjs, every take line from a recording (take.mjs).
  */
-import { kit, kitDe } from "./data.mjs";
+import { esc, fill, rowWindow } from "./motion.mjs";
+import { durationText } from "./scene.mjs";
+import { chipText, compareWithKey, findingLine, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
 
-export const WORDS_PER_OUT_LINE = 16;
+/** An icon of the engine sprite (lib/icons.svg). */
+export const ico = (name, cls = "") => `<svg class="ico${cls ? ` ${cls}` : ""}" aria-hidden="true"><use href="./lib/icons.svg#i-${name}"/></svg>`;
 
-export function makeParts(H) {
-  const { s, esc, fill, ico } = H;
-  const t = (text, vars) => esc(fill(text, vars));
-  const split = (text) => String(text).split(" · ");
+const split = (text) => String(text).split(" · ");
 
-  /** The kit's prompt, byte for byte, on a copyable card. The copy button is chrome (class fig), the text is .prompt-body. */
-  const prompt = (c, n, text, attrs = "") =>
-    `<figure class="prompt st__prompt" data-open${attrs}><pre class="prompt__text prompt-body" id="prompt-${n}">${esc(text)}</pre><button class="prompt__copy fig" type="button" data-copy="prompt-${n}">${ico("copy")}<span class="copy__label">${esc(c.copy)}</span></button></figure>`;
-
-  /**
-   * The labelled empty slot for the learner's own Claude result: text at press kText, the three plain buttons at kBtns.
-   * No recording is shown. o.word adds the line "wording differs, numbers must not" at kBtns.
-   */
-  const slot = (copy, kText, kBtns = kText, o = {}) =>
-    `<div class="st__slot${o.cls ? ` ${o.cls}` : ""}"${s(kText, { fx: "pop", win: "0,.6" })}>
-<p class="st__slot-t">${esc(copy.slot)}</p>
-<div class="st__slot-b"${s(kBtns, { fx: "fade", win: kBtns === kText ? ".3,1" : "0,.6" })}>${copy.slotOpts.map((label) => `<button class="st__btn" type="button">${esc(label)}</button>`).join("")}</div>
-${o.word ? `<p class="st__slot-w"${s(kBtns, { fx: "fade", win: ".3,1" })}>${esc(o.word)}</p>` : ""}
-</div>`;
-
-  /** A poll button with its counter; both count as text. */
-  const pollOpt = (name, value, label, k, cls = "", o = {}) =>
-    `<button class="poll__opt ${cls}" type="button" data-poll="${name}" data-value="${value}"${s(k, { fx: "pop", win: o.win || "0,.6", ...(o.out ? { out: o.out } : {}) })}><span>${esc(label)}</span><span data-poll-n>0</span></button>`;
-
-  /** The static strip of the four ladder rung labels (figure cells), as a link to appendix a2. `hot` is the rung of this slide. */
-  const rungStrip = (copy, cls, hot) =>
-    `<a class="st__rungs ${cls}" href="#a2" aria-label="${esc(copy.accounts)}"><span class="fig st__rungs-l">${ico("book")}${esc(copy.rungsLabel)}</span>${split(copy.rungs).map((r, i) => `<span class="fig${i === hot ? " is-hot" : ""}" style="--i:${i}">${esc(r)}</span>`).join("")}</a>`;
-
-  /* ── key tables, read from the kit files ──────────────────────────── */
-
-  const keyFile = (lang) => (lang === "de" ? kitDe("LOESUNGEN.md") : kit("ANSWERS.md"));
-  const dropParen = (text) => text.replace(/\s\([^)]*\)?.*$/, "").trim();
-
-  /** Rows of the Step 1 key (13 rows, 5 columns), shortened to lines of at most 16 words. */
-  function keyRows(lang) {
-    const text = keyFile(lang);
-    const from = text.indexOf(lang === "de" ? "## Schritt 1" : "## Step 1");
-    const end = text.indexOf("\n## ", from + 5);
-    const rows = text
-      .slice(from, end)
-      .split("\n")
-      .filter((line) => /^\| L\d\d /.test(line))
-      .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
-    if (rows.length !== 13 || rows.some((r) => r.length !== 5)) throw new Error(`${lang}: the Step 1 key does not hold 13 rows of 5 columns`);
-    return rows.map(([id, article, paper, owner, where]) => {
-      const file = /[\w.-]+\.(?:csv|md|txt)/.exec(where)?.[0];
-      const short = [id, dropParen(article), dropParen(paper), dropParen(owner), file || where.split(/[,;]/)[0].trim()];
-      const words = short.join(" ").split(/\s+/).length;
-      if (words > WORDS_PER_OUT_LINE) throw new Error(`${lang}: key row ${id} has ${words} words, the cap of an output line is ${WORDS_PER_OUT_LINE}`);
-      return short;
-    });
-  }
-
-  /** The first three data rows of the kit's sample attendance file (invented rows, X-ids). */
-  function sampleRows(lang) {
-    const text = lang === "de" ? kitDe("vorlagen/sample-rows_attendance.csv") : kit("templates/sample-rows_attendance.csv");
-    const rows = text.split("\n").filter((line) => line && !line.startsWith("#") && !line.startsWith("id,"));
-    if (rows.length < 3) throw new Error(`${lang}: the sample attendance file holds fewer than 3 rows`);
-    return rows.slice(0, 3);
-  }
-
-  /** The fields of the new-paper template (from the kit file), one line each, without the intro and the signature blank. */
-  function noteLines(lang) {
-    const text = lang === "de" ? kitDe("vorlagen/neues-papier.md") : kit("templates/new-paper-note.md");
-    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-    const from = lines.findIndex((l) => /^(Title|Titel):/.test(l));
-    if (from < 0) throw new Error(`${lang}: the new-paper template has no title field`);
-    const out = lines.slice(from);
-    if (out.length > WORDS_PER_OUT_LINE || out.some((l) => l.split(/\s+/).length > WORDS_PER_OUT_LINE)) throw new Error(`${lang}: the new-paper template exceeds the output caps`);
-    return out;
-  }
-
-  return { t, split, prompt, slot, pollOpt, rungStrip, keyRows, sampleRows, noteLines };
+/** The footer prints the page counter only. n is 1 to 15 or "A1". */
+export function foot(c, n, total) {
+  const label = typeof n === "number" ? `${String(n).padStart(2, "0")} / ${total}` : `${esc(c.appendix)} ${n}`;
+  return `<footer class="foot"><span class="foot__inv"></span><span class="foot__n">${label}</span></footer>`;
 }
+
+/**
+ * Poll buttons in one element: four (or two, or three) chips with an outline, each with its counter. The counter digits are
+ * counted words, the labels too. The buttons fade in together with their container.
+ */
+export function pollButtons(it, { id, name, labels, k, zone, out, win, cls = "", wide = false }) {
+  const buttons = labels
+    .map((label, i) => `<button class="poll__opt" type="button" data-poll="${name}" data-value="${i}"><span>${esc(label)}</span><span data-poll-n>0</span></button>`)
+    .join("");
+  return it({ id, tag: "div", cls: `poll pb${wide ? " pb--wide" : ""} pb--${labels.length}${cls ? ` ${cls}` : ""}`, zone, k, out, win, html: buttons, attrs: `data-poll-name="${name}"` });
+}
+
+/**
+ * The kit prompt in the window's thread: the engine's .prompt collapsed to three lines (--lines:3, no data-open) so the
+ * slide shows the start of it, while the DOM holds the full text, byte for byte as in the start file. `full` shows all of it.
+ */
+export function promptBubble(c, n, text, { full = false } = {}) {
+  const lines = full ? "" : ` style="--lines:3"`;
+  return `<figure class="cw-user prompt tk-prompt${full ? " tk-prompt--full" : ""}"${full ? " data-open" : ""}${lines}><pre class="prompt__text prompt-body" id="prompt-${n}">${esc(text)}</pre><button class="prompt__copy fig" type="button" data-copy="prompt-${n}">${ico("copy")}<span class="copy__label">${esc(c.copy)}</span></button></figure>`;
+}
+
+/**
+ * The Claude window replica: the engine's .cw, its bar with the crumbs (chrome, class fig) and one thread. `thread` is the
+ * markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
+ */
+export function claudeWindow(it, { id, crumbs, thread, k = 0, out, zone = "w", win, cls = "" }) {
+  const bar = `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span>${split(crumbs).map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${esc(x)}</span>`).join("")}</div>`;
+  const body = `<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread tk-thread">${thread}</div></div></div>`;
+  return it({ id, tag: "div", cls: `cw tk-cw${cls ? ` ${cls}` : ""}`, zone, k, out, win, html: bar + body });
+}
+
+/* ── takes ───────────────────────────────────────────────────────────── */
+
+/** Number placeholders of a key template that count up (S08 only): wrapped in their own spans. */
+function keyHtml(template, vars, { count = [], k = 0 } = {}) {
+  return String(template)
+    .split(/(\{\w+\})/)
+    .map((part) => {
+      const m = /^\{(\w+)\}$/.exec(part);
+      if (!m) return esc(part);
+      const value = vars[m[1]];
+      if (!count.includes(m[1])) return esc(value);
+      return `<span class="tk-n" data-step="${k}" data-win=".3,1" data-fx="none" data-count="0,${Number(value)},0">${esc(value)}</span>`;
+    })
+    .join("");
+}
+
+/** The words "This run: ..." after the key: same, or what differs (at most two short phrases). */
+function runPart(copy, diffs) {
+  if (diffs.length === 0) return copy.same;
+  const phrases = [...new Set(diffs.map((x) => fill(copy.diffs[x.code] ?? copy.diffs.answer, { got: x.got })))].slice(0, 2).join(", ");
+  return fill(copy.diff, { diff: phrases });
+}
+
+/**
+ * The grid of the scan scene: one cell per row Claude read. Columns and rows come from the count (693 is 33 by 21): the factor pair
+ * nearest to a 3:2 field; a count with no such pair gets the next full field and the cells past the count are simply not counted.
+ */
+export function scanGrid(n) {
+  let best = null;
+  for (let rows = 8; rows <= 40; rows += 1) {
+    if (n % rows) continue;
+    const cols = n / rows;
+    const ratio = cols / rows;
+    if (ratio < 1.2 || ratio > 2.2) continue;
+    if (!best || Math.abs(ratio - 1.55) < Math.abs(best.cols / best.rows - 1.55)) best = { cols, rows };
+  }
+  if (best) return best;
+  const cols = Math.ceil(Math.sqrt(n * 1.55));
+  return { cols, rows: Math.ceil(n / cols) };
+}
+
+/**
+ * Where the finding marks sit on the scan grid: spread over the width (one column band each, so the band meets them one after
+ * another) and over the height in a fixed shuffled order. Decorative only: a mark stands for one finding, not for a row number.
+ */
+export function markSpots(count, { cols, rows }) {
+  const order = [3, 13, 7, 16, 2, 11, 5, 15, 9, 4, 12, 6, 14, 8];
+  const band = (cols - 2) / count;
+  return Array.from({ length: count }, (_, i) => ({
+    col: Math.min(cols - 2, Math.round(1 + band * (i + 0.5))),
+    row: Math.min(rows - 2, Math.max(1, Math.round(((order[i % order.length] + 0.5) / 18) * (rows - 1)))),
+  }));
+}
+
+/** The scan scene of step 2 (left column): a counter that runs to the rows read, a field of one cell per row, a band that sweeps it, one mark per finding. */
+export function scanScene(it, { c, d, k, zone, id, timeText }) {
+  const t = c.take.scan;
+  const grid = scanGrid(d.rowsRead);
+  const spots = markSpots(d.findings.length, grid);
+  const PITCH = 6;
+  const from = 0.4;
+  const marks = spots
+    .map((m, i) => {
+      const at = from + (1 - from) * ((m.col + 0.5) / grid.cols) * 0.92;
+      return it({ tag: "i", cls: "scan__m", k, win: `${at.toFixed(3).replace(/^0/, "")},${Math.min(1, at + 0.12).toFixed(3).replace(/^0/, "")}`, attrs: `style="left:${m.col * PITCH + 1}px;top:${m.row * PITCH + 1}px"` });
+    })
+    .join("");
+  const sweep = `<i class="w05-sweep" aria-hidden="true" data-step="${k}" data-win=".4,1" data-fx="none"></i>`;
+  const num = (value) => it({ tag: "span", cls: "scan__v", k, fx: "none", win: ".4,1", count: `0,${value},0`, text: String(value) });
+  const time = timeText ? `<p class="scan__t"><b>${esc(timeText)}</b><small>${esc(t.time)}</small></p>` : "";
+  // the contrast with the week of slide 5, as a line under the counters (the evenings are the ones the week strip shows)
+  const last = timeText ? `<p class="scan__last">${esc(t.last)}</p>` : "";
+  const html = `<div class="scan__top"><p class="scan__n"><b>${num(d.rowsRead)}</b><small>${esc(t.rows)}</small></p>${time}</div>${last}<div class="scan__grid" style="width:${grid.cols * PITCH + 3}px;height:${grid.rows * PITCH + 3}px"><svg class="scan__tex" aria-hidden="true" focusable="false"><defs><pattern id="scan-cell" width="${PITCH}" height="${PITCH}" patternUnits="userSpaceOnUse" x="3" y="3"><rect class="scan__cell" width="${PITCH - 3}" height="${PITCH - 3}"/></pattern></defs><rect width="100%" height="100%" fill="url(#scan-cell)"/></svg>${sweep}${marks}</div><p class="scan__lg"><em class="scan__k">${esc(t.key)}</em><i class="scan__m scan__m--key"></i><b>${num(d.findings.length)}</b><span>${esc(t.found)}</span><b>${esc(d.decoys.length)}</b><span>${esc(t.fine)}</span></p>`;
+  return it({ id, tag: "div", cls: "scan fig", zone, k, win: ".3,.42", html, attrs: `role="img" aria-label="${esc(`${d.rowsRead} ${t.rows}, ${d.findings.length} ${t.found}, ${d.decoys.length} ${t.fine}`)}"` });
+}
+
+/** The status board of step 3 (left column): one tile per checklist line, full for COVERED, half for WEAK, empty for GAP, read from the take's own lines. */
+export function statusBoard(it, { c, k, zone, id, out, turn, ms }) {
+  const lines = statusLines(turn.final_text);
+  if (!lines.length) return "";
+  const word = c.take.status;
+  const tally = { covered: 0, weak: 0, gap: 0 };
+  for (const l of lines) tally[l.status] += 1;
+  const tiles = lines.map((l, i) => it({ tag: "li", cls: `board__t board__t--${l.status}`, k, win: rowWindow(i, ms, 0.35, 36, 0.3), html: `<span>${esc(l.id)}</span>` })).join("");
+  const legend = ["covered", "weak", "gap"].map((s) => `<span class="board__k board__k--${s}"><i></i><b>${tally[s]}</b> ${esc(word[s])}</span>`).join("");
+  return it({ id, tag: "div", cls: "board fig", zone, k, out, win: ".3,.42", html: `<ul class="board__g">${tiles}</ul><p class="board__lg">${legend}</p>` });
+}
+
+/**
+ * One recorded turn in the window and its chip and key line. `o`: { c, d, takes, key ("chain" or "register"), slot, k, ms,
+ * ids: {take, chip, key}, zones: {take, chip, key}, out: {take, chip, key}, count (placeholders of the key line that run),
+ * scan ({zone, id}: the scan scene of step 2), board ({zone, id, out}: the status board of step 3), head (show the first rows, not the last),
+ * hit (highlight the first line that names a finding), tools (show tool chips) }.
+ * Returns { take, chip, key } as markup; the take goes into the window's thread, chip and key into the left column.
+ * Without an accepted take the take is the labelled empty frame and the chip is left out.
+ */
+export function takeView(it, o) {
+  const { c, d, takes, key, slot, k, ms, ids, zones, out = {} } = o;
+  const copy = c.take;
+  const rec = takes[key];
+  const keyLine = fill(copy.key[o.keyName ?? slot], d.vars);
+  if (!rec) {
+    const buttons = copy.slotOpts.map((label) => `<span class="st__btn fig">${esc(label)}</span>`).join("");
+    const frame = it({ id: ids.take, tag: "div", cls: "st__slot", zone: zones.take, k, out: out.take, html: `<p class="st__slot-t">${esc(copy.slot)}</p><div class="st__slot-b">${buttons}</div>` });
+    const keyOnly = it({ id: ids.key, tag: "p", cls: "tk-key", zone: zones.key, k, out: out.key, html: keyHtml(keyLine, d.vars, { count: o.count, k }) });
+    return { take: frame, chip: "", key: keyOnly, time: "", scan: "", board: "", rec: null };
+  }
+  const turn = turnOf(rec, key, slot);
+  const diffs = compareWithKey(rec, slot);
+  const entries = takeRows(turn.final_text);
+  const hitAt = o.hit ? findingLine(entries) : -1;
+  let row = 0;
+  let fence = false;
+  // The stagger runs per recorded line (at most 16): the wrapped parts of one line and the cells of a table row come in together.
+  let item = 0;
+  const rows = entries
+    .map((e, index) => {
+      if (e.kind === "table") {
+        const trs = [e.header, ...e.body].map((r, i) => (row++, it({ tag: "tr", k, win: rowWindow(item++, ms), html: r.map((cell) => `<${i === 0 ? "th" : "td"}>${esc(cell)}</${i === 0 ? "th" : "td"}>`).join(""), attrs: `data-take="${rec.id}"` }))).join("");
+        return `<table class="fig rec" data-take="${rec.id}"><tbody>${trs}</tbody></table>`;
+      }
+      const win = rowWindow(item++, ms);
+      const kind = lineKind(e.line, fence);
+      fence = kind.fence;
+      const marked = markdownRows(e.rows);
+      return e.rows
+        .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${index === hitAt ? " is-hit" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
+        .join("");
+    })
+    .join("");
+  const used = o.tools === false ? [] : toolsOf(turn);
+  const tools = used.length ? `<p class="tk-tools fig">${used.map((t) => `<span class="tk-tool">${esc(copy.tool[t])}</span>`).join("")}</p>` : "";
+  const made = o.files ? fileChips(o.recFiles ?? rec, "", { skip: o.skipFiles }) : "";
+  // The answer is printed whole at 27 px. When it is taller than the window, the flow scrolls up with the rows as they come in
+  // (the way a Claude window does, see .tk-flow in deck.css); nothing is cut, nothing is edited, and a fade at the top of the window shows it.
+  const flow = `<div class="tk-flow" data-step="${k}" data-win=".3,1" data-fx="none">${tools}${rows}${made}</div>`;
+  const take = it({ id: ids.take, tag: "div", cls: `cw-answer tk${o.head ? " tk--head" : ""}`, zone: zones.take, k, out: out.take, win: ".3,.45", attrs: `data-take="${rec.id}"`, html: `${flow}` });
+  const chip = it({ id: ids.chip, tag: "p", cls: "tk-chip fig", zone: zones.chip, k, out: out.chip, text: chipText(rec, d.lang, diffs.length > 0, copy) });
+  const keyEl = it({ id: ids.key, tag: "p", cls: "tk-key", zone: zones.key, k, out: out.key, html: `${keyHtml(keyLine, d.vars, { count: o.count, k })} ${esc(runPart(copy, diffs))}` });
+  // The measured time of the recorded turn (stats.duration_ms), shown only when the recording carries it, never estimated.
+  const timeText = o.time || o.scan ? durationText(turn) : null;
+  const time = !o.scan && timeText ? it({ id: o.time.id, tag: "p", cls: "tk-time fig", zone: o.time.zone, k, out: out.time, html: `<b>${esc(timeText)}</b><small>${esc(copy.time)}</small>` }) : "";
+  const scan = o.scan ? scanScene(it, { c, d, k, zone: o.scan.zone, id: o.scan.id, timeText }) : "";
+  const board = o.board ? statusBoard(it, { c, k, zone: o.board.zone, id: o.board.id, out: o.board.out, turn, ms }) : "";
+  return { take, chip, key: keyEl, time, scan, board, rec, diffs, entries };
+}
+
+
+/**
+ * Display markup of the rows of one recorded line. **bold** is shown bold; the asterisks stay in the page (so the text is
+ * the recorded text, character for character) but are not drawn (class md). A bold run that wraps onto the next row is closed
+ * and opened again, nothing is added.
+ */
+export function markdownRows(rows) {
+  let bold = false;
+  return rows.map((text) => {
+    let out = bold ? "<b>" : "";
+    for (const part of String(text).split(/(\*\*)/)) {
+      if (part === "**") {
+        out += bold ? '</b><span class="md">**</span>' : '<span class="md">**</span><b>';
+        bold = !bold;
+      } else out += esc(part);
+    }
+    return bold ? `${out}</b>` : out;
+  });
+}
+
+/** What kind of line a recorded line is: a list item, a code fence, a line inside a fence. Returns the class and the new fence state. */
+export function lineKind(line, inFence) {
+  const trimmed = String(line).trim();
+  if (trimmed.startsWith("```")) return { cls: " is-fence", fence: !inFence };
+  if (inFence) return { cls: " is-code", fence: true };
+  if (/^(\d+\.|-)\s/.test(trimmed)) return { cls: " is-li", fence: false };
+  return { cls: "", fence: false };
+}
+
+/** The produced files of a take as chips (names from the recording), or the names the copy lists while there is none. */
+export function fileChips(rec, fallback, { skip } = {}) {
+  const fromRecording = rec?.produced_files?.length ? rec.produced_files.map((f) => String(f.name).split("/").pop()).filter((n) => !(skip && skip.test(n))) : [];
+  const names = fromRecording.length ? fromRecording : fallback ? split(fallback) : [];
+  if (!names.length) return "";
+  return `<p class="tk-files fig">${names.map((n) => `<span class="cw-file"><i>${esc((n.split(".").pop() ?? "").slice(0, 4))}</i><b>${esc(n)}</b></span>`).join("")}</p>`;
+}
+
+/** The produced files of a take as small page previews (a sheet with three lines and the file name), or the listed names. */
+export function filePreviews(rec, fallback, { skip } = {}) {
+  const fromRecording = rec?.produced_files?.length ? rec.produced_files.map((f) => String(f.name).split("/").pop()).filter((n) => !(skip && skip.test(n))) : [];
+  const names = fromRecording.length ? fromRecording : fallback ? split(fallback) : [];
+  if (!names.length) return "";
+  return `<div class="tk-prevs fig">${names.map((n) => `<span class="tk-prev"><i></i><i></i><i></i><b>${esc(n)}</b></span>`).join("")}</div>`;
+}
+
+/** Four dots, the one of the current step filled: where we are in the four prompts. Label-free, so it sits in a figure cell. */
+export const progress = (it, n, zone = "p") => it({ id: "prog", tag: "p", cls: "tk-prog fig", zone, attrs: `role="img" aria-label="${n} / 4"`, html: [1, 2, 3, 4].map((i) => `<i${i === n ? ' class="is-now"' : i < n ? ' class="is-done"' : ""}>${i}</i>`).join("") });

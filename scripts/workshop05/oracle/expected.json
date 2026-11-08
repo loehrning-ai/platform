@@ -316,5 +316,105 @@
       [0,1,2,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
       [0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0]
     ]
+  },
+  "register": {
+    "today": "2026-11-26",
+    "rows": 98,
+    "byPaper": {
+      "contract": 24,
+      "registration": 24,
+      "medical-exam": 24,
+      "leave-decision": 23,
+      "overtime-notice": 2,
+      "safety-statement": 1
+    },
+    "expired": [
+      {
+        "id": "E-02",
+        "paper": "medical-exam",
+        "validUntil": "2026-09-12"
+      },
+      {
+        "id": "E-06",
+        "paper": "medical-exam",
+        "validUntil": "2026-09-12"
+      },
+      {
+        "id": "E-10",
+        "paper": "medical-exam",
+        "validUntil": "2026-09-12"
+      },
+      {
+        "id": "E-16",
+        "paper": "medical-exam",
+        "validUntil": "2026-09-12"
+      }
+    ],
+    "expiring": [
+      {
+        "id": "E-03",
+        "paper": "medical-exam",
+        "validUntil": "2026-12-03"
+      }
+    ],
+    "missing": [
+      {
+        "id": "E-11",
+        "paper": "leave-decision"
+      },
+      {
+        "id": "E-19",
+        "paper": "leave-decision"
+      },
+      {
+        "id": "E-07",
+        "paper": "overtime-notice"
+      },
+      {
+        "id": "E-08",
+        "paper": "overtime-notice"
+      }
+    ],
+    "summary": {
+      "en": "register.csv: 98 rows, 4 expired, 1 expiring, 4 missing",
+      "de": "register.csv: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen"
+    },
+    "askE07": {
+      "onFile": 4,
+      "missing": 1,
+      "missingPaper": "overtime-notice"
+    },
+    "byDate": {
+      "2026-11-26": {
+        "rows": 98,
+        "expired": 4,
+        "expiring": 1,
+        "missing": 4,
+        "expiringIds": [
+          "E-03"
+        ]
+      },
+      "2027-01-05": {
+        "rows": 99,
+        "expired": 5,
+        "expiring": 2,
+        "missing": 5,
+        "expiringIds": [
+          "E-17",
+          "E-22"
+        ]
+      },
+      "2027-03-01": {
+        "rows": 99,
+        "expired": 5,
+        "expiring": 3,
+        "missing": 5,
+        "expiringIds": [
+          "E-17",
+          "E-20",
+          "E-22"
+        ]
+      }
+    }
   }
 }

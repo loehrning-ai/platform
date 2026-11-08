@@ -1,5 +1,5 @@
 /**
- * Workshop 05: the five effect scripts (lib/w05-*.js) are small, quiet and safe. They hold no timer, no key handler,
+ * Workshop 05: the one effect script (lib/w05-tally.js) is small, quiet and safe. They hold no timer, no key handler,
  * no storage of their own, no random numbers and no backdrop-filter; they write no data-fx value outside the engine's
  * list; and each one loads in a bare context (no document) and exports its pure functions.
  * The glass test does not scan public/**\/*.js, so this test does.
@@ -12,12 +12,12 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib");
-const SCRIPTS = ["w05-tally.js", "w05-clock.js", "w05-matrix.js", "w05-days.js", "w05-gates.js"];
+const SCRIPTS = ["w05-tally.js"];
 const BANNED = ["backdrop-filter", "setInterval", "setTimeout", "keydown", "keyup", "keypress", "localStorage", "sessionStorage", "Date.now", "Math.random", "requestAnimationFrame", "fetch(", "XMLHttpRequest", "eval(", "new Function", "innerHTML"];
 const ENGINE_FX = ["fade", "none", "line", "move", "draw", "pop", "fly", "flip", "strike", "type", "glow", "blur", "arc", "travel", "dim", "zoom", "grow"];
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
 
-test("the five scripts exist and are the only w05-*.js files", () => {
+test("the tally script exists and is the only w05-*.js files", () => {
   const found = readdirSync(LIB).filter((n) => /^w05-.*\.js$/.test(n)).sort();
   assert.deepEqual(found, [...SCRIPTS].sort());
 });
@@ -72,13 +72,11 @@ test("no script and no stylesheet names an internal path, a person or a secret",
   }
 });
 
-test("w05-fx.css states its end states for reduced motion and html.w05-final", () => {
-  const css = read("w05-fx.css");
-  assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(css, /html\.w05-final/);
+test("w05-fx.css states its end state for reduced motion", () => {
+  assert.match(read("w05-fx.css"), /@media \(prefers-reduced-motion:\s*reduce\)/);
 });
 
-test("the tally helper counts five with Shift and one without; the gate list is the four names of the spec", () => {
+test("the tally helper counts five with Shift and one without", () => {
   const load = (name) => {
     const sandbox = { module: { exports: {} } };
     vm.runInNewContext(read(name), sandbox, { filename: name });
@@ -87,8 +85,4 @@ test("the tally helper counts five with Shift and one without; the gate list is 
   const tally = load("w05-tally.js");
   assert.equal(tally.clicksFor(true), 5);
   assert.equal(tally.clicksFor(false), 1);
-  const gates = load("w05-gates.js");
-  assert.deepEqual(Array.from(gates.GATES), ["subscription", "contract", "security", "transfer"]);
-  assert.equal(gates.allOpen(["subscription", "contract", "security"]), false);
-  assert.equal(gates.allOpen(["transfer", "security", "contract", "subscription"]), true);
 });

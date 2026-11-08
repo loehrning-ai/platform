@@ -10,14 +10,14 @@ import type { Model } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
 import { DockCaption } from "./dock-caption";
 import { formatter } from "./fmt";
 import { ClockStage, FolderStage, TestsStage, type Guesses } from "./scene-folder";
-import { LateStage, LevelStage, type LateStep } from "./scene-late";
+import { LateStage, type LateStep } from "./scene-late";
 import { OwnStage, type OwnTicks } from "./scene-own";
+import { RegisterStage } from "./scene-register";
 import { TakeHomeScene, type TakeHomeFiles } from "./scene-takehome";
 import { rowsDrawn, XrayStage } from "./scene-xray";
 import "./w05.css";
 
 const NO_GUESSES: Guesses = {};
-const NO_COLUMNS: ReadonlySet<string> = new Set();
 
 export default function Demo({ copy, model, files }: { readonly copy: W05Copy; readonly model: Model; readonly files: TakeHomeFiles }) {
   const clock = useBeatClock();
@@ -33,7 +33,7 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
   const [focus, setFocus] = useState<TestId | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [late, setLate] = useState<LateStep>("start");
-  const [columns, setColumns] = useState<ReadonlySet<string>>(NO_COLUMNS);
+  const [dateAt, setDateAt] = useState(0);
   const [ownText, setOwnText] = useState("");
   const [ticks, setTicks] = useState<OwnTicks>({});
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -47,7 +47,7 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
     setFocus(null);
     setOpen(null);
     setLate("start");
-    setColumns(NO_COLUMNS);
+    setDateAt(0);
   });
   // A new beat brings the stage back into view when the visitor had scrolled away (never on load).
   useEffect(() => {
@@ -69,6 +69,8 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
   const scanDone = reduced || clock.progress >= 1 || view !== "roentgen";
   const scanRows = view === "free" ? total : rowsDrawn(clock.progress, total, scanDone);
   const cardRows = view === "ordner" && !reduced && clock.progress < 1 ? Math.floor(clock.progress * total) : total;
+  // The register's counts run up once while its beat opens; a picked date then shows its counts at once.
+  const registerProgress = view !== "register" || reduced ? 1 : clock.progress;
   const chosen = model.clock[pick] ?? model.clock[model.clock.length - 1];
 
   const guess = (id: string, status: Status) => setGuesses((current) => ({ ...current, [id]: status }));
@@ -76,13 +78,6 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
     setTicks((current) => {
       const now = current[paper] ?? [];
       return { ...current, [paper]: now.includes(test) ? now.filter((entry) => entry !== test) : [...now, test] };
-    });
-  const toggleColumn = (id: string) =>
-    setColumns((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
     });
 
   const caption = ((): string[] => {
@@ -99,8 +94,8 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
           : [copy.xray.caption[0], fmt.t(copy.xray.caption[1], { over: model.wrong.over, under: model.wrong.under, month: copy.months[Number(model.pay.periodEnd.slice(5, 7)) - 1] as string })];
       case "nachtrag":
         return [late === "start" ? fmt.t(copy.late.captionStart, { n: model.pay.daysLate }) : late === "edited" ? copy.late.captionEdited : copy.late.captionNote];
-      case "zuviel":
-        return [columns.size === 0 ? copy.level.captionNone : copy.level.captionSome];
+      case "register":
+        return [...copy.register.caption];
       case "ordner-eigen":
         return [copy.own.caption];
       case "mitnehmen":
@@ -123,8 +118,8 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
         return <XrayStage fmt={fmt} model={model} drawn={scanRows} open={open} onOpen={setOpen} guesses={guesses} scanning={scanRows < total} />;
       case "nachtrag":
         return <LateStage fmt={fmt} model={model} step={late} />;
-      case "zuviel":
-        return <LevelStage fmt={fmt} model={model} picked={columns} onToggle={toggleColumn} />;
+      case "register":
+        return <RegisterStage fmt={fmt} model={model} pick={dateAt} progress={registerProgress} />;
       case "ordner-eigen":
         return <OwnStage fmt={fmt} text={ownText} onText={setOwnText} ticks={ticks} onTick={tick} />;
       case "mitnehmen":
@@ -194,12 +189,15 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
             {copy.late.write}
           </GlasButton>
         ) : null;
-      case "zuviel":
-        return columns.size > 0 ? (
-          <GlasButton variant="plain" size="compact" onClick={() => setColumns(NO_COLUMNS)} data-w05-level-clear="">
-            {copy.level.clear}
-          </GlasButton>
-        ) : null;
+      case "register":
+        return (
+          <GlasSegmented
+            label={copy.register.group}
+            value={String(dateAt)}
+            onChange={(value) => setDateAt(Number(value))}
+            options={model.register.map((entry, index) => ({ value: String(index), label: fmt.dayYear(entry.date) }))}
+          />
+        );
       default:
         return null;
     }

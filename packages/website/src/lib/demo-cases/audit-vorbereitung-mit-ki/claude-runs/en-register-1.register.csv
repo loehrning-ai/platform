@@ -1,0 +1,100 @@
+# Fictional training material, invented for the exercise.
+person_id,paper,date,valid_until,owner,where,approved_by
+E-01,contract,2022-12-26,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-01,registration,2022-12-16,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-01,medical-exam,2026-03-12,2028-03-12,office manager (E-02),health centre slips,NOT IN FILES
+E-01,leave-decision,2026-02-25,,office manager (E-02),leave decisions,NOT IN FILES
+E-02,contract,2021-04-12,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-02,registration,2021-04-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-02,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES
+E-02,leave-decision,2026-02-02,,office manager (E-02),leave decisions,NOT IN FILES
+E-03,contract,2013-10-28,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-03,registration,2013-10-22,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-03,medical-exam,2024-12-03,2026-12-03,office manager (E-02),health centre slips,NOT IN FILES
+E-03,leave-decision,2026-01-02,,office manager (E-02),leave decisions,NOT IN FILES
+E-04,contract,2021-08-16,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-04,registration,2021-08-10,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-04,medical-exam,2026-02-20,2028-02-20,office manager (E-02),health centre slips,NOT IN FILES
+E-04,leave-decision,2026-01-05,,office manager (E-02),leave decisions,NOT IN FILES
+E-05,contract,2026-03-02,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-05,registration,2026-03-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-05,medical-exam,2026-07-23,2028-07-23,office manager (E-02),health centre slips,NOT IN FILES
+E-05,leave-decision,2026-09-03,,office manager (E-02),leave decisions,NOT IN FILES
+E-06,contract,2019-09-30,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-06,registration,2019-09-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-06,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES
+E-06,leave-decision,2026-01-05,,office manager (E-02),leave decisions,NOT IN FILES
+E-07,contract,2015-11-09,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-07,registration,2015-11-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-07,medical-exam,2026-02-11,2028-02-11,office manager (E-02),health centre slips,NOT IN FILES
+E-07,leave-decision,2026-02-06,,office manager (E-02),leave decisions,NOT IN FILES
+E-07,overtime-notice,MISSING,,office manager (E-02),overtime notices folder,NOT IN FILES
+E-08,contract,2024-03-04,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-08,registration,2024-02-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-08,medical-exam,2026-03-19,2028-03-19,office manager (E-02),health centre slips,NOT IN FILES
+E-08,leave-decision,2026-02-11,,office manager (E-02),leave decisions,NOT IN FILES
+E-08,overtime-notice,MISSING,,office manager (E-02),overtime notices folder,NOT IN FILES
+E-09,contract,2024-05-20,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-09,registration,2024-05-13,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-09,medical-exam,2026-06-22,2028-06-22,office manager (E-02),health centre slips,NOT IN FILES
+E-09,leave-decision,2026-01-08,,office manager (E-02),leave decisions,NOT IN FILES
+E-10,contract,2021-01-25,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-10,registration,2021-01-18,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-10,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES
+E-10,leave-decision,2026-02-09,,office manager (E-02),leave decisions,NOT IN FILES
+E-11,contract,2024-04-01,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-11,registration,2024-03-22,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-11,medical-exam,2026-05-11,2028-05-11,office manager (E-02),health centre slips,NOT IN FILES
+E-11,leave-decision,MISSING,,office manager (E-02),leave decisions,NOT IN FILES
+E-12,contract,2021-01-04,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-12,registration,2020-12-31,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-12,medical-exam,2026-09-28,2028-09-28,office manager (E-02),health centre slips,NOT IN FILES
+E-12,leave-decision,2026-02-16,,office manager (E-02),leave decisions,NOT IN FILES
+E-13,contract,2014-01-27,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-13,registration,2014-01-21,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-13,medical-exam,2026-05-12,2028-05-12,office manager (E-02),health centre slips,NOT IN FILES
+E-13,leave-decision,2026-01-26,,office manager (E-02),leave decisions,NOT IN FILES
+E-14,contract,2023-09-04,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-14,registration,2023-08-29,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-14,medical-exam,2025-12-05,2027-12-05,office manager (E-02),health centre slips,NOT IN FILES
+E-14,leave-decision,2026-01-06,,office manager (E-02),leave decisions,NOT IN FILES
+E-15,contract,2016-02-01,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-15,registration,2016-01-28,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-15,medical-exam,2025-05-02,2027-05-02,office manager (E-02),health centre slips,NOT IN FILES
+E-15,leave-decision,2026-02-16,,office manager (E-02),leave decisions,NOT IN FILES
+E-16,contract,2022-12-19,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-16,registration,2022-12-09,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-16,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES
+E-16,leave-decision,2026-02-26,,office manager (E-02),leave decisions,NOT IN FILES
+E-17,contract,2022-02-07,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-17,registration,2022-01-28,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-17,medical-exam,2025-03-03,2027-03-03,office manager (E-02),health centre slips,NOT IN FILES
+E-17,leave-decision,2026-02-04,,office manager (E-02),leave decisions,NOT IN FILES
+E-18,contract,2021-01-11,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-18,registration,2020-12-31,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-18,medical-exam,2026-06-29,2028-06-29,office manager (E-02),health centre slips,NOT IN FILES
+E-18,leave-decision,2026-01-26,,office manager (E-02),leave decisions,NOT IN FILES
+E-19,contract,2025-12-01,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-19,registration,2025-11-25,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-19,medical-exam,2026-05-22,2028-05-22,office manager (E-02),health centre slips,NOT IN FILES
+E-19,leave-decision,MISSING,,office manager (E-02),leave decisions,NOT IN FILES
+E-20,contract,2018-05-14,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-20,registration,2018-05-10,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-20,medical-exam,2025-03-20,2027-03-20,office manager (E-02),health centre slips,NOT IN FILES
+E-20,leave-decision,2026-02-17,,office manager (E-02),leave decisions,NOT IN FILES
+E-21,contract,2021-04-12,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-21,registration,2021-04-07,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-21,medical-exam,2026-10-05,2028-10-05,office manager (E-02),health centre slips,NOT IN FILES
+E-21,leave-decision,2026-02-17,,office manager (E-02),leave decisions,NOT IN FILES
+E-22,contract,2026-06-01,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-22,registration,2026-05-29,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-22,medical-exam,2025-03-05,2027-03-05,office manager (E-02),health centre slips,NOT IN FILES
+E-23,contract,2020-10-26,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-23,registration,2020-10-19,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-23,medical-exam,2025-05-06,2027-05-06,office manager (E-02),health centre slips,NOT IN FILES
+E-23,leave-decision,2026-02-11,,office manager (E-02),leave decisions,NOT IN FILES
+E-24,contract,2019-06-03,,office manager (E-02),contracts folder in the office,NOT IN FILES
+E-24,registration,2019-05-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES
+E-24,medical-exam,2025-08-25,2027-08-25,office manager (E-02),health centre slips,NOT IN FILES
+E-24,leave-decision,2026-02-25,,office manager (E-02),leave decisions,NOT IN FILES
+FIRM,safety-statement,2019-03-14,,person with the binder (no job title in files),safety_statement_2019.md,NOT IN FILES

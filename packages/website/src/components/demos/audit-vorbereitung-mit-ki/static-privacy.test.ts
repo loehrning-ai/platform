@@ -56,7 +56,7 @@ describe("W05 demo, static guards", () => {
 
   it("names only slots the demo fills", async () => {
     const { COPY } = await import("@/lib/demo-cases/audit-vorbereitung-mit-ki/copy");
-    const known = new Set(["n", "guesses", "label", "notice", "day", "need", "days", "date", "calendar", "working", "people", "month", "listed", "titles", "id", "status", "guess", "paper", "file", "periodEnd", "paid", "weekday", "total", "covered", "weak", "gap", "over", "under", "files", "visit", "papers"]);
+    const known = new Set(["n", "guesses", "label", "notice", "day", "need", "days", "date", "calendar", "working", "people", "month", "listed", "titles", "id", "status", "guess", "paper", "file", "periodEnd", "paid", "weekday", "total", "covered", "weak", "gap", "over", "under", "files", "visit", "papers", "rows", "expired", "expiring", "missing"]);
     const walk = (value: unknown, trail: string): void => {
       if (typeof value === "string") {
         for (const slot of value.matchAll(/\{(\w+)\}/g)) expect(known.has(slot[1] as string), `${trail}: {${slot[1]}}`).toBe(true);

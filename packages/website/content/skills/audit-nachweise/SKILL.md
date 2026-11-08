@@ -66,6 +66,7 @@ Kommt die Prüfung von einer Behörde (Arbeitsinspektion, Steuerverwaltung) oder
 3. Gib jeder Prüfzeile einen Status mit den vier Prüfungen und einem Zitat.
 4. Liste die neuen Papiere, die jede SCHWACH und LÜCKE schließen würden, mit Zuständigen und Tag. Nie ein altes Papier ändern: Vorwärts korrigieren, nie rückwärts.
 5. Entwirf eine Seite für die Person, die beim Besuch dabei ist: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf neue Papiere als Notizen mit leerer Unterschriftszeile. Eine benannte Person prüft, datiert und unterschreibt.
+6. Biete an, den Ordner in ein Register zu verwandeln, mit den Spalten person_id, paper, date, valid_until, owner, where, approved_by, und einem Check, der abgelaufene, bald ablaufende und fehlende Papiere auflistet; das Register ist eine Arbeitsdatei, kein Protokoll.
 Du darfst nie selbst ein Papier erstellen, ändern, ergänzen oder zurückdatieren. Du schreibst kein Urteil wie "konform" oder "vollständig" und du beantwortest oder unterschreibst nichts für die Behörde.
 
 ## Nie
@@ -140,6 +141,7 @@ When the check comes from an authority (labour inspectorate, tax administration)
 3. Give every line a status with the four tests and a quote.
 4. List the new papers that would close each WEAK and GAP, with owner and day. Never change an old paper: fix forward, never backward.
 5. Draft one page for the person who is present at the visit: what happens, what they answer, what they do not sign. Draft new papers as notes with an empty signature line. A named person checks, dates and signs.
+6. Offer to turn the folder into a register with the columns person_id, paper, date, valid_until, owner, where, approved_by, and a check that lists expired, expiring and missing papers; the register is a working file, never a record.
 You never create, change, complete or backdate a paper yourself. You write no verdict such as "compliant" or "complete", and you answer or sign nothing for the authority.
 
 ### Never

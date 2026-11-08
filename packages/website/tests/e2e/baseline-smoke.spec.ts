@@ -16,7 +16,7 @@ const assetManifest = JSON.parse(readFileSync(path.resolve(process.cwd(), "../..
 };
 const courses = [
   { capability: "workshop-w04", slug: "esg-berichte-mit-ki", scene: "weingut", intro: { de: "Crvena Zemja", en: "Crvena Zemja" }, band: { de: "Tim", en: "Tim" } },
-  { capability: "workshop-w05", slug: "audit-vorbereitung-mit-ki", scene: "doors", intro: { de: "erfundene Firma", en: "invented firm" }, band: { de: "Am Montag kommt ein Brief", en: "On Monday a letter arrives" } },
+  { capability: "workshop-w05", slug: "audit-vorbereitung-mit-ki", scene: "today", intro: { de: "erfundene Firma", en: "invented firm" }, band: { de: "Am Montag kommt ein Brief", en: "On Monday a letter arrives" } },
 ] as const;
 
 for (const locale of ["de", "en"] as const) {
@@ -85,7 +85,7 @@ for (const locale of ["de", "en"] as const) {
       });
       await inNewPage(context, async (page) => {
         await openApp(page, `${prefix}/workshops/${course.slug}/kit`);
-        await expect(page.locator("main")).toContainText("Codex");
+        await expect(page.locator("main")).toContainText(course.capability === "workshop-w05" ? "Claude" : "Codex");
         if (course.capability === "workshop-w04") {
           await expect(page.locator("[data-kit-setup-step]")).toHaveCount(4);
           await expect(page.locator("[data-kit-setup]")).toContainText("Instructions → Edit");

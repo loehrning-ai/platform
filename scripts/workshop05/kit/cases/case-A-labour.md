@@ -7,8 +7,14 @@ Laws as of 7 November 2026. Sources are named at the end, read on 2026-11-07. Ev
 ## Who comes and how you learn the date
 A state labour inspector of the State Labour Inspectorate (DIT), sometimes two, one for labour and one for safety. ZIN, the general inspection law (SV 135/2025), applies from 1 January 2026. The inspectorate also has its own special law, so the notice period and other rules can differ in a real case. Ask an adviser.
 - A regular inspection is announced by a written notice with the checklist at least three working days before it starts (ZIN Art. 57(2),(3)). There are exceptions where special laws allow it or where immediate action is needed.
-- An extraordinary inspection is by rule unannounced and starts within 10 working days of the initiative or written order (ZIN Art. 58).
+- An extraordinary inspection is usually unannounced and is carried out within 10 working days of the initiative or written order (ZIN Art. 58).
 - You name one employee who is present. You may accompany the inspector, get a copy of each checklist, add a reasoned comment and refuse to sign minutes that do not match the facts. The minutes are written on the spot and signed by both sides (ZIN Art. 54, 65).
+
+## How often it comes and how it starts
+- Sourced: the Law on Inspection Supervision (in force since 1 January 2026) says inspections follow a risk assessment of the firm. The same inspection service may do a regular inspection at the same firm at most once a year (Art. 24, 57(6)). A regular inspection is usually announced in writing at least three working days ahead. An extraordinary inspection, after a complaint, an own finding or an order, is usually not announced (Art. 58).
+- Sourced: in 2025 DIT did 26,484 inspections, 5,664 of them regular and 14,305 extraordinary (proposed annual report for 2025). Wholesale and retail trade is among the risk sectors under watch.
+- Own calculation, rough: 5,664 regular inspections in 2025 divided by 73,310 active enterprises in 2024 is, on paper, about one regular inspection a year for every 13 active enterprises. It is not the chance for one firm.
+- This kit's story (invented): Gradba-Pro was last inspected in spring 2024. Normally nobody opens the binders. When the letter comes, everybody works overtime in the last week. Nothing in this line is a measured rhythm.
 
 ## The clocks
 - Notice to visit: at least 3 working days for a regular inspection.
@@ -22,7 +28,7 @@ Whether the day of the notice and the day of the visit count is not settled in o
 Employment contracts, attendance sheets, overtime notices to the labour inspector, pay calculations with the overtime line, leave decisions. With a safety inspector the safety statement and the medical exam papers follow.
 
 ## Bottlenecks
-Sourced: the clocks are short and fixed (3, 3, 8 and 15 days). Late or inaccurate documents are themselves a fineable offence (ZIN Art. 83). DIT annual report for 2025, proposal version, published April 2026: 124 inspectors and 26,484 inspections (labour and safety), so about 214 inspections for each inspector (derived).
+Sourced: the clocks are short and fixed (3, 3, 8 and 15 days). Late or inaccurate documents are themselves a fineable offence (ZIN Art. 83). The proposed DIT annual report for 2025 names 124 inspectors and 26,484 inspections (labour and safety), so about 214 inspections for each inspector (derived).
 This kit's story (invented): papers kept in several places, attendance sheets that are only ticks, overtime notices that were never written, a safety statement older than the hall. Nothing in this second list is a measured finding.
 
 ## Cost and what the law leaves open
@@ -38,4 +44,4 @@ AI may sort, compare, count, check and draft. Turn the public checklist into an 
 AI never creates, changes, completes or backdates a record. Write a new paper with today's date and leave the old one as it is. Records changed afterwards can fall under Criminal Code Art. 280 or Art. 378 (can apply, not will).
 
 ## Sources, read on 2026-11-07
-ZIN (SV 135/2025), ZRO, ZBZR, the Law on Records, the public DIT checklists (2022 versions), the DIT annual report for 2025 (proposal version, published April 2026).
+ZIN (SV 135/2025), ZRO, ZBZR, the Law on Records, the public DIT checklists (2022 versions), the proposed DIT annual report for 2025, the State Statistical Office release on active enterprises in 2024 (preliminary data, April 2026).

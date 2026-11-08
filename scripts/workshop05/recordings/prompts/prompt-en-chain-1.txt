@@ -1,0 +1,1 @@
+Read the three checklist excerpts. Make a table with one row per checklist question: line id, article, the paper that answers it, its owner, where it lives (use folder-index.md). Do not open the folder files yet. If a paper is not in the files, write NOT IN FILES. Use ids, no names. Answer with the table only.

@@ -86,3 +86,19 @@ test("every Cyrillic character in the visible text of the built decks (and in ea
     assert.deepEqual(missing(quotes).map(hex), [], `${file} .qd elements`);
   }
 });
+
+test("on the main slides Cyrillic appears on two slides only, the evidence wall (why) and the notice of the letter, every quote with its translation beside it", () => {
+  for (const file of ["slides.html", "en/slides.html"]) {
+    const html = readFileSync(path.join(DECK, file), "utf8");
+    const main = html.split(/<section\b/).filter((s) => /data-kind="main"/.test(s.slice(0, 400)));
+    const withCyrillic = main.filter((s) => /[\u0400-\u04FF]/.test(visibleText(s)));
+    assert.deepEqual(withCyrillic.map((s) => /id="([a-z0-9]+)"/.exec(s)[1]), ["why", "letter"], `${file}: Cyrillic on the why and the letter slide only`);
+    for (const slide of withCyrillic) {
+      const quotes = [...slide.matchAll(/class="(?:[^"]* )?qd(?: [^"]*)?"[^>]*>([^<]*)</g)].map((m) => m[1]);
+      const glosses = [...slide.matchAll(/class="(?:[^"]* )?qd-gloss(?: [^"]*)?"/g)];
+      assert.ok(quotes.some((q) => /[\u0400-\u04FF]/.test(q)), `${file}: a Cyrillic .qd string`);
+      const foreign = quotes.filter((q) => /[\u0400-\u04FF]/.test(q));
+      assert.ok(glosses.length >= foreign.length, `${file}: every Cyrillic quote has its translation (${foreign.length} quotes, ${glosses.length} glosses)`);
+    }
+  }
+});

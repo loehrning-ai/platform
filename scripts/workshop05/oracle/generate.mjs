@@ -3,7 +3,7 @@
  * Seeded generator for the dated kit files of Workshop 05 (the invented firm Gradba-Pro). Seed 2611.
  *
  * Writes every dated CSV and the overtime notices listing into scripts/workshop05/kit/folder/ and the
- * German tree (kit-de/ordner/), and the three CSV templates into templates/ and vorlagen/. The CSV bytes
+ * German tree (kit-de/ordner/), and the four CSV templates (evidence index, clock, register, sample rows) into templates/ and vorlagen/. The CSV bytes
  * are identical in both editions (both label lines are in every file).
  *
  *   node scripts/workshop05/oracle/generate.mjs            writes the files
@@ -255,7 +255,7 @@ export function generateAll() {
     en: [
       "Fictional training material, invented for the exercise. Not legal advice.",
       "Folder listing: overtime notices to the labour inspector. Invented firm Gradba-Pro DOOEL.",
-      "Format: date | people | what the notice says | signature",
+      "Format: date | people | what the notice says | sign-off",
       "2019-06-03 | none named | overtime for the autumn rush of 2019 | Signed by:",
       "2026: (empty)",
       "",
@@ -274,6 +274,8 @@ export function generateAll() {
   const templates = {
     "evidence-index.csv": csv(LABEL, "line_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due", []),
     "clock.csv": csv(LABEL, "event,rule,date", ["example: delete this row,3 calendar days after a written request,2026-01-12"]),
+    // Step 4: the header of the register (columns of SPEC 4.2); the same bytes in both editions.
+    "register.csv": csv(LABEL, "person_id,paper,date,valid_until,owner,where,approved_by", []),
     "sample-rows_attendance.csv": csv(LABEL, "id,date,start,end,tick,code", [
       "X-01,2026-02-02,08:01,16:05,,",
       "X-02,2026-02-02,07:57,16:12,,",

@@ -10,6 +10,15 @@
  *     --kit-file prognose-pruefen-kit/daten/tool-export.txt \
  *     --prompt-file prompt.txt --skill prognose-pruefen --allow-python --allow-write \
  *     [--no-skill] [--follow-up-file b.txt] [--model claude-opus-5-5] [--dry-run]
+ *     [--keep-paths] [--instructions-file <path inside the zip>]
+ *
+ * --keep-paths: kit files keep their path below the kit's root folder in the workspace
+ * (folder/a.csv, templates/b.csv) instead of being flattened; kit_files[].name is then that
+ * relative path. --instructions-file: a file of the zip whose exact bytes go to the run as
+ * --append-system-prompt text (on every resumed turn too), like a Claude Project's
+ * instructions; the recording stores the placeholder <project-instructions> in `flags` and
+ * the file's name, path, size and sha256 in `instructions`. --follow-up-file may repeat:
+ * every follow-up resumes the same session.
  *
  * What it does: copies the named files out of the shipped kit zip and (unless
  * --no-skill) content/skills/<skill>/ into a fresh temporary workspace
@@ -77,7 +86,9 @@ export function skillDigest(dir) {
 }
 
 /** The CLI flags for one run, without machine paths (stored in the recording as `flags`). */
-export function runFlags({ model, withSkill, allowWrite, allowPython, persist }) {
+export const INSTRUCTIONS_PLACEHOLDER = "<project-instructions>";
+
+export function runFlags({ model, withSkill, allowWrite, allowPython, persist, instructions = false }) {
   const tools = ["Read", "Skill", ...(allowWrite ? ["Write"] : []), ...(allowPython ? ["Bash"] : [])].join(",");
   const flags = [
     "--output-format", "stream-json", "--verbose", "--include-partial-messages",
@@ -91,7 +102,26 @@ export function runFlags({ model, withSkill, allowWrite, allowPython, persist })
   // The skill's "rechnet per Code" step: any shell command, inside the sandbox (SANDBOX_SETTINGS).
   if (allowPython) flags.push("--allowedTools", "Bash", "--settings", SANDBOX_SETTINGS);
   if (!withSkill) flags.push("--disable-slash-commands");
+  // The project instructions travel as text; the recording keeps only the placeholder, never a path or the text twice.
+  if (instructions) flags.push("--append-system-prompt", INSTRUCTIONS_PLACEHOLDER);
   return flags;
+}
+
+/** The stored flags with the placeholder replaced by the instructions' exact text (what the CLI is started with). */
+export function resolveFlags(flags, instructionsText) {
+  if (!flags.includes(INSTRUCTIONS_PLACEHOLDER)) return flags;
+  if (typeof instructionsText !== "string") throw new Error("the flags name project instructions but no text was given");
+  return flags.map((flag) => (flag === INSTRUCTIONS_PLACEHOLDER ? instructionsText : flag));
+}
+
+/** The argument list of one claude turn; a resumed turn gets the same flags, instructions included. */
+export function claudeArgs(prompt, flags, extra = [], instructionsText) {
+  return ["-p", prompt, ...resolveFlags(flags, instructionsText), ...extra];
+}
+
+/** The path of a kit file as the workspace and the recording name it: below the kit's root folder with --keep-paths, else the base name. */
+export function kitRelative(zipPath, keepPaths) {
+  return keepPaths ? zipPath.split("/").slice(1).join("/") : basename(zipPath);
 }
 
 /**
@@ -220,7 +250,21 @@ function refreshFiles(path) {
   console.log(`${basename(path)}: ${produced.filter((file) => file.text !== undefined).length} text files attached`);
 }
 
-function parseArgs(argv) {
+/**
+ * The pre-flight of a take: nothing that goes into the workspace or the prompts may hold a forbidden
+ * pattern (a machine path, the word "signature"). Empty when the take can be stored.
+ */
+export function preflightProblems({ files, instructions, prompts }) {
+  const problems = [];
+  const all = [...files, ...(instructions ? [instructions] : []), ...prompts.map((text, index) => ({ name: index === 0 ? "prompt" : `follow-up ${index}`, text }))];
+  for (const { name, text } of all) {
+    const hit = FORBIDDEN.exec(text);
+    if (hit) problems.push(`${name}: contains ${JSON.stringify(hit[0])}`);
+  }
+  return problems;
+}
+
+export function parseArgs(argv) {
   const options = { kitFiles: [], followUps: [], model: DEFAULT_MODEL, take: 1 };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
@@ -246,6 +290,9 @@ function parseArgs(argv) {
       case "--allow-python": options.allowPython = true; break;
       case "--model": options.model = value(); break;
       case "--raw-dir": options.rawDir = value(); break;
+      case "--keep-paths": options.keepPaths = true; break;
+      case "--instructions-file": options.instructionsFile = value(); break;
+      case "--preflight": options.preflight = true; break;
       case "--dry-run": options.dryRun = true; break;
       default: throw new Error(`unknown flag ${flag}`);
     }
@@ -261,14 +308,14 @@ function parseArgs(argv) {
   return options;
 }
 
-function runClaude(prompt, flags, cwd, rawLines, extra = []) {
+function spawnClaude(argv, cwd, rawLines) {
   const { env: parentEnv } = process;
   // No auto-memory: nothing from earlier runs is loaded, and nothing is written outside the workspace.
   const env = { ...parentEnv, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" };
   delete env.VERCEL_PLUGIN_BOOTSTRAP_HINTS;
   return new Promise((resolvePromise, reject) => {
     const started = process.hrtime.bigint();
-    const child = spawn("claude", ["-p", prompt, ...flags, ...extra], { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn("claude", argv, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
     const events = [];
     let buffer = "";
     let stderr = "";
@@ -300,6 +347,28 @@ function runClaude(prompt, flags, cwd, rawLines, extra = []) {
   });
 }
 
+/**
+ * The conversation of one take: the first prompt, then each follow-up resuming the same session.
+ * Every turn gets the same flags, so the project instructions are in all of them. `run(argv, cwd, raw)`
+ * returns the stream events of one turn (the real one spawns claude; the test passes a stand-in).
+ */
+export async function runConversation({ prompt, followUps, flags, extra, instructionsText, cwd, raw, prefixes, check, run = spawnClaude }) {
+  const first = distill(await run(claudeArgs(prompt, flags, extra, instructionsText), cwd, raw), prefixes);
+  const errors = check({ init: first.init, turn: first.turn });
+  const followTurns = [];
+  for (const followUp of followUps) {
+    const next = distill(await run(claudeArgs(followUp, flags, [...extra, "--resume", first.init.session], instructionsText), cwd, raw), prefixes);
+    errors.push(...check({ init: first.init, turn: next.turn }).map((error) => `follow-up: ${error}`));
+    followTurns.push({ prompt: followUp, ...next.turn });
+  }
+  return { first, followTurns, errors };
+}
+
+/** Paths that are new or whose bytes changed since `before` (a Map of path to sha256), in path order. */
+export function producedPaths(before, after) {
+  return [...after.entries()].filter(([path, hash]) => before.get(path) !== hash).map(([path]) => path).sort();
+}
+
 /** Every file under dir (relative paths), skipping the .claude folder. */
 function listFiles(dir) {
   const found = [];
@@ -314,6 +383,11 @@ function listFiles(dir) {
   };
   walk(dir);
   return found;
+}
+
+/** Map of relative path to sha256 for every file under dir (the .claude folder is skipped). */
+function fingerprint(dir) {
+  return new Map(listFiles(dir).map((path) => [path, sha256(readFileSync(join(dir, path)))]));
 }
 
 async function main() {
@@ -332,17 +406,30 @@ async function main() {
   const prompt = readFileSync(options.promptFile, "utf8").trim();
   const followUps = options.followUps.map((file) => readFileSync(file, "utf8").trim());
   const persist = followUps.length > 0;
-  const flags = runFlags({ model: options.model, withSkill: options.withSkill, allowWrite: options.allowWrite, allowPython: options.allowPython, persist });
+  const readZip = (path) => {
+    const bytes = execFileSync("unzip", ["-p", kitZip, path], { maxBuffer: 64 * 1024 * 1024 });
+    if (bytes.length === 0) throw new Error(`${path} is not in ${basename(kitZip)}`);
+    return bytes;
+  };
+  const instructionsBytes = options.instructionsFile ? readZip(options.instructionsFile) : undefined;
+  const instructionsText = instructionsBytes?.toString("utf8");
+  const flags = runFlags({ model: options.model, withSkill: options.withSkill, allowWrite: options.allowWrite, allowPython: options.allowPython, persist, instructions: instructionsBytes !== undefined });
 
   const workspace = mkdtempSync(join(tmpdir(), "claude-rec-"));
   const work = join(workspace, "work");
   mkdirSync(work);
   const kitFiles = options.kitFiles.map((path) => {
-    const bytes = execFileSync("unzip", ["-p", kitZip, path], { maxBuffer: 64 * 1024 * 1024 });
-    if (bytes.length === 0) throw new Error(`${path} is not in ${basename(kitZip)}`);
-    writeFileSync(join(work, basename(path)), bytes);
-    return { name: basename(path), path, bytes: bytes.length, sha256: sha256(bytes) };
+    const bytes = readZip(path);
+    const name = kitRelative(path, options.keepPaths);
+    mkdirSync(dirname(join(work, name)), { recursive: true });
+    writeFileSync(join(work, name), bytes);
+    return { name, path, bytes: bytes.length, sha256: sha256(bytes), text: bytes.toString("utf8") };
   });
+  const instructions = instructionsBytes
+    ? { name: kitRelative(options.instructionsFile, options.keepPaths), path: options.instructionsFile, bytes: instructionsBytes.length, sha256: sha256(instructionsBytes) }
+    : undefined;
+  const problems = preflightProblems({ files: kitFiles.map(({ name, text }) => ({ name, text })), instructions: instructionsText === undefined ? undefined : { name: instructions.name, text: instructionsText }, prompts: [prompt, ...followUps] });
+  const kitRefs = kitFiles.map(({ text: _text, ...ref }) => ref);
   const extra = [];
   // The whole workspace is an added directory: the skill loads from <workspace>/.claude/skills, and
   // files Claude saves next to its work folder (the skill's script) stay inside the sandbox.
@@ -352,14 +439,20 @@ async function main() {
   const userSkills = existsSync(userSkillsDir) ? readdirSync(userSkillsDir) : [];
 
   if (options.dryRun) {
-    console.log(JSON.stringify({ id: options.id, flags, kitFiles, followUps: followUps.length }, null, 2));
+    const turns = 1 + followUps.length;
+    const resumed = followUps.map((followUp) => claudeArgs(followUp, flags, [...extra, "--resume", "<session>"], instructionsText)).map((args) => args.length);
+    console.log(JSON.stringify({ id: options.id, flags, kitFiles: kitRefs, instructions: instructions ?? null, turns, argsPerTurn: [claudeArgs(prompt, flags, extra, instructionsText).length, ...resumed], preflight: problems }, null, 2));
     rmSync(workspace, { recursive: true, force: true });
     return;
+  }
+  if (options.preflight && problems.length > 0) {
+    rmSync(workspace, { recursive: true, force: true });
+    throw new Error(`pre-flight failed:\n${problems.join("\n")}`);
   }
 
   const prefixes = [workspace, realpathSync(workspace), work, realpathSync(work), homedir()];
   const raw = [];
-  const before = new Set(listFiles(workspace));
+  const before = fingerprint(workspace);
   const cleanup = () => {
     rmSync(workspace, { recursive: true, force: true });
     // The CLI keeps a project folder named after the working directory; remove ours.
@@ -370,26 +463,22 @@ async function main() {
     }
   };
   try {
-    const first = distill(await runClaude(prompt, flags, work, raw, extra), prefixes);
-    const errors = isolationErrors(first, { skill: options.skill, withSkill: options.withSkill, userSkills });
-    const followTurns = [];
-    for (const followUp of followUps) {
-      const next = distill(await runClaude(followUp, flags, work, raw, [...extra, "--resume", first.init.session]), prefixes);
-      errors.push(...isolationErrors({ init: first.init, turn: next.turn }, { skill: options.skill, withSkill: options.withSkill, userSkills }).map((error) => `follow-up: ${error}`));
-      followTurns.push({ prompt: followUp, ...next.turn });
-    }
-    mkdirSync(outDir, { recursive: true });
-    const produced = listFiles(workspace)
-      .filter((path) => !before.has(path))
-      .map((path) => {
-        const name = basename(path);
-        const bytes = readFileSync(join(workspace, path));
-        if (FORBIDDEN.test(bytes.toString("utf8"))) errors.push(`the produced file ${name} contains a machine path`);
-        const storedAs = `${options.id}.${name}`;
-        writeFileSync(join(outDir, storedAs), bytes);
-        const text = producedText(bytes);
-        return { name, bytes: bytes.length, sha256: sha256(bytes), stored_as: storedAs, ...(text !== undefined ? { text } : {}) };
-      });
+    const check = (turn) => isolationErrors(turn, { skill: options.skill, withSkill: options.withSkill, userSkills });
+    const { first, followTurns, errors } = await runConversation({ prompt, followUps, flags, extra, instructionsText, cwd: work, raw, prefixes, check });
+    // A file counts as produced when it is new or its bytes changed during the run (step 3 fills a template that exists before).
+    const found = producedPaths(before, fingerprint(workspace)).map((path) => {
+      const bytes = readFileSync(join(workspace, path));
+      return { path: path.replace(/^work\//, ""), name: basename(path), bytes };
+    });
+    const taken = new Set();
+    const produced = found.map(({ path, name, bytes }) => {
+      if (FORBIDDEN.test(bytes.toString("utf8"))) errors.push(`the produced file ${name} contains a machine path`);
+      // Two produced files may share a base name (a template filled in place and a new copy at the top): the second keeps its folder in the stored name.
+      const storedAs = `${options.id}.${taken.has(name) ? path.split("/").join("__") : name}`;
+      taken.add(name);
+      const text = producedText(bytes);
+      return { name, ...(options.keepPaths ? { path } : {}), bytes: bytes.length, sha256: sha256(bytes), stored_as: storedAs, ...(text !== undefined ? { text } : {}), _bytes: bytes };
+    });
     const strip = ({ permission_denials: _denials, ...turn }) => turn;
     const recording = {
       schema: SCHEMA,
@@ -406,7 +495,8 @@ async function main() {
       flags,
       prompt,
       kit_zip: relative(WEBSITE, kitZip).split("\\").join("/"),
-      kit_files: kitFiles,
+      kit_files: kitRefs,
+      ...(instructions ? { instructions } : {}),
       skill: options.withSkill ? { name: options.skill, sha256: skillDigest(skillDir) } : null,
       skill_name: options.skill,
       with_skill: options.withSkill,
@@ -415,7 +505,7 @@ async function main() {
       memory_sources: first.init.memory_sources,
       ...strip(first.turn),
       follow_ups: followTurns.map(strip),
-      produced_files: produced,
+      produced_files: produced.map(({ _bytes, ...file }) => file),
       edited: false,
     };
     const clean = scrub(recording, prefixes);
@@ -425,10 +515,15 @@ async function main() {
     const rawDir = options.rawDir ?? mkdtempSync(join(tmpdir(), "claude-runs-raw-"));
     mkdirSync(rawDir, { recursive: true });
     writeFileSync(join(rawDir, `${options.id}.raw.jsonl`), `${raw.join("\n")}\n`);
-    const target = join(errors.length > 0 ? join(outDir, "rejected") : outDir, `${options.id}.json`);
-    mkdirSync(dirname(target), { recursive: true });
+    // A take that carries a machine path or the word "signature" is never stored in the repo (the shared test scans every file there);
+    // it goes to the raw folder with its produced files. A take that failed for another reason goes to rejected/, produced files with it.
+    const leaks = errors.some((error) => /machine path|session secret/.test(error));
+    const targetDir = leaks ? rawDir : errors.length > 0 ? join(outDir, "rejected") : outDir;
+    mkdirSync(targetDir, { recursive: true });
+    for (const file of produced) writeFileSync(join(targetDir, file.stored_as), file._bytes);
+    const target = join(targetDir, leaks ? `${options.id}.leaked.json` : `${options.id}.json`);
     writeFileSync(target, `${JSON.stringify(errors.length > 0 ? { ...clean, rejected: errors } : clean, null, 2)}\n`);
-    console.log(JSON.stringify({ id: options.id, written: relative(ROOT, target), model: clean.model, skill_invoked: clean.skill_invoked, chars: clean.final_text.length, duration_ms: clean.stats.duration_ms, produced: produced.map((file) => file.name), errors }, null, 2));
+    console.log(JSON.stringify({ id: options.id, written: leaks ? "(raw folder only, it leaked a path or a forbidden word)" : relative(ROOT, target), model: clean.model, skill_invoked: clean.skill_invoked, chars: clean.final_text.length, duration_ms: clean.stats.duration_ms, produced: produced.map((file) => file.path ?? file.name), errors }, null, 2));
     if (errors.length > 0) process.exitCode = 2;
   } finally {
     cleanup();

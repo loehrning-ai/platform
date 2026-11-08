@@ -130,11 +130,57 @@ Neue Papiere, die die Zeilen SCHWACH und LÜCKE schließen (nie eine Änderung e
 
 L01 und L13 brauchen kein neues Papier. Jede Unterschriftszeile bleibt leer, bis eine benannte Person unterschreibt.
 
+Prüfe nach dem Lauf von Hand: Jede Unterschriftszeile in den Dateien, die Claude geschrieben hat, ist leer, und vorlagen/clock.csv lässt das Datum der Papiere offen (der Inspektor setzt es am Besuchstag). Hat Claude etwas ausgefüllt, lösche es. Hier wird aus der Regel „eine benannte Person unterschreibt“ ein Schritt, den du selbst tust.
+
 Muster für die Person, die anwesend ist (höchstens 150 Wörter):
 
 > Beantworte nur, was gefragt wird. Nenne das Papier. Gibt es keins, sag: dieses Papier gibt es nicht, wir schreiben es heute. Rate keine Zeiten oder Daten. Unterschreibe kein Protokoll, das nicht stimmt; schreibe deinen Grund neben die Unterschrift (ZIN Art. 54, 65).
 
 Zählung: 2 BELEGT, 1 SCHWACH, 10 LÜCKE.
+
+## Schritt 4
+
+Heute ist Do 26. Nov 2026. Erwartet: eine register.csv mit 7 Spalten und 98 Zeilen, ein check.py und drei Listen. Das Register ist eine Arbeitsdatei, kein Protokoll. Es enthält nur Kennungen und Daten: keine Namen, keine Gesundheitsinhalte, keine Lohnwerte.
+
+| Papier | Zeilen | Datum aus | Gültig bis | Zuständig |
+|---|---|---|---|---|
+| contract | 24 | start_date in contracts_register_2026.csv | leer | Büroleiterin |
+| registration | 24 | date_filed in registration_M1M2_2026.csv | leer | Büroleiterin |
+| medical-exam | 24 | last_exam_date in medical_exams.csv | Datum plus 24 Monate | Büroleiterin |
+| leave-decision | 23 | decision_date in leave_decisions_2026.csv | leer | Büroleiterin |
+| overtime-notice | 2 | keine unterschriebene Meldung für 2026, also MISSING | leer | Büroleiterin |
+| safety-statement | 1 | Datum: 2019-03-14 in sicherheitserklaerung_2019.md (Kennung FIRM) | leer | die Person mit dem Aktenordner |
+| Summe | 98 | | | |
+
+Die drei Listen für den 26. Nov 2026:
+
+| Liste | Anzahl | Wer und was |
+|---|---|---|
+| Abgelaufen | 4 | E-02, E-06, E-10, E-16: medical-exam, gültig bis 2026-09-12 |
+| Läuft in den nächsten 60 Tagen ab | 1 | E-03: medical-exam, gültig bis 2026-12-03 |
+| Fehlt | 4 | E-11 und E-19: leave-decision. E-07 und E-08: overtime-notice |
+
+Zählung: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen.
+
+Die Zusammenfassung eines Laufs lautet: register.csv: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen
+
+Zweiter Prompt, welche Papiere für E-07 vorliegen: 4 vorhanden (contract, registration, medical-exam, leave-decision), 1 fehlt (overtime-notice). Zuständig für alle fünf Papiere ist die Büroleiterin.
+
+Schlüssel: 4 vorhanden, 1 fehlt.
+
+Jede Zeile hat NICHT IN DATEIEN in approved_by, weil keine Datei des Kits eine Person nennt, die ein Papier freigibt. Das ist die Lehre des Registers: Die Firma entscheidet, wer freigibt.
+
+E-22 hat nach der Regel dieses Kits keine Zeile für leave-decision. Ein Bescheid ist fällig, sobald das volle Recht nach 6 Monaten beginnt (ZRO Art. 139), und davor besteht ein anteiliges Recht (ZRO Art. 140). Die 6-Monats-Regel ist eine Entscheidung für die Übung, kein geklärtes Recht: Frag die Fachperson. E-22 erreicht 6 Monate am 2026-12-01.
+
+Dasselbe Register an zwei späteren Tagen:
+
+| Tag | Zeilen | Abgelaufen | Läuft in den nächsten 60 Tagen ab | Fehlt |
+|---|---|---|---|---|
+| 2026-11-26 | 98 | 4 | 1 (E-03) | 4 |
+| 2027-01-05 | 99 | 5 | 2 (E-17, E-22) | 5 |
+| 2027-03-01 | 99 | 5 | 3 (E-17, E-20, E-22) | 5 |
+
+Am 2027-01-05 ist für E-22 ein Urlaubsbescheid fällig, und es gibt keinen: Die Zeilenzahl und die Liste der fehlenden Papiere wachsen um eins. Ein KI-Lauf weicht in der Formulierung ab. Die Zahlen dürfen es nicht.
 
 ## Die Fristen
 

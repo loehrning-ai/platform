@@ -518,3 +518,105 @@ export function whatIf(files: OracleFiles, kind: WhatIf): { readonly files: Orac
 export function counter(result: OracleResult): number {
   return result.findings.length + result.warnings.length;
 }
+
+// ---------------------------------------------------------------- the register (Step 4, beat "register")
+// A port of buildRegister in scripts/workshop05/oracle/oracle.mjs. The register is a working file, never a
+// record: one row per person and paper, dates only, ids and no names. oracle.test.ts holds the counts for
+// the three dates to expected.json (register.byDate), so no number of the beat is typed anywhere.
+
+/** The "today" of the whole exercise and of Step 4. */
+export const REGISTER_TODAY = "2026-11-26";
+/** The three dates the beat offers: the exercise day and two later days. */
+export const REGISTER_DATES = ["2026-11-26", "2027-01-05", "2027-03-01"] as const;
+/** The fixed paper ids of the register, the same in both editions. */
+export const REGISTER_PAPERS = ["contract", "registration", "medical-exam", "leave-decision", "overtime-notice", "safety-statement"] as const;
+export type RegisterPaper = (typeof REGISTER_PAPERS)[number];
+/** The date cell of a paper the files do not hold. */
+export const REGISTER_MISSING = "MISSING";
+/** A paper counts as expiring when it runs out on the day or within this many days. */
+export const REGISTER_EXPIRING_DAYS = 60;
+
+export interface RegisterRow {
+  readonly person_id: string;
+  readonly paper: RegisterPaper;
+  readonly date: string;
+  readonly valid_until: string;
+}
+
+export interface RegisterEntry {
+  readonly id: string;
+  readonly paper: RegisterPaper;
+  readonly validUntil?: string;
+}
+
+export interface Register {
+  readonly today: string;
+  readonly rows: readonly RegisterRow[];
+  readonly byPaper: Readonly<Record<RegisterPaper, number>>;
+  readonly expired: readonly RegisterEntry[];
+  readonly expiring: readonly RegisterEntry[];
+  readonly missing: readonly RegisterEntry[];
+}
+
+/**
+ * The register on a day: rows ordered by paper and then person id, the count per paper and the three lists.
+ * A medical exam is valid 24 months; a leave decision has a row for everybody with six months of service on
+ * that day (and for anybody with a decision); an overtime notice has a row for everybody with overtime weeks;
+ * the safety statement is one row for the firm. A paper the files do not hold has MISSING as its date.
+ * Expired: valid_until before the day. Expiring: valid_until on the day or in the next 60 days.
+ */
+export function buildRegister(files: OracleFiles, today: string = REGISTER_TODAY): Register {
+  const get = (key: FileKey): string => files[FILE_NAMES[key]] as string;
+  const now = toDay(today);
+  const contracts = table(get("contracts"));
+  const people = sortIds(contracts.map((r) => cell(r, "id")));
+  const start = Object.fromEntries(contracts.map((r) => [cell(r, "id"), cell(r, "start_date")]));
+  const dateOf: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+    contract: start,
+    registration: Object.fromEntries(table(get("registration")).map((r) => [cell(r, "id"), cell(r, "date_filed")])),
+    "medical-exam": Object.fromEntries(table(get("exams")).map((r) => [cell(r, "id"), cell(r, "last_exam_date")])),
+    "leave-decision": Object.fromEntries(table(get("leave")).map((r) => [cell(r, "id"), cell(r, "decision_date")])),
+  };
+  const overtimePeople = sortIds(uniq(table(get("overtime")).map((r) => cell(r, "id"))));
+  const notices = get("notices")
+    .split("\n")
+    .map((line) => line.match(/^(\d{4}-\d{2}-\d{2}) \| ([^|]*) \| ([^|]*) \| Signed by:(.*)$/))
+    .filter((match): match is RegExpMatchArray => match !== null)
+    .map((m) => ({ date: m[1] as string, ids: ((m[2] as string).match(/E-\d\d/g) ?? []) as string[], signed: (m[4] as string).trim() !== "" }));
+  const noticeDate = (id: string): string | undefined =>
+    notices
+      .filter((n) => n.signed && n.ids.includes(id))
+      .map((n) => n.date)
+      .sort()
+      .pop();
+  const statementDate = (get("statement").match(/^Dated: (\d{4}-\d{2}-\d{2})/m) ?? [])[1];
+  if (!statementDate) throw new Error("oracle: the safety statement has no date line");
+
+  const owed = (id: string): boolean => toDay(addMonths(start[id] as string, LEAVE_AFTER_MONTHS)) <= now;
+  const who: Readonly<Record<RegisterPaper, readonly string[]>> = {
+    contract: people,
+    registration: people,
+    "medical-exam": people,
+    "leave-decision": people.filter((id) => owed(id) || dateOf["leave-decision"]?.[id] !== undefined),
+    "overtime-notice": overtimePeople,
+    "safety-statement": ["FIRM"],
+  };
+  const rows: RegisterRow[] = [];
+  for (const paper of REGISTER_PAPERS) {
+    for (const id of who[paper]) {
+      const date = paper === "overtime-notice" ? noticeDate(id) : paper === "safety-statement" ? statementDate : dateOf[paper]?.[id];
+      rows.push({ person_id: id, paper, date: date ?? REGISTER_MISSING, valid_until: paper === "medical-exam" && date ? addMonths(date, EXAM_MONTHS) : "" });
+    }
+  }
+  const byPaper = Object.fromEntries(REGISTER_PAPERS.map((paper) => [paper, rows.filter((r) => r.paper === paper).length])) as Record<RegisterPaper, number>;
+  const entry = (r: RegisterRow): RegisterEntry => ({ id: r.person_id, paper: r.paper, ...(r.valid_until ? { validUntil: r.valid_until } : {}) });
+  const dated = rows.filter((r) => r.valid_until !== "");
+  return {
+    today,
+    rows,
+    byPaper,
+    expired: dated.filter((r) => toDay(r.valid_until) < now).map(entry),
+    expiring: dated.filter((r) => toDay(r.valid_until) >= now && toDay(r.valid_until) - now <= REGISTER_EXPIRING_DAYS).map(entry),
+    missing: rows.filter((r) => r.date === REGISTER_MISSING).map(entry),
+  };
+}

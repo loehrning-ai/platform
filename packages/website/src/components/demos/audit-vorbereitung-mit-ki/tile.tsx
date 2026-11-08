@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { TileSvg, type TileProps } from "../hub/tile-kit";
 
 /*
- * W05 "Vier Tage", hub miniature: thirteen question chips on the left, the
+ * W05 "Ordner und Register", hub miniature: thirteen question chips on the left, the
  * papers they read on the right, a line between each pair. A test bar sweeps
  * down; one line turns dashed (weak), ten break apart (gap), two stay solid
  * (covered), and the counter drops from 13/13 to 2/13. The start frame

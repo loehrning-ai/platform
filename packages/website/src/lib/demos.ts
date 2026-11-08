@@ -255,9 +255,9 @@ export const demos: readonly Demo[] = [
     externalActionMode: "none",
     courseSlug: "ai-native",
     lastReviewed: "2026-11-07",
-    title: "Vier Tage",
+    title: "Ordner und Register",
     oneLiner:
-      "Dreizehn Fragen des Arbeitsinspektors, ein Ordner mit den Papieren einer erfundenen Firma. Schätz zuerst, zähl die Tage bis zum Besuch und sieh, welche Papiere halten. Alles läuft in diesem Tab.",
+      "Dreizehn Fragen des Arbeitsinspektors, ein Ordner mit den Papieren einer erfundenen Firma. Rate den Status der Fragen, lass die Prüfungen laufen, baue ein Register der Papiere und sieh, was abläuft. Alles läuft in diesem Tab.",
     question: "Welche der dreizehn Fragen der Liste beantwortet der Ordner der erfundenen Firma am 27. November, und was tust du zuerst?",
     syntheticDataLabel:
       "Erfundener Fall aus Workshop 05: Gradba-Pro, Bitola, 24 Beschäftigte und alle Personen sind erfunden. Auf dieser Seite läuft keine KI. Was du eingibst, bleibt in deinem Browser.",
@@ -267,9 +267,9 @@ export const demos: readonly Demo[] = [
       take: "eine Tabelle mit dreizehn Fragen und ein Skill, der ohne Zitat nichts zählt",
     },
     en: {
-      title: "Four days",
+      title: "Folder and register",
       oneLiner:
-        "Thirteen questions from the labour inspector, one folder with the papers of an invented firm. Guess first, count the days to the visit and see which papers hold up. Everything runs in this tab.",
+        "Thirteen questions from the labour inspector, one folder with the papers of an invented firm. Guess the status of the questions, run the checks, build a register of the papers and see what expires. Everything runs in this tab.",
       question: "Which of the thirteen questions on the list does the folder of the invented firm answer on 27 November, and what do you do first?",
       syntheticDataLabel:
         "Invented case from Workshop 05: Gradba-Pro, Bitola, 24 staff and every person are invented. No AI runs on this page. What you enter stays in your browser.",

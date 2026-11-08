@@ -1,18 +1,19 @@
 /**
  * Every fact the Workshop 05 deck computes or reads: the oracle's answer on the kit files, the kit's own
- * prompts, and the public figures the slides count. build.mjs hands this object to slides.mjs, which writes
- * computed numbers into the HTML only (data-count attributes, the matrix JSON, chip texts). deck-copy.json
- * is hand written; scripts/__tests__/workshop05-lockstep.test.mjs holds its numbers to this file.
+ * prompts, the register of step 4 and the public figures the slides count. build.mjs hands this object to the
+ * slide files, which write computed numbers into the HTML only (placeholders of deck-copy.json, data-count
+ * and data-fill attributes). deck-copy.json is hand written; scripts/__tests__/workshop05-lockstep.test.mjs holds
+ * its numbers to this file.
  *
- * Kit folder files are all English (the kit's business language); the German edition differs only in the
- * prompts, which come from kit-de.
+ * The kit's business files are all English; the German edition differs only in the prompts, which come from kit-de.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { analyse, counter, whatIf } from "../oracle/oracle.mjs";
+import { kitEntries, kitEntriesDe } from "../build-kit.mjs";
+import { analyse, askPerson, buildRegister, registerSummary, registerExpected, askKeyLine, REGISTER_EXPIRING_DAYS } from "../oracle/oracle.mjs";
 import { loadKitFiles } from "../oracle/load.mjs";
-import { LINES, NOTICE_DATE, CHECK_DATE, TODAY_IN_EXERCISE } from "../oracle/plan.mjs";
+import { CHECK_DATE, NOTICE_DATE, TODAY_IN_EXERCISE } from "../oracle/plan.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const KIT_DIR = path.join(HERE, "..", "kit");
@@ -25,19 +26,6 @@ const must = (value, what) => {
   if (value === undefined || value === null || value === "" || Number.isNaN(value)) throw new Error(`deck data: ${what} not found`);
   return value;
 };
-
-/** Days from a to b (ISO dates, UTC). */
-export const days = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
-
-/** Mon to Fri days strictly between two ISO dates, no holiday list (the same rule as lib/w05-clock.js). */
-export function workingDaysBetween(from, to) {
-  let n = 0;
-  for (let t = Date.parse(`${from}T00:00:00Z`) + 86400000; t < Date.parse(`${to}T00:00:00Z`); t += 86400000) {
-    const day = new Date(t).getUTCDay();
-    if (day !== 0 && day !== 6) n += 1;
-  }
-  return n;
-}
 
 /** The indented prompt blocks of a START-HERE section, in order (the text the cards show byte for byte). */
 export function promptBlocks(startHere, heading) {
@@ -62,29 +50,13 @@ export function promptBlocks(startHere, heading) {
 }
 
 /**
- * Public figures the first slides count, each with its source in the notes of its slide. They are typed here
- * once (they are not in the kit) and the deck derives its dots and counters from them.
- *  - doors: SC-E01 31 building-site inspections in one day (22 Oct 2024, old law); SC-E10 214 businesses in one
- *    week (28 Jul to 3 Aug 2025, press quoting the tax office), irregularities at 66; C22 3 to 5 audit days.
- *  - firmSize: X11 (SSO 2022) 59,965 of 71,228 enterprises have 1 to 9 staff.
- *  - dit2025: C8 annual report 2025, proposal version of April 2026: 5,664 regular, 6,515 follow-up, 14,305 extraordinary.
+ * Public figures slide 3 counts (the proposed DIT annual report 2025). They are not in the kit; each is printed with its
+ * source tag, and the dots are computed from them here: the share of extraordinary inspections, rounded to 100.
  */
 export const PUBLIC = {
-  doors: { building: 31, tax: 214, taxIrregular: 66, isoFrom: 3, isoTo: 5 },
-  firmSize: { micro: 59965, all: 71228 },
-  dit2025: { regular: 5664, followUp: 6515, extraordinary: 14305, inspectors: 124 },
-  checklists: { labour: 108, safety: 34, records: 27 },
+  dit2025: { regular: 5664, followUp: 6515, extraordinary: 14305 },
   staff: 24,
 };
-
-/** 100 dots for a share, rounded; the three DIT kinds are rounded so that they add up to exactly 100. */
-export function dotsFor(parts) {
-  const total = Object.values(parts).reduce((a, b) => a + b, 0);
-  const dots = Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, Math.round((v / total) * 100)]));
-  const sum = Object.values(dots).reduce((a, b) => a + b, 0);
-  if (sum !== 100) throw new Error(`deck data: dots add up to ${sum}, not 100`);
-  return { dots, total };
-}
 
 let cached;
 /** The oracle on the committed kit files. Pure and fast, so every edition shares one run. */
@@ -92,89 +64,137 @@ export function oracleResult() {
   if (!cached) {
     const files = loadKitFiles();
     const result = analyse(files);
-    cached = { files, result, counters: { base: counter(result) }, whatIfResults: {} };
-    for (const kind of ["e08-nine-hours", "ticks-filled", "no-free-day-move"]) {
-      const { files: f, options } = whatIf(files, kind);
-      const run = analyse(f, options);
-      cached.whatIfResults[kind] = run;
-      cached.counters[kind] = counter(run);
-    }
+    const register = buildRegister(files);
+    cached = { files, result, register, e07: askPerson(register, "E-07") };
   }
   return cached;
 }
 
+/** Top-level names of the kit zip, as the folder tree of slide 6 prints them (a folder has a trailing slash). */
+function treeNames(entries) {
+  const seen = [];
+  for (const [name] of entries) {
+    const top = name.includes("/") ? `${name.split("/")[0]}/` : name;
+    if (!seen.includes(top)) seen.push(top);
+  }
+  return seen;
+}
+
+/** Files per top-level folder of the zip (a plain file counts 1), keyed like treeNames. */
+function treeCounts(entries) {
+  const counts = {};
+  for (const [name] of entries) {
+    const top = name.includes("/") ? `${name.split("/")[0]}/` : name;
+    counts[top] = (counts[top] ?? 0) + 1;
+  }
+  return counts;
+}
+
 export function deckData(lang = "en") {
-  const { result, files, counters, whatIfResults } = oracleResult();
+  const { result, register, e07 } = oracleResult();
   const de = lang === "de";
   const startHere = de ? kitDe("START-HIER.md") : kit("START-HERE.md");
   const step = de ? "## Schritt" : "## Step";
+  const entries = de ? kitEntriesDe() : kitEntries();
 
-  // S09 and S12: the 13 labels, straight from the plan the kit was made from.
-  const lines = LINES.map((line) => {
-    const found = must(result.lines.find((r) => r.id === line.id), `oracle line ${line.id}`);
-    return { id: line.id, label: de ? line.labelDe : line.label, status: found.status };
-  });
-  if (lines.length !== 13) throw new Error("deck data: the kit holds 13 question lines");
-  const statusOf = (id) => must(lines.find((l) => l.id === id), `line ${id}`).status;
-
-  // S04: 84 of 100 firms with 1 to 9 staff (X11); S08: the three DIT kinds (C8).
-  const micro = Math.round((PUBLIC.firmSize.micro / PUBLIC.firmSize.all) * 100);
-  const dit = dotsFor({ extraordinary: PUBLIC.dit2025.extraordinary, followUp: PUBLIC.dit2025.followUp, regular: PUBLIC.dit2025.regular });
-
-  // S05: the calendar between the letter and the visit.
   const notice = must(result.days?.notice, "notice date");
   const visit = must(result.days?.visit, "visit date");
-  const clock = {
-    notice,
-    visit,
-    today: TODAY_IN_EXERCISE,
-    calendar: days(notice, visit),
-    workingBetween: workingDaysBetween(notice, visit),
-    buttons: ["2026-11-25", "2026-11-26", "2026-11-27"],
-    workingFor: Object.fromEntries(["2026-11-25", "2026-11-26", "2026-11-27"].map((d) => [d, workingDaysBetween(notice, d)])),
-    papersDue: result.days.papersDue,
+  const l10 = must(result.findings.find((f) => f.id === "F10"), "finding F10").facts;
+
+  const dit = PUBLIC.dit2025;
+  const ditTotal = dit.regular + dit.followUp + dit.extraordinary;
+  const dots = Math.round((dit.extraordinary / ditTotal) * 100);
+
+  const prompts = {
+    step1: promptBlocks(startHere, `${step} 1`)[0],
+    step2: promptBlocks(startHere, `${step} 2`)[0],
+    step3: promptBlocks(startHere, `${step} 3`)[0],
+    step4: promptBlocks(startHere, `${step} 4`)[0],
+    step4b: promptBlocks(startHere, `${step} 4`)[1],
+  };
+  if (promptBlocks(startHere, `${step} 4`).length !== 2) throw new Error("deck data: step 4 holds two prompt blocks");
+
+  const summary = { en: registerSummary(register, "en"), de: registerSummary(register, "de") };
+  /** A few real rows of register.csv for the table that builds on slide 12: the first row of each paper, then the first expired medical exam. */
+  const seen = new Set();
+  const sample = register.rows.filter((r) => (seen.has(r.paper) ? false : seen.add(r.paper)));
+  const expiredIds = new Set(register.expired.map((x) => x.id));
+  const firstExpired = register.rows.find((r) => r.paper === "medical-exam" && expiredIds.has(r.person_id));
+  const rowsShown = [...sample.slice(0, 5), firstExpired].filter(Boolean).map((r) => ({ id: r.person_id, paper: r.paper, date: r.date, validUntil: r.valid_until, where: r.where, owner: r.owner, approved: r.approved_by }));
+  const reg = {
+    byDate: registerExpected(oracleResult().files).byDate,
+    sample: rowsShown,
+    today: register.today,
+    rows: register.rows.length,
+    expired: register.expired.length,
+    expiring: register.expiring.length,
+    missing: register.missing.length,
+    summary,
+    ask: { id: e07.id, onFile: e07.onFile, missing: e07.missing, missingPaper: e07.missingPapers[0], key: askKeyLine(e07, lang) },
   };
 
-  // S07 and S11: the rows the slides show, read from the kit file, never typed.
-  const attendance = files["attendance_2026-11.csv"].split("\n");
-  const tickRows = attendance.filter((line) => line.startsWith("E-12,")).slice(0, 3).map((line) => line.split(","));
-  const f8 = must(result.findings.find((f) => f.id === "F8"), "finding F8");
-  const emptyFields = must(f8.number, "F8 empty cells");
-  const opinionYear = Number(must(/opinion[^\n]*?(\d{4})-\d{2}-\d{2}/i.exec(files["safety_statement_2019.md"])?.[1], "opinion year in the safety statement"));
-
-  // The slides print these sample papers; the oracle must agree with the copy.
-  const sample = { contract: statusOf("L01"), opinion: statusOf("L11"), attendance: statusOf("L04") };
-  const tests = { quote: statusOf("L04"), period: statusOf("L11"), scope: statusOf("L03"), approval: statusOf("L06") };
+  /** The placeholders deck-copy.json uses; the slide files fill them with fill(text, d.vars). */
+  const vars = {
+    files: entries.length,
+    rows: result.lines.length,
+    cols: 5,
+    rowsRead: result.rowsRead,
+    findings: result.findings.length,
+    decoys: result.decoys.length,
+    covered: result.tally.covered,
+    weak: result.tally.weak,
+    gap: result.tally.gap,
+    jobs: l10.titles,
+    listed: l10.listed,
+    calendar: must(result.days.calendar, "calendar days"),
+    dots,
+    expired: reg.expired,
+    expiring: reg.expiring,
+    expiringDays: REGISTER_EXPIRING_DAYS,
+    missing: reg.missing,
+    registerRows: reg.rows,
+    askOnFile: reg.ask.onFile,
+    askMissing: reg.ask.missing,
+  };
 
   return {
     lang,
     notice: NOTICE_DATE,
     checkDate: CHECK_DATE,
-    lines,
+    today: TODAY_IN_EXERCISE,
     rowsRead: result.rowsRead,
     tally: result.tally,
     findings: result.findings,
     decoys: result.decoys,
-    matrix: result.matrix,
-    peopleInFindings: result.peopleInFindings,
-    overtime: result.overtime,
-    wrong: result.wrong,
-    counters,
-    whatIfCounters: counters,
-    whatIfResults,
+    days: result.days,
     oracle: result,
-    kitFiles: files,
+    register: reg,
+    files: entries.length,
+    tree: treeNames(entries),
+    treeCounts: treeCounts(entries),
     public: PUBLIC,
-    doors: PUBLIC.doors,
-    micro: { share: micro, grey: micro, fade: 100 - micro - 1 },
-    dit,
-    clock,
-    sample,
-    tests,
-    emptyFields,
-    opinionYear,
-    tickRows,
+    dit: { ...dit, total: ditTotal },
+    dots,
+    finds: [result.findings.length - 4, result.findings.length, result.findings.length + 4, result.findings.length * 2],
     startHere,
-    prompts: { step1: promptBlocks(startHere, `${step} 1`)[0], step2: promptBlocks(startHere, `${step} 2`)[0], step3: promptBlocks(startHere, `${step} 3`)[0] },
+    prompts,
+    vars,
+    /** What the key says for the take comparison (take.mjs compareWithKey). */
+    key: {
+      rows: result.lines.length,
+      cols: 5,
+      noOwner: ["L10", "L11"],
+      rowsRead: result.rowsRead,
+      findings: result.findings.length,
+      checked: result.decoys.length,
+      tally: result.tally,
+      register: { rows: reg.rows, expired: reg.expired, expiring: reg.expiring, missing: reg.missing },
+      ask: reg.ask,
+    },
   };
 }
+
+/** The agenda in minutes per main slide, in deck order (slides.mjs asserts that SLIDES carry exactly these). */
+export const AGENDA_MINUTES = [1, 3, 4, 5, 9, 5, 6, 9, 5, 9, 6, 12, 4, 8, 4];
+/** The three parts of the day with the start (cover and today) in front: [start, the case (slides 3 to 5), the kit (6 to 11), your firm (12 to 15)]. */
+export const AGENDA_PARTS = [[0, 2], [2, 5], [5, 11], [11, 15]].map(([from, to]) => AGENDA_MINUTES.slice(from, to).reduce((sum, n) => sum + n, 0));

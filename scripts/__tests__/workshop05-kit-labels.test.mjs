@@ -1,6 +1,6 @@
 /**
  * Workshop 05 kit: labels on every file, CSV comment lines, one external URL at most, weekday words,
- * banned words, the tree (34 files, 11 top-level entries) in both editions.
+ * banned words, the tree (36 files, 11 top-level entries) in both editions.
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -25,11 +25,11 @@ for (const edition of EDITIONS) {
   const files = walk(edition.dir).filter((file) => !file.endsWith(".DS_Store"));
   const text = (file) => readFileSync(path.join(edition.dir, file), "utf8");
 
-  test(`${edition.name}: 34 files with the skill, 11 top-level entries, plain ASCII names`, () => {
+  test(`${edition.name}: 36 files with the skill, 11 top-level entries, plain ASCII names`, () => {
     const entries = edition.entries().map(([file]) => file);
-    assert.equal(entries.length, 34);
+    assert.equal(entries.length, 36);
     assert.ok(entries.includes(SKILL));
-    assert.equal(files.length, 33);
+    assert.equal(files.length, 35);
     assert.equal(new Set(entries.map((file) => file.split("/")[0])).size, 11);
     for (const file of entries) assert.match(file, /^[A-Za-z0-9._\-/]+$/);
   });

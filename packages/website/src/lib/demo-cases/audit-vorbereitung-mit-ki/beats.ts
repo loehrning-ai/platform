@@ -1,15 +1,16 @@
 /**
- * The W05 beats, the red line of deck, kit and demo, on the case "Four days": the thirteen questions of
+ * The W05 beats, the red line of deck, kit and demo, on the case "Folder and register": the thirteen questions of
  * the inspector's list (the visitor guesses), the clock from the notice to the visit, four tests on two
- * papers, the x-ray of the whole folder, an edit that cannot be hidden, the question what may go to a
- * tool, the visitor's own papers, and the files to do it tomorrow. Plain data, both languages,
+ * papers, the x-ray of the whole folder, the register that counts what has expired, what expires soon
+ * and what is missing, an edit that cannot be hidden, the visitor's own papers, and the files to do it
+ * tomorrow. Plain data, both languages,
  * importable from client code. The kit ships in two editions with different paths, so the beats name
  * no single kitFile.
  */
 
 import type { Beat } from "@/lib/demo-beats";
 
-export type BeatId = "ordner" | "uhr" | "pruefungen" | "roentgen" | "nachtrag" | "zuviel" | "ordner-eigen" | "mitnehmen";
+export type BeatId = "ordner" | "uhr" | "pruefungen" | "roentgen" | "register" | "nachtrag" | "ordner-eigen" | "mitnehmen";
 
 /** The three lines the first beat asks the visitor to guess: one covered, one gap, one weak in the end. */
 export const GUESS_LINES = ["L01", "L05", "L11"] as const;
@@ -18,6 +19,8 @@ export const GUESS_LINES = ["L01", "L05", "L11"] as const;
 export const DRAW_SECONDS = 0.9;
 /** How long the scan runs over the 13 x 24 grid. */
 export const SCAN_SECONDS = 2.4;
+/** How long the counts of the register run up when its beat opens. */
+export const REGISTER_SECONDS = 1.2;
 
 export const BEATS: readonly Beat[] = [
   {
@@ -52,20 +55,23 @@ export const BEATS: readonly Beat[] = [
     nextName: { de: "das Röntgenbild", en: "the x-ray" },
   },
   {
+    id: "register",
+    kind: "apply",
+    seconds: REGISTER_SECONDS,
+    label: { de: "Register bauen", en: "Build register" },
+    step: {
+      de: "Wähle ein Datum und sieh zu, wie das Register zählt, was abgelaufen ist, was bald abläuft und was fehlt.",
+      en: "Pick a date and watch the register count what has expired, what expires soon and what is missing.",
+    },
+    nextName: { de: "das Register", en: "the register" },
+  },
+  {
     id: "nachtrag",
     kind: "apply",
     seconds: 0,
     label: { de: "Nachtrag", en: "Late edit" },
     step: { de: "Du versuchst, ein Datum zu ändern, und schreibst dann ein neues Papier.", en: "You try to change a date and then write a new paper." },
     nextName: { de: "der Nachtrag", en: "the late edit" },
-  },
-  {
-    id: "zuviel",
-    kind: "apply",
-    seconds: 0,
-    label: { de: "Zu viel", en: "Too much" },
-    step: { de: "Du wählst, welche Spalten an ein KI-Werkzeug gehen.", en: "You choose which columns go to an AI tool." },
-    nextName: { de: "die Datenstufe", en: "the data level" },
   },
   {
     id: "ordner-eigen",
@@ -88,11 +94,11 @@ export const BEATS: readonly Beat[] = [
 /** Minutes per scene; their sum is the demo's minutes in demos.ts. */
 export const SCENE_MINUTES: Readonly<Record<BeatId, number>> = {
   ordner: 1,
-  uhr: 1,
+  uhr: 0.5,
   pruefungen: 1,
   roentgen: 1.5,
+  register: 1.5,
   nachtrag: 1,
-  zuviel: 1,
   "ordner-eigen": 1,
   mitnehmen: 0.5,
 };

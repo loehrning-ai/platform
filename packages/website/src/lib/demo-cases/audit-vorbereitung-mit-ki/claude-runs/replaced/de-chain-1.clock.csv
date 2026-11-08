@@ -1,0 +1,9 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+event,rule,date
+Mitteilung über eine reguläre Kontrolle (Aktenzeichen 22-0487/1),Datum der Mitteilung; mindestens 3 Arbeitstage vor dem Besuch (ZIN Art. 57(2)),2026-11-23
+Besuch des Inspektors 09:00 Uhr,Datum aus der Mitteilung; eine beschäftigte Person ist anwesend,2026-11-27
+Papiere auf Verlangen des Inspektors,binnen 3 Kalendertagen nach dem Verlangen (ZIN Art. 53(1)); der Inspektor kann die Zeit setzen (Art. 55),
+Unterlagen gegen Quittung mitgenommen,höchstens 15 Tage (ZIN Art. 52(3)),
+Bescheid des Inspektors,spätestens 8 Tage nach dem Tag des Protokolls (ZIN Art. 68),
+Widerspruch gegen den Bescheid,binnen 15 Tagen nach Erhalt; hemmt den Bescheid nicht (ZIN Art. 70),

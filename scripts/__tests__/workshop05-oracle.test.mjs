@@ -23,7 +23,7 @@ const result = analyse(files);
 test("generate.mjs --check: the files on disk equal the generator output (seed 2611)", () => {
   const { count, differing } = checkAll();
   assert.equal(differing.length, 0, `differing: ${differing.join(", ")}`);
-  assert.equal(count, 30);
+  assert.equal(count, 32);
 });
 
 test("expected.json is the committed output of the oracle", () => {
