@@ -9,7 +9,7 @@
  * miniature is tile.tsx (+ tile-motion.ts); the contract of this folder is
  * checked by src/components/demos/demo-contract.test.ts.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { skillZip } from "@/app/skills/_lib/skill-zip";
 import type { DemoComponentProps } from "../demo-page";
@@ -30,7 +30,7 @@ function filesFor(locale: Locale): TakeHomeFiles {
   const kilobytes = Math.max(1, Math.round(skillZip(skillName, document).length / 1024));
   return {
     skill: { href: `/skills/${skillName}.zip`, download: `${skillName}.zip`, size: `${kilobytes} KB` },
-    kit: { href: kit.href, download: kit.href.split("/").pop() ?? kit.href },
+    kit: { href: kit.href, download: kit.href.split("/").pop() ?? kit.href, size: `${Math.max(1, Math.round(statSync(path.join(process.cwd(), "public", kit.href)).size / 1024))} KB` },
     shown: kit.shown.map((entry) => entry.split("/").pop() ?? entry),
   };
 }

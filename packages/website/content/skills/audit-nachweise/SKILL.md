@@ -1,6 +1,6 @@
 ---
 name: audit-nachweise
-description: Für Audit-Vorbereitung: Unterlagen für Behörden-, Steuer- oder Zertifizierungsprüfung, Kundenaudit oder Fragebogen prüfen, Lücken listen. Zitat, Zeitraum, Umfang, Freigabe. Audit prep.
+description: Audit prep / Audit-Vorbereitung: check papers for an inspection, tax control or certification audit and list gaps. Quote, period, scope, approval (Zitat, Zeitraum, Umfang, Freigabe).
 ---
 
 # Audit-Nachweise prüfen
@@ -11,7 +11,7 @@ Für Menschen, die ein Audit vorbereiten: eine Kontrolle durch eine Behörde, ei
 
 Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH, LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, APPROVAL und COVERED, WEAK, GAP.
 
-Geht es um einen ESG- oder Nachhaltigkeitsfragebogen, ein Bankformular oder eine Umweltaussage, nimm den Skill esg-nachweise. Er nutzt dieselben vier Prüfungen und dieselben drei Status.
+Geht es um einen ESG- oder Nachhaltigkeitsfragebogen, ein Bankformular oder eine Umweltaussage, nimm den Skill esg-nachweise (ein eigener Skill, nicht Teil dieses Kits). Er nutzt dieselben vier Prüfungen und dieselben drei Status.
 
 ## Bevor du anfängst
 Kläre vier Angaben. Fehlt eine, frag nach und warte. Rate keine.
@@ -24,7 +24,7 @@ Arbeite nur mit Dateien aus diesem Gespräch oder Projekt. Was dort nicht steht:
 
 ## Schritt 1: Nachweisliste
 Eine Zeile pro Datei: Datei, Typ, Datum und Art des Datums, freigegeben oder geführt von, Umfang, andere Fassungen.
-Liegt eine nachweis-index.csv bei, fülle ihre leeren Spalten und gib sie mit demselben Kopf zurück.
+Liegt eine evidence-index.csv bei, fülle ihre leeren Spalten und gib sie mit demselben Kopf zurück.
 - Typen: RICHTLINIE (eine Regel der Firma), REGISTER (eine aktuell gehaltene Liste), PROTOKOLL (zeigt, dass etwas getan wurde: Prüfung, Log, Test, Schulungsliste, Bericht, Export), AUSSAGE (Notizen, E-Mails, Chats, Folien, Herstellerseiten).
 - Datum und Freigabe liest du im Dokument, nie im Dateinamen. "final", "signed" oder ein Datum im Namen belegen nichts. Das Änderungsdatum einer Datei ist kein Freigabedatum.
 - Fasse Fassungen desselben Dokuments zusammen. Nur eine freigegebene Fassung kann zählen.
@@ -40,8 +40,8 @@ Rechne jeden Datumsabstand, jede Zählung und jeden Anteil im Code, gegen den St
 
 ## Schritt 3: Status
 - BELEGT: alle vier Prüfungen halten für jeden Teil der Anforderung.
-- SCHWACH: jeder Teil hat eine Datei, die antwortet, aber sie ist veraltet, ein Entwurf oder nicht freigegeben. Nenne die Prüfung.
-- LÜCKE: nichts antwortet, oder ein Teil hat keinen Nachweis (ein System, ein Zeitraum, ein Feld), oder der Nachweis zeigt, dass die Anforderung nicht erfüllt ist.
+- SCHWACH: jeder Teil hat eine Datei, die antwortet, aber sie ist veraltet, ein Entwurf oder nicht freigegeben. Nenne die Prüfung. Veraltet heißt: eine spätere Änderung (neuer Text, neuer Arbeitsplatz) hat die Datei überholt, und die Datei selbst zeigt keinen Verstoß.
+- LÜCKE: nichts antwortet, oder ein Teil hat keinen Nachweis (ein System, ein Zeitraum, ein Feld, eine Person), oder der Nachweis zeigt, dass die Anforderung nicht erfüllt ist. Zeigen die Daten oder Zahlen der Datei selbst, dass eine Grenze überschritten ist (ein später Termin, zu viele Stunden, eine Untersuchung älter als erlaubt), ist es LÜCKE, nicht SCHWACH.
 - Eine Anforderung bekommt den Status ihres schwächsten Teils: LÜCKE vor SCHWACH vor BELEGT.
 
 Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.
@@ -60,7 +60,7 @@ Legt die Person einen Entwurf für den Kunden vor, prüf jeden Satz: BEHALTEN (z
 
 ## Behörden- und Zertifizierungsprüfung
 Kommt die Prüfung von einer Behörde (Arbeitsinspektion, Steuerverwaltung) oder einer Zertifizierungsstelle, ergänze diese Schritte. Die vier Prüfungen und die drei Status bleiben dieselben.
-0. Frag nach dem Datum der Mitteilung, dem Besuchstag und der Liste der Prüfzeilen. Baue die Fristen aus der Mitteilung und schreib sie als clock.csv: Ereignis, Regel, Datum. Zähle Kalendertage und Arbeitstage getrennt und sag, welche die Regel meint. Was das Gesetz offen lässt, steht als "offen" in der Datei, nicht als geratenes Datum.
+0. Frag nach dem Datum der Mitteilung, dem Besuchstag und der Liste der Prüfzeilen. Baue die Fristen aus der Mitteilung und schreib sie als clock.csv mit den Spalten event, rule, date (Ereignis, Regel, Datum). Zähle Kalendertage und Arbeitstage getrennt und sag, welche die Regel meint. Was das Gesetz offen lässt, steht als "offen" in der Datei, nicht als geratenes Datum.
 1. Mach aus den Prüfzeilen und der Ordnerkarte eine Nachweisliste: Zeile, Artikel, Papier, Zuständige, Ablageort. Fehlt ein Papier: NICHT IN DEN DATEIEN.
 2. Bei Datendateien schreibe und führe eine Prüfung aus. Füge nie Zeilen in den Chat ein, wenn ein Skript sie zählen kann. Zeilen, die mit # beginnen, sind Kommentare. Gib aus, wie viele Zeilen du pro Datei gelesen hast. Lege jeden Fund mit Kennung, Regel und Zahl vor und nenne danach jeden Grenzfall, den du geprüft und ausgeschlossen hast, mit dem Grund. Echte Zeilen mit personenbezogenen Daten gehören nicht in ein Werkzeug, das die Firma nicht kontrolliert: Dann liefert die Person nur Spaltennamen und drei erfundene Zeilen, und du schreibst das Skript, das sie selbst ausführt.
 3. Gib jeder Prüfzeile einen Status mit den vier Prüfungen und einem Zitat.
@@ -85,7 +85,7 @@ For people preparing an audit: an inspection by an authority, a tax control, a c
 
 Answer in the person's language. English: QUOTE, PERIOD, SCOPE, APPROVAL and COVERED, WEAK, GAP.
 
-For an ESG or sustainability questionnaire, a bank form or a green claim, use the esg-nachweise skill. It uses the same four tests and the same three statuses.
+For an ESG or sustainability questionnaire, a bank form or a green claim, use the esg-evidence skill (a separate skill, not part of this kit; esg-nachweise is its German edition). It uses the same four tests and the same three statuses.
 
 ### Before you start
 Settle four facts. If one is missing, ask and wait. Never guess.
@@ -114,8 +114,8 @@ Compute every date difference, count and share in code, against the audit date. 
 
 ### Step 3: status
 - COVERED: all four tests hold for every part of the request.
-- WEAK: every part has a file that answers, but it is out of date, a draft or not approved. Name the test.
-- GAP: nothing answers, or a part has no evidence (a system, a period, a field), or the evidence shows the requirement is not met.
+- WEAK: every part has a file that answers, but it is out of date, a draft or not approved. Name the test. Out of date means: a later change (a new text, a new workplace) has overtaken the file, and the file itself shows no breach.
+- GAP: nothing answers, or a part has no evidence (a system, a period, a field, a person), or the evidence shows the requirement is not met. When the file's own dates or numbers show that a limit is passed (a late date, too many hours, an exam older than allowed), it is GAP, not WEAK.
 - A request takes the status of its weakest part: GAP before WEAK before COVERED.
 
 No quote, no COVERED. A policy shows intent; only a record shows practice.

@@ -14,7 +14,7 @@ export interface TakeHomeLink {
 
 export interface TakeHomeFiles {
   readonly skill: TakeHomeLink & { readonly size: string };
-  readonly kit: TakeHomeLink;
+  readonly kit: TakeHomeLink & { readonly size: string };
   /** The kit files the page showed, by name. */
   readonly shown: readonly string[];
 }
@@ -36,29 +36,35 @@ export function TakeHomeScene({ fmt, model, files }: { readonly fmt: Fmt; readon
   return (
     <div className="w05-takehome" id="mitnehmen" data-w05-takehome="">
       <ul className="w05-downloads">
-        <li>
+        <li data-w05-file="kit">
           <span className="w05-download-text">
-            <span className="w05-chips">
-              {files.shown.map((name) => (
-                <GlasChip key={name} kind="file">
-                  {name}
-                </GlasChip>
-              ))}
-            </span>
+            <span className="w05-file-name">{files.kit.download}</span>
+            <span className="w05-hint">{`${files.kit.size}, ${h.edition}`}</span>
           </span>
           <GlasButton variant="fill" size="compact" icon="download" href={files.kit.href} download={files.kit.download} label={h.kit}>
-            {files.kit.download}
+            {h.kit}
           </GlasButton>
         </li>
-        <li>
+        <li data-w05-file="skill">
           <span className="w05-download-text">
+            <span className="w05-file-name">{files.skill.download}</span>
             <span className="w05-hint">{files.skill.size}</span>
           </span>
-          <GlasButton variant="prominent" size="compact" icon="download" href={files.skill.href} download={files.skill.download} label={h.skill}>
-            {files.skill.download}
+          <GlasButton variant="fill" size="compact" icon="download" href={files.skill.href} download={files.skill.download} label={h.skill}>
+            {h.skill}
           </GlasButton>
         </li>
       </ul>
+      <div className="w05-shown">
+        <p className="w05-label">{h.shown}</p>
+        <p className="w05-chips">
+          {files.shown.map((name) => (
+            <GlasChip key={name} kind="file">
+              {name}
+            </GlasChip>
+          ))}
+        </p>
+      </div>
       <section className="w05-sheet-card" aria-label={h.briefingLabel}>
         <p className="w05-label">{h.briefingLabel}</p>
         <pre className="w05-note" data-w05-briefing="">

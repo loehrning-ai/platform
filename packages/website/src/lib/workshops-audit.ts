@@ -22,8 +22,8 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zi
  * palette.
  */
 
-/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 91910 and 86295 bytes. */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "90 KB", en: "84 KB" };
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 97422 and 90735 bytes. */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "95 KB", en: "89 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -56,9 +56,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit-Vorbereitung mit KI: Vier Tage bis zur Kontrolle",
     eyebrow: "Workshop 05 · Audit-Vorbereitung",
     summary:
-      "Drei echte Kontrollen in Nordmazedonien. Eine erfundene Firma bekommt in vier Tagen den Arbeitsinspektor. Du bereitest ihre Papiere mit KI vor.",
+      "Drei Arten von Kontrollen in Nordmazedonien. Eine erfundene Firma bekommt in vier Tagen den Arbeitsinspektor. Du bereitest ihre Papiere mit KI vor.",
     lede:
-      "Am Montag kommt ein Brief: Am 27. kommt der Arbeitsinspektor. Du hast vier Tage und eine Liste mit dreizehn Fragen. Du bereitest die Papiere mit KI vor, und eine benannte Person unterschreibt.",
+      "Am Montag kommt ein Brief: Am 27. November kommt der Arbeitsinspektor. Du hast vier Tage und dreizehn Fragen. Du bereitest die Papiere mit KI vor, eine Person unterschreibt.",
     description:
       "Bereite eine Arbeitsinspektion mit KI in vier Tagen vor: dreizehn Fragen, vier Prüfungen, ein Schlüssel. Dazu Steuerprüfung und ISO. Kostenlos, mit Kit.",
     format: "Live-Workshop mit Deck",
@@ -69,7 +69,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Ein Brief vom Inspektorat, ein Ordner mit erfundenen Unterlagen und ein Lösungsschlüssel. Du führst drei Prompts in Claude oder Codex aus, etwa 60 Minuten.",
+        "Ein Brief vom Inspektorat, ein Ordner mit erfundenen Unterlagen und ein Lösungsschlüssel. Du führst drei Prompts in Claude oder Codex aus, etwa 70 Minuten.",
       facts: ["34 Dateien", "3 Schritte", "13 Fragen"],
     },
     audience: [
@@ -131,7 +131,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-11-07",
       data: "synthetic",
-      note: "Gesetze und öffentliche Zahlen stammen aus amtlichen Texten und Berichten, abgerufen am 7. November 2026. Die Firma, ihre Papiere und ihre Daten sind erfunden.",
+      note: "Nordmazedonien, Stand 7. November 2026: Gesetze und Jahresberichte der Behörden, dazu Pressemeldungen, Anbieterseiten und Bedingungen, jeweils mit Quelle und Vertrauensstufe. Die Firma, ihre Papiere und ihre Daten sind erfunden. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -152,7 +152,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Check laufen lassen",
         description:
-          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, 8 geprüft ohne Befund. Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
+          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, mindestens 8 geprüft ohne Befund. Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
         tool: "Claude-Projekt",
       },
       {
@@ -204,9 +204,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit Preparation with AI: Four Days Until the Inspection",
     eyebrow: "Workshop 05 · Audit preparation",
     summary:
-      "Three real kinds of checks in North Macedonia. An invented firm gets a labour inspector in four days. You prepare its papers with AI.",
+      "Three kinds of checks in North Macedonia. An invented firm gets a labour inspector in four days. You prepare its papers with AI.",
     lede:
-      "On Monday a letter arrives: on the 27th the labour inspector comes. You have four days and a list of thirteen questions. You prepare the papers with AI, and a named person signs.",
+      "On Monday a letter arrives: on 27 November the labour inspector comes. You have four days and thirteen questions. You prepare the papers with AI, a person signs.",
     description:
       "Prepare a labour inspection with AI in four days: thirteen questions, four tests, one answer key. Plus tax control and ISO audits. Free workshop with kit.",
     format: "Live workshop with deck",
@@ -217,7 +217,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A letter from the inspectorate, a folder of invented records and an answer key. You run three prompts in Claude or Codex, about 60 minutes.",
+        "A letter from the inspectorate, a folder of invented records and an answer key. You run three prompts in Claude or Codex, about 70 minutes.",
       facts: ["34 files", "3 steps", "13 questions"],
     },
     audience: [
@@ -279,7 +279,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-11-07",
       data: "synthetic",
-      note: "Laws and public numbers come from official texts and reports, fetched on 7 November 2026. The firm, its papers and its dates are invented.",
+      note: "North Macedonia, as of 7 November 2026: laws and annual reports of the authorities, plus press reports, vendor pages and terms, each labelled with its source and confidence. The firm, its papers and its dates are invented. Not legal advice.",
     },
     steps: [
       {
@@ -300,7 +300,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Run the check",
         description:
-          "A script counts every row and names the rule: 10 findings, 8 checked with no problem. With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
+          "A script counts every row and names the rule: 10 findings, at least 8 checked with no problem. With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
         tool: "Claude Project",
       },
       {

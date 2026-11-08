@@ -26,7 +26,7 @@ export function tokensIn(node) {
 /** The text of a node as shown: entities resolved, white space collapsed (punctuation kept, unlike the token count). */
 export function textOf(node) {
   const raw = node.text !== undefined ? node.text : (node.children ?? []).map(textOf).join(" ");
-  return raw.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+  return raw.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 }
 
 /** The slides of a page: the section nodes with class slide, in order. */

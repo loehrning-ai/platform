@@ -6,21 +6,25 @@ Gradba-Pro DOOEL, Bitola, 24 staff (E-01 to E-24). Everything here is invented f
 
 | paper | owner | where it lives |
 |---|---|---|
-| contracts | Elena (office manager) | contracts folder in the office, listed in contracts_register_2026.csv |
+| contracts | office manager (E-02) | contracts folder in the office, listed in contracts_register_2026.csv |
 | payroll | the outside accountant | the accountant's files, listed in payroll_runs_2026.csv and payroll_lines_2026-07_to_10.csv |
-| registration M1/M2 | Elena (office manager) | print-outs from the Employment Agency, listed in registration_M1M2_2026.csv |
-| employee records | Elena (office manager) | employee_records_2026.csv |
-| attendance sheets | Elena (office manager) | attendance_2026-11.csv |
-| overtime hours | Elena (office manager) | overtime_weekly_2026.csv |
-| overtime notices | Elena (office manager) | the folder listing overtime_notices_folder.txt |
-| leave decisions | Elena (office manager) | leave_decisions_2026.csv, absences in absences_2026.csv |
-| health papers | Elena (office manager) | slips from the health centre, listed in medical_exams.csv (dates only) |
-| safety statement | Goran, in the binder (no job title is given) | safety_statement_2019.md |
-| safety training proofs | Elena (office manager) | training_proofs_2026.csv |
+| registration M1/M2 | office manager (E-02) | print-outs from the Employment Agency, listed in registration_M1M2_2026.csv |
+| employee records | office manager (E-02) | employee_records_2026.csv |
+| attendance sheets | office manager (E-02) | attendance_2026-11.csv |
+| overtime hours | office manager (E-02) | overtime_weekly_2026.csv |
+| overtime notices | office manager (E-02) | the folder listing overtime_notices_folder.txt |
+| leave decisions | office manager (E-02) | leave_decisions_2026.csv, absences in absences_2026.csv |
+| health papers | office manager (E-02) | slips from the health centre, listed in medical_exams.csv (dates only) |
+| safety statement | the person with the binder (no job title is given) | safety_statement_2019.md |
+| safety training proofs | office manager (E-02) | training_proofs_2026.csv |
+
+Registers are as of 25 Nov 2026 and each is kept by the owner named in this table. The dates inside the rows are the dates of the paper itself.
 
 ## Company facts
 
 Last change to the workplace: hall racking and forklift work were added in 2023.
+
+A new hire in this kit is a person who started in the 12 months before 27 Nov 2026 (the kit's reading).
 
 Staff by title (10 titles): director 1, office manager 1, purchasing and accounts clerk 2, sales adviser 5, cashier 2, order picker 6, driver 3, forklift operator 2, dispatcher 1, cleaner 1.
 

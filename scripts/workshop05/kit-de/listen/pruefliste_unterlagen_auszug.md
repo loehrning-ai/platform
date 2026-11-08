@@ -6,4 +6,4 @@ Erfundene Umschreibung der öffentlichen Liste der Inspektion. Der Regelsatz ist
 
 | line_id | article | question | rule_sentence |
 |---|---|---|---|
-| L03 | Gesetz über die Evidenzen Art. 8(1) | Enthält die Akte jeder Person alle 22 Datenfelder? | Alle 22 Datenfelder in der Akte jeder Person sind ausgefüllt. |
+| L03 | Gesetz über die Aufzeichnungen Art. 8(1) | Enthält die Akte jeder Person alle 22 Datenfelder? | Alle 22 Datenfelder in der Akte jeder Person sind ausgefüllt. |

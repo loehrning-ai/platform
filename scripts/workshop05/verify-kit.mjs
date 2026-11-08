@@ -162,24 +162,34 @@ const BLOCK = {
     "Öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein, füge listen/ und ordner/ hinzu. Diese Dateien sind erfunden, das ist also Stufe 2 der Datenleiter. Eigene Firma später: Stufe 3, nur Spaltennamen und 3 erfundene Zeilen.",
   ],
 };
+const INTRO = { en: ["## What you do", "## Set up once"], de: ["## Was du tust", "## Einmal einrichten"] };
 for (const [locale, text, start, step, after, marker] of [
   ["en", read("START-HERE.md"), "START-HERE.md", "Step", "## After the visit (optional)", "<!-- claude-ui:en -->"],
   ["de", readDe("START-HIER.md"), "START-HIER.md", "Schritt", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
 ]) {
   expect(`${start} block`, text.split("\n").slice(0, 5), BLOCK[locale]);
-  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [`## ${step} 1`, `## ${step} 2`, `## ${step} 3`, after]);
-  expect(`${start} marker`, [text.split(marker).length - 1, text.trimEnd().endsWith(marker)], [1, true]);
+  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, after]);
+  // The install text of the skill sits in the set-up section, above Step 1, and the file ends with the after-visit block.
+  expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(INTRO[locale][1]) && text.indexOf(marker) < text.indexOf(`## ${step} 1`)], [1, true]);
   const prompts = [...text.matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]);
   expect(`${start} prompts`, prompts.length, 3);
   expect(`${start} prompt words`, prompts.map((prompt) => prompt.split(/\s+/).length <= 150), [true, true, true]);
 }
-const timeLines = (text) => [...text.matchAll(/^(?:In the room|Im Raum) (\d+)(?: minutes| Minuten), (?:at your desk|am Schreibtisch) about 20\.$|^(?:In the room|Im Raum) (\d+)/gm)].map((match) => Number(match[1] ?? match[2]));
-expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[5, 7, 6], [5, 7, 6]]);
+// The room minutes are the deck's slots; the desk minutes are an estimate and the file says so.
+const timeLines = (text) => [...text.matchAll(/^(?:In the room|Im Raum) (\d+)(?: minutes| Minuten)\. (?:At your desk about|Am Schreibtisch etwa) (\d+), (?:our estimate, not measured|unsere Schätzung, nicht gemessen)\./gm)].map((match) => [Number(match[1]), Number(match[2])]);
+expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[5, 20], [7, 20], [6, 30]], [[5, 20], [7, 20], [6, 30]]]);
 for (const [text, word] of [
   [read("START-HERE.md"), "Predict first, then check ANSWERS.md."],
   [readDe("START-HIER.md"), "Sag es voraus, dann prüf es in LOESUNGEN.md."],
 ]) if (text.split(word).length - 1 !== 3) fail(`a start file must say "${word}" in each of the three steps`);
-if (!read("START-HERE.md").includes("Skip lines that start with #")) fail("Step 2 must say that lines starting with # are skipped");
+if (!read("START-HERE.md").includes("skip the lines that start with #")) fail("Step 2 must say that lines starting with # are skipped");
+// The skill: where to get it and what the kit holds (the kit has the folder, not a zip).
+for (const [text, needle] of [
+  [read("START-HERE.md"), "loehrning.ai/skills/audit-nachweise.zip"],
+  [read("START-HERE.md"), "cases/case-A-labour.md"],
+  [readDe("START-HIER.md"), "loehrning.ai/skills/audit-nachweise.zip"],
+  [readDe("START-HIER.md"), "faelle/fall-A-arbeit.md"],
+]) if (!text.includes(needle)) fail(`a start file must name ${needle}`);
 
 // 5. Project instructions: 13 rules, rules 4 to 7 are the four tests (and equal the registry once it names this kit).
 const rulesOf = (text) => [...text.matchAll(/^(\d+)\. (.*)$/gm)].map((match) => [Number(match[1]), match[2]]);
@@ -288,7 +298,7 @@ expect("statuses EN equal DE", statusByLine.en, statusByLine.de);
 // 7. Document request, minutes, cases, templates: the facts they must hold.
 const mustHave = [
   ["inspector/document-request_2026-11-27.md", ["Open on the day of the visit.", "Mon 30 November 2026", "ZIN Art. 53(1)", "E-02"]],
-  ["inspector/minutes_sample_2026-11-27.md", ["Open after Step 3.", "E-12", "15 days (invented)", "Reason, if you do not sign: ______"]],
+  ["inspector/minutes_sample_2026-11-27.md", ["Open after Step 3.", "E-12", "the inspector issues an act with a fix period", "Reason, if you do not sign: ______"]],
   ["templates/transfer-sheet.md", ["1. Who checks", "6. Your sentence", "Before [date], [role] checks [paper] against [rule].", "Level 4"]],
   ["templates/new-paper-note.md", ["Signed by: ______", "The old paper stays untouched."]],
   ["templates/comment-on-minutes.md", ["at most four sentences", "Signed by: ______"]],
@@ -301,7 +311,7 @@ const mustHave = [
 for (const [file, needles] of mustHave) for (const needle of needles) if (!read(file).includes(needle)) fail(`${file} lacks "${needle}"`);
 for (const [file, needles] of [
   ["inspektor/verlangen_unterlagen_2026-11-27.md", ["Am Tag des Besuchs öffnen.", "Mo 30. November 2026", "ZIN Art. 53(1)", "E-02"]],
-  ["inspektor/protokoll_beispiel_2026-11-27.md", ["Nach Schritt 3 öffnen.", "E-12", "15 Tage (erfunden)"]],
+  ["inspektor/protokoll_beispiel_2026-11-27.md", ["Nach Schritt 3 öffnen.", "E-12", "erlässt einen Bescheid mit einer Frist zur Behebung"]],
   ["vorlagen/uebertragungsblatt.md", ["1. Wer prüft", "6. Dein Satz", "Stufe 4"]],
   ["AENDERUNGEN.md", ["## 2026-11-07"]],
   ["faelle/fall-A-arbeit.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)"]],

@@ -20,7 +20,7 @@ Ein Steuerinspektor einer Regionaldirektion des Amts für öffentliche Einnahmen
 Bücher und Buchhaltungsbelege, Rechnungen ein und aus mit den Mehrwertsteuer-Aufzeichnungen, Jahresabschlüsse, Lohnunterlagen, und bei einer Registrierkasse: Kassenbons, das Tagesberichtsbuch und der Nachweis der eingezahlten Einnahmen.
 
 ## Engpässe
-Belegt: Fehlende oder unzuverlässige Bücher werden doppelt bestraft, mit einer Strafe und mit einer Schätzung, die nicht zugunsten des Steuerpflichtigen ausfällt (ZDP Art. 76). Das UJP darf elektronische Daten kopieren und geänderte und gelöschte Daten wiederherstellen (Art. 60a).
+Belegt: Fehlende oder unzuverlässige Bücher werden doppelt bestraft, mit einer Strafe und mit einer Schätzung, die nicht zugunsten des Steuerpflichtigen ausfällt (ZDP Art. 76). Das UJP darf vorhandene Daten auf Geräten mit einem Speichermedium einsehen, eine getreue Kopie ziehen und geänderte und gelöschte Daten wiederherstellen (ZDP Art. 60-a(1),(2)).
 Die Geschichte dieses Kits (erfunden): Kassendaten und Bücher, die bei einer externen Buchhaltung liegen.
 Nicht gemessen: die Dauer einer Prüfung in Kalendertagen. Etwa 30 Inspektorenstunden pro Prüfung (2025, errechnet aus 118.659 Stunden und 4.003 Prüfungen).
 

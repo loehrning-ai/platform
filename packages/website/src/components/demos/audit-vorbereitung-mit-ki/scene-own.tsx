@@ -42,7 +42,8 @@ export function OwnStage({
       <ul className="w05-papers-own">
         {papers.map((paper) => {
           const set = new Set(ticks[paper] ?? []);
-          const status = ownStatus(set);
+          // Nothing ticked yet: a neutral state, never a red verdict on input the visitor has not given.
+          const status = set.size === 0 ? "idle" : ownStatus(set);
           return (
             <li key={paper} className="w05-own-paper" data-w05-own-paper="" data-status={status}>
               <span className="w05-own-name">{paper}</span>

@@ -15,7 +15,7 @@ const EXEMPT = ["qd", "qd-gloss", "prompt-body", "fig", "out", "focus", "foot"];
 export function parseHtml(html) {
   const root = { tag: "#root", attrs: {}, children: [] };
   const stack = [root];
-  const re = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][\w:-]*)((?:\s+[^\s=>\/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*(\/?)>|([^<]+)/g;
+  const re = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][\w:-]*)((?:\s+[^\s=>\/"']+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>"'=]+))?)*)\s*(\/?)>|([^<]+)/g;
   let m;
   while ((m = re.exec(html))) {
     if (m[0].startsWith("<!--")) continue;
@@ -42,7 +42,7 @@ export function parseHtml(html) {
   return root;
 }
 
-const unescape = (t) => t.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+const unescape = (t) => t.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
 
 export function tokensOf(text) {
   return unescape(text).split(/\s+/).filter((t) => /[\p{L}\p{N}]/u.test(t));

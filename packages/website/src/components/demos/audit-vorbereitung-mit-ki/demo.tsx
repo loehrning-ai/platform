@@ -88,19 +88,19 @@ export default function Demo({ copy, model, files }: { readonly copy: W05Copy; r
   const caption = ((): string[] => {
     switch (view) {
       case "ordner":
-        return [kept ? copy.folder.kept : copy.folder.briefing];
+        return kept ? [copy.folder.kept] : [];
       case "uhr":
-        return chosen ? [fmt.t(copy.clock.picked, { calendar: chosen.calendar, working: chosen.workingBetween, need: model.needWorking }), ...copy.clock.caption] : [];
+        return chosen ? [...copy.clock.caption] : [];
       case "pruefungen":
         return focus ? [copy.checkDef[focus], copy.tests.rule] : [copy.tests.rule, copy.statusDef.weak, copy.statusDef.gap];
       case "roentgen":
         return scanRows < total
           ? [copy.xray.scan]
-          : [fmt.t(copy.xray.tally, model.tally), copy.xray.caption[0], fmt.t(copy.xray.caption[1], { over: model.wrong.over, under: model.wrong.under, month: copy.months[Number(model.pay.periodEnd.slice(5, 7)) - 1] as string })];
+          : [copy.xray.caption[0], fmt.t(copy.xray.caption[1], { over: model.wrong.over, under: model.wrong.under, month: copy.months[Number(model.pay.periodEnd.slice(5, 7)) - 1] as string })];
       case "nachtrag":
         return [late === "start" ? fmt.t(copy.late.captionStart, { n: model.pay.daysLate }) : late === "edited" ? copy.late.captionEdited : copy.late.captionNote];
       case "zuviel":
-        return [columns.size === 0 ? copy.level.captionNone : copy.level.captionSome, ...(columns.size > 0 ? [fmt.t(copy.level.selected, { n: columns.size, total: model.columns.length })] : [])];
+        return [columns.size === 0 ? copy.level.captionNone : copy.level.captionSome];
       case "ordner-eigen":
         return [copy.own.caption];
       case "mitnehmen":

@@ -7,7 +7,7 @@ import type { WorkshopKit } from "./workshop-kit";
  * locale (gradba-audit-kit-de.zip, gradba-audit-kit.zip); scripts/workshop05/verify-kit.mjs checks
  * the figures against the kit's source files and workshops-audit.test.ts checks this block against
  * the kit. The rules equal rules 4 to 7 of the project instructions of each edition without their
- * number. The zip's path and size come from the workshop's kit material. The kit has 34 files in
+ * number; the page numbers them 1 to 4, so its heading names the real range (rules 4 to 7 of 13). The zip's path and size come from the workshop's kit material. The kit has 34 files in
  * 11 top-level entries per edition.
  */
 export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
@@ -18,9 +18,9 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     stats: [
       { value: "34", label: "Dateien" },
       { value: "3", label: "Schritte" },
-      { value: "13", label: "Regeln" },
+      { value: "13", label: "Regeln für Claude" },
     ],
-    rulesHeading: "Die 13 Regeln für Claude",
+    rulesHeading: "Die vier Prüfungen (Regeln 4 bis 7 von 13)",
     rules: [
       "ZITAT: Wörtlich aus der Datei kopierte Worte beantworten die Zeile. „Geplant“ ist kein Protokoll.",
       "ZEITRAUM: Das Datum passt zur Regel (vor der ersten Schicht, binnen 15 Tagen, binnen 24 Monaten).",
@@ -48,7 +48,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         title: "Check laufen lassen",
         input: "Die CSV-Dateien in ordner/",
         action: "Claude schreibt und führt einen Check aus",
-        output: "10 Funde und 8 geprüft ohne Befund",
+        output: "10 Funde und mindestens 8 geprüft ohne Befund",
         note: "Sag es zuerst voraus: Wie viele Funde? Dann prüf es in LOESUNGEN.md.",
       },
       {
@@ -61,7 +61,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Entpacke das Kit, öffne Claude oder Codex, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/ und ordner/ hinzu. Die Dateien sind erfunden (Stufe 2); deine eigenen Dateien warten auf die Datenleiter.",
+      "Entpacke das Kit, öffne Claude oder Codex, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/ und ordner/ hinzu. Die Dateien sind erfunden. Deine echten Dateien gehen erst in ein Werkzeug, wenn du die Datenstufen kennst: Demo, Schritt 6.",
     fictionalNote: "Alle Dateien sind für die Übung erfunden. Keine Rechtsberatung.",
     contents: [
       { name: "START-HIER.md", description: "Einrichtung und die drei Prompts" },
@@ -74,7 +74,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "faelle/", description: "Feldkarten für drei Prüfungen" },
       { name: "inspektor/", description: "Verlangen und Protokoll, später öffnen" },
       { name: "vorlagen/", description: "Neues Papier, Uhr, Nachweisindex" },
-      { name: "claude/", description: "Der Skill audit-nachweise" },
+      { name: "claude/", description: "Skill, auch unter /skills/audit-nachweise.zip" },
     ],
   },
   en: {
@@ -84,9 +84,9 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     stats: [
       { value: "34", label: "files" },
       { value: "3", label: "steps" },
-      { value: "13", label: "rules" },
+      { value: "13", label: "rules for Claude" },
     ],
-    rulesHeading: "The 13 rules for Claude",
+    rulesHeading: "The four tests (rules 4 to 7 of 13)",
     rules: [
       "QUOTE: words copied exactly from the file answer the line. “Planned” is not a record.",
       "PERIOD: the date fits the rule (before the first shift, within 15 days, within 24 months).",
@@ -114,7 +114,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         title: "Run the check",
         input: "The CSV files in folder/",
         action: "Claude writes and runs a check",
-        output: "10 findings and 8 checked with no problem",
+        output: "10 findings and at least 8 checked with no problem",
         note: "Predict first: how many findings? Then check ANSWERS.md.",
       },
       {
@@ -127,7 +127,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Unzip the kit, open Claude or Codex, make a Project, paste project-instructions.md, then add checklists/ and folder/. The files are invented (Level 2); your own files wait for the data ladder.",
+      "Unzip the kit, open Claude or Codex, make a Project, paste project-instructions.md, then add checklists/ and folder/. The files are invented. Your real files go into a tool only after you know the data levels: demo, step 6.",
     fictionalNote: "All files are invented for the exercise. Not legal advice.",
     contents: [
       { name: "START-HERE.md", description: "Setup and the three prompts" },
@@ -140,7 +140,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "cases/", description: "Field cards for three audits" },
       { name: "inspector/", description: "Request and minutes, opened later" },
       { name: "templates/", description: "New paper, clock, evidence index" },
-      { name: "claude/", description: "The audit-nachweise skill" },
+      { name: "claude/", description: "Skill, also at /skills/audit-nachweise.zip" },
     ],
   },
 };

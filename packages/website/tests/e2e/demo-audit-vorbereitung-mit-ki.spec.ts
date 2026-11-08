@@ -75,8 +75,13 @@ test.describe(`/demos/${SLUG}`, () => {
       // Scene 2: the real visit is four calendar days and three working days away.
       await expect(page.locator("[data-w05-calendar]")).toHaveAttribute("data-w05-calendar", "4");
       await expect(page.locator("[data-w05-working]")).toHaveAttribute("data-w05-working", "3");
+      await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "fits");
+      // The deck's rule: 25 is short, 26 is unclear (does the notice day count?), 27 fits. No weekend date is printed.
       await page.getByRole("radio").first().click();
       await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "short");
+      await page.getByRole("radio").nth(1).click();
+      await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "unclear");
+      await expect(page.locator("[data-w05-data]")).not.toContainText(/\b2[89]\.? (Nov|November)\b/);
       await advanceTo(page, "pruefungen");
 
       // Scene 3: the attendance sheet is a gap, the safety statement is weak.

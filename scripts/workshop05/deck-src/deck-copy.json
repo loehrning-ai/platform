@@ -28,15 +28,15 @@
         "bName": "Steuer",
         "bCount": "214",
         "bDetail": "Betriebe kontrolliert, 66 mit Verstößen",
-        "bChecks": "Kassenkontrollen",
         "bSource": "Presse, 28. Juli bis 3. Aug. 2025",
         "cName": "Zertifizierer oder Kunde",
         "cDays": "3 bis 5 Audittage",
         "cStaff": "16 bis 65 Beschäftigte, Erstaudit",
-        "cDates": "Termine vorab vereinbart"
+        "cDates": "Termine vorab vereinbart",
+        "bTag": "Presse 2025"
       },
       "papers": {
-        "title": "Wonach jeder Prüfer zuerst fragt",
+        "title": "Papiere, nach denen Prüfer fragen",
         "aName": "Arbeit",
         "aQuote": "Договор за вработување · Евидентен лист за присуство · Месечна пресметка на плата",
         "aGloss": "Arbeitsvertrag · Anwesenheitsliste · monatliche Lohnabrechnung",
@@ -58,8 +58,8 @@
         "noticeGloss": "Mitteilung über eine reguläre Inspektion",
         "visit": "Besuch: 27. November, 09:00",
         "tabs": "Arbeit · Sicherheit · Unterlagen",
-        "dots": "Von 100 Firmen hier haben 84 ein bis neun Beschäftigte (2022). Gradba-Pro hat 24.",
-        "rule": "Bei 24: Papierliste erlaubt. Ab 26: elektronische Erfassung.",
+        "dots": "Von 100 Firmen hier haben 84 ein bis neun Beschäftigte (Statistikamt, 2022). Gradba-Pro hat 24.",
+        "rule": "Bei 24 Beschäftigten: Papierliste erlaubt. Ab 26: elektronische Erfassung.",
         "ruleSource": "ZRO Art. 116, Verordnung nicht gelesen"
       },
       "clock": {
@@ -76,16 +76,17 @@
         "chipUnclear": "unklar",
         "chipFits": "passt",
         "none": "keine",
-        "shortNames": "Kurzbezeichnungen"
+        "shortNames": "Glossar",
+        "visitOn": "Besuch am"
       },
       "plan": {
         "question": "Elena fragt dich: Geht das in Ordnung?",
         "l1": "Zeiten fehlen: aus dem Gedächtnis eintragen.",
-        "c1": "Zeiten",
+        "c1": "Zeiten nachgetragen",
         "l2": "Urlaub im Januar zugesagt: jetzt schreiben, auf 1. Januar datieren.",
-        "c2": "Urlaub",
+        "c2": "Urlaub zurückdatiert",
         "l3": "Überstunden im Juli bekannt: Meldung jetzt schreiben, auf Juli datieren.",
-        "c3": "Überstunden",
+        "c3": "Überstunden zurückdatiert",
         "options": [
           "In Ordnung",
           "Unsicher",
@@ -98,17 +99,19 @@
         "labour": "Arbeitsinspektor: ungenaue Daten werden bestraft.",
         "fine": "Kleine Firma (Größe angenommen): 1.500 bis 2.000 Euro, ZIN Art. 83",
         "criminal": "Strafgesetzbuch Art. 280 kann greifen; eine Firma erhält eine Geldstrafe.",
-        "cellNew": "08:00"
+        "cellNew": "08:00",
+        "invented": "erfundene Firma",
+        "caption": "x ersetzt durch 08:00"
       },
       "neighbour": {
-        "head": "100 DIT-Inspektionen, 2025",
-        "source": "Jahresbericht 2025, Entwurfsfassung, April 2026, Gesetz von 2019",
-        "extra": "54 außerordentlich",
-        "followUp": "25 Nachkontrollen",
-        "regular": "21 regulär",
+        "head": "Auf 100 Inspektionen, gerundet",
+        "source": "DIT-Bericht 2025, Entwurf, April 2026",
+        "extra": "54 % außerordentlich",
+        "followUp": "25 % Nachkontrollen",
+        "regular": "21 % regulär",
         "reasons": "Beschwerde, Unfall, Aktion, gemeinsamer Einsatz",
-        "noLetter": "Zuerst kein Brief.",
-        "consequence": "124 Inspektoren, 26.484 Inspektionen. Den Ordner das ganze Jahr bereit halten."
+        "noLetter": "Meist kein Brief",
+        "consequence": "124 Inspektoren, 26.484 Inspektionen (DIT-Bericht 2025). Den Ordner das ganze Jahr bereit halten."
       },
       "table": {
         "title": "Die Liste des Inspektors",
@@ -134,13 +137,14 @@
           "Stellungnahme der Vertretung nach der letzten Änderung datiert?",
           "Letzte Untersuchung höchstens 24 Monate alt?",
           "Nachweis der Sicherheitsunterweisung bei der Einstellung?"
-        ]
+        ],
+        "about": "etwa"
       },
       "drawer": {
         "title": "Wo jedes Papier liegt",
-        "path": "Lohn: externe Buchhaltung. Vertrag: Ordner. Anmeldung: Ausdrucke. Zettel: Gesundheitszentrum.",
+        "path": "Lohn: externe Buchhaltung. Vertrag: Ordner. Anmeldung: Ausdrucke. Ärztliche Zettel: Gesundheitszentrum.",
         "morning": "ein Vormittag",
-        "assumption": "Annahme des Kits"
+        "assumption": "Annahme, nicht gemessen"
       },
       "tests": {
         "title": "Vier Prüfungen für jedes Papier",
@@ -160,16 +164,29 @@
           "SCHWACH",
           "LÜCKE",
           "LÜCKE"
-        ]
+        ],
+        "papers": [
+          "Anwesenheitsliste",
+          "Stellungnahme",
+          "Personalakte",
+          "Überstundenmeldung"
+        ],
+        "questions": [
+          "Steht es wörtlich drin?",
+          "Passt das Datum?",
+          "Gilt es für alle?",
+          "Wer hat unterschrieben?"
+        ],
+        "invented": "erfunden, Gradba-Pro"
       },
       "status": {
         "title": "Drei Wörter für jede Frage",
         "covered": "BELEGT",
-        "coveredDef": "jede Person hat einen Nachweis, nichts verletzt",
+        "coveredDef": "alle haben einen Nachweis",
         "weak": "SCHWACH",
-        "weakDef": "ein Papier gibt es, eine Prüfung scheitert, ein neues datiertes Papier behebt es",
+        "weakDef": "Papier da, eine Prüfung scheitert",
         "gap": "LÜCKE",
-        "gapDef": "jemand hat kein Papier, oder die Akte zeigt den Verstoß",
+        "gapDef": "kein Papier, oder Regel verletzt",
         "samples": "Vertrag · Stellungnahme 2019 · Anwesenheit nur Haken"
       },
       "forward": {
@@ -177,15 +194,18 @@
         "p1": "Späte Meldung · Notiz mit Datum",
         "p2": "Fehlende Zeiten · unterschriebene Notiz",
         "p3": "Keine Entscheidung · heute ausstellen",
-        "p4": "Alte Erklärung · neue, echtes Datum",
+        "p4": "Alte Erklärung · neue mit echtem Datum",
         "never": "Nie rückwärts.",
         "draft": "KI schreibt einen Entwurf. Er wird zum Papier, wenn eine benannte Person ihn datiert und unterschreibt.",
-        "again": "Elena fragt dich noch einmal: Geht das in Ordnung?",
+        "again": "Elena fragt dich erneut: Geht das in Ordnung?",
         "options": [
           "In Ordnung",
           "Unsicher",
           "Nein"
-        ]
+        ],
+        "colOld": "Problem",
+        "colNew": "Heute neu",
+        "ghostLegend": "grau: erste Abstimmung"
       },
       "step1": {
         "title": "Schritt 1: die Tabelle bauen",
@@ -202,7 +222,8 @@
           "Lief nicht"
         ],
         "accounts": "Konten und die Datenleiter",
-        "cols": "Zeile · Artikel · Papier · Zuständig · Ablageort"
+        "cols": "Zeile · Artikel · Papier · Zuständig · Ablageort",
+        "rungsLabel": "Datenleiter"
       },
       "step2": {
         "title": "Schritt 2: den Check laufen lassen",
@@ -218,7 +239,7 @@
         "never": "Deine Zeilen verlassen deinen Rechner nicht.",
         "naive": "Die einfache Regel markiert den Oktoberlohn. Die Regel mit freiem Tag klärt ihn.",
         "invented": "erfundenes Beispiel, keine Aufzeichnung",
-        "formulas": "=IF(pay_date>period_end+15,\"late\",\"ok\") · =IF(pay_date>NEXT_WORKDAY(period_end+15),\"late\",\"ok\")",
+        "formulas": "=IF(pay_date>period_end+15,\"late\",\"ok\") · =IF(pay_date>WORKDAY(period_end+14,1),\"late\",\"ok\")",
         "slot": "Dein Claude-Ergebnis: noch nicht aufgezeichnet.",
         "slotOpts": [
           "Wie der Schlüssel",
@@ -228,16 +249,21 @@
         "wording": "Der Wortlaut darf abweichen, die Zahlen nicht.",
         "accounts": "Konten und die Datenleiter",
         "tool": "Werkzeug",
-        "computer": "Dein Rechner"
+        "computer": "Dein Rechner",
+        "rungsLabel": "Datenleiter",
+        "sampleHead": "id,date,start,end,tick,code",
+        "formulaWord": "Formel",
+        "fSimple": "einfach",
+        "fFree": "mit freiem Tag"
       },
       "xray": {
         "head": "Mittwoch: ein Skript, jede Zeile",
-        "computed": "Aus den Kit-Dateien gerechnet. Kein Claude-Lauf.",
+        "computed": "Skript-Ergebnis, kein Claude-Lauf.",
         "rows": "Zeilen gelesen",
         "findings": "Funde",
         "checked": "Geprüft, in Ordnung:",
         "wrong": "Meldet zu viel: {over}. Übersieht den Septemberlohn: {under}.",
-        "wrongTitle": "Zwei typische falsche Zählungen",
+        "wrongTitle": "Zwei falsche Zählungen, von uns nachgerechnet",
         "wrongExtra": "Zu viel: E-08 mit 7 h und E-09 mit genau 20 Tagen kommen dazu",
         "whatifs": [
           "E-08: 9 h statt 7",
@@ -250,7 +276,7 @@
           "E-07, E-08 keine Überstundenmeldung, {f2} Wochen",
           "E-07 über 8 h in {f3w} von {f3t} Wochen",
           "E-07, E-08 keine Überstundenzeile",
-          "E-12, E-13 nur Haken, {f5} Tage",
+          "E-12, E-13 nur Haken, {f5} Personentage ({f5h} je Person)",
           "Septemberlohn {f6} Tage zu spät; Art. 265 vertretbar, Inspektor entscheidet",
           "E-11, E-19 kein Urlaubsbescheid; E-14 hat {f7} Tage",
           "E-04, E-15, E-21 Akte unvollständig",
@@ -259,7 +285,7 @@
         ],
         "people": "{people} von {all} Personen kommen in einem Fund vor. Funde zur ganzen Firma zählen nicht.",
         "ticksLines": [
-          "E-12, E-13: dieselbe Zeit in {w1} von {w1} Zeilen, ein Skript sieht das",
+          "Im Was-wäre-wenn, E-12, E-13: dieselbe Zeit in {w1} von {w1} Zeilen, ein Skript sieht das",
           "was ein Skript sieht, keine Quelle sagt, dass Inspektoren so prüfen"
         ],
         "alt": "Raster aus 13 Fragen und 24 Personen. Rote Zellen sind Funde.",
@@ -346,7 +372,13 @@
             "fine": "Keine Quelle sagt, dass Inspektoren danach suchen.",
             "fix": "Zeiten werden nie nachträglich eingetragen."
           }
-        }
+        },
+        "guess": "Deine Schätzung",
+        "whatLabel": "Was wäre wenn?",
+        "whatLines": [
+          "E-08: 9 h in einer Woche",
+          "Auch der Oktoberlohn zu spät"
+        ]
       },
       "step3": {
         "title": "Schritt 3: Plan und Briefing",
@@ -358,7 +390,7 @@
         "gap": "LÜCKE",
         "computed": "Aus dem Kit gerechnet",
         "visit": "Besuch 27. Nov., 09:00, erfunden",
-        "papers": "Papiere: 3 Tage nach dem schriftlichen Verlangen",
+        "papers": "Papiere: 3 Tage nach dem schriftlichen Verlangen (ZIN Art. 53, 55)",
         "draft": "KI schreibt einen Entwurf. Er wird zum Papier, wenn eine benannte Person ihn datiert und unterschreibt.",
         "ledger": "Alte Papiere geändert: 0 · Neue Papiere entworfen: 3 · Von Goran unterschrieben: 0, bis er sie liest",
         "slot": "Dein Claude-Ergebnis: noch nicht aufgezeichnet.",
@@ -368,92 +400,105 @@
           "Lief nicht"
         ],
         "wording": "Der Wortlaut darf abweichen, die Zahlen nicht.",
-        "warnFirst": "zuerst eine Verwarnung"
+        "warnFirst": "zuerst eine Verwarnung",
+        "legend": "Warnsymbol: zuerst kann eine Verwarnung kommen (ZRO Art. 258(1))"
       },
       "ladder": {
         "question": "Gehaltsliste mit Namen. Welche Stufe?",
         "rungs": "Öffentlicher Text · Nur erfundene Zeilen · KI schreibt, du führst aus · Echte Daten: vier Tore",
         "caution": "Echte Zeilen mit Kennung bleiben personenbezogen.",
-        "gates": "Business-Tarif · Auftragsverarbeitungsvertrag · Sicherheitsmaßnahmen · Regeln für die Übermittlung ins Ausland",
+        "gates": "Business-Tarif · Auftragsverarbeitungs­vertrag · Sicherheits­maßnahmen · Regeln für das Ausland",
         "light": "Vier Tore: alle nötig, allein nicht genug.",
-        "abroad": "Ausland: EU-, EWR-, NATO-Staaten ausgenommen (Art. 48(2)); die Agentur benachrichtigen (Art. 48(3)).",
-        "health": "Nicht für Gesundheitsdaten ohne Ausnahme.",
-        "adviser": "Frag deine eigene Datenschutzberatung. Keine Aufsichtsleitlinie zu Chat-Werkzeugen gefunden.",
+        "abroad": "Ausland: Übermittlungsregeln gelten nicht für EU, EWR, NATO (Art. 48(2)); Agentur trotzdem benachrichtigen (Art. 48(3)).",
+        "health": "Gesundheitsdaten: nur mit Ausnahme (PDPL Art. 32, 36).",
+        "adviser": "Keine Leitlinie der Aufsicht zu Chat-Werkzeugen gefunden, 7. Nov. 2026.",
         "accounts": "Konten und die Datenleiter"
       },
       "judge": {
-        "lines": "Zwei New Yorker Anwälte ließen KI Fälle zitieren. Die Fälle gab es nicht.",
+        "lines": "Zwei New Yorker Anwälte ließen KI Fälle zitieren (2023). Die Fälle gab es nicht.",
         "quote": "nothing inherently improper about using a reliable artificial intelligence tool for assistance",
         "gloss": "nichts ist an sich unangemessen daran, ein verlässliches KI-Werkzeug zur Unterstützung zu nutzen",
         "source": "Mata v. Avianca, S.D.N.Y. 2023",
-        "fine": "Sie und ihre Kanzlei zahlten zusammen 5.000 US-Dollar. US-Fall, kein mazedonisches Recht.",
+        "fine": "Das Gericht verhängte gegen sie und ihre Kanzlei zusammen 5.000 US-Dollar. US-Fall, kein mazedonisches Recht.",
         "sign": "Wer unterschreibt, prüft."
       },
       "visit": {
-        "date": "27. November, 09:00",
-        "who": "Ein staatlicher Arbeitsinspektor mit Ausweis. Einer oder zwei kommen.",
+        "date": "27. November, 09:00, erfunden",
+        "who": "Ein staatlicher Arbeitsinspektor mit Ausweis, manchmal zwei.",
         "m1": "09:00 Inspektor kommt",
         "m2": "Protokoll vor Ort",
-        "m3": "Elena unterschreibt oder schreibt ihre Gründe",
+        "m3": "Elena unterschreibt oder ergänzt Gründe",
         "m4": "Kopie wird übergeben",
         "m5": "Papiere bis 30. November, erfunden",
-        "last": "Nachträglich geschriebene Stunden sind nicht die gearbeiteten."
+        "last": "Nachträglich geschriebene Stunden sind nicht die gearbeiteten.",
+        "src": "ZIN Art. 54, 65"
       },
       "after": {
-        "question": "Einspruch: wie lange?",
+        "question": "Beschwerde: wie lange?",
         "options": [
           "8 Tage",
           "15 Tage",
           "30 Tage",
           "Nicht möglich"
         ],
-        "chain": "Papiere 3 · Bescheid 8 · Behebung 15, erfunden · Einspruch 15 · Öffentlich 5",
+        "chain": "Papiere: 3 Tage · Zum Bescheid: bis 8 Tage · Behebung: 15 Tage, erfunden · Beschwerde: 15 Tage · Öffentlich: 5 Tage",
         "tokens": "Verlangen · Protokoll · Bescheid · Zustellung · endgültig",
-        "noStop": "Der Einspruch hemmt den Bescheid nicht.",
-        "warnings": "Verwarnungen: 2.316 von 3.192 Arbeitsbescheiden, 2025",
+        "noStop": "Eine Beschwerde stoppt den Bescheid nicht (ZIN Art. 68, 70).",
+        "warnings": "Verwarnungen: 2.316 von 3.192 Bescheiden (DIT-Bericht 2025)",
         "half": "Zahlungsbefehl in 8 Tagen bezahlt: halbe Strafe (Arbeitsrecht)",
-        "bands": "Arbeit: 200 bis 400 Euro, Inspektor entscheidet. Sicherheit: 500 bis 1.000 Euro, Gericht verhängt. Größe angenommen."
+        "bands": "Arbeit: 200 bis 400 Euro, Inspektor entscheidet. Sicherheit: 500 bis 1.000 Euro, Gericht verhängt. Annahme: kleine Firma."
       },
       "taxsheet": {
         "title": "Steuerprüfung: UJP",
         "zin": "ZIN gilt nicht für die Steuerbehörde.",
-        "survey": "Befragungsjahr: 51,5 Prozent von 354 Firmen wurden besucht oder trafen Steuerbeamte (2023).",
+        "survey": "Weltbank 2023: 51,5 Prozent von 354 formalen Firmen (ab 5 Beschäftigte) wurden besucht oder trafen Steuerbeamte. Ein Treffen ist keine Prüfung.",
         "notice": "Ankündigung: 2 Wochen oder keine",
         "books": "Zuerst die Bücher",
-        "ghost": "Steuerregel: alte Werte kommen zurück",
+        "ghost": "Die Steuerbehörde darf geänderte und gelöschte Daten rekonstruieren (Art. 60-a)",
         "quote": "Книжењето и друго евидентирање, и во електронска форма, не смее да се менува на начин што првобитната содржина повеќе не може да се утврди.",
         "gloss": "Unterlagen dürfen nicht so geändert werden, dass das Original nicht mehr feststellbar ist.",
         "findings": "Feststellungen, dann Beschluss",
-        "lawsuit": "Klage binnen 30 Tagen nach Zustellung",
-        "noStop": "hemmt die Zahlung nicht (ZDP Art. 176(2))",
-        "who": "Wer: Steuerinspektoren mit schriftlicher Anordnung. Etwa 30 Inspektorenstunden pro Kontrolle (2025, errechnet).",
-        "cost": "Kosten: Zahlungsbefehl im Schnitt etwa 24.500 MKD (2025, errechnet). Ohne Beleg, wiederholt: Laden 15 bis 30 Tage versiegelt.",
+        "lawsuit": "Klage in 30 Tagen (ZUS Art. 26)",
+        "noStop": "Stoppt die Zahlung nicht (ZDP Art. 176(2))",
+        "who": "Wer: Steuerinspektoren mit schriftlicher Anordnung. Etwa 30 Inspektorenstunden pro Kontrolle (UJP-Bericht 2025, errechnet).",
+        "cost": "Kosten: Zahlungsbefehl im Schnitt etwa 24.500 MKD (UJP-Bericht 2025, errechnet). Ohne Kassenbon, wiederholt: Laden 15 bis 30 Tage versiegelt (ZRGP Art. 20-a).",
         "ai": "KI darf: Kasse, Bank und MwSt-Zeilen abgleichen. Nie: ein fehlendes Papier schreiben und zurückdatieren.",
-        "sources": "Quellen und Daten"
+        "sources": "Quellen und Daten",
+        "quoteSrc": "ZDP Art. 47(2)",
+        "noticeSrc": "ZDP Art. 92"
       },
       "isosheet": {
-        "question": "ISO 9001: wie viele Audittage im Erstaudit?",
+        "question": "ISO 9001: Audittage im Erstaudit?",
         "bands": [
-          "bis 25 Beschäftigte",
+          "16 bis 25",
           "26 bis 45",
           "46 bis 65"
         ],
         "marker": "Gradba-Pro: 24",
         "effective": "wirksame Beschäftigte, nicht Kopfzahl",
-        "initial": "Erstaudit",
+        "initial": "Tage, Erstaudit (IAF MD 5:2023)",
         "legend": "3 Tage · 4 Tage · 5 Tage",
         "follow": "Jahresprüfung etwa 1/3, Erneuerung etwa 2/3",
-        "jams": "Wo es hakt: Dokumentenlenkung, Korrekturmaßnahmen ohne Ursache, Kalibrierung, Schulungsnachweise.",
-        "fix": "Der Auditor darf die Lösung nicht vorschlagen.",
-        "price": "Eine Beratung in Skopje, etwa 10 Beschäftigte, ISO 9001:2015, 2024, Werbung: Audit etwa 1.200 Euro, Jahresprüfung etwa 600 Euro",
+        "jams": "Wo es hakt: Dokumentenlenkung, Korrekturmaßnahmen ohne Ursache, Kalibrierung, Schulungsnachweise (Smithers, Sep. 2026, mittlere Sicherheit).",
+        "fix": "Auditor darf die Lösung nicht vorschlagen (ISO/IEC 17021-1).",
+        "price": "Werbung einer Beratung in Skopje, für eine Firma mit etwa 10 Beschäftigten, ISO 9001:2015, 2024: Audit etwa 1.200 Euro, Jahresprüfung etwa 600 Euro. MwSt unbekannt.",
         "who": "Wer: Auditor der Zertifizierungsstelle oder des Kunden.",
-        "aiMay": "KI darf: Versionen vergleichen, Ursachenanalyse für die Verantwortliche entwerfen.",
-        "aiNever": "KI nie: den ISO-Text hochladen, Ja für eine Maßnahme antworten, die du nicht betreibst."
+        "aiMay": "KI darf: Versionen vergleichen, Ursachen für die zuständige Person entwerfen.",
+        "aiNever": "KI nie: den ISO-Text hochladen, Ja sagen zu einer Maßnahme, die du nicht betreibst.",
+        "barLabels": [
+          "Erstaudit",
+          "Jahresprüfung, etwa 1/3",
+          "Erneuerung, etwa 2/3"
+        ],
+        "coins": [
+          "Audit 1.200",
+          "Jahresprüfung 600"
+        ]
       },
       "notmeasured": {
         "title": "Wofür wir keine Zahl fanden",
         "boxes": "Vorbereitungsstunden · Dauer des Besuchs · Länge der Behebungsfrist · Umsatzverlust durch ein Verbot · Bereite Firmen · Trefferquote der KI, dieser Check",
-        "known": "Bekannt stattdessen: 124 Inspektoren, 26.484 Inspektionen (2025). 4.003 Steuerkontrollen (2025).",
+        "known": "Bekannt stattdessen: 124 Inspektoren, 26.484 Inspektionen (DIT-Bericht 2025, Entwurf). 4.003 Steuerkontrollen (UJP 2025).",
         "more": "Lücken und Quellen"
       },
       "transfer": {
@@ -473,7 +518,8 @@
           "Elena, Goran",
           "Besuch 27. November"
         ],
-        "sentence": "Vor [Datum] prüft [Rolle] [Papier] gegen [Regel]."
+        "sentence": "Vor [Datum] prüft [Rolle] [Papier] gegen [Regel].",
+        "exTag": "Beispiel: Gradba-Pro, erfunden"
       },
       "close": {
         "question": "Welche Kontrolle könnte zu dir kommen?",
@@ -491,7 +537,8 @@
           "Demo",
           "Claude-Skill-Datei"
         ],
-        "questions": "Fragen"
+        "questions": "Fragen",
+        "cue": "Hand hoch: ja, vielleicht, nein"
       },
       "a1": {
         "title": "Gesetze, Stand 7. November 2026",
@@ -554,9 +601,9 @@
             "id": "C20"
           }
         ],
-        "fines": "ZIN Art. 83, EUR: Kleinstfirma 500 bis 1.000 · klein 1.500 bis 2.000 · mittel 3.000 bis 6.000 · groß 5.000 bis 10.000 · Person 250 bis 500 · C7",
+        "fines": "ZIN Art. 83, EUR: sehr klein 500 bis 1.000 · klein 1.500 bis 2.000 · mittel 3.000 bis 6.000 · groß 5.000 bis 10.000 · Person 250 bis 500",
         "finesNote": "Größenschwellen ungeprüft.",
-        "iso": "ISO 9001:2026 · angekündigt am 16. Sep. 2026, Übergang bis 30. Sep. 2029 · Meldung einer Zertifizierungsstelle, mittel · X10"
+        "iso": "ISO 9001:2026 · angekündigt am 16. Sep. 2026, Übergang bis 30. Sep. 2029 · Meldung einer Zertifizierungsstelle, mittel"
       },
       "a2": {
         "title": "Konten und die Datenleiter",
@@ -592,14 +639,14 @@
         "title": "Quellen und Daten",
         "back": "Zurück",
         "rows": [
-          "DIT Jahresbericht 2025 · Entwurfsfassung · veröffentlicht April 2026",
+          "DIT Jahresbericht 2025 · Entwurfsfassung · veröffentlicht April 2026 · Inspektionen nach dem Gesetz von 2019",
           "UJP Jahresbericht 2025 · 4.003 Kontrollen",
           "Weltbank Unternehmensbefragung, Nordmazedonien · 2023",
           "Staatliches Statistikamt · Unternehmen 2022 und 2024",
           "IAF MD 5:2023 · herausgegeben am 14. Jun. 2023",
           "DIT Mitteilung · 22. Okt. 2024 · altes Gesetz",
           "Pressebericht mit Zitat der Steuerbehörde · 28. Jul. bis 3. Aug. 2025 · mittel",
-          "ISO Konsalting Preisseite · 14. Mai 2024 · Werbung, mittel",
+          "Preisseite einer Beratung in Skopje · 14. Mai 2024 · Werbung, mittel",
           "LRQA Meldung · 16. Sep. 2026 · mittel",
           "Mata v. Avianca · 22. Jun. 2023",
           "Smithers zu Engpässen bei Audits · Sep. 2026 · mittel"
@@ -647,7 +694,7 @@
       "07 · Ein Datum ändern\nTime: 3 min\nSay: Ein Datum ändern: Sieht es später jemand? Handzeichen, keine Abstimmung. Dann die belegte Antwort für Arbeit: Der Inspektor fragt nach genauen und vollständigen Daten. Ungenaue Unterlagen werden bestraft, bei einer kleinen Firma 1.500 bis 2.000 Euro, Größenklasse angenommen. Das Strafgesetzbuch kann greifen, eine Firma erhält eine Geldstrafe. Ob alte Werte wiederhergestellt werden können, ist eine Steuerregel; wir zeigen sie auf der Steuer-Folie.\nStudents: Hände hoch, dann zuschauen.\nCue: P1 die Änderung, P2 die Arbeitszeilen, P3 das Strafgesetzbuch.\nRemember: Falls gefragt: Ein auf den 1. Januar datierter Urlaubsbescheid und der Zeitnachweis derselben Person, der in dieser Woche das Gegenteil zeigt, sind zwei Papiere, die sich widersprechen. Wir behaupten nicht, dass der Arbeitsinspektor so quer prüft oder geänderte Zellen wiederherstellt.",
       "08 · Die anderen 54 Prozent\nTime: 3 min\nSay: Hundert Kreise stehen für die 26.484 Inspektionen, die das Arbeitsinspektorat 2025 durchgeführt hat. 54 waren außerordentlich: Eine Beschwerde, ein Unfall, eine Aktion oder ein gemeinsamer Einsatz hat sie ausgelöst. Per Regel kommen sie ohne Brief. 25 waren Nachkontrollen, 21 regulär. Die Zahlen stammen aus der Entwurfsfassung des Jahresberichts, veröffentlicht im April 2026, und entstanden noch unter dem alten Gesetz von 2019. 124 Inspektoren haben sie gemacht: 65 Arbeit, 46 Sicherheit, 13 beides. Deshalb muss der Ordner das ganze Jahr bereit sein.\nStudents: Hinschauen, mitzählen.\nCue: P1 54, P2 25 und 21, P3 die Gründe, P4 die Folge.\nRemember: Schreib nie \"unangekündigt\" auf die Folie, nur außerordentlich. Sag nie, die meisten Besuche beginnen mit einer Beschwerde. Streiche diese Folie nie.",
       "09 · Die Liste des Inspektors\nTime: 3 min\nSay: Die Liste des Inspektors. Die Prüflisten sind öffentlicher Text, jedes Werkzeug darf sie lesen. Etwa 108 Fragen zu Arbeit, etwa 34 zu Sicherheit, 27 zu Unterlagen: die Listen auf der Seite des Inspektorats, Stand 2022. Unser Kit presst sie in 13 Fragen mit eigenen Worten. Die echte Liste ist länger.\nStudents: Auf den Trichter schauen.\nCue: P1 die echte Zeile landet, P2 das Leuchten.\nRemember: Stufe 1 der Leiter: Öffentlicher Text darf in jedes Werkzeug. Sag \"die veröffentlichten Listen\", nicht \"die aktuelle Liste\". Die 13 sind Fragen, keine Papiere: Der Ordner hat dreizehn Datendateien, und zwei Fragen teilen sich die Sicherheitserklärung.",
-      "10 · Wo jedes Papier liegt\nTime: 1 min\nSay: Elena braucht die vier Papiere hinter einer Frage, wie der Lohn behandelt wird: die Buchhaltung, der Vertragsordner, Ausdrucke der Arbeitsagentur, Zettel vom Gesundheitszentrum. Das dauert in unserem Kit einen Vormittag. Es ist eine Annahme des Kits, keine gemessene Tatsache. In unserer erfundenen Firma liegen die Papiere an fünf Orten.\nStudents: Hinschauen.\nCue: P1 der Weg, P2 das Schild.\nRemember: Sag: Annahme des Kits. Behaupte nicht, die meisten kleinen Firmen sähen so aus. Erste Folie, die du bei Zeitnot streichst.",
+      "10 · Wo jedes Papier liegt\nTime: 1 min\nSay: Elena braucht die vier Papiere hinter einer Frage, wie der Lohn behandelt wird: die Buchhaltung, der Vertragsordner, Ausdrucke der Arbeitsagentur, Zettel vom Gesundheitszentrum. Das dauert in unserem Kit einen Vormittag. Es ist eine Annahme des Kits, keine gemessene Tatsache. In unserer erfundenen Firma liegen die Papiere an vier Orten.\nStudents: Hinschauen.\nCue: P1 der Weg, P2 das Schild.\nRemember: Sag: Annahme des Kits. Behaupte nicht, die meisten kleinen Firmen sähen so aus. Erste Folie, die du bei Zeitnot streichst.",
       "11 · Vier Prüfungen pro Papier\nTime: 3 min\nSay: Vier kurze Fragen an jedes Papier. Gibt es ein Zitat? Passt das Datum? Deckt es alle ab? Hat eine benannte Person unterschrieben? Jede Karte dreht sich zu einem Gradba-Papier, das an diesem Test scheitert, und der Status darunter folgt der Regel: Ein gescheitertes Zitat oder eine Person ohne Papier ist eine Lücke; ein Papier, das es gibt und an einer Prüfung scheitert, ist schwach. Die Meldung ist eine Lücke, weil es gar keine Meldung für 2026 gibt.\nStudents: Hinschauen, dann sagen, welche Prüfung dir am schwersten fällt, gern per Handzeichen.\nCue: P1 das Umdrehen, P2 der Status.\nRemember: Die Wörter sind absichtlich dieselben wie in Workshop 4: Zitat, Zeitraum, Umfang, Freigabe. Nicht umbenennen. Der schwächste Teil zählt.",
       "12 · BELEGT, SCHWACH oder LÜCKE\nTime: 3 min\nSay: Drei Wörter. BELEGT: Jede Person hat einen Nachweis, und nichts ist verletzt. SCHWACH: Ein Papier gibt es, eine Prüfung scheitert, und ein neues datiertes Papier behebt es. LÜCKE: Jemand hat kein Papier, oder die Akte zeigt den Verstoß. Drei Beispielpapiere fallen in die Kacheln. Das ganze Ergebnis für alle dreizehn Fragen kommt, nachdem ihr die Schritte selbst ausgeführt habt.\nStudents: Hinschauen.\nCue: P1 BELEGT, P2 SCHWACH, P3 LÜCKE.\nRemember: BELEGT braucht einen Nachweis, und ein Nachweis ist ein Zitat aus einer Datei. Zeig hier nicht die 13 Ergebnisse: Sie sind die Antwort von Schritt 3.",
       "13 · Nach vorne reparieren\nTime: 3 min\nSay: Vier Paare. Späte Meldung: eine Notiz mit dem heutigen Datum. Fehlende Zeiten: eine unterschriebene Notiz über das, was heute bekannt ist. Keine Entscheidung: heute ausstellen. Alte Erklärung: eine neue mit ihrem echten Datum. Das alte Papier bleibt. Das neue kommt dazu. KI schreibt einen Entwurf; er wird zum Papier, wenn eine benannte Person ihn datiert und unterschreibt. Jetzt fragt Elena noch einmal: dieselbe Frage. Laut zählen, pro Hand einmal klicken.\nStudents: Noch einmal abstimmen. Die grauen Geisterbalken vergleichen.\nCue: P1 bis P4 die Paare, P5 die zweite Abstimmung.\nRemember: Sag die Antwort nicht. Die zweite Abstimmung verschiebt sich ohne Vortrag. Tippe nicht r.",
@@ -658,8 +705,8 @@
       "18 · Die Datenleiter\nTime: 4 min\nSay: Eine Gehaltsliste mit Namen. Welche Stufe darf in ein Werkzeug? Abstimmen. Stufe 1 ist öffentlicher Text. Stufe 2 sind nur erfundene Zeilen; echte Zeilen mit Kennung statt Name bleiben personenbezogen, solange du den Schlüssel hast. Stufe 3: Die KI schreibt den Check, du führst ihn auf deinem Rechner aus, und die echten Zeilen verlassen ihn nie. Stufe 4 ist der einzige Ort für echte personenbezogene Daten, und nur in ein Werkzeug, das die Firma per Vertrag kontrolliert (Rechtslinie 4). Sie braucht alle vier Tore: einen Business-Tarif, einen Auftragsverarbeitungsvertrag, Sicherheitsmaßnahmen und die Regeln für die Übermittlung ins Ausland. Alle vier sind nötig, und sie reichen allein nicht. Gesundheitsdaten brauchen zusätzlich eine Ausnahme. Bußgelder sind Obergrenzen: bis zu 2 oder 4 Prozent des Jahreseinkommens.\nStudents: Abstimmen.\nCue: P1 der Block steigt, P2 die Tore. Jedes Tor anklicken und benennen. P4 die Übermittlungsregel.\nRemember: Bedingungen ändern sich. Ihre Daten stehen in a2. Für Übermittlungen: eigene Datenschutzberatung fragen. Wir fanden keine Aufsichtsleitlinie zu Chat-Werkzeugen. Fehlen ist kein Beweis. Stelle Stufe 4 nie als unbedenklich dar, wenn die vier Tore fehlen.",
       "19 · Zwei Anwälte und eine KI\nTime: 2 min\nSay: Zwei New Yorker Anwälte ließen eine KI Gerichtsfälle zitieren. Die Fälle gab es nicht. Das Gericht verhängte gegen die Anwälte und ihre Kanzlei zusammen 5.000 US-Dollar Strafe. Das Gericht schrieb auch, dass an der Nutzung eines verlässlichen KI-Werkzeugs zur Unterstützung nichts an sich unangemessen ist. Es ist ein US-Fall und kein mazedonisches Recht. Wir nutzen ihn aus einem Grund: Jemand muss prüfen, und es muss die Person sein, die unterschreibt.\nStudents: Zuhören.\nCue: P1 Durchstreichen und der Satz des Richters, P2 die Unterschrift.\nRemember: Sag in einem Satz, dass es ein US-Fall ist. Zieh daraus keinen mazedonischen Schluss. Die Folie darf nicht wie eine Warnung vor KI wirken: Der Workshop nutzt KI, um zu sortieren, zu vergleichen, zu zählen, zu prüfen und zu entwerfen.",
       "20 · Der Besuch\nTime: 3 min\nSay: Der 27., neun Uhr. Ein staatlicher Arbeitsinspektor mit Ausweis kommt, manchmal zwei. Eine Person muss anwesend sein: Elena. Der Inspektor schreibt das Protokoll vor Ort. Du kannst unterschreiben oder deine Gründe ins Protokoll schreiben. Der Inspektor übergibt ein Verlangen nach Papieren und schreibt das Datum hinein: in unserer Geschichte der 30. Nachträglich geschriebene Stunden sind nicht die gearbeiteten.\nStudents: Zuhören.\nCue: P1 bis P5 die Marken, P6 der letzte Satz.\nRemember: Sag, dass das Protokoll sofort geschrieben wird. Deshalb gibt es das Briefing für Elena. Frag jede Person nach dem Satz, den sie sagen würde, nicht nach dem Blatt. Das Datum 30. November ist erfunden; das Gesetz lässt den Inspektor es setzen, oder drei Tage ab dem schriftlichen Verlangen.",
-      "21 · Nach dem Besuch\nTime: 3 min\nSay: Nach dem Besuch laufen fünf Uhren, jede ab ihrem eigenen Start. Papiere: drei Tage ab dem schriftlichen Verlangen oder das Datum, das der Inspektor hineinschreibt. Der Bescheid des Inspektors: acht Tage ab dem Protokoll. Die Behebung im Bescheid: fünfzehn Tage, hier erfunden. Einspruch: fünfzehn Tage ab Zustellung, und er hemmt den Bescheid nicht. Der endgültige Bescheid wird nach fünf Tagen veröffentlicht. 2025 waren 2.316 von 3.192 Arbeitsbescheiden der Inspektion Verwarnungen. Ein Zahlungsbefehl, der innerhalb von acht Tagen bezahlt wird, halbiert die Strafe, im Arbeitsrecht. Spannen für eine kleine Firma, Größe angenommen.\nStudents: Erst abstimmen: Wie lange kann man Einspruch einlegen? Laut zählen, pro Hand einmal klicken.\nCue: P1 die Kette, P2 die Warnung und die Münze, P3 die Spannen.\nRemember: Die acht Tage beginnen mit dem Protokoll, nicht mit dem Besuch. Zeichne kein Datum auf diesen Balken. Verwarnungen kommen nur bei den leichteren Verstößen zuerst, und bei Sicherheitsstrafen entscheidet ein Gericht. Tippe bei der Abstimmung nicht r.",
-      "22 · Fall B: die Steuerprüfung\nTime: 4 min\nSay: Fall B, die Steuerprüfung, durch das Amt für öffentliche Einnahmen (UJP). Das Inspektionsgesetz ZIN gilt hier nicht, die drei Tage Ankündigung und die Prüfliste sind also keine Rechte. Ankündigung zwei Wochen, oder keine. Zuerst die Bücher, und hier stimmt der Geist: Die Steuerbehörde kann geänderte und gelöschte Daten wiederherstellen. Feststellungen, dann ein Beschluss. Klage binnen dreißig Tagen nach Zustellung, sie hemmt die Zahlung nicht. Wer kommt: Steuerinspektoren mit schriftlicher Anordnung, etwa 30 Inspektorenstunden pro Kontrolle. Kosten: Der durchschnittliche Zahlungsbefehl 2025 lag bei etwa 24.500 Denar, errechnet. Im Befragungsjahr wurden 51,5 Prozent von 354 Firmen besucht oder trafen Steuerbeamte, Weltbank 2023. In einer Woche zwischen Juli und August 2025 kontrollierte die Steuerbehörde 214 Betriebe und fand bei 66 Unregelmäßigkeiten: ein Pressebericht, mittlere Sicherheit. Frag per Handzeichen: Welches Papier würde dir am meisten wehtun?\nStudents: Handzeichen.\nCue: P1 bis P4 die Stationen, P2 der Geist, P5 wer, P6 Kosten, P7 KI.\nRemember: Sag einmal: Presse, mittlere Sicherheit. Das Kit deckt diesen Fall nicht ab. Strafgesetzbuch Art. 280 kann bei falschen, ungenauen oder unvollständigen Einträgen in vorgeschriebenen Büchern greifen; eine juristische Person erhält eine Geldstrafe; Art. 378 kann auch greifen. Die Strafspannen nach Größenklasse stehen auf Karte B, Größenschwellen ungeprüft.",
+      "21 · Nach dem Besuch\nTime: 3 min\nSay: Nach dem Besuch laufen fünf Uhren, jede ab ihrem eigenen Start. Papiere: drei Tage ab dem schriftlichen Verlangen oder das Datum, das der Inspektor hineinschreibt. Der Bescheid des Inspektors: acht Tage ab dem Protokoll. Die Behebung im Bescheid: fünfzehn Tage, hier erfunden. Beschwerde: fünfzehn Tage ab Zustellung, und sie hemmt den Bescheid nicht. Der endgültige Bescheid wird nach fünf Tagen veröffentlicht. 2025 waren 2.316 von 3.192 Arbeitsbescheiden der Inspektion Verwarnungen. Ein Zahlungsbefehl, der innerhalb von acht Tagen bezahlt wird, halbiert die Strafe, im Arbeitsrecht. Spannen für eine kleine Firma, Größe angenommen.\nStudents: Erst abstimmen: Wie lange kann man Beschwerde einlegen? Laut zählen, pro Hand einmal klicken.\nCue: P1 die Kette, P2 die Warnung und die Münze, P3 die Spannen.\nRemember: Die acht Tage beginnen mit dem Protokoll, nicht mit dem Besuch. Zeichne kein Datum auf diesen Balken. Verwarnungen kommen nur bei den leichteren Verstößen zuerst, und bei Sicherheitsstrafen entscheidet ein Gericht. Tippe bei der Abstimmung nicht r.",
+      "22 · Fall B: die Steuerprüfung\nTime: 4 min\nSay: Fall B, die Steuerprüfung, durch das Amt für öffentliche Einnahmen (UJP). Das Inspektionsgesetz ZIN gilt hier nicht, die drei Tage Ankündigung und die Prüfliste sind also keine Rechte. Ankündigung zwei Wochen, oder keine. Zuerst die Bücher, und hier stimmt der Geist, mit Grenzen: Das Original muss feststellbar bleiben (Art. 47(2)), und die Steuerbehörde darf geänderte und gelöschte Daten rekonstruieren (Art. 60-a). Feststellungen, dann ein Beschluss. Klage binnen dreißig Tagen nach Zustellung, sie hemmt die Zahlung nicht. Wer kommt: Steuerinspektoren mit schriftlicher Anordnung, etwa 30 Inspektorenstunden pro Kontrolle. Kosten: Der durchschnittliche Zahlungsbefehl 2025 lag bei etwa 24.500 Denar, errechnet. Im Befragungsjahr wurden 51,5 Prozent von 354 formalen Firmen mit fünf oder mehr Beschäftigten besucht oder trafen Steuerbeamte, Weltbank 2023. Ein Treffen ist keine Prüfung, und die meisten Firmen hier sind kleiner als diese Stichprobe. In einer Woche zwischen Juli und August 2025 kontrollierte die Steuerbehörde 214 Betriebe und fand bei 66 Unregelmäßigkeiten: ein Pressebericht, mittlere Sicherheit. Frag per Handzeichen: Welches Papier würde dir am meisten wehtun?\nStudents: Handzeichen.\nCue: P1 bis P4 die Stationen, P2 der Geist, P5 wer, P6 Kosten, P7 KI.\nRemember: Sag einmal: Presse, mittlere Sicherheit. Das Kit deckt diesen Fall nicht ab. Strafgesetzbuch Art. 280 kann bei falschen, ungenauen oder unvollständigen Einträgen in vorgeschriebenen Büchern greifen; eine juristische Person erhält eine Geldstrafe; Art. 378 kann auch greifen. Die Strafspannen nach Größenklasse stehen auf Karte B, Größenschwellen ungeprüft.",
       "23 · Fall C: ISO-Audits\nTime: 4 min\nSay: Fall C, ISO 9001, Erstaudit. Drücke ein Band: Sechzehn bis fünfundsechzig wirksame Beschäftigte ergeben drei, vier oder fünf Audittage, nur für das Erstaudit. Die Jahresprüfung dauert etwa ein Drittel des ersten Audits. Die Erneuerung etwa zwei Drittel. Wo es hakt: Dokumentenlenkung, Korrekturmaßnahmen ohne Ursache, Kalibrierung, Schulungsnachweise. Der Auditor darf die Lösung nicht vorschlagen. Preis: Eine Beratung in Skopje wirbt mit etwa 1.200 Euro für das Audit und 600 für die Jahresprüfung, für eine Firma mit etwa zehn Beschäftigten, ISO 9001:2015, Mai 2024. Das ist Werbung, keine Preisliste einer Zertifizierungsstelle, und die Seite sagt nicht, ob die Mehrwertsteuer enthalten ist. Frag per Handzeichen: Was macht dir mehr Angst, die Zertifizierungsstelle oder der Kunde?\nStudents: Ein Band drücken, dann Handzeichen.\nCue: P0 Tasten, P1 Balken, P2 wo es hakt, P3 Münzen, P4 und P5 KI.\nRemember: ISO 9001:2026 steht nur in a1, nicht hier. Ein Autokunde (IATF) erwartet auf eine große Abweichung eine Antwort in fünfzehn Tagen; das ist keine ISO-Regel. Nenne nie einen Preis für 24 Beschäftigte: Das wäre Hochrechnung.",
       "24 · Wofür wir keine Zahl fanden\nTime: 2 min\nSay: Sechs Dinge, für die wir keine Zahl fanden: wie viele Stunden die Vorbereitung dauert, wie lange ein Besuch dauert, wie lang die Behebungsfrist des Inspektors ist, was ein Verbot an Umsatz kostet, wie viele Firmen bereit sind, wie oft ein KI-Check bei dieser Art Check recht hat. Dafür geben wir dir keine Zahlen. Was es gibt, steht rechts: 124 Inspektoren, 26.484 Inspektionen, 4.003 Steuerkontrollen, alle 2025. Welche der sechs hättest du gern?\nStudents: Handzeichen.\nCue: P1 die Nachbarn.\nRemember: Sag es klar: Wir fanden keine Zahl. Fehlen in unserer Suche ist kein Beweis, dass es niemand weiß. Andere Genauigkeitszahlen zu KI gibt es für andere Aufgaben; keine für diesen Check.",
       "25 · Dein eigenes Blatt\nTime: 6 min\nSay: Sechs Kästchen, ein Blatt. Wer prüft dich? Welches Gesetz gilt? Welche Papiere? Wer hält jedes? Welche Uhr läuft? Dann ein Satz: Vor diesem Datum prüft diese Rolle dieses Papier gegen diese Regel. Schreib deinen für ein echtes Audit, das du kennst. Das Beispiel ist Gradba-Pro. Sechs Minuten.\nStudents: Schreibt euer eigenes Blatt. Sechs Minuten.\nCue: Ein Kästchen pro Klick.\nRemember: Geh durch den Raum. Frag jede Person nach dem Satz, nicht nach dem Blatt. Echte personenbezogene Daten bleiben draußen.",
@@ -700,15 +747,15 @@
         "bName": "Tax",
         "bCount": "214",
         "bDetail": "businesses checked, 66 with irregularities",
-        "bChecks": "cash register checks",
         "bSource": "press, 28 Jul to 3 Aug 2025",
-        "cName": "Certifier or customer",
-        "cDays": "3 to 5 audit days",
+        "cName": "Certifier, client",
+        "cDays": "3 to 5 days",
         "cStaff": "16 to 65 staff, first audit",
-        "cDates": "dates agreed in advance"
+        "cDates": "dates agreed ahead",
+        "bTag": "press 2025"
       },
       "papers": {
-        "title": "What each inspector asks for first",
+        "title": "Papers inspectors ask for",
         "aName": "Labour",
         "aQuote": "Договор за вработување · Евидентен лист за присуство · Месечна пресметка на плата",
         "aGloss": "Employment contract · attendance sheet · monthly pay calculation",
@@ -730,7 +777,7 @@
         "noticeGloss": "Notice of regular inspection",
         "visit": "Visit: 27 November, 09:00",
         "tabs": "Labour · Safety · Records",
-        "dots": "84 of 100 firms here have 1 to 9 staff (2022). Gradba-Pro has 24.",
+        "dots": "84 of 100 firms here have 1 to 9 staff (state statistics, 2022). Gradba-Pro: 24.",
         "rule": "24 staff: paper attendance sheet is allowed. At 26 staff: electronic recording.",
         "ruleSource": "ZRO Art. 116, rulebook not read"
       },
@@ -748,16 +795,17 @@
         "chipUnclear": "unclear",
         "chipFits": "fits",
         "none": "none",
-        "shortNames": "Short names"
+        "shortNames": "Glossary",
+        "visitOn": "Visit on"
       },
       "plan": {
         "question": "Elena asks you: is this fine?",
         "l1": "Times missing: fill in from memory.",
-        "c1": "Times",
+        "c1": "Times from memory",
         "l2": "Leave agreed in January: write it now, date 1 January.",
-        "c2": "Leave",
+        "c2": "Leave backdated",
         "l3": "Overtime known in July: write the notice now, date July.",
-        "c3": "Overtime",
+        "c3": "Overtime backdated",
         "options": [
           "Fine",
           "Not sure",
@@ -770,17 +818,19 @@
         "labour": "Labour inspector: inaccurate data is fined.",
         "fine": "Small firm (size assumed): EUR 1,500 to 2,000, ZIN Art. 83",
         "criminal": "Criminal Code Art. 280 can apply; a firm gets a fine.",
-        "cellNew": "08:00"
+        "cellNew": "08:00",
+        "invented": "invented firm",
+        "caption": "x replaced by 08:00"
       },
       "neighbour": {
-        "head": "100 DIT inspections, 2025",
-        "source": "Annual report 2025, proposal version, April 2026, 2019 law",
-        "extra": "54 extraordinary",
-        "followUp": "25 follow-up",
-        "regular": "21 regular",
+        "head": "Per 100 inspections, rounded",
+        "source": "DIT report 2025, draft, April 2026",
+        "extra": "54 % extraordinary",
+        "followUp": "25 % follow-up",
+        "regular": "21 % regular",
         "reasons": "Complaint, accident, campaign, joint action",
-        "noLetter": "No letter first.",
-        "consequence": "124 inspectors, 26,484 inspections. Keep the folder ready all year."
+        "noLetter": "By rule no letter",
+        "consequence": "124 inspectors, 26,484 inspections (DIT report 2025). Keep the folder ready all year."
       },
       "table": {
         "title": "The inspector's list",
@@ -806,13 +856,14 @@
           "Employee opinion on file, dated after the last change?",
           "Last medical exam at most 24 months old?",
           "Proof of safety training at hiring?"
-        ]
+        ],
+        "about": "about"
       },
       "drawer": {
         "title": "Where each paper lives",
-        "path": "Pay: outside accountant. Contract: folder. Registration: print-outs. Slips: health centre.",
+        "path": "Pay: outside accountant. Contract: folder. Registration: print-outs. Medical slips: health centre.",
         "morning": "one morning",
-        "assumption": "Assumption of the kit"
+        "assumption": "assumption, not measured"
       },
       "tests": {
         "title": "Four tests for every paper",
@@ -832,16 +883,29 @@
           "WEAK",
           "GAP",
           "GAP"
-        ]
+        ],
+        "papers": [
+          "Attendance sheet",
+          "Employee opinion",
+          "Employee file",
+          "Overtime notice"
+        ],
+        "questions": [
+          "Is there a quote?",
+          "Does the date fit?",
+          "Does it cover everyone?",
+          "Who signed?"
+        ],
+        "invented": "invented, Gradba-Pro"
       },
       "status": {
         "title": "Three words for every question",
         "covered": "COVERED",
-        "coveredDef": "every person has proof, nothing broken",
+        "coveredDef": "everyone has proof",
         "weak": "WEAK",
-        "weakDef": "a paper exists, one test fails, a new dated paper fixes it",
+        "weakDef": "paper exists, one test fails",
         "gap": "GAP",
-        "gapDef": "someone has no paper, or the record shows the rule broken",
+        "gapDef": "no paper, or rule broken",
         "samples": "Contract · Opinion 2019 · Attendance ticks"
       },
       "forward": {
@@ -849,7 +913,7 @@
         "p1": "Late filing · dated note",
         "p2": "Missing times · signed note",
         "p3": "No decision · issue today",
-        "p4": "Old statement · new, real date",
+        "p4": "Old statement · new one, real date",
         "never": "Never backward.",
         "draft": "AI writes a draft. It becomes a paper when a named person dates and signs it.",
         "again": "Elena asks you again: is this fine?",
@@ -857,7 +921,10 @@
           "Fine",
           "Not sure",
           "No"
-        ]
+        ],
+        "colOld": "Problem",
+        "colNew": "New today",
+        "ghostLegend": "grey: first vote"
       },
       "step1": {
         "title": "Step 1: make the table",
@@ -874,7 +941,8 @@
           "It did not run"
         ],
         "accounts": "Accounts and the data ladder",
-        "cols": "Line · Article · Paper · Owner · Where"
+        "cols": "Line · Article · Paper · Owner · Where",
+        "rungsLabel": "Data ladder"
       },
       "step2": {
         "title": "Step 2: run the check",
@@ -890,7 +958,7 @@
         "never": "Your rows never leave your computer.",
         "naive": "Naive rule flags October pay. The free-day rule clears it.",
         "invented": "invented example, not a recording",
-        "formulas": "=IF(pay_date>period_end+15,\"late\",\"ok\") · =IF(pay_date>NEXT_WORKDAY(period_end+15),\"late\",\"ok\")",
+        "formulas": "=IF(pay_date>period_end+15,\"late\",\"ok\") · =IF(pay_date>WORKDAY(period_end+14,1),\"late\",\"ok\")",
         "slot": "Your Claude result: not recorded yet.",
         "slotOpts": [
           "Same as the key",
@@ -900,16 +968,21 @@
         "wording": "Wording differs, numbers must not.",
         "accounts": "Accounts and the data ladder",
         "tool": "Tool",
-        "computer": "Your computer"
+        "computer": "Your computer",
+        "rungsLabel": "Data ladder",
+        "sampleHead": "id,date,start,end,tick,code",
+        "formulaWord": "Formula",
+        "fSimple": "simple",
+        "fFree": "with free day"
       },
       "xray": {
         "head": "Wednesday: one script, every row",
-        "computed": "Computed from the kit files. Not a Claude run.",
+        "computed": "Script result, not a Claude run.",
         "rows": "Rows read",
         "findings": "Findings",
         "checked": "Checked, no problem:",
         "wrong": "Flags too much: {over}. Misses the September pay: {under}.",
-        "wrongTitle": "Two typical wrong counts",
+        "wrongTitle": "Two wrong counts, recalculated by us",
         "wrongExtra": "Too much adds E-08 at 7 h and E-09 at exactly 20 days",
         "whatifs": [
           "E-08: 9 h, not 7",
@@ -922,7 +995,7 @@
           "E-07, E-08 no overtime notice, {f2} weeks",
           "E-07 over 8 h in {f3w} of {f3t} weeks",
           "E-07, E-08 no overtime pay line",
-          "E-12, E-13 ticks only, {f5} days",
+          "E-12, E-13 ticks only, {f5} person-days ({f5h} each)",
           "September pay {f6} days late; Art. 265 arguable, inspector decides",
           "E-11, E-19 no leave decision; E-14 has {f7} days",
           "E-04, E-15, E-21 record incomplete",
@@ -931,7 +1004,7 @@
         ],
         "people": "{people} of {all} people appear in a finding. Whole-firm findings do not count.",
         "ticksLines": [
-          "E-12, E-13: same time in {w1} of {w1} rows, a script can see this",
+          "What-if: E-12, E-13, same time in {w1} of {w1} rows, a script sees it",
           "what a script sees, no source says inspectors look"
         ],
         "alt": "Grid of 13 questions by 24 people. Red cells are findings.",
@@ -1018,7 +1091,13 @@
             "fine": "No source says inspectors look for it.",
             "fix": "Times are never filled in afterwards."
           }
-        }
+        },
+        "guess": "Your guess",
+        "whatLabel": "What if?",
+        "whatLines": [
+          "E-08: 9 h in one week",
+          "October pay late too"
+        ]
       },
       "step3": {
         "title": "Step 3: plan and briefing",
@@ -1030,7 +1109,7 @@
         "gap": "GAP",
         "computed": "Computed from the kit",
         "visit": "Visit 27 Nov, 09:00, invented",
-        "papers": "Papers: 3 days after the written request",
+        "papers": "Papers: 3 days after the written request (ZIN Art. 53, 55)",
         "draft": "AI writes a draft. It becomes a paper when a named person dates and signs it.",
         "ledger": "Old papers changed: 0 · New papers drafted: 3 · Signed by Goran: 0 until he reads them",
         "slot": "Your Claude result: not recorded yet.",
@@ -1040,36 +1119,38 @@
           "It did not run"
         ],
         "wording": "Wording differs, numbers must not.",
-        "warnFirst": "warning first"
+        "warnFirst": "warning first",
+        "legend": "Warning symbol: a warning may come first (ZRO Art. 258(1))"
       },
       "ladder": {
         "question": "Payroll with names. Which level?",
         "rungs": "Public text · Invented rows only · AI writes, you run · Real data: four gates",
         "caution": "Real rows with ids are still personal data.",
-        "gates": "Business subscription · Data processing contract · Security measures · Rules for sending data abroad",
+        "gates": "Business subscription · Data processing contract · Security measures · Sending data abroad",
         "light": "Four gates: all needed, not enough alone.",
-        "abroad": "Abroad: EU, EEA, NATO states exempt (Art. 48(2)); notify the Agency (Art. 48(3)).",
-        "health": "Not for health data without an exception.",
-        "adviser": "Ask your own data adviser. No regulator guidance on chat tools found.",
+        "abroad": "Abroad: transfer rules skip EU, EEA, NATO (Art. 48(2)); notify the Agency (Art. 48(3)).",
+        "health": "Health data: only with an exception (PDPL Art. 32, 36).",
+        "adviser": "No regulator guidance on chat tools found, 7 Nov 2026.",
         "accounts": "Accounts and the data ladder"
       },
       "judge": {
-        "lines": "Two New York lawyers let AI cite cases. The cases did not exist.",
+        "lines": "Two New York lawyers let AI cite cases (2023). The cases did not exist.",
         "quote": "nothing inherently improper about using a reliable artificial intelligence tool for assistance",
         "gloss": "",
         "source": "Mata v. Avianca, S.D.N.Y. 2023",
-        "fine": "They and their firm paid US$5,000 together. US case, not Macedonian law.",
+        "fine": "The court fined them and their firm US$5,000 together. US case, not Macedonian law.",
         "sign": "The person who signs checks."
       },
       "visit": {
-        "date": "27 November, 09:00",
-        "who": "A state labour inspector with an ID. One or two come.",
+        "date": "27 November, 09:00, invented",
+        "who": "A state labour inspector with an ID, sometimes two.",
         "m1": "09:00 inspector arrives",
         "m2": "Minutes written on the spot",
-        "m3": "Elena signs or writes her reasons",
+        "m3": "Elena signs or adds reasons",
         "m4": "Copy handed over",
         "m5": "Papers due 30 November, invented",
-        "last": "Hours written afterwards are not the hours worked."
+        "last": "Hours written afterwards are not the hours worked.",
+        "src": "ZIN Art. 54, 65"
       },
       "after": {
         "question": "Appeal: how long?",
@@ -1079,53 +1160,64 @@
           "30 days",
           "Not possible"
         ],
-        "chain": "Papers 3 · Act 8 · Fix 15, invented · Appeal 15 · Public 5",
+        "chain": "Papers: 3 days · To the act: up to 8 days · Fix: 15 days, invented · Appeal: 15 days · Public: 5 days",
         "tokens": "request · minutes · act · receipt · final",
-        "noStop": "Appeal does not stop the order.",
-        "warnings": "Warnings: 2,316 of 3,192 labour decisions, 2025",
+        "noStop": "Appeal does not stop the act (ZIN Art. 68, 70).",
+        "warnings": "Warnings: 2,316 of 3,192 decisions (DIT report 2025)",
         "half": "Payment order paid in 8 days: half the fine (labour law)",
-        "bands": "Labour: EUR 200 to 400, inspector decides. Safety: EUR 500 to 1,000, a court imposes. Size assumed."
+        "bands": "Labour: EUR 200 to 400, inspector decides. Safety: EUR 500 to 1,000, a court imposes. Assumption: small firm."
       },
       "taxsheet": {
         "title": "Tax control: UJP",
         "zin": "ZIN does not apply to the tax office.",
-        "survey": "Survey year: 51.5 percent of 354 firms were visited or met tax officials (2023).",
+        "survey": "World Bank 2023: 51.5 percent of 354 formal firms (5+ staff) were visited or met tax officials. A meeting is no audit.",
         "notice": "Notice: 2 weeks, or none",
         "books": "Books first",
-        "ghost": "Tax rule: old values come back",
+        "ghost": "Tax office may rebuild changed and deleted data (Art. 60-a)",
         "quote": "Книжењето и друго евидентирање, и во електронска форма, не смее да се менува на начин што првобитната содржина повеќе не може да се утврди.",
-        "gloss": "Records must not be changed so the original cannot be found.",
+        "gloss": "Records must not be changed so the original cannot be determined.",
         "findings": "Findings, then decision",
-        "lawsuit": "Lawsuit within 30 days of service",
-        "noStop": "does not stop payment (ZDP Art. 176(2))",
-        "who": "Who: tax inspectors with a written order. About 30 inspector hours per control (2025, derived).",
-        "cost": "Cost: average payment order about 24,500 MKD (2025, derived). No receipt, repeated: shop sealed 15 to 30 days.",
+        "lawsuit": "Lawsuit within 30 days (ZUS Art. 26)",
+        "noStop": "It does not stop payment (ZDP Art. 176(2))",
+        "who": "Who: tax inspectors with a written order. About 30 inspector hours per control (UJP report 2025, derived).",
+        "cost": "Cost: average payment order about 24,500 MKD (UJP report 2025, derived). No receipt, repeated: shop sealed 15 to 30 days (ZRGP Art. 20-a).",
         "ai": "AI may: match register, bank and VAT lines. Never: write a missing paper and date it back.",
-        "sources": "Sources and dates"
+        "sources": "Sources and dates",
+        "quoteSrc": "ZDP Art. 47(2)",
+        "noticeSrc": "ZDP Art. 92"
       },
       "isosheet": {
-        "question": "ISO 9001: how many first-audit days?",
+        "question": "ISO 9001: first-audit days?",
         "bands": [
-          "up to 25 staff",
+          "16 to 25",
           "26 to 45",
           "46 to 65"
         ],
         "marker": "Gradba-Pro: 24",
         "effective": "effective staff, not headcount",
-        "initial": "initial audit",
+        "initial": "days, first audit (IAF MD 5:2023)",
         "legend": "3 days · 4 days · 5 days",
         "follow": "Yearly check about 1/3, renewal about 2/3",
-        "jams": "Where it jams: document control, corrective actions without cause, calibration, training records.",
-        "fix": "The auditor may not suggest the fix.",
-        "price": "One Skopje consultancy, about 10 staff, ISO 9001:2015, 2024, advert: audit about EUR 1,200, yearly check about EUR 600",
+        "jams": "Where it jams: document control, corrective actions without cause, calibration, training records (Smithers, Sep 2026, medium).",
+        "fix": "Auditor may not suggest the fix (ISO/IEC 17021-1).",
+        "price": "One Skopje consultancy advert, for a firm of about 10 staff, ISO 9001:2015, 2024: audit about EUR 1,200, yearly check about EUR 600. VAT unknown.",
         "who": "Who: certifier auditor, or the customer's auditor.",
-        "aiMay": "AI may: compare versions, draft root cause for the owner.",
-        "aiNever": "AI never: upload the ISO text, answer yes for a control you do not run."
+        "aiMay": "AI may: compare versions, draft root causes for the responsible person.",
+        "aiNever": "AI never: upload the ISO text, say yes to a control you do not run.",
+        "barLabels": [
+          "First audit",
+          "Yearly check, about 1/3",
+          "Renewal, about 2/3"
+        ],
+        "coins": [
+          "Audit 1,200",
+          "Yearly check 600"
+        ]
       },
       "notmeasured": {
         "title": "What we found no number for",
         "boxes": "Prep hours · Visit length · Fix period length · Lost sales from a ban · Firms ready · AI hit rate, this check",
-        "known": "Known instead: 124 inspectors, 26,484 inspections (2025). 4,003 tax controls (2025).",
+        "known": "Known instead: 124 inspectors, 26,484 inspections (DIT report 2025, draft). 4,003 tax controls (UJP 2025).",
         "more": "Blanks and sources"
       },
       "transfer": {
@@ -1145,7 +1237,8 @@
           "Elena, Goran",
           "Visit 27 November"
         ],
-        "sentence": "Before [date], [role] checks [paper] against [rule]."
+        "sentence": "Before [date], [role] checks [paper] against [rule].",
+        "exTag": "Example: Gradba-Pro, invented"
       },
       "close": {
         "question": "Which check could come to you?",
@@ -1163,7 +1256,8 @@
           "Demo",
           "Claude skill file"
         ],
-        "questions": "Questions"
+        "questions": "Questions",
+        "cue": "Hands up: yes, maybe, no"
       },
       "a1": {
         "title": "Laws, as of 7 November 2026",
@@ -1226,9 +1320,9 @@
             "id": "C20"
           }
         ],
-        "fines": "ZIN Art. 83, EUR: micro 500 to 1,000 · small 1,500 to 2,000 · medium 3,000 to 6,000 · large 5,000 to 10,000 · person 250 to 500 · C7",
+        "fines": "ZIN Art. 83, EUR: micro 500 to 1,000 · small 1,500 to 2,000 · medium 3,000 to 6,000 · large 5,000 to 10,000 · person 250 to 500",
         "finesNote": "Size thresholds unverified.",
-        "iso": "ISO 9001:2026 · announced 16 Sep 2026, transition to 30 Sep 2029 · news item of a certification body, medium · X10"
+        "iso": "ISO 9001:2026 · announced 16 Sep 2026, transition to 30 Sep 2029 · news item of a certification body, medium"
       },
       "a2": {
         "title": "Accounts and the data ladder",
@@ -1264,14 +1358,14 @@
         "title": "Sources and dates",
         "back": "Back",
         "rows": [
-          "DIT annual report 2025 · proposal version · published April 2026",
+          "DIT annual report 2025 · proposal version · published April 2026 · inspections under the 2019 law",
           "UJP annual report 2025 · 4,003 controls",
           "World Bank Enterprise Survey, North Macedonia · 2023",
           "State Statistical Office · enterprises 2022 and 2024",
           "IAF MD 5:2023 · issued 14 Jun 2023",
           "DIT release · 22 Oct 2024 · old law",
           "Press report quoting the tax office · 28 Jul to 3 Aug 2025 · medium",
-          "ISO Konsalting price page · 14 May 2024 · advertising, medium",
+          "Price page of a Skopje consultancy · 14 May 2024 · advertising, medium",
           "LRQA news item · 16 Sep 2026 · medium",
           "Mata v. Avianca · 22 Jun 2023",
           "Smithers on audit bottlenecks · Sep 2026 · medium"
@@ -1319,7 +1413,7 @@
       "07 · Edit a date\nTime: 3 min\nSay: Edit a date: will someone see it later? Show of hands, no vote. Then show the sourced labour answer: the inspector asks for accurate and complete data. Inaccurate documents are fined, for a small firm EUR 1,500 to 2,000, size class assumed. The Criminal Code can apply, a firm gets a fine. Whether old values can be rebuilt is a tax rule, and we show it on the tax slide.\nStudents: Hands up, then watch.\nCue: P1 the edit, P2 the labour rows, P3 the Criminal Code.\nRemember: If asked: a leave decision dated 1 January for a person whose own time sheet that week shows the opposite are two papers that disagree. We do not claim the labour inspector cross-checks this way or rebuilds changed cells.",
       "08 · The other 54 percent\nTime: 3 min\nSay: One hundred dots stand for the 26,484 inspections the state labour inspectorate did in 2025. 54 were extraordinary: a complaint, an accident, a campaign or a joint action started them. By rule they come without a letter. 25 were follow-up checks, 21 were regular. The numbers are from the proposal version of the annual report, published April 2026, made under the old 2019 law. 124 inspectors did them: 65 labour, 46 safety, 13 both. This is why the folder has to be ready all year.\nStudents: Look, count along.\nCue: P1 54, P2 25 and 21, P3 the reasons, P4 the consequence.\nRemember: Never write \"unannounced\" on the slide, only extraordinary. Never say most visits start with a complaint. Never cut this slide.",
       "09 · The inspector's list\nTime: 3 min\nSay: The inspector's list. The checklists are public text, so any tool may read them. About 108 questions on labour, about 34 on safety, 27 on records: the lists published on the inspectorate's site, 2022 versions. Our kit squeezes them into 13 questions in our own wording. The real list is longer.\nStudents: Look at the funnel.\nCue: P1 the real line lands, P2 the glow.\nRemember: Level 1 of the ladder: public text goes into any tool. Say the words \"the lists published\", not \"the current list\". The 13 are questions, not papers: the folder holds thirteen data files, and two questions share the safety statement.",
-      "10 · Where each paper lives\nTime: 1 min\nSay: Elena needs the four papers behind one question, how pay is handled: the accountant, the contract folder, print-outs from the Employment Agency, slips from the health centre. That takes one morning in our kit. It is an assumption of the kit, not a measured fact. In our invented firm the papers sit in five places.\nStudents: Look.\nCue: P1 the path, P2 the tag.\nRemember: Say: the kit's assumption. Do not claim most small firms look like this. First slide to cut when time runs short.",
+      "10 · Where each paper lives\nTime: 1 min\nSay: Elena needs the four papers behind one question, how pay is handled: the accountant, the contract folder, print-outs from the Employment Agency, slips from the health centre. That takes one morning in our kit. It is an assumption of the kit, not a measured fact. In our invented firm the papers sit in four places.\nStudents: Look.\nCue: P1 the path, P2 the tag.\nRemember: Say: the kit's assumption. Do not claim most small firms look like this. First slide to cut when time runs short.",
       "11 · Four tests per paper\nTime: 3 min\nSay: Four short questions for any paper. Is there a quote? Does the date fit? Does it cover everyone? Did a named person sign? Each card flips to a Gradba paper that fails that test, and the status under it follows the rule: a failed quote or a person without paper is a gap; a paper that exists but fails one test is weak. The overtime notice is a gap because there is no 2026 notice at all.\nStudents: Look, then say which one you find hardest, by hand if you like.\nCue: P1 the flips, P2 the status.\nRemember: The words are the same as in workshop 4 on purpose: quote, period, scope, approval. Do not rename them. The Level of a paper is judged by the weakest part.",
       "12 · COVERED, WEAK or GAP\nTime: 3 min\nSay: Three words. COVERED: every person has proof and nothing is broken. WEAK: a paper exists, one test fails, and a new dated paper fixes it. GAP: someone has no paper, or the record shows the rule broken. Three sample papers drop into the tiles. The full result for all thirteen questions comes after you have run the steps yourselves.\nStudents: Look.\nCue: P1 COVERED, P2 WEAK, P3 GAP.\nRemember: COVERED needs proof, and proof is a quote from a file. Do not show the 13 results here: they are the answer of Step 3.",
       "13 · Fix forward\nTime: 3 min\nSay: Four pairs. Late filing: a note with today's date. Missing times: a signed note of what is known today. No decision: issue it today. Old statement: a new one with its real date. The old paper stays. The new one is added. AI writes a draft; it becomes a paper when a named person dates and signs it. Now Elena asks again: same question. Count aloud, click once per hand.\nStudents: Vote again. Compare the grey ghost bars.\nCue: P1 to P4 the pairs, P5 the second vote.\nRemember: Do not tell them the answer. The second vote shifts without a lecture. Do not type r.",
@@ -1330,8 +1424,8 @@
       "18 · The data ladder\nTime: 4 min\nSay: A payroll list with names. Which level may go into a tool? Vote. Level 1 is public text. Level 2 is invented rows only; real rows with ids instead of names are still personal data while you hold the key. Level 3: the AI writes the check, you run it on your machine, and the real rows never leave it. Level 4 is the only place real personal data may go, and only into a tool the company controls by contract (legal line 4). It needs all four gates: a business subscription, a data processing contract, security measures and the rules for sending data abroad. All four are needed and they are not enough alone. Health data needs an exception on top. Fines are ceilings: up to 2 or 4 percent of annual income.\nStudents: Vote.\nCue: P1 the block climbs, P2 the gates. Click each gate and name it. P4 the transfer rule.\nRemember: Terms change. Their dates are printed on a2. For transfers: ask your own data protection adviser. We found no regulator guidance on chat tools. Absence is not proof. Never present level 4 as fine without the four gates.",
       "19 · Two lawyers and an AI\nTime: 2 min\nSay: Two New York lawyers let an AI cite court cases. The cases did not exist. The court fined the lawyers and their firm 5,000 US dollars together. The court also wrote that there is nothing inherently improper about using a reliable AI tool for assistance. It is a US case and not Macedonian law. We use it for one reason: somebody has to check, and it has to be the person who signs.\nStudents: Listen.\nCue: P1 strikes and the judge's sentence, P2 the signature.\nRemember: Say it is a US case, in one sentence. Do not draw a Macedonian conclusion from it. The slide must not read as a warning against AI: the workshop uses AI to sort, compare, count, check and draft.",
       "20 · The visit\nTime: 3 min\nSay: The 27th, nine o'clock. A state labour inspector with an ID comes, sometimes two. One person must be present: Elena. The inspector writes the minutes on the spot. You may sign or add your reasons to the minutes. The inspector hands over a request for papers and writes the date into it: in our story the 30th. Hours written afterwards are not the hours worked.\nStudents: Listen.\nCue: P1 to P5 the marks, P6 the last sentence.\nRemember: Say that the minutes are written there and then. This is why the briefing for Elena exists. Ask each person for the sentence they would say, not for the sheet. The 30 November date is invented; the law lets the inspector set it, or three days from the written request.",
-      "21 · After the visit\nTime: 3 min\nSay: After the visit, five clocks run, each from its own start. Papers: three days from the written request, or the date the inspector writes into it. The act of the inspector: eight days from the minutes. The fix in the order: fifteen days, invented here. Appeal: fifteen days from receipt, and it does not stop the order. The final act goes public after five days. In 2025, 2,316 of 3,192 labour decisions of the inspectorate were warnings. A payment order paid within eight days halves the fine, in labour law. Bands for a small firm, size assumed.\nStudents: Vote first: how long to appeal? Count aloud, click once per hand.\nCue: P1 the chain, P2 the warning and the coin, P3 the bands.\nRemember: The eight days start at the minutes, not at the visit. Draw no date on that bar. Warnings come first only for the lighter offences, and for safety fines a court decides. Do not type r during the vote.",
-      "22 · Case B: the tax control\nTime: 4 min\nSay: Case B, the tax control, by the Public Revenue Office (UJP). The inspection law ZIN does not apply to it, so the three days of notice and the checklist are not rights here. Notice two weeks, or none. Books first, and here the ghost is true: the tax office can rebuild changed and deleted data. Findings, then a decision. A lawsuit within thirty days of service, which does not stop payment. Who comes: tax inspectors with a written order, about 30 inspector hours per control. Cost: the average payment order in 2025 was about 24,500 denars, derived. In the survey year, 51.5 percent of 354 firms were visited or met tax officials, World Bank 2023. In one week at the turn of July and August 2025 the tax office checked 214 businesses and found irregularities at 66: a press report, medium confidence. Ask by hand: which paper would hurt you most?\nStudents: Show of hands.\nCue: P1 to P4 the stations, P2 the ghost, P5 who, P6 cost, P7 AI.\nRemember: Say press, medium confidence, once. The kit does not cover this case. Criminal Code Art. 280 can apply to false, inaccurate or incomplete entries in required books; a legal entity gets a fine; Art. 378 can also apply. The fine bands by size class are on card B, size thresholds unverified.",
+      "21 · After the visit\nTime: 3 min\nSay: After the visit, five clocks run, each from its own start. Papers: three days from the written request, or the date the inspector writes into it. The act of the inspector: eight days from the minutes. The fix in the order: fifteen days, invented here. Appeal: fifteen days from receipt, and it does not stop the act. The final act goes public after five days. In 2025, 2,316 of 3,192 labour decisions of the inspectorate were warnings. A payment order paid within eight days halves the fine, in labour law. Bands for a small firm, size assumed.\nStudents: Vote first: how long to appeal? Count aloud, click once per hand.\nCue: P1 the chain, P2 the warning and the coin, P3 the bands.\nRemember: The eight days start at the minutes, not at the visit. Draw no date on that bar. Warnings come first only for the lighter offences, and for safety fines a court decides. Do not type r during the vote.",
+      "22 · Case B: the tax control\nTime: 4 min\nSay: Case B, the tax control, by the Public Revenue Office (UJP). The inspection law ZIN does not apply to it, so the three days of notice and the checklist are not rights here. Notice two weeks, or none. Books first, and here the ghost is real, within limits: the original must stay determinable (Art. 47(2)) and the tax office may rebuild changed and deleted data (Art. 60-a). Findings, then a decision. A lawsuit within thirty days of service, which does not stop payment. Who comes: tax inspectors with a written order, about 30 inspector hours per control. Cost: the average payment order in 2025 was about 24,500 denars, derived. In the survey year, 51.5 percent of 354 formal firms with five or more staff were visited or met tax officials, World Bank 2023. A meeting is not an audit, and most firms here are smaller than this sample. In one week at the turn of July and August 2025 the tax office checked 214 businesses and found irregularities at 66: a press report, medium confidence. Ask by hand: which paper would hurt you most?\nStudents: Show of hands.\nCue: P1 to P4 the stations, P2 the ghost, P5 who, P6 cost, P7 AI.\nRemember: Say press, medium confidence, once. The kit does not cover this case. Criminal Code Art. 280 can apply to false, inaccurate or incomplete entries in required books; a legal entity gets a fine; Art. 378 can also apply. The fine bands by size class are on card B, size thresholds unverified.",
       "23 · Case C: ISO audits\nTime: 4 min\nSay: Case C, ISO 9001, first audit. Press a band: sixteen to sixty-five effective staff give three, four or five audit days, for the initial audit only. The yearly check takes about a third of the first audit. The renewal about two thirds. Where it jams: document control, corrective actions without a root cause, calibration, training records. The auditor may not suggest the fix. Price: one consultancy in Skopje advertises about 1,200 euros for the audit and 600 for the yearly check, for a firm of about ten staff, ISO 9001:2015, May 2024. It is advertising, not a certifier's price list, and the page does not say if VAT is in. Ask by hand: which scares you more, the certifier or the customer?\nStudents: Press a band, then show of hands.\nCue: P0 buttons, P1 bars, P2 where it jams, P3 coins, P4 and P5 AI.\nRemember: ISO 9001:2026 is on a1 only, not here. An automotive customer (IATF) expects an answer to a major nonconformity in fifteen days; that is not an ISO rule. Never print a price for 24 staff: it would be extrapolation.",
       "24 · What we found no number for\nTime: 2 min\nSay: Six things we found no number for: how many hours preparation takes, how long a visit lasts, how long the inspector's fix period is, what a ban costs in lost sales, how many firms are ready, how often an AI check is right for this kind of check. We do not give you numbers for these. What does exist is on the right: 124 inspectors, 26,484 inspections, 4,003 tax controls, all 2025. Which of the six would you want?\nStudents: Show of hands.\nCue: P1 the neighbours.\nRemember: Say it plainly: we found no number. Absence in our search is not proof that no one knows. Other AI accuracy figures exist for other tasks; none is for this check.",
       "25 · Your own sheet\nTime: 6 min\nSay: Six boxes, one sheet. Who checks you? Which law applies? Which papers? Who holds each one? Which clock runs? Then one sentence: before this date, this role checks this paper against this rule. Write yours for a real audit you know. The example is Gradba-Pro. Six minutes.\nStudents: Write your own sheet. Six minutes.\nCue: One box per press.\nRemember: Walk the room. Ask each person for the sentence, not the sheet. Real personal data stays out.",

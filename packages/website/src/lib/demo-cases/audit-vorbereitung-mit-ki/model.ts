@@ -8,6 +8,7 @@
 import { statusKey, testsOf, type Status, type Tests } from "./evidence";
 import { LINE_FILES, lineList, type LineDef } from "./lines";
 import { addDays } from "./dates";
+import { NOTICE_WORKING_DAYS } from "./clock-rule";
 import { kitText } from "./kit";
 import { analyseKit, daysBetween, FILE_NAMES, NOTICE_DATE, CHECK_DATE, weekdayOf, type LineId, type OracleResult } from "./oracle";
 
@@ -52,6 +53,8 @@ export interface ClockCase {
   readonly workingBetween: number;
   readonly papersDue: string;
   readonly papersDueWeekday: 1 | 2 | 3 | 4 | null;
+  /** The paper day falls on Monday to Friday: only then does the demo print it as a date. */
+  readonly papersDueOnWorkday: boolean;
 }
 
 export interface WeekDay {
@@ -133,8 +136,7 @@ const clockWeekday = (iso: string): 1 | 2 | 3 | 4 | null => {
   return day >= 1 && day <= 4 ? (day as 1 | 2 | 3 | 4) : null;
 };
 
-/** The general rule of the kit's checklist: an inspection is announced at least three working days before it starts. */
-export const NOTICE_WORKING_DAYS = 3;
+export { NOTICE_WORKING_DAYS };
 
 function weekCells(): readonly WeekDay[] {
   const span = daysBetween(NOTICE_DATE, CHECK_DATE).calendar;
@@ -150,7 +152,7 @@ export const CLOCK_VISITS = ["2026-11-25", "2026-11-26", CHECK_DATE] as const;
 function clockCases(): readonly ClockCase[] {
   return CLOCK_VISITS.map((visit): ClockCase => {
     const { calendar, workingBetween, papersDue } = daysBetween(NOTICE_DATE, visit);
-    return { visit, weekday: visit === CHECK_DATE ? null : clockWeekday(visit), calendar, workingBetween, papersDue, papersDueWeekday: clockWeekday(papersDue) };
+    return { visit, weekday: visit === CHECK_DATE ? null : clockWeekday(visit), calendar, workingBetween, papersDue, papersDueWeekday: clockWeekday(papersDue), papersDueOnWorkday: weekdayOf(papersDue) >= 1 && weekdayOf(papersDue) <= 5 };
   });
 }
 

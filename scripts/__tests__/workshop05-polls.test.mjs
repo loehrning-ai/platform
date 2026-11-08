@@ -43,7 +43,7 @@ const POLLS = {
   "plan-after": { slide: "forward", en: ["Fine", "Not sure", "No"], de: ["In Ordnung", "Unsicher", "Nein"] },
   findings: { slide: "step2", en: ["6", "10", "15", "20"], de: ["6", "10", "15", "20"] },
   tally: { slide: "step3", en: ["0 to 1", "2", "3 to 5", "6 to 13"], de: ["0 bis 1", "2", "3 bis 5", "6 bis 13"], key: 1 },
-  ladder: { slide: "ladder", en: ["Public text", "Invented rows only", "AI writes, you run", "Real data: four gates"], de: ["Öffentlicher Text", "Nur erfundene Zeilen", "KI schreibt, du führst aus", "Echte Daten: vier Tore"] },
+  ladder: { slide: "ladder", en: ["Public text", "Invented rows only", "AI writes, you run", "Real data: four gates"], de: ["Öffentlicher Text", "Nur erfundene Zeilen", "KI schreibt, du führst aus", "Echte Daten: vier Tore"], key: 2 },
   appeal: { slide: "after", en: ["8 days", "15 days", "30 days", "Not possible"], de: ["8 Tage", "15 Tage", "30 Tage", "Nicht möglich"], key: 1 },
   "door-end": { slide: "close", en: ["Labour", "Tax", "Certifier", "Not sure"], de: ["Arbeit", "Steuer", "Zertifizierer", "Unsicher"] },
 };
@@ -155,7 +155,7 @@ for (const lang of LANGS) {
     assert.deepEqual(srcs, SCRIPT_ORDER);
     const up = lang === "de" ? "./lib/" : "../lib/";
     for (const m of html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)) assert.ok(m[1].startsWith(up), `${lang}: ${m[1]} under ${up}`);
-    const inline = [...html.matchAll(/<script\b([^>]*)>/g)].filter((m) => !/\bsrc=/.test(m[1])).map((m) => m[1].trim());
+    const inline = [...html.matchAll(/<script\b([^>]*)>/gi)].filter((m) => !/\bsrc=/.test(m[1])).map((m) => m[1].trim());
     for (const attrs of inline) assert.match(attrs, /type="application\/json"/, `${lang}: an inline executable script`);
     assert.deepEqual([...html.matchAll(/<script type="application\/json" id="([^"]+)"/g)].map((m) => m[1]).sort(), ["speaker-notes", "w05-matrix"]);
     assert.doesNotMatch(html, /\son(click|keydown|keyup|load|error)=/i, `${lang}: an inline event handler`);

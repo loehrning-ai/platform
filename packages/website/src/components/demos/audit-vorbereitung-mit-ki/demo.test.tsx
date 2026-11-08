@@ -27,7 +27,7 @@ function setMotion() {
   })) as unknown as typeof window.matchMedia;
 }
 
-const files = { skill: { href: "/skills/audit-nachweise.zip", download: "audit-nachweise.zip", size: "3 KB" }, kit: { href: "/kit.zip", download: "kit.zip" }, shown: ["project-instructions.md"] };
+const files = { skill: { href: "/skills/audit-nachweise.zip", download: "audit-nachweise.zip", size: "3 KB" }, kit: { href: "/kit.zip", download: "kit.zip", size: "90 KB" }, shown: ["project-instructions.md"] };
 const intro = { kicker: "k", title: "t", sentences: ["a", "b", "c", "d"] as const, start: "s", explore: "e", footnote: "f", news: ["n"] };
 
 function mount(locale: "de" | "en") {
@@ -97,6 +97,33 @@ describe("W05 demo scenes", () => {
     expect(container.querySelector("[data-w05-note]")?.textContent).toContain("Titel:");
   });
 
+  for (const locale of ["de", "en"] as const) {
+    it(`${locale}: the clock reads short, unclear, fits for 25, 26 and 27 and prints no weekend date and no doubled stop`, () => {
+      const { container } = mount(locale);
+      act(() => clock.start());
+      go("uhr");
+      const radios = [...container.querySelectorAll('[role="radio"]')] as HTMLElement[];
+      expect(radios).toHaveLength(3);
+      const seen: string[] = [];
+      for (const radio of radios) {
+        fireEvent.click(radio);
+        const verdict = container.querySelector("[data-w05-verdict]")?.getAttribute("data-w05-verdict") ?? "";
+        const data = container.querySelector("[data-w05-data]")?.textContent ?? "";
+        const caption = container.querySelector("[data-demo-caption]")?.textContent ?? "";
+        seen.push(verdict);
+        // 28 and 29 November 2026 are a Saturday and a Sunday: never printed as a date.
+        expect(`${data} ${caption} ${radio.textContent}`, verdict).not.toMatch(/\b2[89]\.? (Nov|November)\b/);
+        expect(data, verdict).not.toMatch(/\.\.(\s|$)/);
+        expect(data, verdict).toMatch(/Art\.\s55/);
+        // The count of working days is a label with a number, never "1 Arbeitstage".
+        expect(data, verdict).not.toMatch(/\b1 (Arbeitstage|working days)\b/);
+      }
+      expect(seen).toEqual(["short", "unclear", "fits"]);
+      fireEvent.click(radios[2] as HTMLElement);
+      expect(container.querySelector("[data-w05-data]")?.textContent ?? "").toMatch(locale === "de" ? /Mo 30\. Nov\./ : /Mon 30 Nov/);
+    });
+  }
+
   it("de: an own paper never reaches covered", () => {
     const { container } = mount("de");
     act(() => clock.start());
@@ -114,5 +141,29 @@ describe("W05 demo scenes", () => {
     const text = container.querySelector("[data-w05-briefing]")?.textContent ?? "";
     expect(text).toContain("27. November 2026");
     expect(text).not.toMatch(/\b(Freitag|Fr)\b/);
+    // The paper rule keeps the inspector's own date (Art. 55), the date is a Monday, and no sentence ends twice.
+    expect(text).toMatch(/Art\.\s55/);
+    expect(text).toContain("Mo 30. Nov.");
+    expect(text).not.toMatch(/\.\.(\s|$)/);
+  });
+
+  it("de: the take-home names each file with its size and one button", () => {
+    const { container } = mount("de");
+    act(() => clock.start());
+    go("mitnehmen");
+    expect(container.querySelector('[data-w05-file="kit"]')?.textContent).toContain("90 KB");
+    expect(container.querySelector('[data-w05-file="skill"]')?.textContent).toContain("3 KB");
+    expect(container.querySelectorAll("#mitnehmen a[download]")).toHaveLength(2);
+  });
+
+  it("de: an own paper shows a neutral state until a test is ticked", () => {
+    const { container } = mount("de");
+    act(() => clock.start());
+    go("ordner-eigen");
+    fireEvent.change(container.querySelector("[data-w05-own-text]") as HTMLElement, { target: { value: "Arbeitsvertrag" } });
+    const paper = container.querySelector("[data-w05-own-paper]") as HTMLElement;
+    expect(paper.getAttribute("data-status")).toBe("idle");
+    fireEvent.click(paper.querySelector(".glas-chip") as HTMLElement);
+    expect(paper.getAttribute("data-status")).toBe("gap");
   });
 });

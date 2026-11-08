@@ -31,20 +31,24 @@ const ids = ["cover", "doors", "papers", "letter", "clock", "plan", "ghost", "ne
 /** The counted words per press state of each main slide (the deck's design numbers; the rule is in the header). */
 const COUNTS = {
   en: {
-    cover: [11], doors: [2, 13, 24, 22], papers: [6, 1, 2, 9, 15, 14], letter: [13, 17, 20, 24, 23], clock: [9, 24, 19, 23],
-    plan: [6, 13, 18, 19, 16], ghost: [8, 8, 17, 22], neighbour: [13, 15, 19, 23, 21], table: [6, 8, 20], drawer: [4, 16, 20],
-    tests: [9, 15, 24], status: [5, 12, 19, 19], forward: [2, 4, 4, 4, 20, 18], step1: [14, 25, 23], step2: [5, 23, 20, 23, 23],
-    xray: [14, 12, 14, 18, 22, 25], step3: [5, 23, 24, 22, 22, 23], ladder: [22, 25, 25, 19, 25, 19], judge: [13, 17, 22],
-    visit: [14, 14, 19, 14, 17, 22, 13], after: [15, 6, 24, 23], taxsheet: [25, 16, 24, 19, 23, 15, 18, 17],
-    isosheet: [24, 25, 19, 19, 17, 22], notmeasured: [6, 11], transfer: [5, 9, 11, 13, 15, 18, 24], close: [20, 11, 5, 6],
+    cover: [11], doors: [2, 13, 25, 25], papers: [4, 1, 2, 9, 15, 5], letter: [13, 17, 20, 25, 23],
+    clock: [9, 25, 22, 24], plan: [7, 16, 22, 24, 21], ghost: [10, 10, 19, 24], neighbour: [10, 12, 16, 25, 19],
+    table: [16, 18, 25], drawer: [5, 21, 24], tests: [23, 25, 24], status: [5, 9, 15, 21],
+    forward: [4, 6, 6, 6, 22, 23], step1: [14, 25, 23], step2: [5, 23, 17, 15, 23], xray: [11, 9, 11, 15, 23, 24],
+    step3: [5, 23, 20, 16, 22, 23], ladder: [22, 25, 23, 22, 24, 20], judge: [14, 19, 24],
+    visit: [13, 12, 21, 17, 20, 25, 17], after: [15, 10, 19, 18], taxsheet: [25, 19, 23, 13, 25, 17, 23, 17],
+    isosheet: [25, 21, 24, 25, 18, 22], notmeasured: [6, 15], transfer: [5, 12, 14, 16, 18, 21, 24],
+    close: [25, 11, 5, 6],
   },
   de: {
-    cover: [10], doors: [2, 11, 20, 19], papers: [5, 1, 2, 7, 14, 12], letter: [12, 16, 19, 23, 18], clock: [9, 24, 19, 22],
-    plan: [7, 14, 19, 20, 17], ghost: [6, 6, 16, 21], neighbour: [11, 13, 17, 22, 21], table: [7, 9, 20], drawer: [4, 15, 18],
-    tests: [9, 15, 24], status: [5, 13, 20, 18], forward: [3, 5, 5, 5, 21, 21], step1: [13, 24, 19], step2: [6, 24, 21, 25, 21],
-    xray: [11, 9, 11, 15, 18, 19], step3: [5, 23, 24, 22, 21, 21], ladder: [23, 24, 23, 16, 21, 14], judge: [13, 17, 20],
-    visit: [12, 12, 15, 12, 15, 20, 12], after: [15, 6, 20, 22], taxsheet: [20, 13, 21, 18, 24, 12, 18, 14],
-    isosheet: [23, 22, 16, 19, 16, 21], notmeasured: [5, 10], transfer: [5, 8, 10, 13, 15, 18, 24], close: [18, 10, 3, 4],
+    cover: [10], doors: [2, 11, 23, 25], papers: [5, 1, 2, 7, 14, 4], letter: [12, 16, 19, 24, 19],
+    clock: [9, 25, 22, 23], plan: [8, 16, 22, 24, 21], ghost: [8, 8, 18, 23], neighbour: [9, 11, 15, 23, 19],
+    table: [17, 19, 25], drawer: [5, 20, 22], tests: [23, 21, 24], status: [5, 10, 16, 22],
+    forward: [5, 7, 7, 7, 23, 25], step1: [13, 24, 19], step2: [6, 24, 17, 17, 21], xray: [8, 6, 8, 12, 19, 19],
+    step3: [5, 23, 19, 16, 21, 21], ladder: [23, 24, 21, 18, 22, 18], judge: [14, 20, 23],
+    visit: [11, 10, 17, 15, 18, 23, 16], after: [15, 10, 15, 17], taxsheet: [23, 16, 24, 14, 25, 13, 22, 14],
+    isosheet: [25, 20, 22, 25, 17, 21], notmeasured: [5, 13], transfer: [5, 11, 13, 16, 18, 21, 24],
+    close: [23, 10, 3, 4],
   },
 };
 
@@ -142,7 +146,7 @@ for (const lang of LANGS) {
     must("doors", 1, /2024/, "31 building site visits carry their year");
     must("doors", 2, /2025/, "214 businesses carry their year");
     must("letter", 0, en ? /invented/ : /erfunden/, "the company is labelled invented");
-    must("letter", 3, /\(2022\)/, "84 of 100 firms carry the survey year");
+    must("letter", 3, /2022/, "84 of 100 firms carry the survey year");
     must("neighbour", 0, /2025/, "the DIT counts carry the report year");
     must("neighbour", 0, /April 2026/, "the report carries its version date");
     must("ghost", 2, en ? /size assumed/ : /Größe angenommen/, "the fine carries its assumption");
@@ -155,7 +159,7 @@ for (const lang of LANGS) {
     must("step3", 3, en ? /invented/ : /erfunden/, "the visit date is labelled invented");
     must("step2", 3, en ? /invented example, not a recording/ : /erfundenes Beispiel, keine Aufzeichnung/, "the example is labelled");
     for (let k = 0; k <= 5; k += 1) {
-      must("xray", k, en ? /Computed from the kit files\. Not a Claude run\./ : /Aus den Kit-Dateien gerechnet\. Kein Claude-Lauf\./, "the script output says what it is");
+      must("xray", k, en ? /Script result, not a Claude run\./ : /Skript-Ergebnis, kein Claude-Lauf\./, "the script output says what it is");
     }
     must("step3", 2, en ? /Computed from the kit/ : /Aus dem Kit gerechnet/, "the tally says it is computed");
     must("step1", 1, en ? /computed from the kit/ : /aus dem Kit gerechnet/i, "the expected table says it is computed");

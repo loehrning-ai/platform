@@ -5,7 +5,7 @@ Fictional training material, invented for the exercise. Not legal advice.
 Sources are named at the end, read on 2026-11-07. The kit holds no data for this case.
 
 ## Who comes and how you learn the date
-An audit team of a certification body, named in advance so that you can object. A customer audit comes from the customer's own auditor. Dates are agreed in advance, so there is no notice period.
+An audit team of a certification body, named in advance so that you can object. A customer audit comes from the customer's own auditor. Dates of ordinary audits are agreed in advance. Short-notice or unannounced audits exist, for example after a complaint (third-party summary, medium confidence).
 
 ## The clocks
 - Audit days of the initial audit only (IAF MD 5:2023), by effective personnel, not plain headcount: 3 days for 16 to 25 staff, 4 days for 26 to 45, 5 days for 46 to 65.
@@ -18,7 +18,7 @@ Quality policy, quality objectives, process map, document control, corrective ac
 
 ## Bottlenecks
 Sourced: where it jams are document control, corrective actions without a root cause, lapsed calibration, missing competence records and a thin management review (certification practice, Sept 2026, medium confidence). The auditor must not suggest the cause or the solution.
-This kit's story (invented): the dates are agreed in advance, so the work is in the files, not in a notice period.
+This kit's story (invented): the dates of ordinary audits are agreed in advance, so the work is in the files, not in a notice period.
 
 ## Cost and what the law leaves open
 - One Skopje consultancy (about 10 staff, VAT status unknown), advertisement, ISO 9001:2015, May 2024: certification audit about EUR 1,200, first yearly check about EUR 600, implementation EUR 800 to 1,000. This is an advertised price of one consultancy, not a certifier's tariff and not a market average. There is no price for 24 staff.

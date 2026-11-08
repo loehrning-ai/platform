@@ -5,7 +5,7 @@ Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.
 Die Quellen stehen am Ende, gelesen am 2026-11-07. Das Kit enthält keine Daten für diesen Fall.
 
 ## Wer kommt und wie du das Datum erfährst
-Ein Auditteam einer Zertifizierungsstelle, vorher benannt, damit du widersprechen kannst. Ein Kundenaudit kommt vom eigenen Auditor des Kunden. Die Termine werden vorab vereinbart, es gibt also keine Mitteilungsfrist.
+Ein Auditteam einer Zertifizierungsstelle, vorher benannt, damit du widersprechen kannst. Ein Kundenaudit kommt vom eigenen Auditor des Kunden. Die Termine regulärer Audits werden vorab vereinbart. Audits mit kurzer Frist oder unangekündigte Audits gibt es auch, etwa nach einer Beschwerde (Zusammenfassung Dritter, mittlere Sicherheit).
 
 ## Die Fristen
 - Audittage des Erstaudits (nur dieses; IAF MD 5:2023), nach wirksamen Beschäftigten, nicht nach bloßer Kopfzahl: 3 Tage für 16 bis 25 Beschäftigte, 4 Tage für 26 bis 45, 5 Tage für 46 bis 65.
@@ -18,7 +18,7 @@ Qualitätspolitik, Qualitätsziele, Prozesslandkarte, Dokumentenlenkung, Korrekt
 
 ## Engpässe
 Belegt: Es hakt bei Dokumentenlenkung, Korrekturmaßnahmen ohne Ursachenanalyse, abgelaufener Kalibrierung, fehlenden Kompetenznachweisen und einer dünnen Managementbewertung (Zertifizierungspraxis, Sept 2026, mittlere Sicherheit). Der Auditor darf weder die Ursache noch die Lösung vorschlagen.
-Die Geschichte dieses Kits (erfunden): Die Termine werden vorab vereinbart, die Arbeit steckt also in den Dateien, nicht in einer Mitteilungsfrist.
+Die Geschichte dieses Kits (erfunden): Die Termine regulärer Audits werden vorab vereinbart, die Arbeit steckt also in den Dateien, nicht in einer Mitteilungsfrist.
 
 ## Kosten und was das Gesetz offen lässt
 - Eine Beratung in Skopje (etwa 10 Beschäftigte, Mehrwertsteuerstatus unbekannt), Werbung, ISO 9001:2015, Mai 2024: Zertifizierungsaudit etwa 1.200 Euro, erste Jahresprüfung etwa 600 Euro, Einführung 800 bis 1.000 Euro. Das ist der Werbepreis einer Beratung, keine Preisliste einer Zertifizierungsstelle und kein Marktdurchschnitt. Einen Preis für 24 Beschäftigte gibt es nicht.

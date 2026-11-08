@@ -103,3 +103,11 @@ test("the two editions give the same status per line", () => {
   const read = (edition) => statusRows(edition).map((row) => [row.split("|")[1].trim(), edition.words.indexOf(row.split("|")[2].trim())]);
   assert.deepEqual(read(EDITIONS[0]), read(EDITIONS[1]));
 });
+
+test("rule 8 carries the tie-break between WEAK and GAP, and the key's L11 row points at it (a blind run must reach the same status)", () => {
+  const rule8 = (dir, file) => text(dir, file).split("\n").find((line) => line.startsWith("8. ")) ?? "";
+  assert.match(rule8("kit", "project-instructions.md"), /Tie-break: a paper that a later change made stale is WEAK/);
+  assert.match(rule8("kit-de", "projektanweisungen.md"), /Im Zweifel gilt: Ein Papier, das eine spätere Änderung überholt hat, ist SCHWACH/);
+  assert.match(EDITIONS[0].key, /\| L11 \| WEAK \|[^\n]*rule 8, tie-break/);
+  assert.match(EDITIONS[1].key, /\| L11 \| SCHWACH \|[^\n]*Regel 8, Im-Zweifel-Satz/);
+});

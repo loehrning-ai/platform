@@ -10,7 +10,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { analyse, counter, whatIf } from "../workshop05/oracle/oracle.mjs";
 import { loadKitFiles } from "../workshop05/oracle/load.mjs";
-import { checkAll } from "../workshop05/oracle/generate.mjs";
+import { checkAll, isWorkingDay } from "../workshop05/oracle/generate.mjs";
 import { compareWithExpected, recount } from "../workshop05/oracle/recount.mjs";
 import { expectedText } from "../workshop05/oracle/write-expected.mjs";
 import { EXPECTED_STATUS } from "../workshop05/oracle/plan.mjs";
@@ -113,4 +113,21 @@ test("the three what-if buttons give the counters 10, 11, 10, 11", () => {
 
 test("the oracle is pure: the same text gives the same result", () => {
   assert.deepEqual(analyse({ ...files }), result);
+});
+
+test("no date of a folder file falls on a weekend or a public holiday (a slip dated on a Sunday breaks the case)", () => {
+  const day = (iso) => Math.round(Date.parse(`${iso}T00:00:00Z`) / 86_400_000);
+  const bad = [];
+  for (const [name, text] of Object.entries(files)) {
+    if (!name.endsWith(".csv")) continue;
+    const rows = text.split("\n").filter((line) => line && !line.startsWith("#")).slice(1);
+    for (const row of rows) {
+      // payroll_runs.csv: the first column is the last day of a pay period; overtime_weekly.csv: the second names the week
+      // by its Monday. Both are calendar labels and not events (a week may start on a holiday Monday).
+      const all = row.split(",");
+      const cells = name === "payroll_runs_2026.csv" ? all.slice(1) : name === "overtime_weekly_2026.csv" ? [all[0], all[2]] : all;
+      for (const cell of cells) if (/^\d{4}-\d{2}-\d{2}$/.test(cell) && !isWorkingDay(day(cell))) bad.push(`${name}: ${cell}`);
+    }
+  }
+  assert.deepEqual(bad, []);
 });

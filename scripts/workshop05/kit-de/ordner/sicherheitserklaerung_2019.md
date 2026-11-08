@@ -4,7 +4,7 @@ Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.
 
 Datum: 2019-03-14
 
-Gefährdungsbeurteilung für die Arbeitsplätze der Firma. Ein Arbeitsplatz ist hier eine Stelle. Die Stellen stehen mit denselben Wörtern wie im Vertragsregister. Für die Übung erfunden.
+Gefährdungsbeurteilung für die Arbeitsplätze der Firma. Ein Arbeitsplatz ist hier eine Stellenbezeichnung. Die Bezeichnungen stehen mit denselben Wörtern wie im Vertragsregister. Für die Übung erfunden.
 
 ## Erfasste Arbeitsplätze
 

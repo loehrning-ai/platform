@@ -20,7 +20,7 @@ A tax inspector of a regional directorate of the Public Revenue Office (UJP), ex
 Books and accounting documents, invoices in and out with the VAT records, annual accounts, payroll records, and for a cash register: fiscal receipts, the daily report book and the record of takings paid in.
 
 ## Bottlenecks
-Sourced: missing or unreliable books are punished twice, by a fine and by an estimate that is not in favour of the taxpayer (ZDP Art. 76). UJP may copy electronic data and rebuild changed and deleted data (Art. 60a).
+Sourced: missing or unreliable books are punished twice, by a fine and by an estimate that is not in favour of the taxpayer (ZDP Art. 76). UJP may inspect existing data on devices that hold a storage medium, make a faithful copy and rebuild changed and deleted data (ZDP Art. 60-a(1),(2)).
 This kit's story (invented): cash register data and books that live with an outside accountant.
 Not measured: the calendar length of a control. About 30 inspector hours per control (2025, derived from 118,659 hours and 4,003 controls).
 

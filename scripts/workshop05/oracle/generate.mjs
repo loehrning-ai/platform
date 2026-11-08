@@ -42,6 +42,48 @@ const dow = (n) => (n + 4) % 7; // 0 Sunday ... 6 Saturday (day 0 is a Thursday)
 const isWeekend = (n) => dow(n) === 0 || dow(n) === 6;
 const pad = (n) => String(n).padStart(2, "0");
 
+// A working-day calendar for North Macedonia, so that no invented slip, decision or filing is dated on a
+// Sunday, on 1 May or on Orthodox Christmas. It holds the fixed public holidays, Orthodox Easter Monday and
+// the first day of Ramadan Bayram (taken from the published calendar; a day of difference would change
+// nothing here). A holiday on a Sunday also frees the Monday. The kit never prints a holiday; the calendar
+// only keeps the dates plausible. Planted dates come from plan.mjs and are never moved.
+const FIXED_HOLIDAYS = ["01-01", "01-07", "05-01", "05-24", "08-02", "09-08", "10-11", "10-23", "12-08"];
+const RAMADAN_BAYRAM = {
+  2012: "08-19", 2013: "08-08", 2014: "07-28", 2015: "07-17", 2016: "07-06", 2017: "06-25", 2018: "06-15", 2019: "06-04",
+  2020: "05-24", 2021: "05-13", 2022: "05-02", 2023: "04-21", 2024: "04-10", 2025: "03-31", 2026: "03-20",
+};
+/** Orthodox Easter Sunday as a day number (Julian computus, 13 days to the Gregorian calendar until 2099). */
+function orthodoxEaster(year) {
+  const a = year % 4;
+  const b = year % 7;
+  const c = year % 19;
+  const d = (19 * c + 15) % 30;
+  const e = (2 * a + 4 * b - d + 34) % 7;
+  const month = Math.floor((d + e + 114) / 31);
+  const day = ((d + e + 114) % 31) + 1;
+  return toDay(`${year}-${pad(month)}-${pad(day)}`) + 13;
+}
+const holidayCache = new Map();
+function holidaysOf(year) {
+  if (!holidayCache.has(year)) {
+    const days = new Set(FIXED_HOLIDAYS.map((md) => toDay(`${year}-${md}`)));
+    days.add(orthodoxEaster(year) + 1);
+    if (RAMADAN_BAYRAM[year]) days.add(toDay(`${year}-${RAMADAN_BAYRAM[year]}`));
+    for (const day of [...days]) if (dow(day) === 0) days.add(day + 1);
+    holidayCache.set(year, days);
+  }
+  return holidayCache.get(year);
+}
+const isHoliday = (n) => holidaysOf(new Date(n * DAY).getUTCFullYear()).has(n) || holidaysOf(new Date((n - 1) * DAY).getUTCFullYear()).has(n);
+export const isWorkingDay = (n) => !isWeekend(n) && !isHoliday(n);
+/** The same day when it is a working day, else the next one (step 1) or the one before (step -1). */
+const snap = (n, step = 1) => {
+  let day = n;
+  while (!isWorkingDay(day)) day += step;
+  return day;
+};
+const snapIso = (iso, step = 1) => fromDay(snap(toDay(iso), step));
+
 function csv(commentLines, header, rows) {
   return `${[...commentLines, header, ...rows].join("\n")}\n`;
 }
@@ -65,7 +107,7 @@ export function generateAll() {
     let start = FIXED_START[p.id];
     if (!start) {
       let day = int(first, last);
-      while (dow(day) !== 1) day += 1;
+      while (dow(day) !== 1 || !isWorkingDay(day)) day += 1; // a Monday that is not a holiday
       start = fromDay(day);
     }
     return { ...p, start };
@@ -85,7 +127,8 @@ export function generateAll() {
     "id,date_filed",
     people.map((p) => {
       const fixed = PLAN.registrationFixed[p.id];
-      const filed = fixed ?? fromDay(toDay(p.start) - int(4, 10));
+      // a drawn filing date moves back to the working day before, so it stays before the day before the start
+      const filed = fixed ?? fromDay(snap(toDay(p.start) - int(4, 10), -1));
       return `${p.id},${filed}`;
     }),
   );
@@ -125,7 +168,7 @@ export function generateAll() {
       pick(["day", "day", "two-shift"]),
       pick(["B", "B", "none"]),
       pick(["yes", "no"]),
-      `2026-${pad(int(1, 10))}-${pad(int(1, 28))}`,
+      snapIso(`2026-${pad(int(1, 10))}-${pad(int(1, 28))}`),
     ];
     for (const n of PLAN.emptyCells[p.id] ?? []) fields[n - 1] = "";
     return `${p.id},${fields.join(",")}`;
@@ -165,7 +208,7 @@ export function generateAll() {
   for (let month = 1; month <= 10; month += 1) {
     const periodEnd = fromDay(toDay(`2026-${pad(month + 1)}-01`) - 1);
     let pay = toDay(`2026-${pad(month + 1)}-09`);
-    while (isWeekend(pay)) pay += 1;
+    pay = snap(pay);
     runs.push(`${periodEnd},${PLAN.payExceptions[periodEnd] ?? fromDay(pay)}`);
   }
   files["payroll_runs_2026.csv"] = csv(LABEL, "period_end,pay_date", runs);
@@ -181,7 +224,7 @@ export function generateAll() {
   const leave = [];
   for (const p of people) {
     if (p.id === "E-22" || PLAN.leaveMissing.includes(p.id)) continue;
-    const decided = PLAN.leaveDecisionFixed[p.id] ?? `2026-${pad(int(1, 2))}-${pad(int(2, 27))}`;
+    const decided = PLAN.leaveDecisionFixed[p.id] ?? snapIso(`2026-${pad(int(1, 2))}-${pad(int(2, 27))}`);
     const daysOwed = PLAN.leaveDays[p.id] ?? int(21, 25);
     leave.push(`${p.id},${daysOwed},${decided}`);
   }
@@ -197,7 +240,7 @@ export function generateAll() {
   files["medical_exams.csv"] = csv(
     LABEL,
     "id,last_exam_date",
-    people.map((p) => `${p.id},${PLAN.examFixed[p.id] ?? fromDay(int(examFirst, examLast))}`),
+    people.map((p) => `${p.id},${PLAN.examFixed[p.id] ?? fromDay(snap(int(examFirst, examLast)))}`),
   );
 
   // training_proofs_2026.csv
@@ -219,9 +262,9 @@ export function generateAll() {
     ].join("\n"),
     de: [
       "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.",
-      "Ordnerliste: Meldungen von Überstunden an den Arbeitsinspektor. Erfundene Firma Gradba-Pro DOOEL.",
+      "Liste im Aktenordner: Meldungen von Überstunden an den Arbeitsinspektor. Erfundene Firma Gradba-Pro DOOEL.",
       "Aufbau: Datum | Personen | Inhalt der Meldung | Unterschrift",
-      "2019-06-03 | keine genannt | Überstunden in der Herbstsaison 2019 | Signed by:",
+      "2019-06-03 | keine genannt | Überstunden in der Herbstsaison 2019 | Unterschrift:",
       "2026: (leer)",
       "",
     ].join("\n"),

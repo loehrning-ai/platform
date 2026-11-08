@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { GlasChip } from "@/components/demos/glas";
 import { GUESS_LINES } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/beats";
+import { clockVerdict } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/clock-rule";
 import { daysBetween } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/dates";
 import { statusOf, STATUS_ORDER, TEST_ORDER, type Status, type TestId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
 import type { Model, ModelLine } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
@@ -59,40 +60,46 @@ export function FolderStage({
   );
 }
 
-/** The verdict of one visit day against the general rule: too short, at the edge, or enough. */
-export function clockVerdict(workingBetween: number, need: number): "short" | "unclear" | "fits" {
-  if (workingBetween < need) return "short";
-  return workingBetween === need ? "unclear" : "fits";
-}
-
 /** Scene 2: the days from the notice to the visit, counted on the calendar and in working days. */
 export function ClockStage({ fmt, model, pick }: { readonly fmt: Fmt; readonly model: Model; readonly pick: number }) {
   const { copy } = fmt;
   const chosen = model.clock[pick] ?? (model.clock[model.clock.length - 1] as Model["clock"][number]);
   const verdict = clockVerdict(chosen.workingBetween, model.needWorking);
   const due = daysBetween(chosen.visit, chosen.papersDue);
+  // A weekend date is never printed: only a paper day on Monday to Friday is named, the others show the day count.
+  const papers = chosen.papersDueOnWorkday ? fmt.t(copy.clock.papers, { days: due, date: fmt.short(chosen.papersDue, chosen.papersDueWeekday) }) : fmt.t(copy.clock.papersNote, { days: due });
+  let between = 0;
   return (
     <div className="w05-clock" data-w05-clock={pick}>
       <p className="w05-lead">{fmt.t(copy.clock.lead, { notice: fmt.date(model.notice) })}</p>
-      <ol className="w05-days">
+      {/* The strip is keyed by the pick, so the working days light up one after the other each time. */}
+      <ol className="w05-days" key={pick}>
         {model.week.map((cell, index) => {
           const role = index === 0 ? "notice" : cell.date === chosen.visit ? "visit" : cell.date < chosen.visit ? "between" : "after";
+          if (role === "between") between += 1;
           return (
-            <li key={cell.date} className="w05-day" data-role={role}>
+            <li key={cell.date} className="w05-day" data-role={role} style={{ "--k": role === "between" ? between : 0 } as CSSProperties}>
               <span className="w05-day-name">{fmt.day(cell.date, cell.weekday)}</span>
+              {role === "between" ? <span className="w05-day-n">{between}</span> : null}
             </li>
           );
         })}
       </ol>
-      <ul className="w05-facts">
-        <li data-w05-calendar={chosen.calendar}>{fmt.t(copy.clock.calendar, { n: chosen.calendar })}</li>
-        <li data-w05-working={chosen.workingBetween}>{fmt.t(copy.clock.working, { n: chosen.workingBetween })}</li>
-        <li>{fmt.t(copy.clock.rule, { need: model.needWorking })}</li>
-      </ul>
+      <dl className="w05-counts">
+        <div className="w05-count" data-w05-calendar={chosen.calendar}>
+          <dt>{copy.clock.calendar}</dt>
+          <dd>{chosen.calendar}</dd>
+        </div>
+        <div className="w05-count" data-w05-working={chosen.workingBetween} data-verdict={verdict}>
+          <dt>{copy.clock.working}</dt>
+          <dd>{chosen.workingBetween}</dd>
+        </div>
+      </dl>
       <p className="w05-verdict" data-w05-verdict={verdict}>
-        <GlasChip kind="status">{copy.clock.verdict[verdict]}</GlasChip>
+        <GlasChip kind="status">{copy.clock.verdict[verdict]}</GlasChip> <span className="w05-hint">{fmt.t(copy.clock.rule, { need: model.needWorking })}</span>
       </p>
-      <p className="w05-hint">{fmt.t(copy.clock.papers, { days: due, date: fmt.short(chosen.papersDue, chosen.papersDueWeekday) })}</p>
+      <p className="w05-hint">{copy.clock.open}</p>
+      <p className="w05-hint">{papers}</p>
     </div>
   );
 }

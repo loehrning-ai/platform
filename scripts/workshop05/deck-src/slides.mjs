@@ -95,10 +95,10 @@ export function numeral(text, cls = "", { w = 60, h = 100, t = 13, gap = 22, lab
   return `<svg class="${cls}" viewBox="0 0 ${width} ${h}" role="img" aria-label="${esc(label || text)}" fill="currentColor"><title>${esc(label || text)}</title>${body}</svg>`;
 }
 
-/** Elena and Goran as small person icons, always at the same place (top right). Icons carry no visible text. */
+/** Elena and Goran as small person icons with their first name under each, always at the same place (top right). */
 export function who(ids, c, attrs = "") {
   const names = { elena: "Elena", goran: "Goran" };
-  return `<div class="w05-who" role="img" aria-label="${ids.map((id) => names[id]).join(", ")}"${attrs}>${ids.map((id) => `<i class="w05-who__i w05-who__i--${id}">${ico("user")}</i>`).join("")}</div>`;
+  return `<div class="w05-who" role="group"${attrs}>${ids.map((id) => `<span class="w05-who__p"><i class="w05-who__i w05-who__i--${id}" aria-hidden="true">${ico("user")}</i><b class="w05-who__n">${names[id]}</b></span>`).join("")}</div>`;
 }
 
 /* ── S01 cover ──────────────────────────────────────────────────────── */
@@ -108,13 +108,14 @@ function cover(d, c) {
   const title = esc(t.title).replace(/ (mit|with) /, "<br>$1 ");
   // The fifth block is outlined (Mennige edge) and holds the numeral 27 as a stroked shape, never a text node.
   const twentySeven = `<svg viewBox="0 0 100 100" role="img" aria-label="27"><title>27</title><path d="M10 18H44V50H10V82H44"/><path d="M58 18H92L72 82"/></svg>`;
-  return `<div class="cover__globe" aria-hidden="true"><canvas data-globe data-lat="40" data-speed="7" data-boost="120" data-home="84" data-cx="0.81" data-cy="0.5" data-r="0.44" data-arc-width="4" data-arc-land data-globe-steps="0:macedonia@1.5"></canvas></div>
+  return `<div class="cover__globe" aria-hidden="true"><canvas data-globe data-lat="40" data-speed="7" data-boost="120" data-home="84" data-cx="0.84" data-cy="0.5" data-r="0.44" data-arc-width="4" data-arc-land data-globe-steps="0:macedonia@1.5"></canvas></div>
 <div class="cover__main">
 <span class="w05-knock cover__numwrap"${s(0, { fx: "none", win: ".1,.9" })}>${numeral("05", "cover__num", { label: "05" })}<i></i><i></i><i></i></span>
 <p class="cover__pill"${s(0, { fx: "pop", win: "0,.3" })}><span class="pill pill--quiet">${esc(t.pill)}</span></p>
 <h1 class="cover__title"${s(0, { fx: "blur", win: ".1,.55" })}>${title}</h1>
 <p class="cover__sub"${s(0, { fx: "fade", win: ".3,.7" })}>${esc(t.sub)}</p>
 <div id="w05-cover-days" class="w05-days4 cover__days" role="img" aria-label="${esc(c.days)}"${s(0, { fx: "none", win: ".4,1" })}><i></i><i></i><i></i><i></i><i class="w05-days4__27">${twentySeven}</i></div>
+<p class="cover__dn fig" aria-hidden="true"${s(0, { fx: "fade", win: ".5,1" })}>${c.days.split(" ").map((name) => `<span>${esc(name)}</span>`).join("")}<span></span></p>
 </div>
 ${foot(c, 1)}`;
 }
@@ -134,16 +135,16 @@ function doors(d, c) {
 <div class="door door--a">${shape(1)}
 <p class="door__name"${s(1, { fx: "fade" })}>${esc(t.aName)}</p>
 <b id="w05-doors-a" class="door__n"${s(1, { fx: "none", count: `0,${n},0` })}>${n}</b>
+<div class="door__sites" aria-hidden="true">${sites}</div>
+<p class="door__d door__src"${s(1, { fx: "fade" })}>${esc(t.aWhen)}</p>
 <p class="door__d"${s(1, { fx: "fade", out: 3 })}>${esc(t.aDetail)}</p>
-<p class="door__d"${s(1, { fx: "fade", out: 2 })}>${esc(t.aExtra)}</p>
-<p class="door__d"${s(1, { fx: "fade", out: 2 })}>${esc(t.aWhen)}</p>
-<div class="door__sites" aria-hidden="true">${sites}</div></div>
+<p class="door__d"${s(1, { fx: "fade", out: 2 })}>${esc(t.aExtra)}</p></div>
 <div class="door door--b">${shape(2)}
 <p class="door__name"${s(2, { fx: "fade" })}>${esc(t.bName)}</p>
 <b class="door__n"${s(2, { fx: "none", count: `0,${d.doors.tax},0` })}>${d.doors.tax}</b>
-<p class="door__d"${s(2, { fx: "fade", out: 3 })}>${esc(t.bDetail)}</p>
-<p class="door__d"${s(2, { fx: "fade", out: 3 })}>${esc(t.bChecks)}</p>
-<p class="door__d"${s(2, { fx: "fade", out: 3 })}>${esc(t.bSource)}</p></div>
+<p class="door__d door__src"${s(2, { fx: "fade", out: 3 })}>${esc(t.bSource)}</p>
+<p class="door__d door__src"${s(3, { fx: "fade" })}>${esc(t.bTag)}</p>
+<p class="door__d"${s(2, { fx: "fade", out: 3 })}>${esc(t.bDetail)}</p></div>
 <div class="door door--c">${shape(3)}
 <p class="door__name"${s(3, { fx: "fade" })}>${esc(t.cName)}</p>
 <span class="door__mail"${s(3, { fx: "arc", win: "0,.55" })}${arcStyle(-260, -150, 100, 0.7)}>${ico("envelope")}</span>
@@ -158,7 +159,7 @@ ${foot(c, 2)}`;
 /* ── S03 papers ─────────────────────────────────────────────────────── */
 
 const pollBtn = (name, value, label, k, extra = "") =>
-  `<button class="poll__opt door-btn${extra ? ` ${extra}` : ""}" type="button" data-poll="${name}" data-value="${value}"${s(k, { fx: "pop", win: "0,.6" })}><span>${esc(label)}</span><span class="door-btn__n" data-poll-n${s(4, { fx: "fade" })}>0</span></button>`;
+  `<button class="poll__opt door-btn${extra ? ` ${extra}` : ""}" type="button" data-poll="${name}" data-value="${value}"${s(k, { fx: "pop", win: "0,.6", out: 5 })}><span>${esc(label)}</span><span class="door-btn__n" data-poll-n${s(4, { fx: "fade", out: 5 })}>0</span></button>`;
 
 function papers(d, c) {
   const t = c.s.papers;
@@ -170,10 +171,9 @@ function papers(d, c) {
   const ours = parts(t.cPapers)
     .map((p, i) => `<div class="sheet sheet--ours"${s(3, { fx: "fly", win: stagger(i, 3, 0.5, 0, 1), out: 4, outWin: ".0,.4" })}${arcStyle(-70, 90, 0, 0.9)}><span>${esc(p)}</span></div>`)
     .join("");
-  return `${hd(t.title, { attrs: s(0, { fx: "fade", out: 1 }) })}
+  // The questions take the headline's place (one grid cell), so each is read where the eye already is, before the options.
+  return `<header class="hd papers__hd"><h2 class="headline headline--m"${s(0, { fx: "fade", out: 1 })}>${esc(t.title)}</h2><h2 class="headline headline--m"${s(4, { fx: "fade", out: 5 })}>${esc(t.question)}</h2><h2 class="headline headline--m"${s(5, { fx: "fade" })}>${esc(t.hold)}</h2></header>
 <div class="stage papers__stage">
-<p class="papers__q"${s(4, { fx: "fade", out: 5 })}>${esc(t.question)}</p>
-<p class="papers__q papers__q--hold"${s(5, { fx: "fade" })}>${esc(t.hold)}</p>
 <div class="papers__btns">
 ${pollBtn("door", 0, t.aName, 1)}${pollBtn("door", 1, t.bName, 2)}${pollBtn("door", 2, t.cName, 3)}${pollBtn("door", 3, t.notSure, 4)}
 </div>
@@ -190,10 +190,10 @@ ${foot(c, 3)}`;
 
 function letter(d, c) {
   const t = c.s.letter;
-  // 84 stay grey, 15 fade out (each leaves through its own data-out), the last one is Gradba-Pro (Mennige, with a ring).
+  // 84 stay grey, the 15 others stay as pale outlines (the 100 grid stays complete), the last one is Gradba-Pro (Mennige, with a ring).
   const dots = Array.from({ length: 100 }, (_, i) => {
     if (i < d.micro.grey) return "<i></i>";
-    if (i < 99) return `<i class="is-fade"${s(3, { fx: "fade", win: "0,.2", out: 3, outWin: `${r3(0.45 + ((i - d.micro.grey) * 0.4) / 15)},${r3(0.6 + ((i - d.micro.grey) * 0.4) / 15)}` })}></i>`;
+    if (i < 99) return `<i class="is-pale"></i>`;
     return `<i class="is-me"${s(3, { fx: "pop", win: ".6,1" })}></i>`;
   }).join("");
   const tabs = t.tabs.split(" · ").map((tab, i) => `<span class="w05-tab"${s(2, { fx: "fly", win: stagger(i, 3, 0.5, 0, 1), out: 3 })}${arcStyle(-180, -40, 40, 0.8)}>${ico("file")}${esc(tab)}</span>`).join("");
@@ -232,19 +232,23 @@ function clock(d, c) {
   const cells = dates.map((iso, i) => `<div class="cal__d fig" data-day="${iso}" style="--k:${i}">${dayNum(iso)}</div>`).join("");
   const visitBtns = d.clock.buttons.map((iso) => `<button class="clock__pick" type="button" data-clock-visit="${iso}" aria-pressed="false">${dayNum(iso)}</button>`).join("");
   const idle = d.clock.buttons[0];
+  const verdict = (n) => (n < 2 ? "short" : n === 2 ? "unclear" : "fits");
+  const chipWord = { short: t.chipShort, unclear: t.chipUnclear, fits: t.chipFits }[verdict(d.clock.workingFor[idle])];
+  const dayNames = c.days.split(" ");
+  const named = dates.map((iso, i) => `<div class="cal__d fig" data-day="${iso}" style="--k:${i}">${dayNum(iso)}${dayNames[i] ? `<small>${esc(dayNames[i])}</small>` : ""}</div>`).join("");
   return `${hd(t.question, { attrs: s(0, { fx: "fade", out: 2 }) })}
 <div class="stage clock__stage" data-clock data-notice="${d.clock.notice}" data-visit="${dayNum(idle)}" data-chip-short="${esc(t.chipShort)}" data-chip-unclear="${esc(t.chipUnclear)}" data-chip-fits="${esc(t.chipFits)}" data-none="${esc(t.none)}">
-<div class="cal" role="img" aria-label="${dates.map(dayNum).join(" ")}"${s(0, { fx: "fade", win: "0,.6", keep: true })}>${cells}<i class="cal__marker" aria-hidden="true"></i></div>
+<div class="cal" role="img" aria-label="${dates.map(dayNum).join(" ")}"${s(0, { fx: "fade", win: "0,.6", keep: true })}>${named}<i class="cal__marker" aria-hidden="true"></i></div>
 <div class="clock__vote">
 <button class="poll__opt clock__yn" type="button" data-poll="clock" data-value="0"${s(0, { fx: "fade", out: 2 })}><span>${esc(t.yes)}</span><span data-poll-n>0</span></button>
 <button class="poll__opt clock__yn" type="button" data-poll="clock" data-value="1"${s(0, { fx: "fade", out: 2 })}><span>${esc(t.no)}</span><span data-poll-n>0</span></button>
 </div>
 <div class="clock__rule"${s(1, { fx: "line", win: "0,.6", keep: true })}><i class="clock__bar" data-clock-bar></i></div>
-<p class="clock__line"${s(1, { fx: "fade", win: ".2,.8" })}><a class="clock__a1" href="#a1">${esc(t.rule)}</a><a class="clock__a5" href="#a5" aria-label="${esc(t.shortNames)}">${ico("book")}</a></p>
+<p class="clock__line"${s(1, { fx: "fade", win: ".2,.8" })}><a class="clock__a1" href="#a1">${esc(t.rule)}</a><a class="clock__a5" href="#a5">${esc(t.shortNames)}</a></p>
 <p class="clock__line clock__line--dit"${s(1, { fx: "fade", win: ".4,1" })}>${esc(t.dit)}</p>
-<div class="clock__readout"${s(1, { fx: "fade", win: ".5,1" })}><p class="clock__days">${esc(t.days).replace(/\d+$/, "")}<b data-clock-count>${d.clock.workingFor[idle]}</b></p><span class="chip clock__chip" data-clock-chip${s(2, { fx: "fade", win: ".3,1" })}>${esc(t.chipUnclear)}</span></div>
-<div id="w05-clock-anchor" class="clock__picks"${s(2, { fx: "none", win: "0,.6" })}>${visitBtns}</div>
-<div class="clock__extra"${s(3, { fx: "fade" })}><button class="clock__toggle" type="button" data-clock-mode="extra" aria-pressed="false">${esc(t.toggle)}</button><p class="clock__nonote">${esc(t.noNotice)}</p></div>
+<div class="clock__readout"${s(1, { fx: "fade", win: ".5,1" })}><p class="clock__days">${esc(t.days).replace(/\d+$/, "")}<b data-clock-count>${d.clock.workingFor[idle]}</b></p><span class="chip clock__chip" data-clock-chip${s(2, { fx: "fade", win: ".3,1" })}>${esc(chipWord)}</span>
+<div id="w05-clock-anchor" class="clock__picks"${s(2, { fx: "none", win: "0,.6" })}><span class="clock__pickl">${esc(t.visitOn)}</span>${visitBtns}</div></div>
+<div class="clock__extra"${s(3, { fx: "fade" })}><button class="clock__toggle" type="button" data-clock-mode="extra" aria-pressed="false" aria-label="${esc(`${t.toggle}: ${t.noNotice}`)}">${esc(t.toggle)}</button></div>
 </div>
 ${foot(c, 5)}`;
 }
@@ -284,8 +288,9 @@ function ghost(d, c) {
 ${who(["elena", "goran"], c, s(0, { fx: "pop", win: ".2,.7" }))}
 <div class="stage ghost__stage">
 <div class="ghost__file fig"${s(1, { fx: "pop", win: "0,.4" })}>
-<p class="ghost__name">${ico("csv")}<b>${esc(t.file)}</b></p>
-<div class="ghost__grid">${head}${body}</div></div>
+<p class="ghost__name">${ico("csv")}<b>${esc(t.file)}</b><span class="chip ghost__inv">${esc(t.invented)}</span></p>
+<div class="ghost__grid">${head}${body}</div>
+<p class="ghost__cap"${s(1, { fx: "fade", win: ".5,1" })}>${esc(t.caption)}</p></div>
 <div class="ghost__rows">
 <p class="ghost__row"${s(2, { fx: "pop", win: "0,.5", out: 3 })}>${ico("scale")}<span>${esc(t.labour)}</span></p>
 <p class="ghost__row ghost__row--fine"${s(2, { fx: "pop", win: ".3,.8" })}>${ico("euro")}<span>${esc(t.fine)}</span></p>
@@ -303,16 +308,16 @@ function neighbour(d, c) {
   // overlay already owns are marked data-miss (they stay empty).
   const cells = (from) => Array.from({ length: 100 }, (_, i) => `<i data-cell${i < from ? " data-miss" : ""}></i>`).join("");
   const base = Array.from({ length: 100 }, () => "<i></i>").join("");
-  return `${hd(t.head, { attrs: s(0, { fx: "fade", out: 3 }) })}
+  return `${hd(t.head, { attrs: s(0, { fx: "fade" }) })}
 <div class="stage neighbour__stage">
 <div class="neighbour__grid" role="img" aria-label="100">
 <div class="w05-dots">${base}</div>
 <div class="w05-dots w05-dots--hot" data-fill="${e}"${s(1, { fx: "none", win: ".1,.95" })}>${cells(0)}</div>
-<div class="w05-dots w05-dots--ink" data-fill="${f}"${s(2, { fx: "none", win: ".1,.9" })}>${cells(e)}</div>
-<div class="w05-dots w05-dots--ring" data-fill="${r}"${s(2, { fx: "none", win: ".4,1" })}>${cells(e + f)}</div>
+<div class="w05-dots w05-dots--ink" data-fill="${f}"${s(2, { fx: "none", win: ".1,.9", out: 4 })}>${cells(e)}</div>
+<div class="w05-dots w05-dots--ring" data-fill="${r}"${s(2, { fx: "none", win: ".4,1", out: 4 })}>${cells(e + f)}</div>
 </div>
 <div class="neighbour__side">
-<a class="neighbour__src src" href="#a3"${s(0, { fx: "fade", keep: true })}>${esc(t.source)}</a>
+<a class="neighbour__src src" href="#a3"${s(0, { fx: "fade", out: 4 })}>${esc(t.source)}</a>
 <p class="neighbour__k neighbour__k--hot"${s(1, { fx: "fade" })}><i></i>${esc(t.extra)}</p>
 <p class="neighbour__k neighbour__k--ink"${s(2, { fx: "fade", out: 4 })}><i></i>${esc(t.followUp)}</p>
 <p class="neighbour__k neighbour__k--ring"${s(2, { fx: "fade", win: ".3,1", out: 4 })}><i></i>${esc(t.regular)}</p>
@@ -335,21 +340,21 @@ function table(d, c) {
   }
   const strips = t.strips.split(" ");
   const ticks = [d.public.checklists.labour, d.public.checklists.safety, d.public.checklists.records];
-  const strip = (name, n, i) => `<p class="tbl__strip"${s(0, { fx: "fly", win: stagger(i, 3, 0.6, 0, 1) })}${arcStyle(-120, 0, 0, 1)}><span>${esc(name)}</span><i style="--n:${n}" role="img" aria-label="${n}"></i></p>`;
+  const approx = [true, true, false];
+  const strip = (name, n, i) => `<p class="tbl__strip"${s(0, { fx: "fly", win: stagger(i, 3, 0.6, 0, 1) })}${arcStyle(-120, 0, 0, 1)}><span>${esc(name)}</span><i style="--n:${n}" role="img" aria-label="${n}"></i><b class="tbl__sn">${approx[i] ? `${esc(t.about)} ` : ""}${n}</b></p>`;
   const rows = d.lines.map((line, i) => `<li class="tbl__row fig" tabindex="0" data-line="${line.id}"${s(1, { fx: "pop", win: stagger(i, 13, 0.3, 0.25, 1) })}><b>${line.id}</b>${ico(LINE_ICON[line.id])}<span>${esc(line.label)}</span><em class="focus">${esc(t.focus[i])}</em></li>`).join("");
   return `${hd(t.title, { attrs: s(0, { fx: "fade" }) })}
 <div class="stage tbl__stage">
 <div class="tbl__left">
 <div class="tbl__strips">${strips.map((name, i) => strip(name, ticks[i], i)).join("")}</div>
-<div class="tbl__funnel" aria-hidden="true"${s(1, { fx: "pop", win: "0,.5" })}></div>
 <div class="tbl__sample"${s(1, { fx: "fly", win: ".3,.9" })}${arcStyle(0, -170, 60, 0.9)}><p class="qd">${esc(t.quote)}</p><p class="qd-gloss">${esc(t.gloss)}</p></div>
 <p class="tbl__count"${s(1, { fx: "fade", win: ".6,1" })}>${esc(t.count)}</p>
 </div>
 <ol class="tbl__rows">${rows}</ol>
 <div class="tbl__tags">
-<span class="chip tbl__public"${s(2, { fx: "glow", win: "0,.6" })}>${esc(t.public)}</span>
+<span class="chip tbl__public w05-ring"${s(2, { fx: "pop", win: "0,.6" })}>${esc(t.public)}</span>
 <span class="tbl__ours"${s(2, { fx: "fade", win: ".2,.8" })}>${esc(t.ours)}</span>
-<span class="tbl__src src"${s(2, { fx: "fade", win: ".4,1" })}>${esc(t.source)}</span>
+<span class="tbl__src src"${s(0, { fx: "fade", win: ".5,1", keep: true })}>${esc(t.source)}</span>
 </div></div>
 ${foot(c, 9)}`;
 }
@@ -363,13 +368,19 @@ function drawer(d, c) {
   const drawers = places.map((place, i) => `<div class="drawer__d" style="--x:${xs[i]}%">
 <div class="drawer__box"><i class="drawer__front"${s(1, { fx: "move", win: stagger(i, 4, 0.25, 0.1, 0.9) })} style="--dx:0px;--dy:-46px"></i></div>
 <p class="drawer__label"${s(1, { fx: "fade", win: stagger(i, 4, 0.25, 0.15, 0.95) })}>${esc(place)}</p></div>`).join("");
-  return `${hd(t.title, { attrs: s(0, { fx: "fade" }) })}
+  const line = d.lines[7];
+  // One red line from Elena (top right) to each of the four drawers: they all sit behind the one question L08.
+  const paths = xs.map((x, i) => {
+    const px = Math.round((x / 100) * 1696);
+    return `<path d="M1646 4 C 1646 96, ${px} 52, ${px} 166" pathLength="1"${s(1, { fx: "draw", win: stagger(i, 4, 0.4, 0, 1), ease: "linear" })}/>`;
+  }).join("");
+  return `<header class="hd"><h2 class="headline headline--m"${s(0, { fx: "fade" })}>${esc(t.title)}</h2><p class="drawer__q"><span class="chip w05-ring"${s(2, { fx: "pop", win: "0,.5" })}>${esc(`${line.id} ${line.label}`)}</span></p></header>
 ${who(["elena"], c, s(0, { fx: "pop", win: ".3,.8" }))}
 <div class="stage drawer__stage">
 <div class="drawer__row">${drawers}</div>
-<svg class="drawer__path" viewBox="0 0 1696 120" preserveAspectRatio="none" aria-hidden="true"><path d="M60 100 C 300 10, 520 110, 740 60 S 1180 10, 1500 80" pathLength="1"${s(1, { fx: "draw", win: ".0,1", ease: "linear" })}/></svg>
+<svg class="drawer__path" viewBox="0 0 1696 170" preserveAspectRatio="none" aria-hidden="true">${paths}</svg>
 <div class="drawer__clock"${s(1, { fx: "fade", win: ".6,1" })}><i class="drawer__face" aria-hidden="true"><b></b></i><span>${esc(t.morning)}</span></div>
-<p class="drawer__tag chip"${s(2, { fx: "pop" })}>${esc(t.assumption)}</p>
+<p class="drawer__tag chip"${s(1, { fx: "pop", win: ".7,1" })}>${esc(t.assumption)}</p>
 </div>
 ${foot(c, 10)}`;
 }
@@ -393,11 +404,12 @@ function tests(d, c) {
 <p class="tcard__name"${s(0, { fx: "fade", keep: true })}>${esc(name)}</p>
 <div class="tcard__flip"${s(1, { fx: "flip", win: stagger(i, 4, 0.5, 0, 1) })}>
 <div class="face">${ico(TEST_ICON[i])}</div>
-<div class="face face--back"><span class="tcard__bad">${esc(bad[i])}<i${s(1, { fx: "strike", win: ".7,1" })}></i></span></div></div>
+<div class="face face--back"><span class="tcard__paper"${s(1, { fx: "fade", win: ".6,1", out: 2 })}>${esc(t.papers[i])}</span><span class="tcard__bad">${esc(bad[i])}<i${s(1, { fx: "strike", win: ".7,1" })}></i></span></div></div>
+<p class="tcard__q"${s(0, { fx: "fade", out: 1 })}>${esc(t.questions[i])}</p>
 <div class="tcard__status"${s(2, { fx: "pop", win: stagger(i, 4, 0.4, 0, 1) })}>${chip(status[i], words[i], "chip--lg")}</div>
 ${i === 3 ? `<p class="tcard__note"${s(2, { fx: "fade", win: ".4,1" })}>${esc(t.noNotice)}</p>` : ""}</div>`).join("");
   return `${hd(t.title, { attrs: s(0, { fx: "fade", out: 1 }) })}
-<div class="stage tests__stage">${cards}</div>
+<div class="stage tests__stage">${cards}<p class="tests__inv"${s(1, { fx: "pop", win: ".6,1", out: 2 })}><span class="chip">${esc(t.invented)}</span></p></div>
 ${foot(c, 11)}`;
 }
 
@@ -408,7 +420,7 @@ function status(d, c) {
   const samples = t.samples.split(" · ");
   const tile = (k, key, statusName, word, def, sample, out) => `<div class="stile stile--${key}">
 <div class="stile__head"${s(k, { fx: "pop", win: "0,.5" })}>${chip(statusName, word, "chip--lg")}</div>
-<p class="stile__def"${s(k, { fx: "fade", win: ".3,1", ...(out ? { out } : {}) })}>${esc(def)}</p>
+<p class="stile__def"${s(k, { fx: "fade", win: ".3,1" })}>${esc(def)}</p>
 <span class="stile__sample fig"${s(k, { fx: "move", win: ".5,1" })} style="--dx:0px;--dy:-130px">${esc(sample)}</span></div>`;
   if (d.sample.contract !== "COVERED" || d.sample.opinion !== "WEAK" || d.sample.attendance !== "GAP") throw new Error("the three sample papers of the status slide differ from the oracle");
   return `${hd(t.title, { attrs: s(0, { fx: "fade" }) })}
@@ -425,7 +437,7 @@ function forward(d, c) {
   const pair = (k, text) => {
     const [oldText, newText] = text.split(" · ");
     return `<li class="pair">
-<span class="pair__old fig"${s(k, { fx: "pop", win: "0,.3", out: 5, outWin: ".0,.5" })}>${esc(oldText)}<i${s(k, { fx: "strike", win: ".3,.6" })}></i></span>
+<span class="pair__old fig"${s(k, { fx: "pop", win: "0,.3", out: 5, outWin: ".0,.5" })}>${esc(oldText)}</span>
 <i class="pair__line"${s(k, { fx: "line", win: ".5,.8", out: 5, outWin: ".0,.5" })}></i>
 <span class="pair__new fig"${s(k, { fx: "arc", win: ".5,1", out: 5, outWin: ".0,.5" })}${arcStyle(-260, 0, 70, 0.8)}>${esc(newText)}</span></li>`;
   };
@@ -436,11 +448,13 @@ function forward(d, c) {
 ${who(["elena", "goran"], c, s(0, { fx: "pop", win: ".2,.7" }))}
 <div class="stage forward__stage">
 <p class="forward__never"${s(1, { fx: "fade", win: ".3,1" })}>${esc(t.never)}</p>
+<p class="forward__heads fig" aria-hidden="true"${s(1, { fx: "fade", win: "0,.4", out: 5, outWin: ".0,.5" })}><span>${esc(t.colOld)}</span><span></span><span>${esc(t.colNew)}</span></p>
 <ol class="forward__pairs">${pair(1, t.p1)}${pair(2, t.p2)}${pair(3, t.p3)}${pair(4, t.p4)}</ol>
 <p class="forward__draft"${s(4, { fx: "fade", win: ".4,1", out: 5, outWin: ".0,.5" })}>${esc(t.draft)}</p>
 <p class="forward__again"${s(5, { fx: "fade", win: "0,.5" })}>${esc(t.again)}</p>
 <div class="pv">
 <div class="pv__ghost w05-ghost w05-ghost--ink" data-poll-show="plan"${s(5, { fx: "none", win: ".1,1" })} aria-hidden="true">${bars}</div>
+<p class="pv__legend"${s(5, { fx: "fade", win: ".4,1" })}>${esc(t.ghostLegend)}</p>
 <div class="pv__btns">${btns}</div></div>
 </div>
 ${foot(c, 13)}`;

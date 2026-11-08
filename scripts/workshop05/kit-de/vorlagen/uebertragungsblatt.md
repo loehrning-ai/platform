@@ -7,7 +7,7 @@ Nimm zuerst ein erfundenes Beispiel. Echte Zeilen mit Kennungen statt Namen sind
 | Feld | Dein Audit | Beispiel: Gradba-Pro (erfunden) |
 |---|---|---|
 | 1. Wer prüft | | das Arbeitsinspektorat (DIT) |
-| 2. Welches Gesetz | | ZIN, ZRO, ZBZR, Gesetz über die Evidenzen |
+| 2. Welches Gesetz | | ZIN, ZRO, ZBZR, Gesetz über die Aufzeichnungen |
 | 3. Welche Papiere | | Verträge, Anwesenheitslisten, Überstundenmeldungen, Lohnzeilen, Urlaubsbescheide, Sicherheitserklärung |
 | 4. Wer hat jedes | | Büroleiterin, externe Buchhaltung, der Ordner |
 | 5. Welche Frist | | Mitteilung Mo 23. Nov, Besuch 27. Nov um 09:00 Uhr, Papiere 3 Kalendertage nach dem schriftlichen Verlangen |

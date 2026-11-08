@@ -10,7 +10,7 @@
   'use strict';
 
   /* Logical drawing size. Keep W and H equal to the aspect ratio of .w05-mx__plot in w05-fx.css (checked by a test). */
-  var LAYOUT = { W: 936, H: 780, labelW: 96, labelH: 150, cellW: 64, cellH: 26, gap: 3, cols: 13, rows: 24 };
+  var LAYOUT = { W: 860, H: 760, labelW: 70, labelH: 200, cellW: 60, cellH: 23, gap: 3, cols: 13, rows: 24 };
   var FLAG_SPAN = 1.9;
   var FLAG_STEP = 0.09;
   var CHECK_SPAN = 1.6;
@@ -86,6 +86,7 @@
   var canvas = anchor.querySelector('canvas');
   var flagsBox = anchor.querySelector('[data-mx-phase="flags"]');
   var checkedProbe = anchor.querySelector('[data-mx-phase="checked"]');
+  var wrongProbe = anchor.querySelector('[data-mx-phase="wrong"]');
   var pulses = anchor.querySelector('.w05-mx__pulses');
   var whatifRoot = document.querySelector('[data-mx-whatifs]');
   if (!canvas || !canvas.getContext) return;
@@ -148,31 +149,57 @@
     ctx.setTransform(w / LAYOUT.W, 0, 0, h / LAYOUT.H, 0, 0);
   }
 
+  /** Greedy wrap of a header label into at most two lines of `max` pixels; a single word that is too long shrinks the font. */
+  function wrapHeader(label, max) {
+    var size = 15;
+    var words = String(label).split(/\s+/).filter(Boolean);
+    for (; size >= 11; size -= 0.5) {
+      ctx.font = '600 ' + size + 'px ' + palette.sans;
+      var lines = [];
+      var cur = '';
+      var ok = true;
+      for (var i = 0; i < words.length; i += 1) {
+        var tryLine = cur ? cur + ' ' + words[i] : words[i];
+        if (ctx.measureText(tryLine).width <= max) { cur = tryLine; continue; }
+        if (!cur) { ok = false; break; }
+        lines.push(cur);
+        cur = words[i];
+        if (ctx.measureText(cur).width > max) { ok = false; break; }
+      }
+      if (!ok) continue;
+      lines.push(cur);
+      if (lines.length <= 2) return { size: size, lines: lines };
+    }
+    return { size: 11, lines: [String(label)] };
+  }
+
   function labels() {
     var i;
-    ctx.font = '600 12px ' + palette.mono;
+    ctx.font = '600 14px ' + palette.mono;
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
     for (i = 0; i < data.people.length; i += 1) {
       var r = cellRect(0, i);
-      ctx.fillStyle = rgba(palette.ink, 0.66);
-      ctx.textAlign = 'left';
+      ctx.fillStyle = rgba(palette.ink, 0.78);
       ctx.fillText(data.people[i], 8, r.y + r.h / 2);
-      ctx.fillStyle = rgba(palette.ink, 0.42);
-      ctx.textAlign = 'right';
-      ctx.fillText(data.titles[i], LAYOUT.labelW - 10, r.y + r.h / 2);
     }
-    ctx.textAlign = 'left';
-    ctx.font = '600 13px ' + palette.sans;
+    var avail = LAYOUT.labelH - 10 - 30 - 6;
     for (i = 0; i < data.lines.length; i += 1) {
       var c = cellRect(i, 0);
+      var head = wrapHeader(data.labels[i] || '', avail);
       ctx.save();
-      ctx.translate(c.x + c.w / 2 + 4, LAYOUT.labelH - 10);
+      ctx.translate(c.x + c.w / 2 + 1, LAYOUT.labelH - 10);
       ctx.rotate(-Math.PI / 2);
-      ctx.fillStyle = rgba(palette.ink, 0.4);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.font = '600 13px ' + palette.sans;
+      ctx.fillStyle = rgba(palette.ink, 0.5);
       ctx.fillText(data.lines[i].replace(/^L/, ''), 0, 0);
-      ctx.fillStyle = rgba(palette.ink, 0.82);
-      ctx.fillText(data.labels[i] || '', 26, 0);
+      ctx.font = '600 ' + head.size + 'px ' + palette.sans;
+      ctx.fillStyle = rgba(palette.ink, 0.9);
+      head.lines.forEach(function (line, k) {
+        ctx.fillText(line, 30, (k - (head.lines.length - 1) / 2) * (head.size + 3));
+      });
       ctx.restore();
     }
   }
@@ -205,7 +232,7 @@
     ctx.translate(top.x + top.w / 2 + 4, top.y + full / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = 'rgba(255,255,255,' + 0.94 * faded + ')';
-    ctx.font = '700 12px ' + palette.mono;
+    ctx.font = '700 14px ' + palette.mono;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text.wholeFirm || '', 0, 0);
@@ -227,6 +254,7 @@
     var scan = clamp01(readP(anchor));
     var flagsP = clamp01(readP(flagsBox));
     var checkedP = clamp01(readP(checkedProbe));
+    var wrongP = clamp01(readP(wrongProbe));
     var front = scan * data.lines.length;
     var dim = hot >= 0 ? 0.32 : 1;
     var c;
@@ -270,6 +298,23 @@
         }
       });
     });
+
+    /* the two wrong counts of the quick script: dashed outlines on the cells it would flag too much (base state only) */
+    if (current === 0 && wrongP > 0 && data.ghosts) {
+      ctx.save();
+      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = rgba(palette.accent, wrongP * (hot >= 0 ? 0.4 : 1));
+      data.ghosts.forEach(function (g) {
+        var gc = data.lines.indexOf(g.line);
+        var gr = data.people.indexOf(g.id);
+        if (gc < 0 || gr < 0) return;
+        var gb = cellRect(gc, gr);
+        roundRect(gb.x + 1, gb.y + 1, gb.w - 2, gb.h - 2, 4);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
 
     /* checked, no problem: amber, then a flip to green with a tick (reading order) */
     var k = 0;
@@ -433,7 +478,7 @@
     if (!FINAL && whatifRoot && readP(whatifRoot) <= 0 && current !== 0) reset();
     else draw();
   });
-  [anchor, flagsBox, checkedProbe, whatifRoot].forEach(function (el) {
+  [anchor, flagsBox, checkedProbe, wrongProbe, whatifRoot].forEach(function (el) {
     if (el) watcher.observe(el, { attributes: true, attributeFilter: ['style'] });
   });
   window.addEventListener('resize', draw);

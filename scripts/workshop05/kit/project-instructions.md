@@ -9,7 +9,7 @@ Audit: labour inspection at Gradba-Pro DOOEL, visit 27 November 2026. You prepar
 5. PERIOD: the date fits the rule (before the first shift, within 15 days, within 24 months).
 6. SCOPE: every person and every workplace the line names. Name who is missing.
 7. APPROVAL: a named person signed or owns it, with a date. A blank field is no approval.
-8. COVERED: all four tests hold for everyone and the record does not show the rule broken. WEAK: a paper answers for everyone, one test fails and a new dated paper can fix it. GAP: a person or workplace has no paper, or the record shows the rule broken. The weakest part counts.
+8. COVERED: all four tests hold for everyone and the record does not show the rule broken. WEAK: a paper answers for everyone, one test fails and a new dated paper can fix it. GAP: a person or workplace has no paper, or the record shows the rule broken. Tie-break: a paper that a later change made stale is WEAK, because the paper itself shows no breach. A record whose own dates or numbers show the limit passed is GAP. The weakest part counts.
 9. COVERED needs proof, and proof is a quote from a file. Every WEAK and GAP names the paper that would close it and its owner.
 10. Quote first, then status. Find every quote again before you finish.
 11. Count, date and compare in code. Level 2 (invented files in this Project): you may run the code here. Level 3 (real files): the code runs on the owner's own machine, and only column names and 3 invented rows come to you.

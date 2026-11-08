@@ -9,7 +9,7 @@ type Values = Readonly<Record<string, string | number>>;
 export interface Fmt {
   readonly copy: W05Copy;
   readonly locale: "de" | "en";
-  /** Fills the "{name}" slots of a copy string. */
+  /** Fills the "{name}" slots of a copy string; a filled slot that ends in a full stop ("30. Nov.") never doubles the sentence's own. */
   t(template: string, values?: Values): string;
   /** "27 November 2026" or "27. November 2026". */
   date(iso: string): string;
@@ -46,7 +46,7 @@ export function formatter(copy: W05Copy): Fmt {
   return {
     copy,
     locale: copy.locale,
-    t: (template, values = {}) => fill(template, values),
+    t: (template, values = {}) => fill(template, values).replace(/(?<!\.)\.\.(?!\.)/g, "."),
     date,
     weekday: weekdayWord,
     day: (iso, weekday) => (weekday === null ? String(parts(iso).day) : `${weekdayWord(weekday)} ${parts(iso).day}`),

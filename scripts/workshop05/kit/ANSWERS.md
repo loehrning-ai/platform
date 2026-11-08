@@ -2,7 +2,7 @@ Fictional training material, invented for the exercise. Not legal advice.
 
 # Answer key
 
-Predict first, then check. The wording of an AI run will differ from this key. The numbers must not.
+Predict first, then check. The wording of an AI run will differ from this key. The numbers of the findings must not. The list of near misses may be longer. The ids F1 to F10 follow the order of the checklist lines; a run may number its findings in the order of the prompt.
 
 ## Step 1
 
@@ -22,7 +22,7 @@ Expected: 13 rows, 5 columns, no names. A paper that the files do not name is NO
 | L10 | ZBZR Art. 11(1) | safety statement | NOT IN FILES (the index gives no job title for the holder of the binder) | the binder, safety_statement_2019.md |
 | L11 | ZBZR Art. 11(2) | opinion of the employee representative | NOT IN FILES (no owner in the index) | one line inside safety_statement_2019.md; no separate paper in the index |
 | L12 | ZBZR Art. 22(1) | medical exam slip | office manager | slips from the health centre, medical_exams.csv (dates only) |
-| L13 | ZBZR (training of new workers; the article number is confirmed before print) | safety training proof | office manager | training_proofs_2026.csv |
+| L13 | ZBZR (training of new workers; article number not given in the checklist) | safety training proof | office manager | training_proofs_2026.csv |
 
 ## Step 2
 
@@ -43,11 +43,13 @@ Rows read, per file:
 | training_proofs_2026.csv | 3 |
 | Total | 693 |
 
+The 693 counts the 11 CSV files. The overtime notices (txt) and the safety statement (md) are read separately, so a run that also counts their lines prints a higher total. The numbers of the findings do not change.
+
 Findings:
 
 | Id | Line | Rule | Number |
 |---|---|---|---|
-| F1 | L02 | Registration filed later than the day before the first shift (Art. 13(7)) | E-05 filed 2026-03-05, due 2026-03-01: 4 days after the due date, 3 days after the first shift (2026-03-02) |
+| F1 | L02 | Registration filed later than the day before the first shift (Art. 13(7)) | E-05 filed 2026-03-05, due 2026-03-01: 4 days after the due date (the first shift was 2026-03-02). The free-day rule is for pay only |
 | F2 | L06 | Overtime weeks without a notice to the inspector (Art. 117(6)) | E-07 and E-08: 17 weeks each, 0 notices for 2026 |
 | F3 | L05 | Overtime above 8 hours a week (Art. 117(2)) | E-07: 9 h in 17 of 17 weeks, 153 h in total |
 | F4 | L07 | Overtime hours without an overtime line in the pay calculation (Art. 117(5)) | E-07 and E-08: 8 pay lines (4 months each) |
@@ -57,6 +59,8 @@ Findings:
 | F8 | L03 | Empty fields in the employee record (Law on Records Art. 8) | 3 incomplete records, 7 empty cells (E-04 two, E-15 three, E-21 two) |
 | F9 | L12 | Medical exam older than 24 months on 2026-11-27 (ZBZR Art. 22(1)) | E-02, E-06, E-10, E-16: last exam 2024-09-12, 76 days past 24 months |
 | F10 | L10 | Job title of the register missing from the safety statement (ZBZR Art. 11(1)) | 10 titles in the register, 8 in the statement: 2 missing (order picker, forklift operator) |
+
+The eleventh check, training given later than the hire date, finds 0 (see D7).
 
 What to say:
 
@@ -73,9 +77,11 @@ Checked, no problem (near misses, each with its reason):
 | D3 | L09 | E-09 | Exactly 20 days meets the minimum of 20. |
 | D4 | L08 | whole firm | The October period was paid 2026-11-16. Day 15 is a weekend day, so the limit moves to Mon 16 Nov. |
 | D5 | L12 | E-03 | Last exam 2024-12-03, valid until 2026-12-03: within 24 months on 2026-11-27. |
-| D6 | L09 | E-22 | No leave decision yet: the full right of 20 days arises after 6 months, on 2026-12-01 (Art. 139). A proportional right before that exists and is outside the kit: ask the practitioner. |
+| D6 | L09 | E-22 | No leave decision yet: the full right of 20 days arises after 6 months, on 2026-12-01. A proportional right before that exists and is outside the kit: ask the practitioner. |
 | D7 | L13 | E-05, E-19, E-22 | Each training date is on or before the hire date. |
 | D8 | L04 | E-07 | Six rows without times carry the code ABS and match absences_2026.csv. |
+
+These are the 8 near misses planted in the data. A careful run may clear more cases, for example the leave decision of E-05, dated one day after the 6 months. That is fine.
 
 Two wrong answers, side by side:
 
@@ -92,7 +98,7 @@ Status per line, with a quote from the file. The weakest part counts.
 
 | Line | Status | What fails | Quote | Reading |
 |---|---|---|---|---|
-| L01 | COVERED | nothing | "E-05,sales adviser,shop,2026-03-02,40,yes" | All 24 rows say yes. Nothing to find (invented, no problem planted). |
+| L01 | COVERED | nothing | "E-05,sales adviser,shop,2026-03-02,40,yes" | All 24 rows say yes. The index names the owner and the date of the register. Nothing to find (invented, no problem planted). |
 | L02 | GAP | PERIOD, the record shows the rule broken | "E-05,sales adviser,shop,2026-03-02,40,yes" and "E-05,2026-03-05" | E-05 was filed 4 days after the due date. The record shows the rule broken. Twin: E-22 filed in time (D1). |
 | L03 | GAP | SCOPE | "Mogila,,,T03" | Three records have empty fields: SCOPE fails, the cells are missing. The fine is for not keeping the record, not for incomplete content. |
 | L04 | GAP | QUOTE | "E-12,2026-11-02,,,x," | E-12 has a tick and no start or end. E-12 and E-13 together: 20 person-days. E-07's six rows carry the code ABS and clear (D8). |
@@ -102,13 +108,13 @@ Status per line, with a quote from the file. The weakest part counts.
 | L08 | GAP | the record shows the rule broken | "2026-09-30,2026-10-19" | The September period was paid 2026-10-19, the limit was 2026-10-15. The October period is on time (D4). |
 | L09 | GAP | SCOPE, the record shows the rule broken | "E-14,18,2026-01-06" | E-11 and E-19 have no decision, E-14 has 18 days. SCOPE fails and the record shows the rule broken. E-09 at exactly 20 and E-22 not yet owed clear (D3, D6). |
 | L10 | GAP | SCOPE | "Dated: 2019-03-14" | The statement lists 8 positions, the register has 10. Order picker and forklift operator are missing. |
-| L11 | WEAK | PERIOD | "Opinion of the employee representative: on file for this text, dated 2019-03-20" and "Last change to the workplace: hall racking and forklift work were added in 2023." | The opinion is dated 2019, the workplace changed in 2023. PERIOD fails. Nobody is missing and the rule is not shown broken, so WEAK. A new dated opinion closes it. |
+| L11 | WEAK | PERIOD | "Opinion of the employee representative: on file for this text, dated 2019-03-20" and "Last change to the workplace: hall racking and forklift work were added in 2023." | The opinion is dated 2019, the workplace changed in 2023. PERIOD fails. Nobody is missing and the paper itself shows no breach: a later change made it stale, so WEAK (rule 8, tie-break). L10 is a GAP for another reason: two positions are missing. A new dated opinion closes L11. |
 | L12 | GAP | the record shows the rule broken | "E-02,2024-09-12" | Four people have 2024-09-12, 76 days past 24 months on 2026-11-27. E-03 is valid until 2026-12-03 (D5). |
-| L13 | COVERED | nothing | "E-19,2025-12-01,2025-11-28" | Three hires, three proofs, each on or before the hire date (D7). |
+| L13 | COVERED | nothing | "E-19,2025-12-01,2025-11-28" | Three hires in the 12 months before 27 Nov 2026 (the index says what a new hire is), three proofs, each on or before the hire date (D7). E-08, E-09 and E-11 started in 2024, outside that window. |
 
-New papers that close the WEAK and GAP lines (never a change to an old paper). Today is Thu 26 Nov 2026.
+New papers that close the WEAK and GAP lines (never a change to an old paper). Today is Thu 26 Nov 2026. The owners are suggested roles for the new papers, and a person decides. The owners of Step 1 come from the files.
 
-| Line | New paper | Owner | Day |
+| Line | New paper | Suggested owner | Day |
 |---|---|---|---|
 | L02 | Note with the facts of E-05's registration (filed 2026-03-05), and a check that every new hire is registered before the first shift from now on | office manager | Thu 26 Nov |
 | L03 | New dated entries with the missing data for E-04, E-15 and E-21. The old entries stay as they are | office manager | Thu 26 Nov, entries when the data is in hand |
@@ -139,11 +145,11 @@ The notice came on 2026-11-23 (Mon). The visit is on 2026-11-27 at 09:00: 4 cale
 | Notice | the letter of the labour inspectorate | 2026-11-23 |
 | Visit | named in the notice | 2026-11-27, 09:00 |
 | Papers asked for | 3 calendar days after the written request (ZIN Art. 53(1)) | not known on Thu 26 Nov; the invented request of the visit day says Mon 2026-11-30 |
-| Act | at the latest 8 days after the day the minutes are drawn up (ZIN Art. 68) | not known until the minutes exist |
-| Appeal | within 15 days of receipt, it does not stop the act (ZIN Art. 70) | not known until the act arrives |
+| Act | at the latest 8 days after the day the minutes are drawn up (ZIN Art. 68) | open: not known until the minutes exist |
+| Appeal | within 15 days of receipt, it does not stop the act (ZIN Art. 70) | open: not known until the act arrives |
 
-The regular notice is at least 3 working days before the start (ZIN Art. 57), with exceptions, and the inspectorate's own law can differ. Whether the day of the notice and the day of the visit count is not settled in our sources: ask the practitioner. The papers clock counts calendar days. The clock.csv of Step 3 holds only the notice date, the visit date and the rule "papers: 3 calendar days after the written request".
+The regular notice is at least 3 working days before the start (ZIN Art. 57), with exceptions, and the inspectorate's own law can differ. Whether the day of the notice and the day of the visit count is not settled in our sources: ask the practitioner. The papers clock counts calendar days. The clock.csv of Step 3 holds the notice date, the visit date and the rule "papers: 3 calendar days after the written request" with its date left open. A run that also lists the act and the appeal writes open as their date, because both start later. These articles are in cases/case-A-labour.md, which the Project holds.
 
 ## How this key was made
 
-Computed from the kit files by a script, then checked by a second script. An AI run will differ in wording. The numbers must not.
+Computed from the kit files by a script, then checked by a second script. An AI run will differ in wording. The numbers of the findings must not.

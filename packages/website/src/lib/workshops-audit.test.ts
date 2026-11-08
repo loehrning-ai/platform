@@ -56,7 +56,7 @@ const DECK_FILE = { de: "slides.html", en: "en/slides.html" } as const;
 /** The main slides of a built deck edition: label and minutes, read from its sections. */
 function deckSlides(locale: "de" | "en"): { label: string; minutes: number }[] {
   const html = readFileSync(resolve(root, DECK_FILE[locale]), "utf8");
-  const unescape = (text: string) => text.replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+  const unescape = (text: string) => text.replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
   return [...html.matchAll(/<section class="slide[^"]*" id="[^"]+" data-kind="main" data-label="([^"]*)" data-seconds="(\d+)"/g)].map((match) => ({
     label: unescape(match[1]),
     minutes: Number(match[2]) / 60,
@@ -106,8 +106,9 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(en.title).toBe("Audit Preparation with AI: Four Days Until the Inspection");
     expect(de.title).toBe("Audit-Vorbereitung mit KI: Vier Tage bis zur Kontrolle");
     // The teaser names the three real checks, the four days and the papers prepared with AI.
-    expect(en.summary).toMatch(/^Three real kinds of checks.+four days.+papers with AI/);
-    expect(de.summary).toMatch(/^Drei echte Kontrollen.+vier Tagen.+Papiere mit KI/);
+    // Three kinds of checks, not three real inspections that happened.
+    expect(en.summary).toMatch(/^Three kinds of checks in North Macedonia.+four days.+papers with AI/);
+    expect(de.summary).toMatch(/^Drei Arten von Kontrollen in Nordmazedonien.+vier Tagen.+Papiere mit KI/);
     for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
     // The lede opens with the letter on Monday.
     expect(de.lede).toMatch(/^Am Montag kommt ein Brief/);
@@ -192,7 +193,10 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       expect(de.kit?.rulesShort?.[index]).toMatch(new RegExp(`^${word}:`));
     }
     const ruleCount = instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length;
-    expect(en.kit?.stats.find((stat) => stat.label === "rules")?.value).toBe(String(ruleCount));
+    expect(en.kit?.stats.find((stat) => stat.label.startsWith("rules"))?.value).toBe(String(ruleCount));
+    // The page numbers the four tests 1 to 4, so its heading names their real place in the file.
+    expect(en.kit?.rulesHeading).toMatch(/rules 4 to 7 of 13/);
+    expect(de.kit?.rulesHeading).toMatch(/Regeln 4 bis 7 von 13/);
   });
 
   it.each(["de", "en"] as const)("matches the %s kit: 34 files, 11 entries, three steps, the statuses of the key", (locale) => {
@@ -226,7 +230,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     // The key prints the same tallies the strips show.
     expect(edition.key).toMatch(locale === "de" ? /Zählung: 10 Funde, 8 geprüft ohne Befund\./ : /Count: 10 findings, 8 checked, no problem\./);
     expect(edition.key).toMatch(locale === "de" ? /Zählung: 2 BELEGT, 1 SCHWACH, 10 LÜCKE\./ : /Count: 2 COVERED, 1 WEAK, 10 GAP\./);
-    expect(kit.steps[1]?.output).toMatch(locale === "de" ? /10 Funde und 8 geprüft ohne Befund/ : /10 findings and 8 checked with no problem/);
+    // The near-miss list of a run is not stable, so the page promises the key's 8 as a floor.
+    expect(kit.steps[1]?.output).toMatch(locale === "de" ? /10 Funde und mindestens 8 geprüft ohne Befund/ : /10 findings and at least 8 checked with no problem/);
     expect(kit.steps[2]?.output).toMatch(locale === "de" ? /2 BELEGT, 1 SCHWACH, 10 LÜCKE/ : /2 COVERED, 1 WEAK, 10 GAP/);
   });
 

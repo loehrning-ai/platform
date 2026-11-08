@@ -4,7 +4,7 @@ Fictional training material, invented for the exercise. Not legal advice.
 
 Dated: 2019-03-14
 
-Risk assessment for the workplaces of the firm. A workplace here is a job position. Invented for the exercise.
+Risk assessment for the workplaces of the firm. A workplace here is a job position. The titles use the same words as the contracts register. Invented for the exercise.
 
 ## Workplaces covered
 

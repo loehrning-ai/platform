@@ -18,12 +18,18 @@
   --w05-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+/*
+ * The stage grows with its scene instead of scrolling inside a fixed box: thirteen questions are
+ * thirteen cards the visitor can see, and a phone scrolls the page, not a box inside it. The shell's
+ * height stays the least the stage takes.
+ */
+.w05 .w05-stage {
+  height: auto;
+  min-height: var(--demo4-stage-h);
+}
 .w05 .w05-data {
   position: relative;
-  height: 100%;
   min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
 }
 .w05 .w05-main {
   min-height: 100%;
@@ -121,8 +127,13 @@
   opacity: 1;
   transform: none;
 }
+/* The three cards that take a guess carry the accent; the other ten are plain reading. */
+.w05 .w05-card:not([data-guess]) {
+  background: var(--w05-wash);
+}
 .w05 .w05-card[data-guess] {
-  border-color: var(--w05-ink);
+  border: 2px solid var(--w05-mennige-line);
+  padding: 9px 11px;
 }
 .w05 .w05-card-head {
   display: flex;
@@ -139,13 +150,9 @@
   font-weight: 650;
 }
 .w05 .w05-card-q {
-  display: -webkit-box;
-  overflow: hidden;
   color: var(--w05-ink-2);
   font-size: 0.8125rem;
   line-height: 1.35;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 .w05 .w05-guess {
   display: flex;
@@ -164,7 +171,8 @@
   list-style: none;
 }
 .w05 .w05-day {
-  padding: 10px 6px;
+  min-height: 4.25rem;
+  padding: 12px 6px;
   border: 1px solid var(--w05-line);
   border-radius: 10px;
   background: var(--w05-bogen);
@@ -177,7 +185,28 @@
   background: var(--w05-wash);
 }
 .w05 .w05-day[data-role="between"] {
+  position: relative;
   background: var(--w05-wash);
+  animation: w05-day-in 0.4s ease both;
+  animation-delay: calc(var(--k, 0) * 140ms);
+}
+.w05 .w05-day-n {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--w05-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+@keyframes w05-day-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .w05 .w05-day[data-role="visit"] {
   border-color: var(--w05-mennige-line);
@@ -188,16 +217,41 @@
   border-style: dashed;
   opacity: 0.55;
 }
-.w05 .w05-facts {
+.w05 .w05-counts {
   display: grid;
-  gap: 2px;
-  margin: 0 0 8px;
-  padding: 0;
-  list-style: none;
-  font-size: 0.875rem;
-  font-weight: 600;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.w05 .w05-count {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 10px 12px;
+  border: 1px solid var(--w05-line);
+  border-radius: 12px;
+  background: var(--w05-bogen);
+}
+.w05 .w05-count dt {
+  color: var(--w05-ink-2);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+.w05 .w05-count dd {
+  margin: 0;
+  font-family: var(--w05-mono);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.w05 .w05-count[data-verdict="short"] dd {
+  color: var(--w05-mennige);
 }
 .w05 .w05-verdict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 6px;
 }
 
@@ -421,7 +475,7 @@
 }
 .w05 .w05-gates ul {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   margin: 0;
   padding-left: 1.1rem;
 }
@@ -476,6 +530,10 @@
 .w05 .w05-own-paper[data-status="gap"] .w05-own-status {
   color: var(--w05-mennige);
 }
+.w05 .w05-own-paper[data-status="idle"] .w05-own-status {
+  color: var(--w05-ink-2);
+  font-weight: 600;
+}
 
 /* Scene 8: take home. */
 .w05 .w05-takehome {
@@ -498,8 +556,24 @@
 }
 .w05 .w05-download-text {
   display: grid;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
+}
+.w05 .w05-file-name {
+  font-family: var(--w05-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.w05 .w05-shown {
+  display: grid;
+  gap: 4px;
+}
+/* On a phone the file chips would push the briefing below the fold; the names are in the kit. */
+@media (max-width: 39.99rem) {
+  .w05 .w05-shown {
+    display: none;
+  }
 }
 .w05 .w05-actions {
   display: flex;
@@ -579,12 +653,22 @@
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     align-items: start;
   }
+  /* One line per question: the name on the left, the twenty-four people on the right, so all thirteen fit. */
+  .w05 .w05-mrow-button {
+    grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 5px 10px;
+  }
   .w05 .w05-caption-text {
     font-size: 0.9375rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .w05 .w05-day[data-role="between"] {
+    animation: none;
+  }
   .w05 .w05-card,
   .w05 .w05-cell {
     transition: none;

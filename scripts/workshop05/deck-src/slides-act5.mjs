@@ -15,7 +15,7 @@ export default function makeAct5(H) {
   function ladder(d, c) {
     const x = c.s.ladder;
     const rungs = split(x.rungs)
-      .map((label, i) => `<button class="poll__opt ld__rung ld__rung--${i + 1}" type="button" data-poll="ladder" data-value="${i}"${s(0, { fx: "pop", win: stagger(i, 4, 0.4, 0, 1), out: 3 })}><span>${esc(label)}</span><span data-poll-n${s(0, { fx: "fade", out: 2 })}>0</span></button>`)
+      .map((label, i) => `<button class="poll__opt ld__rung ld__rung--${i + 1}${i === 2 ? " is-key" : ""}" type="button" data-poll="ladder" data-value="${i}"${s(0, { fx: "pop", win: stagger(i, 4, 0.4, 0, 1), out: 3 })}><span>${esc(label)}</span><span data-poll-n${s(0, { fx: "fade", out: 2 })}>0</span></button>`)
       .join("");
     const gates = split(x.gates)
       .map((label, i) => `<button class="w05-gate" type="button" data-gate="${GATES[i]}" aria-pressed="false"><i class="w05-gate__lock" aria-hidden="true"></i><span>${esc(label)}</span></button>`)
@@ -26,7 +26,7 @@ export default function makeAct5(H) {
 <div class="ld__rungs">${rungs}</div>
 <i class="ld__block" role="img" aria-label="${esc(split(x.rungs)[2])}"${s(1, { fx: "move", win: "0,1", out: 3 })} style="--dx:0px;--dy:420px">${ico("table")}</i>
 <p class="ld__caution"${s(1, { fx: "fade", win: ".3,1", out: 2 })}>${esc(x.caution)}</p>
-<a class="ld__a2" href="#a2" aria-label="${esc(x.accounts)}"${s(0, { fx: "fade", win: ".5,1", out: 3 })}>${ico("book")}</a>
+<a class="ld__a2 src" href="#a2"${s(3, { fx: "fade", win: ".5,1", out: 4 })}>${esc(x.accounts)}</a>
 <div class="w05-cloud ld__cloud" data-gate-cloud${s(3, { fx: "fade", win: "0,.6", keep: false })}></div>
 <p class="ld__light"${s(3, { fx: "fade", win: ".3,1", out: 4 })}>${esc(x.light)}</p>
 </div>
@@ -52,7 +52,7 @@ ${foot(c, 18)}`;
 <div class="jd__right">
 <blockquote class="jd__quote"${s(1, { fx: "type", ease: "linear", win: "0,.7" })}><p class="qd" lang="en">${esc(x.quote)}</p>${x.gloss ? `<p class="qd-gloss">${esc(x.gloss)}</p>` : ""}</blockquote>
 <p class="jd__src src"${s(1, { fx: "fade", win: ".5,1" })}>${esc(x.source)}</p>
-<p class="jd__fine"${s(1, { fx: "pop", win: ".6,1" })}>${ico("euro")}<span>${esc(x.fine)}</span></p>
+<p class="jd__fine"${s(1, { fx: "pop", win: ".6,1" })}>${ico("scale")}<span>${esc(x.fine)}</span></p>
 <div class="jd__sign"${s(2, { fx: "fade", win: "0,.4" })}>
 <i class="jd__who" aria-hidden="true">${ico("user")}</i>
 <svg class="jd__line" viewBox="0 0 400 20" aria-hidden="true"><path d="M2 14 C 60 2, 120 22, 200 10 S 340 6, 398 12" pathLength="1"${s(2, { fx: "draw", win: ".2,1" })}/></svg>
@@ -89,6 +89,7 @@ ${foot(c, 19)}`;
 </div>
 </div>
 <ol class="vs__line">${html}</ol>
+<p class="vs__src src"${s(2, { fx: "fade", win: ".3,1", keep: true })}>${esc(x.src)}</p>
 <i class="vs__rail" aria-hidden="true"${s(1, { fx: "line", win: "0,1", out: 6 })}></i>
 <p class="vs__last"${s(6, { fx: "fade", win: "0,.6" })}>${esc(x.last)}</p>
 </div>
@@ -104,17 +105,18 @@ ${foot(c, 20)}`;
     const cells = split(x.chain);
     const tokens = split(x.tokens);
     const days = [3, 8, 15, 15, 5];
+    const KEY_BAR = 3;
     const bars = cells
       .map((label, i) => `<li class="af__seg af__seg--${i}" style="--d:${days[i]}"${s(1, { fx: "fade", win: stagger(i, 5, 0.3, 0, 1) })}>
 <span class="af__tok fig">${esc(tokens[i])}</span>
-<i class="af__bar${i === 2 ? " af__bar--invented" : ""}"${s(1, { fx: "line", win: stagger(i, 5, 0.3, 0.1, 1) })}></i>
+<i class="af__bar${i === 2 ? " af__bar--invented" : ""}${i === KEY_BAR ? " af__bar--key" : ""}"${s(1, { fx: "line", win: stagger(i, 5, 0.3, 0.1, 1) })}></i>
 <span class="af__lab fig">${esc(label)}</span></li>`)
       .join("");
     return `${hd(x.question, { attrs: s(0, { fx: "fade", out: 1 }) })}
 <div class="stage af__stage">
 <div class="af__opts">${opts}</div>
 <ol class="af__chain">${bars}</ol>
-<p class="af__nostop"${s(1, { fx: "fade", win: ".6,1" })}>${esc(x.noStop)}</p>
+<p class="af__nostop"${s(1, { fx: "fade", win: ".6,1", out: 2 })}>${esc(x.noStop)}</p>
 <div class="af__end">
 <p class="af__warn"${s(2, { fx: "pop", win: "0,.5", out: 3 })}>${ico("alert")}<span>${esc(x.warnings)}</span></p>
 <p class="af__half"${s(2, { fx: "pop", win: ".3,.9", out: 3 })}><i class="af__coin" aria-hidden="true">${ico5("coin")}</i><span>${esc(x.half)}</span></p>

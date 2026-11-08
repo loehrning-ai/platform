@@ -43,6 +43,17 @@ const slide = (lang, id) => slidesOf(pages[lang]).find((s) => s.attrs.id === id)
 /** data-count end values (the middle number of "from,to,from") of a slide, in document order. */
 const counts = (lang, id) => withAttr(slide(lang, id), "data-count").map((n) => Number(n.attrs["data-count"].split(",")[1]));
 
+/** Removes script and style blocks (any case, also "</script >") until nothing changes. */
+function stripBlocks(html) {
+  let prev;
+  let out = html;
+  do {
+    prev = out;
+    out = out.replace(/<(script|style)\b[\s\S]*?<\/\1\s*>/gi, " ");
+  } while (out !== prev);
+  return out;
+}
+
 test("the oracle answer on the kit equals expected.json and the numbers the deck was designed on", () => {
   const d = data.en;
   assert.equal(d.rowsRead, 693);
@@ -77,7 +88,7 @@ test("the tally, the xray counters and the question count are placeholders or co
     for (const key of ["{covered}", "{weak}", "{gap}"]) assert.ok(step3.status.includes(key), `${lang}: step3.status carries ${key}`);
     assert.ok(step3.question.includes("{lines}"), `${lang}: step3.question carries {lines}`);
     assert.match(copy[lang].s.table.count, new RegExp(`^${data[lang].lines.length} `), `${lang}: the table count is the number of lines`);
-    const text = withoutNotes(pages[lang]).replace(/<script[\s\S]*?<\/script>/g, "");
+    const text = stripBlocks(withoutNotes(pages[lang]));
     assert.doesNotMatch(text, /\{[A-Za-z0-9]+\}/, `${lang}: an unfilled placeholder on a page`);
   }
 });

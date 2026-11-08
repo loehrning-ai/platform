@@ -101,7 +101,7 @@ export function XrayStage({
             );
           })}
         </ol>
-        {seen ? <p className="w05-tally" data-w05-tally="">{fmt.t(copy.xray.tally, model.tally)}</p> : null}
+        {seen ? <p className="w05-tally" data-w05-tally="">{fmt.t(copy.xray.tally, { ...model.tally, total: model.lines.length })}</p> : null}
       </div>
       <div className="w05-xray-side">{line ? <Lens fmt={fmt} model={model} line={line} guess={guesses[line.id]} /> : <p className="w05-hint">{seen ? copy.xray.hint : copy.xray.scan}</p>}</div>
     </div>

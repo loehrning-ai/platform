@@ -32,9 +32,9 @@ ${o.word ? `<p class="st__slot-w"${s(kBtns, { fx: "fade", win: ".3,1" })}>${esc(
   const pollOpt = (name, value, label, k, cls = "", o = {}) =>
     `<button class="poll__opt ${cls}" type="button" data-poll="${name}" data-value="${value}"${s(k, { fx: "pop", win: o.win || "0,.6", ...(o.out ? { out: o.out } : {}) })}><span>${esc(label)}</span><span data-poll-n>0</span></button>`;
 
-  /** The static strip of the four ladder rung labels (figure cells), as a link to appendix a2. */
-  const rungStrip = (copy, cls) =>
-    `<a class="st__rungs ${cls}" href="#a2" aria-label="${esc(copy.accounts)}">${split(copy.rungs).map((r, i) => `<span class="fig" style="--i:${i}">${esc(r)}</span>`).join("")}</a>`;
+  /** The static strip of the four ladder rung labels (figure cells), as a link to appendix a2. `hot` is the rung of this slide. */
+  const rungStrip = (copy, cls, hot) =>
+    `<a class="st__rungs ${cls}" href="#a2" aria-label="${esc(copy.accounts)}"><span class="fig st__rungs-l">${ico("book")}${esc(copy.rungsLabel)}</span>${split(copy.rungs).map((r, i) => `<span class="fig${i === hot ? " is-hot" : ""}" style="--i:${i}">${esc(r)}</span>`).join("")}</a>`;
 
   /* ── key tables, read from the kit files ──────────────────────────── */
 
