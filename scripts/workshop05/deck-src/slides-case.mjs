@@ -116,7 +116,7 @@ export function letter(it, ctx, d, c) {
   const t = c.s.letter;
   const env = it({
     id: "env", tag: "div", cls: "w05-env lt-env", zone: "env", fx: "none", attrs: 'data-scene',
-    html: `<div class="envelope"><div class="envelope__back"></div><div class="envelope__flap"></div><div class="envelope__letter">${ico("paper")}<p class="qd lt-env__t" lang="mk">${esc(t.qd)}</p><p class="qd-gloss lt-env__g">${esc(t.gl)}</p><p class="lt-env__d fig">${esc(t.dates)}</p></div><div class="envelope__front"></div></div>`,
+    html: `<div class="envelope"><div class="envelope__back"></div><div class="envelope__flap"></div><div class="envelope__letter">${ico("file")}<p class="qd lt-env__t" lang="mk">${esc(t.qd)}</p><p class="qd-gloss lt-env__g">${esc(t.gl)}</p><p class="lt-env__d fig">${esc(t.dates)}</p></div><div class="envelope__front"></div></div>`,
   });
   const week = t.wk.map((x, i) => rise(it, { cls: `ltw ltw--${i + 1}`, k: 1, win: spread(i, 3, 0, 0.6), text: x })).join("");
   const tiles = t.days
