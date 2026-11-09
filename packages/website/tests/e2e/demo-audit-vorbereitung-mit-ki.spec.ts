@@ -1,14 +1,21 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 /**
- * W05 "Die Lückenliste" on the v4 stage: the intro fits a small phone, the
- * board's rows are tap-sized and keep name and stamp, the four tests leave
- * two files that hold, the bench shows why R7 is a gap, the Claude window
- * replays a recorded take with the page's quote marks on its answer, and
- * the take-home fills a gap request. Keys:
- * ArrowLeft and ArrowRight walk the path, Escape closes a sheet, r and
- * Shift+R restart but keep the visitor's own files.
+ * W05 "Ordner und Register" on the v4 stage: the intro fits a small phone, the thirteen question cards are
+ * tap-sized and three of them take a guess, the clock counts the days, two papers show their four
+ * tests, the x-ray opens a question and compares it with the guess, the register counts what has
+ * expired, what expires soon and what is missing on three dates (the numbers are read from the oracle's
+ * expected.json, never typed here), the late edit leaves the old value visible, the own papers never
+ * reach "covered", and the take-home builds a briefing without naming the weekday of the visit. No
+ * scene paints a dark fill (the workshop's visual law, scanned by computed colour). Keys: ArrowLeft and
+ * ArrowRight walk the path, r and Shift+R restart but keep the visitor's own papers.
  */
+const EXPECTED = JSON.parse(readFileSync(path.resolve(process.cwd(), "../../scripts/workshop05/oracle/expected.json"), "utf8")) as {
+  register: { byDate: Record<string, { rows: number; expired: number; expiring: number; missing: number }> };
+};
+const REGISTER_DATES = Object.keys(EXPECTED.register.byDate);
 const SLUG = "audit-vorbereitung-mit-ki";
 const PHONE = { width: 390, height: 664 };
 
@@ -23,43 +30,70 @@ function collectErrors(page: Page): string[] {
 
 const overflow = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 const beat = (page: Page) => page.locator("[data-demo-clock]");
+/** Leave a form field, so the next key is the page's: the shell never takes a key typed into a field. */
+const leaveField = (page: Page) => page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
 const next = (page: Page) => page.locator("[data-demo-next]").first();
 
-/**
- * The board's rows: each at least 44px tall with its name visible, and the
- * last one reachable above the dock by scrolling the stage (never the page).
- */
-const boardRows = (page: Page) =>
-  page.evaluate(() => {
-    const rows = [...document.querySelectorAll<HTMLElement>(".w05-request")];
-    const scroller = document.querySelector<HTMLElement>(".w05-data");
-    const scrollY = window.scrollY;
-    rows.at(-1)?.closest<HTMLElement>(".w05-row")?.scrollIntoView({ block: "nearest" });
-    const last = rows.at(-1)?.getBoundingClientRect().bottom ?? 999;
-    const dock = document.querySelector(".demo4-dock")?.getBoundingClientRect().top ?? 0;
-    const named = rows.filter((row) => (row.querySelector(".w05-request-name")?.getBoundingClientRect().width ?? 0) > 20).length;
-    if (scroller) scroller.scrollTop = 0;
-    window.scrollTo(0, scrollY);
-    return { count: rows.length, smallest: Math.min(...rows.map((row) => row.getBoundingClientRect().height)), named, lastAboveDock: last <= dock + 1 };
-  });
-
-/** File names on the board that do not fit their box. */
-const cutFileNames = (page: Page) =>
-  page.evaluate(() =>
-    [...document.querySelectorAll<HTMLElement>(".w05-file")].filter((element) => element.offsetParent && element.scrollWidth > element.clientWidth + 1).map((element) => element.textContent),
-  );
-
 /** Next until the clock shows the beat: a press during a beat's opening motion only finishes the motion. */
-async function advanceTo(page: Page, id: string, press: () => Promise<void> = () => next(page).click()) {
+async function advanceTo(page: Page, id: string) {
   await expect(async () => {
-    await press();
+    await next(page).click();
     await expect(beat(page)).toHaveAttribute("data-beat", id, { timeout: 700 });
   }).toPass({ timeout: 10_000 });
 }
 
-async function closeSheet(page: Page) {
-  await page.keyboard.press("Escape");
-  await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+/**
+ * The visual law, scanned on the computed colours of the stage content and of the chips the visitor picks:
+ * no element of 10 x 4 px or more has a background with alpha 0.3 or more and a relative luminance below
+ * 0.15. The shared glass buttons of the dock (the accent button) are outside the scanned scope.
+ */
+async function darkFills(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const channels = (value: string): [number, number, number, number] | null => {
+      const rgb = /^rgba?\(([^)]+)\)$/.exec(value);
+      if (rgb) {
+        const [r = 0, g = 0, b = 0, a = 1] = (rgb[1] as string).split(/[\s,/]+/).filter(Boolean).map(Number);
+        return [r, g, b, a];
+      }
+      const srgb = /^color\(srgb ([^)]+)\)$/.exec(value);
+      if (srgb) {
+        const [r = 0, g = 0, b = 0, a = 1] = (srgb[1] as string).split(/[\s/]+/).filter(Boolean).map(Number);
+        return [r * 255, g * 255, b * 255, a];
+      }
+      return null;
+    };
+    const linear = (c: number) => ((c / 255) <= 0.04045 ? c / 255 / 12.92 : (((c / 255) + 0.055) / 1.055) ** 2.4);
+    const hits: string[] = [];
+    for (const element of document.querySelectorAll("[data-w05-data], [data-w05-data] *, .w05-focus *")) {
+      const box = element.getBoundingClientRect();
+      if (box.width < 10 || box.height < 4) continue;
+      const parsed = channels(getComputedStyle(element).backgroundColor);
+      if (!parsed || parsed[3] < 0.3) continue;
+      const luminance = 0.2126 * linear(parsed[0]) + 0.7152 * linear(parsed[1]) + 0.0722 * linear(parsed[2]);
+      if (luminance < 0.15) hits.push(`${element.tagName.toLowerCase()}.${String((element as HTMLElement).className).replace(/\s+/g, ".")} ${getComputedStyle(element).backgroundColor}`);
+    }
+    return hits;
+  });
+}
+
+/** The three cards that take a guess: one chip each (the first chip of every group). */
+async function guessAll(page: Page) {
+  for (const id of ["L01", "L05", "L11"]) await page.locator(`[data-w05-card="${id}"] .glas-chip`).first().click();
+}
+
+/** From the intro through the first beats to the named beat, doing what each gate asks. */
+async function walkTo(page: Page, target: string) {
+  await page.locator("[data-demo-start]").click();
+  const order = ["ordner", "uhr", "pruefungen", "roentgen", "register", "nachtrag", "ordner-eigen", "mitnehmen"];
+  for (const id of order) {
+    if (id === target) return;
+    if (id === "ordner") {
+      await guessAll(page);
+      await page.locator('[data-w05-commit="keep"]').click();
+    }
+    if (id === "roentgen") await page.locator('[data-w05-row="L05"]').click({ timeout: 10_000 });
+    await advanceTo(page, order[order.indexOf(id) + 1] as string);
+  }
 }
 
 test.describe(`/demos/${SLUG}`, () => {
@@ -68,191 +102,124 @@ test.describe(`/demos/${SLUG}`, () => {
       const errors = collectErrors(page);
       await page.setViewportSize(PHONE);
       await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-      const intro = page.locator("[data-demo-intro-body]");
-      await expect(intro).toContainText("Vardar Works");
-      await expect(intro).toContainText("Tannwald");
-      await expect(intro).toContainText(locale === "de" ? "Im Workshop bediene ich Claude live" : "In the workshop I run Claude live");
-
-      // The intro card and both buttons fit the first screen; the page has not scrolled.
-      const card = await page.locator("[data-demo-intro]").boundingBox();
-      const fold = await page.evaluate(() => {
-        const bar = document.querySelector("[data-mobile-tab-bar]");
-        return Math.min(bar ? bar.getBoundingClientRect().top : window.innerHeight, window.innerHeight);
-      });
-      expect((card?.y ?? 999) + (card?.height ?? 0), "intro card above the tab bar").toBeLessThanOrEqual(fold + 0.5);
-      for (const selector of ["[data-demo-start]", "[data-demo-explore]"]) {
-        const box = await page.locator(selector).boundingBox();
-        expect((box?.y ?? 999) + (box?.height ?? 0), selector).toBeLessThanOrEqual(600);
-      }
+      await expect(page.locator("[data-demo-intro-news]")).toContainText(locale === "de" ? "26.484" : "26,484");
       expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
-      // Scene 1: eight requests, each linked to a file with a matching name, all above the dock.
+      // Scene 1: thirteen cards, three of them take a guess; "keep" appears after the third.
       await page.locator("[data-demo-start]").click();
-      await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
-      await expect(page.locator("[data-w05-row]")).toHaveCount(8);
-      expect(await boardRows(page)).toEqual({ count: 8, smallest: expect.any(Number), named: 8, lastAboveDock: true });
-      expect((await boardRows(page)).smallest).toBeGreaterThanOrEqual(44);
-      expect(await cutFileNames(page)).toEqual([]);
-      await page.locator("[role=slider]").first().focus();
-      await page.keyboard.press("ArrowRight");
+      await expect(page.locator(".w05-card")).toHaveCount(13);
+      await expect(page.locator("[data-w05-card][data-guess]")).toHaveCount(3);
+      await expect(page.locator('[data-w05-commit="skip"]')).toBeVisible();
+      await guessAll(page);
+      // A picked chip is light with an outline, never a dark pill.
+      expect(await darkFills(page)).toEqual([]);
       await page.locator('[data-w05-commit="keep"]').click();
-      await expect(page.locator("[data-w05-lead]")).toHaveCount(0);
+      await advanceTo(page, "uhr");
 
-      // Scene 2: the four tests leave two of eight; a stamped row keeps its name.
+      // Scene 2: the real visit is four calendar days and three working days away.
+      await expect(page.locator("[data-w05-calendar]")).toHaveAttribute("data-w05-calendar", "4");
+      await expect(page.locator("[data-w05-working]")).toHaveAttribute("data-w05-working", "3");
+      await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "fits");
+      // The deck's rule: 25 is short, 26 is unclear (does the notice day count?), 27 fits. No weekend date is printed.
+      await page.getByRole("radio").first().click();
+      await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "short");
+      await page.getByRole("radio").nth(1).click();
+      await expect(page.locator("[data-w05-verdict]")).toHaveAttribute("data-w05-verdict", "unclear");
+      await expect(page.locator("[data-w05-data]")).not.toContainText(/\b2[89]\.? (Nov|November)\b/);
       await advanceTo(page, "pruefungen");
-      for (const check of ["quote", "date", "scope", "approval"]) await page.locator(`[data-w05-switch="${check}"]`).click();
-      await expect(page.locator("[data-w05-legend]")).toContainText(locale === "de" ? "2 von 8" : "2 of 8");
-      expect((await boardRows(page)).named).toBe(8);
-      // The dock's own button names the next step and opens R1, the one request that holds and still is a problem.
-      await expect(page.locator("[data-w05-next-r1]")).toHaveText(locale === "de" ? "Weiter: R1 ansehen" : "Next: look at R1");
-      await page.locator("[data-w05-next-r1]").click();
-      await expect(page.locator('[data-w05-evidence="R1"]')).toBeVisible();
-      await closeSheet(page);
-      await expect(page.locator("[data-w05-next-r1]")).toHaveCount(0);
 
-      // Scene 3: the backup report on the bench; reading its lines lights the ring, quote fails.
-      await advanceTo(page, "r7");
-      await page.locator('[data-w05-card="backup-report_2026-10.txt"]').click();
-      await page.locator('[data-w05-target="R7"]').click();
-      await expect(page.locator("[data-w05-doc]")).toBeVisible();
-      await page.locator("[data-w05-readall]").focus();
-      await page.keyboard.press("Enter");
-      await expect(page.locator('[data-w05-ring="quote"]')).toHaveAttribute("data-state", "fail", { timeout: 5_000 });
-      for (const check of ["date", "scope", "approval"]) await expect(page.locator(`[data-w05-ring="${check}"]`)).toHaveAttribute("data-state", "pass", { timeout: 5_000 });
-      // With the report read, the dock offers the four tests as rules first.
-      await page.locator("[data-w05-next-rules]").click();
-      await expect(page.locator("[data-w05-rule-sheet]")).toBeVisible();
-      await closeSheet(page);
+      // Scene 3: the attendance sheet is a gap, the safety statement is weak.
+      await expect(page.locator('[data-w05-paper="L04"] [data-w05-status="gap"]')).toHaveCount(1);
+      await expect(page.locator('[data-w05-paper="L11"] [data-w05-status="weak"]')).toHaveCount(1);
+      await page.locator(".w05-focus .glas-chip").first().click();
+      expect(await darkFills(page)).toEqual([]);
+      await advanceTo(page, "roentgen");
 
-      // Scene 4, then scene 5: the Claude window on the stage, labelled a depiction with the take's date and model.
+      // Scene 4: a question opens in the x-ray and is compared with the guess.
+      await expect(page.locator('[data-w05-xray="done"]')).toBeVisible({ timeout: 10_000 });
+      await expect(page.locator("[data-w05-rows]")).toHaveAttribute("data-w05-rows", "693");
+      await page.locator('[data-w05-row="L05"]').click();
+      await expect(page.locator('[data-w05-lens="L05"]')).toContainText("E-07");
+      expect(await darkFills(page)).toEqual([]);
+      await advanceTo(page, "register");
+
+      // Scene 5: the register counts the three dates; the numbers are the oracle's own.
+      await expect(page.locator('[data-w05-register-state="done"]')).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByRole("radio")).toHaveCount(3);
+      for (const [index, date] of REGISTER_DATES.entries()) {
+        await page.getByRole("radio").nth(index).click();
+        const expected = EXPECTED.register.byDate[date] as { rows: number; expired: number; expiring: number; missing: number };
+        await expect(page.locator("[data-w05-register]")).toHaveAttribute("data-w05-register", date);
+        for (const count of ["rows", "expired", "expiring", "missing"] as const) {
+          await expect(page.locator(`[data-w05-register-count="${count}"] dd`)).toHaveText(String(expected[count]));
+        }
+        await expect(page.locator("[data-w05-register-result]")).toContainText(String(expected.rows));
+      }
+      await expect(page.locator("[data-w05-register-note]")).toBeVisible();
+      // The lists name an id and a paper, never a person.
+      await expect(page.locator(".w05-reg-entry").first()).toContainText(/^E-\d\d /);
+      expect(await darkFills(page)).toEqual([]);
+      await advanceTo(page, "nachtrag");
+
+      // Scene 6: the changed date keeps its old value on the page, then the new paper is written.
+      await page.locator("[data-w05-late-edit]").click();
+      await expect(page.locator("[data-w05-ghost]")).toBeVisible();
+      await page.locator("[data-w05-late-write]").click();
+      await expect(page.locator("[data-w05-note]")).toContainText(locale === "de" ? "Titel:" : "Title:");
+      expect(await darkFills(page)).toEqual([]);
       await advanceTo(page, "ordner-eigen");
-      await expect(page.locator("[data-w05-drop]")).toBeVisible();
-      await advanceTo(page, "claude");
-      const stage = page.locator('[data-demo-stage] [data-w05-probe="recorded"]');
-      // The default take is the whole folder without the skill: the harder case, with the skill one switch away.
-      await expect(stage).toHaveAttribute("data-w05-take", locale === "de" ? "de-alle-without-5" : "en-alle-without-1");
-      const claudeWindow = stage.locator("[data-w05-window]");
-      await expect(claudeWindow).toContainText(locale === "de" ? "26.10.2026" : "26 October 2026");
-      await expect(claudeWindow).toContainText("Claude Opus 5.5");
-      await expect(claudeWindow).toContainText(locale === "de" ? "Darstellung" : "Depiction");
-      // At phone width both choices and the lookup buttons share one row, leaving the answer more room.
-      const controlTops = await page.locator(".w05-claude-dock > *").evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().top));
-      expect(Math.max(...controlTops) - Math.min(...controlTops)).toBeLessThan(8);
-      await expect(stage.locator("[data-w05-send]")).toHaveAccessibleName(locale === "de" ? "Aufzeichnung abspielen" : "Play the recording");
-      // The composer's one button sends the prompt, then stops the stream: the whole answer with the page's marks drawn on it.
-      await stage.locator("[data-w05-send]").click();
-      await expect(stage.locator("[data-w05-send]")).toHaveAttribute("data-state", "stop");
-      await stage.locator("[data-w05-send]").click();
-      await expect(stage).toHaveAttribute("data-w05-done", "");
-      // The English take quotes the files in the answer itself, so its found quotes are drawn there; the German take quotes them in its produced file.
-      if (locale === "en") await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights?: Map<string, unknown> }).highlights?.has("w05-found") ?? false)).toBe(true);
-      await page.locator("[data-w05-marks-open]").click();
-      await expect(page.locator('[data-w05-mark="found"]').first()).toBeVisible();
-      await page.locator("[data-w05-mark-open]").first().click();
-      await expect(page.locator("[data-w05-doc]")).toBeVisible();
-      await closeSheet(page);
-      // Under the window, the mistake hunt: a wrong rule says so, the right one solves the card.
-      const hunt = page.locator("[data-w05-hunt]");
-      await expect(hunt).toHaveAttribute("data-w05-hunt", "0");
-      await hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="4"]').click();
-      await expect(hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="4"]')).toHaveAttribute("data-verdict", "wrong");
-      await hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="7"]').click();
-      await expect(hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="7"]')).toHaveAttribute("data-verdict", "right");
-      await expect(hunt).toHaveAttribute("data-w05-hunt", "1");
 
-      // Scene 6: the managing director's draft first. Each of its four sentences is struck with the kit's evidence, then the honest reply appears.
+      // Scene 7: the own paper never reaches the covered status, even with all four tests ticked.
+      await page.locator("[data-w05-own-text]").fill("Vertragsregister");
+      const paper = page.locator("[data-w05-own-paper]").first();
+      for (const chip of await paper.locator(".glas-chip").all()) await chip.click();
+      await expect(paper).toHaveAttribute("data-status", "open");
+      await expect(paper).not.toHaveAttribute("data-status", "covered");
+      expect(await darkFills(page)).toEqual([]);
       await advanceTo(page, "mitnehmen");
-      await expect(page.locator("[data-w05-claim]")).toHaveCount(4);
-      await expect(page.locator("[data-w05-reply]")).toHaveCount(0);
-      await page.locator('[data-w05-claim="1"]').click();
-      await expect(page.locator('[data-w05-claim="1"]')).toHaveAttribute("aria-pressed", "true");
-      await expect(page.locator("[data-w05-claim-evidence]").first()).toContainText("training-records");
-      await page.locator("[data-w05-draft-all]").click();
-      await expect(page.locator("[data-w05-reply]")).toBeVisible();
-      await expect(page.locator("[data-w05-reply]")).toContainText("Dear");
-      // Then one gap request per weak or missing item; a tap fills the mail.
-      await expect(page.locator("[data-w05-gap]")).toHaveCount(6);
-      await page.locator('[data-w05-gap="R7"]').click();
-      await expect(page.locator('[data-w05-mail="R7"]')).toContainText("R7");
+
+      // Scene 8: the briefing names the visit day without its weekday; the kit link is there.
+      const briefing = page.locator("[data-w05-briefing]");
+      await expect(briefing).toContainText("27");
+      expect(await briefing.textContent()).not.toMatch(/\b(Friday|Freitag|Fri|Fr)\b/);
+      await expect(page.locator("#mitnehmen a[download]")).toHaveCount(2);
+
       expect(await overflow(page)).toBeLessThanOrEqual(0);
       expect(errors).toEqual([]);
     });
   }
 
-  test("de: arrows walk the path, Escape closes a sheet, r and Shift+R restart but keep the own list", async ({ page }) => {
-    // A phone width: there a tapped request opens in a sheet (a wide screen shows it beside the board).
-    await page.setViewportSize({ width: 390, height: 844 });
+  test("de: arrows walk the path, r and Shift+R restart but keep the own papers", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.setViewportSize(PHONE);
     await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator("[data-demo-start]").click();
-    await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
-    // A request opens in a sheet; Escape closes the sheet and leaves the path where it was.
-    await page.locator('[data-w05-row="R5"] .w05-request').click();
-    await expect(page.locator('[role="dialog"]')).toBeVisible();
-    await closeSheet(page);
-    await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    const right = () => page.keyboard.press("ArrowRight");
-    for (const id of ["pruefungen", "r7", "ordner-eigen"]) await advanceTo(page, id, right);
+    await walkTo(page, "ordner-eigen");
+    await page.locator("[data-w05-own-text]").fill("Vertragsregister");
+    await leaveField(page);
     await page.keyboard.press("ArrowLeft");
-    await expect(beat(page)).toHaveAttribute("data-beat", "r7");
-    await advanceTo(page, "ordner-eigen", right);
+    await expect(beat(page)).toHaveAttribute("data-beat", "nachtrag");
 
-    await page.locator("[data-w05-paste-open]").click();
-    await page.locator("[data-w05-paste]").fill("Backup-Konzept.docx\t02.04.2023\nSchulung_Teilnahme_2026.xlsx\t03.03.2026");
     // A key typed into a form field never restarts.
-    await page.locator("[data-w05-paste]").press("r");
+    await advanceTo(page, "ordner-eigen");
+    await page.locator("[data-w05-own-text]").press("r");
     await expect(beat(page)).toHaveAttribute("data-beat", "ordner-eigen");
-    await page.locator("[data-w05-paste-read]").click();
-    await expect(page.locator("[data-w05-own]")).toBeVisible();
 
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await leaveField(page);
     await page.keyboard.press("r");
-    await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    for (const id of ["pruefungen", "r7", "ordner-eigen"]) await advanceTo(page, id, right);
-    await expect(page.locator("[data-w05-own]")).toBeVisible();
-
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.keyboard.press("Shift+R");
-    await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
+    await expect(beat(page)).toHaveAttribute("data-beat", "ordner", { timeout: 10_000 });
+    await expect(page.locator('[data-w05-commit="skip"]')).toBeVisible();
+    // The guesses are gone after the restart.
+    await expect(page.locator("[data-w05-card][data-guess] .glas-chip[aria-pressed='true']")).toHaveCount(0);
+    expect(errors).toEqual([]);
   });
 
-  test("de: an old date in the pasted list caps the backup row once the Stichtag is set", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/demos/${SLUG}?beat=ordner-eigen`, { waitUntil: "networkidle" });
-    await page.locator("[data-w05-paste-open]").click();
-    await page.locator("[data-w05-paste]").fill("Backup-Konzept.docx\t02.04.2023");
-    await page.locator("[data-w05-paste-read]").click();
-    const card = page.locator('[data-w05-own-card="Backup-Konzept.docx"]');
-    await expect(card).toBeVisible();
-    await page.locator("[data-w05-stichtag]").fill("2026-12-10");
-    await expect(card).toContainText("2023");
-    await expect(page.locator('[data-w05-own-card="Backup-Konzept.docx"] [data-state="fail"]')).not.toHaveCount(0);
-    expect(await overflow(page)).toBeLessThanOrEqual(0);
-  });
-
-  test("de: on a wide screen a tapped request opens beside the board, and a switch shows the row it broke", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(`/demos/${SLUG}?beat=pruefungen`, { waitUntil: "networkidle" });
-    const panel = page.locator("[data-w05-panel]");
-    await expect(panel).toBeVisible();
-    await page.locator('[data-w05-switch="approval"]').click();
-    await expect(panel).toHaveAttribute("data-w05-panel", "R8");
-    await page.locator('[data-w05-row="R3"] .w05-request').click();
-    await expect(panel).toHaveAttribute("data-w05-panel", "R3");
-    await expect(page.locator('[role="dialog"]')).toHaveCount(0);
-    expect(await overflow(page)).toBeLessThanOrEqual(0);
-  });
-
-  test("en: free play puts any file against any request", async ({ page }) => {
-    await page.goto(`/en/demos/${SLUG}`, { waitUntil: "networkidle" });
+  test("de: free play opens the x-ray with every row drawn", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
     await page.locator("[data-demo-explore]").click();
-    await page.locator('[data-w05-item="R5"]').click();
-    await expect(page.locator('[data-w05-target="R5"]')).toBeVisible();
-    await page.locator('[data-w05-card="training-records_2026.csv"]').click();
-    await page.locator('[data-w05-target="R5"]').click();
-    await expect(page.locator('[data-w05-checklist="training-records_2026.csv"]')).toBeVisible();
-    await page.locator("[data-w05-putback]").click();
-    await expect(page.locator("[data-w05-hand]")).toBeVisible();
+    await expect(page.locator('[data-w05-xray="done"]')).toBeVisible();
+    await page.locator('[data-w05-row="L11"]').click();
+    await expect(page.locator('[data-w05-lens="L11"]')).toContainText(/schwach/i);
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
   });
 });

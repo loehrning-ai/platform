@@ -1,20 +1,20 @@
 /*
  * DEMO · /demos/audit-vorbereitung-mit-ki (and /en/demos/audit-vorbereitung-mit-ki)
- * Workshop 05 "Audit-Vorbereitung mit KI" on the v4 shell (Glas): the
- * Vardar folder against Tannwald's eight requests. Server component: picks
- * the locale pack, the recorded Claude takes of this locale (the window of
- * scene 5 replays them, claude-takes.ts) and the take-home links, and renders the client demo with
- * them, so the browser bundle holds one language. The hub miniature is
- * tile.tsx (+ tile-motion.ts); the contract of this folder is checked by
- * src/components/demos/demo-contract.test.ts.
+ * Workshop 05 "Audit-Vorbereitung mit KI" on the v4 shell (Glas): the case
+ * "Folder and register", an invented firm in Bitola and the thirteen questions of the
+ * labour inspector. Server component: it picks the locale pack, computes the
+ * model from the kit with the oracle (plain data, so the browser never loads
+ * the kit or the oracle) and builds the take-home links, then renders the
+ * client demo with them, so the browser bundle holds one language. The hub
+ * miniature is tile.tsx (+ tile-motion.ts); the contract of this folder is
+ * checked by src/components/demos/demo-contract.test.ts.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { skillZip } from "@/app/skills/_lib/skill-zip";
 import type { DemoComponentProps } from "../demo-page";
-import { SCENE } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-runs";
-import { windowQuestions } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-takes";
 import { COPY } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
+import { buildModel } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
 import { takeHomeFor } from "@/lib/demo-takehome";
 import type { Locale } from "@/lib/i18n/locale";
 import Demo from "./demo";
@@ -30,11 +30,11 @@ function filesFor(locale: Locale): TakeHomeFiles {
   const kilobytes = Math.max(1, Math.round(skillZip(skillName, document).length / 1024));
   return {
     skill: { href: `/skills/${skillName}.zip`, download: `${skillName}.zip`, size: `${kilobytes} KB` },
-    kit: { href: kit.href, download: kit.href.split("/").pop() ?? kit.href },
+    kit: { href: kit.href, download: kit.href.split("/").pop() ?? kit.href, size: `${Math.max(1, Math.round(statSync(path.join(process.cwd(), "public", kit.href)).size / 1024))} KB` },
     shown: kit.shown.map((entry) => entry.split("/").pop() ?? entry),
   };
 }
 
 export default function AuditVorbereitungDemo({ locale }: DemoComponentProps) {
-  return <Demo copy={COPY[locale]} questions={windowQuestions(SCENE, locale)} files={filesFor(locale)} />;
+  return <Demo copy={COPY[locale]} model={buildModel(locale)} files={filesFor(locale)} />;
 }

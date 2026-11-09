@@ -1,0 +1,6 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+id,date,start,end,tick,code
+X-01,2026-02-02,08:01,16:05,,
+X-02,2026-02-02,07:57,16:12,,
+X-03,2026-02-02,,,x,

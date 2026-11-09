@@ -1,3 +1,5 @@
 {
-  "de-alle-without-3": "Claude wrote two different files with the same name (OFFEN.txt), so the recording keeps only one of them and cannot show the run as it was. Replaced by de-alle-without-5."
+  "de-chain-1": "Not chosen: the step 2 answer prints a banned word (a weekday, in the reason for a near miss), so it cannot appear on a slide",
+  "de-chain-2": "Not chosen: the step 2 answer has 17 lines where the prompt asks for at most 16, and its totals differ from the key",
+  "de-chain-4": "Clean take, not chosen: de-chain-3 is shown, both differ from the key only in the number of near misses (7 against 8 and 11 against 8)"
 }

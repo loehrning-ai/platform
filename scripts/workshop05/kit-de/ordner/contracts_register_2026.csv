@@ -1,0 +1,27 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+id,role,workplace,start_date,hours_per_week,copy_handed_over
+E-01,director,office,2022-12-26,40,yes
+E-02,office manager,office,2021-04-12,40,yes
+E-03,purchasing and accounts clerk,office,2013-10-28,40,yes
+E-04,purchasing and accounts clerk,office,2021-08-16,40,yes
+E-05,sales adviser,shop,2026-03-02,40,yes
+E-06,sales adviser,shop,2019-09-30,40,yes
+E-07,order picker,hall,2015-11-09,40,yes
+E-08,order picker,hall,2024-03-04,40,yes
+E-09,sales adviser,shop,2024-05-20,40,yes
+E-10,sales adviser,shop,2021-01-25,40,yes
+E-11,sales adviser,shop,2024-04-01,40,yes
+E-12,driver,yard,2021-01-04,40,yes
+E-13,driver,yard,2014-01-27,40,yes
+E-14,driver,yard,2023-09-04,40,yes
+E-15,cashier,shop,2016-02-01,40,yes
+E-16,cashier,shop,2022-12-19,40,yes
+E-17,order picker,hall,2022-02-07,40,yes
+E-18,order picker,hall,2021-01-11,40,yes
+E-19,order picker,hall,2025-12-01,40,yes
+E-20,forklift operator,hall,2018-05-14,40,yes
+E-21,forklift operator,hall,2021-04-12,40,yes
+E-22,order picker,hall,2026-06-01,40,yes
+E-23,dispatcher,yard,2020-10-26,40,yes
+E-24,cleaner,shop and office,2019-06-03,20,yes

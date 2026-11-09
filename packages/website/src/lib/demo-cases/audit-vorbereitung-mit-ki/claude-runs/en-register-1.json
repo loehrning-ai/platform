@@ -1,0 +1,942 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-register-1",
+  "slug": "audit-vorbereitung-mit-ki",
+  "locale": "en",
+  "prompt_id": "register",
+  "take": 1,
+  "recorded_at": "2026-11-08T16:02:17Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.319",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands",
+    "--append-system-prompt",
+    "<project-instructions>"
+  ],
+  "prompt": "Build the register. Read folder-index.md and the CSV files in the folder. Skip the lines that start with #. Make register.csv with the columns of templates/register.csv and one row per person and paper. Papers: contract, registration, medical-exam (valid 24 months), leave-decision (only for people with 6 months of service on 26 Nov 2026), overtime-notice (for every person with overtime weeks) and safety-statement (one row for the firm, person_id FIRM). Take the owner from folder-index.md. Where a paper is missing, write MISSING in the date column. Where no file names an approver, write NOT IN FILES. Use ids, no names, and no health content, dates only. Then write check.py. It reads register.csv and prints three lists for today: expired, expiring in the next 60 days, missing. Run it with today's date, 26 Nov 2026. Answer in 16 lines at most: the three counts, then the first five rows of register.csv.",
+  "kit_zip": "public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
+  "kit_files": [
+    {
+      "name": "folder/absences_2026.csv",
+      "path": "gradba-audit-kit/folder/absences_2026.csv",
+      "bytes": 168,
+      "sha256": "22c2a412549929eb782a8fd4ae5a702843fff145064a78f492a73dc433e663ac"
+    },
+    {
+      "name": "folder/attendance_2026-11.csv",
+      "path": "gradba-audit-kit/folder/attendance_2026-11.csv",
+      "bytes": 12880,
+      "sha256": "14fe32bf347e3eac60d1171fb6ae7a9bf24e113da2b1e1573100f381c1a9b83c"
+    },
+    {
+      "name": "folder/contracts_register_2026.csv",
+      "path": "gradba-audit-kit/folder/contracts_register_2026.csv",
+      "bytes": 1190,
+      "sha256": "b63cbd5c2d633fdcee32558ae31f8871d68ad3d3fae76551027f8e3286fd6ad8"
+    },
+    {
+      "name": "folder/employee_records_2026.csv",
+      "path": "gradba-audit-kit/folder/employee_records_2026.csv",
+      "bytes": 3512,
+      "sha256": "e6e76f7cc6560669facbcc381004770f7dd5b64b276dea9e34c14c8113874f4b"
+    },
+    {
+      "name": "folder/folder-index.md",
+      "path": "gradba-audit-kit/folder/folder-index.md",
+      "bytes": 2987,
+      "sha256": "09378d25f92947e589b7512f364daa618c3a65b875734fb2461d5c6265b0faa1"
+    },
+    {
+      "name": "folder/leave_decisions_2026.csv",
+      "path": "gradba-audit-kit/folder/leave_decisions_2026.csv",
+      "bytes": 535,
+      "sha256": "382ab7b4b9d632bcc1b0d292543e172c09578a91ca40944dd2ef6ed6de5b7a3a"
+    },
+    {
+      "name": "folder/medical_exams.csv",
+      "path": "gradba-audit-kit/folder/medical_exams.csv",
+      "bytes": 516,
+      "sha256": "5be40c99760d62560b085ff798e77cc55ff36ef1d7e1a86c20ebe1016a1f27f7"
+    },
+    {
+      "name": "folder/overtime_notices_folder.txt",
+      "path": "gradba-audit-kit/folder/overtime_notices_folder.txt",
+      "bytes": 310,
+      "sha256": "8f0c46bba88f659b743fce9f86de2bafb9ec359f557e9329fc81b7392dc3ceec"
+    },
+    {
+      "name": "folder/overtime_weekly_2026.csv",
+      "path": "gradba-audit-kit/folder/overtime_weekly_2026.csv",
+      "bytes": 755,
+      "sha256": "c0942e2078cc3fe88df4da31314637b82f09989bba130989f79a4f2f1b254170"
+    },
+    {
+      "name": "folder/payroll_lines_2026-07_to_10.csv",
+      "path": "gradba-audit-kit/folder/payroll_lines_2026-07_to_10.csv",
+      "bytes": 1971,
+      "sha256": "1038d5e56c7089e9d0b2bb7d742e0aceca48761d99abce2b8327f932cecee87e"
+    },
+    {
+      "name": "folder/payroll_runs_2026.csv",
+      "path": "gradba-audit-kit/folder/payroll_runs_2026.csv",
+      "bytes": 354,
+      "sha256": "1b416fc24cdc7684d6d10e9bfac7b169b27dea0a76a84ac4b84d47e5600630fc"
+    },
+    {
+      "name": "folder/registration_M1M2_2026.csv",
+      "path": "gradba-audit-kit/folder/registration_M1M2_2026.csv",
+      "bytes": 512,
+      "sha256": "762d96863676c02146f82d63c45adcd2be11c15c14c2b76f2365520466701494"
+    },
+    {
+      "name": "folder/safety_statement_2019.md",
+      "path": "gradba-audit-kit/folder/safety_statement_2019.md",
+      "bytes": 617,
+      "sha256": "958b770969cef33183fc7198fbc29b33daafa682501937fb785017f1be64e7a9"
+    },
+    {
+      "name": "folder/training_proofs_2026.csv",
+      "path": "gradba-audit-kit/folder/training_proofs_2026.csv",
+      "bytes": 222,
+      "sha256": "4efc22dfbe7ab9bef63701c14da988213a71c85393c8b9d9d465a74ef6c71378"
+    },
+    {
+      "name": "templates/register.csv",
+      "path": "gradba-audit-kit/templates/register.csv",
+      "bytes": 171,
+      "sha256": "1f97ff8839eb7d312e7fa14b13f4b6cc75695b150ba35775d2555166f03228f0"
+    }
+  ],
+  "instructions": {
+    "name": "project-instructions.md",
+    "path": "gradba-audit-kit/project-instructions.md",
+    "bytes": 2363,
+    "sha256": "88fd5d3791703d14dd69afba65185f277a06c00c195c32ce43d48d8dc85cb8af"
+  },
+  "skill": null,
+  "skill_name": "audit-nachweise",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 7202,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | head -100 && cat folder-index.md",
+        "description": "List project files and show folder index"
+      }
+    },
+    {
+      "t_ms": 8207,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 12777,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in folder/folder-index.md templates/register.csv folder/employee_records_2026.csv folder/contracts_register_2026.csv folder/registration_M1M2_2026.csv folder/medical_exams.csv folder/leave_decisions_2026.csv folder/overtime_notices_folder.txt folder/safety_statement_2019.md; do echo \"=== $f\"; cat \"$f\"; done; wc -l folder/*.csv",
+        "description": "Show index, template and relevant source files"
+      }
+    },
+    {
+      "t_ms": 12922,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 26132,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd folder && cat overtime_weekly_2026.csv; head -5 attendance_2026-11.csv training_proofs_2026.csv absences_2026.csv",
+        "description": "Show overtime file and heads of other files"
+      }
+    },
+    {
+      "t_ms": 26265,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 45252,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd . && cat > build_register.py <<'EOF'\n# Builds register.csv from the folder files. Skips lines starting with #.\nimport csv, datetime as dt\nF = \"folder/\"\nD = dt.date.fromisoformat\ndef rows(name):\n    with open(F + name, newline=\"\") as fh:\n        return list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\ndef add_months(d, n):\n    y, m = divmod(d.month - 1 + n, 12)\n    y += d.year; m += 1\n    import calendar\n    return dt.date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\nNIF = \"NOT IN FILES\"\nOM = \"office manager (E-02)\"\nCUT = dt.date(2026, 11, 26)\npeople = [r[\"id\"] for r in rows(\"employee_records_2026.csv\")]\nstart = {r[\"id\"]: D(r[\"f09\"]) for r in rows(\"employee_records_2026.csv\")}\ncon = {r[\"id\"]: r[\"start_date\"] for r in rows(\"contracts_register_2026.csv\")}\nreg = {r[\"id\"]: r[\"date_filed\"] for r in rows(\"registration_M1M2_2026.csv\")}\nmed = {r[\"id\"]: r[\"last_exam_date\"] for r in rows(\"medical_exams.csv\")}\nlev = {r[\"id\"]: r[\"decision_date\"] for r in rows(\"leave_decisions_2026.csv\")}\not_people = sorted({r[\"id\"] for r in rows(\"overtime_weekly_2026.csv\") if float(r[\"overtime_hours\"]) > 0})\n# overtime_notices_folder.txt lists \"2026: (empty)\", so no 2026 notice exists for anyone.\nnotices_2026 = {}\n\nout = []\nfor p in people:\n    out.append([p, \"contract\", con.get(p, \"MISSING\"), \"\", OM, \"contracts folder in the office\", NIF])\n    out.append([p, \"registration\", reg.get(p, \"MISSING\"), \"\", OM, \"Employment Agency print-outs\", NIF])\n    m = med.get(p)\n    out.append([p, \"medical-exam\", m or \"MISSING\", add_months(D(m), 24).isoformat() if m else \"\", OM, \"health centre slips\", NIF])\n    if add_months(start[p], 6) <= CUT:\n        out.append([p, \"leave-decision\", lev.get(p, \"MISSING\"), \"\", OM, \"leave decisions\", NIF])\n    if p in ot_people:\n        out.append([p, \"overtime-notice\", notices_2026.get(p, \"MISSING\"), \"\", OM, \"overtime notices folder\", NIF])\nout.append([\"FIRM\", \"safety-statement\", \"2019-03-14\", \"\", \"person with the binder (no job title in files)\", \"safety_statement_2019.md\", NIF])\n\nwith open(\"register.csv\", \"w\", newline=\"\") as fh:\n    fh.write(\"# Fictional training material, invented for the exercise.\\n\")\n    w = csv.writer(fh)\n    w.writerow([\"person_id\", \"paper\", \"date\", \"valid_until\", \"owner\", \"where\", \"approved_by\"])\n    w.writerows(out)\nprint(len(out), \"rows\")\nEOF\ncat > check.py <<'EOF'\n# Reads register.csv and prints expired, expiring in the next 60 days, and missing papers.\n# Usage: python3 check.py [YYYY-MM-DD]\nimport csv, sys, datetime as dt\ntoday = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()\nlimit = today + dt.timedelta(days=60)\nwith open(\"register.csv\", newline=\"\") as fh:\n    rows = list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\nexpired, expiring, missing = [], [], []\nfor r in rows:\n    tag = f'{r[\"person_id\"]} {r[\"paper\"]} {r[\"valid_until\"] or r[\"date\"]}'\n    if r[\"date\"] == \"MISSING\":\n        missing.append(tag); continue\n    if r[\"valid_until\"]:\n        v = dt.date.fromisoformat(r[\"valid_until\"])\n        if v < today: expired.append(tag)\n        elif v <= limit: expiring.append(tag)\nprint(f\"Today {today}. Data rows read: {len(rows)}\")\nfor name, lst in ((\"EXPIRED\", expired), (\"EXPIRING IN 60 DAYS\", expiring), (\"MISSING\", missing)):\n    print(f\"{name}: {len(lst)}\")\n    for t in lst: print(\"  \" + t)\nEOF\npython3 build_register.py && python3 check.py 2026-11-26 && sed -n 2,7p register.csv",
+        "description": "Build register.csv, write check.py, run it"
+      }
+    },
+    {
+      "t_ms": 45440,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 53227,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 53228,
+      "kind": "text",
+      "chunk": "I"
+    },
+    {
+      "t_ms": 53229,
+      "kind": "text",
+      "chunk": " built register"
+    },
+    {
+      "t_ms": 53229,
+      "kind": "text",
+      "chunk": ".csv with"
+    },
+    {
+      "t_ms": 53229,
+      "kind": "text",
+      "chunk": " 98 rows and"
+    },
+    {
+      "t_ms": 53229,
+      "kind": "text",
+      "chunk": " ran check.py for"
+    },
+    {
+      "t_ms": 53230,
+      "kind": "text",
+      "chunk": " 26 Nov 2"
+    },
+    {
+      "t_ms": 53230,
+      "kind": "text",
+      "chunk": "026. It"
+    },
+    {
+      "t_ms": 53230,
+      "kind": "text",
+      "chunk": " read 98 data rows."
+    },
+    {
+      "t_ms": 53230,
+      "kind": "text",
+      "chunk": "\nExpired: 4."
+    },
+    {
+      "t_ms": 53230,
+      "kind": "text",
+      "chunk": " These"
+    },
+    {
+      "t_ms": 53231,
+      "kind": "text",
+      "chunk": " are the medical exams of E"
+    },
+    {
+      "t_ms": 53231,
+      "kind": "text",
+      "chunk": "-02, E-06, E"
+    },
+    {
+      "t_ms": 53231,
+      "kind": "text",
+      "chunk": "-10 and E-16,"
+    },
+    {
+      "t_ms": 53231,
+      "kind": "text",
+      "chunk": " val"
+    },
+    {
+      "t_ms": 53231,
+      "kind": "text",
+      "chunk": "id until 2026-09-"
+    },
+    {
+      "t_ms": 53232,
+      "kind": "text",
+      "chunk": "12.\nExpiring in"
+    },
+    {
+      "t_ms": 53232,
+      "kind": "text",
+      "chunk": " the next 60 days: "
+    },
+    {
+      "t_ms": 53232,
+      "kind": "text",
+      "chunk": "1. This is the medical ex"
+    },
+    {
+      "t_ms": 53232,
+      "kind": "text",
+      "chunk": "am of E-03, valid"
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": " until 2026-12-03"
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": ".\nMissing: 4"
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": ". There is no 2026 "
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": "overtime notice for E-"
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": "07 or E-08, and"
+    },
+    {
+      "t_ms": 53233,
+      "kind": "text",
+      "chunk": " no leave decision for E-"
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": "11 or E-19."
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": "\nEvery approved"
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": "_by is"
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": " NOT IN FILES"
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": ", and the "
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": "2019 notice's"
+    },
+    {
+      "t_ms": 53234,
+      "kind": "text",
+      "chunk": " \"Signed by:\" field"
+    },
+    {
+      "t_ms": 53235,
+      "kind": "text",
+      "chunk": " is blank. The contract date"
+    },
+    {
+      "t_ms": 53235,
+      "kind": "text",
+      "chunk": " is the start date, because"
+    },
+    {
+      "t_ms": 53235,
+      "kind": "text",
+      "chunk": " no file gives a signing date"
+    },
+    {
+      "t_ms": 53235,
+      "kind": "text",
+      "chunk": ".\nE-22 has"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": " no leave-"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": "decision row because"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": " they"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": " started 2026-06-01"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": ", which"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": " is 5 days"
+    },
+    {
+      "t_ms": 53236,
+      "kind": "text",
+      "chunk": " short of 6 months. That"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": " is a near miss.\nThe"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": " F"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": "IRM safety statement row"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": " is dated 2019-03"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": "-14. Its list"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": " of"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": " workplaces le"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": "aves out order picker and for"
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": "klift operator."
+    },
+    {
+      "t_ms": 53237,
+      "kind": "text",
+      "chunk": "\nA"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": " named"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": " person still"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": " has to check, date and sign"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": " the register at a"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": " sign-off line.\n\n```"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": "\nperson_id,paper,"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": "date,valid_until,ow"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": "ner,where,approved_by"
+    },
+    {
+      "t_ms": 53238,
+      "kind": "text",
+      "chunk": "\nE-01,contract,"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "2022-12-26,,"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "office manager (E-02),"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "contracts folder in the office"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": ",NOT IN FIL"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "ES\nE-01,registration"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": ",2022-12-16,"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": ",office manager (E-02"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "),Employment Agency print"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "-outs,NOT I"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "N FILES\nE-01"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": ",medical-exam,2"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "026-03-12,2028"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "-03-12,office manager"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": " (E-02),health centre"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": " slips,NOT IN"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": " FILES\nE-01,"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "leave-decision,2026"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "-02-25,,office man"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "ager (E-02),leave"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": " decisions,NOT I"
+    },
+    {
+      "t_ms": 53240,
+      "kind": "text",
+      "chunk": "N FILES\nE-02"
+    },
+    {
+      "t_ms": 53241,
+      "kind": "text",
+      "chunk": ",contract,2021-04"
+    },
+    {
+      "t_ms": 53241,
+      "kind": "text",
+      "chunk": "-12,,office manager ("
+    },
+    {
+      "t_ms": 53241,
+      "kind": "text",
+      "chunk": "E-02),contracts fol"
+    },
+    {
+      "t_ms": 53241,
+      "kind": "text",
+      "chunk": "der in the office,NOT"
+    },
+    {
+      "t_ms": 53241,
+      "kind": "text",
+      "chunk": " IN FILES\n```"
+    }
+  ],
+  "final_text": "I built register.csv with 98 rows and ran check.py for 26 Nov 2026. It read 98 data rows.\nExpired: 4. These are the medical exams of E-02, E-06, E-10 and E-16, valid until 2026-09-12.\nExpiring in the next 60 days: 1. This is the medical exam of E-03, valid until 2026-12-03.\nMissing: 4. There is no 2026 overtime notice for E-07 or E-08, and no leave decision for E-11 or E-19.\nEvery approved_by is NOT IN FILES, and the 2019 notice's \"Signed by:\" field is blank. The contract date is the start date, because no file gives a signing date.\nE-22 has no leave-decision row because they started 2026-06-01, which is 5 days short of 6 months. That is a near miss.\nThe FIRM safety statement row is dated 2019-03-14. Its list of workplaces leaves out order picker and forklift operator.\nA named person still has to check, date and sign the register at a sign-off line.\n\n```\nperson_id,paper,date,valid_until,owner,where,approved_by\nE-01,contract,2022-12-26,,office manager (E-02),contracts folder in the office,NOT IN FILES\nE-01,registration,2022-12-16,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\nE-01,medical-exam,2026-03-12,2028-03-12,office manager (E-02),health centre slips,NOT IN FILES\nE-01,leave-decision,2026-02-25,,office manager (E-02),leave decisions,NOT IN FILES\nE-02,contract,2021-04-12,,office manager (E-02),contracts folder in the office,NOT IN FILES\n```",
+  "stats": {
+    "duration_ms": 52912,
+    "duration_api_ms": 51326,
+    "ttft_ms": 6855,
+    "num_turns": 5,
+    "output_tokens": 4330
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Look at register.csv. Which papers are on file for E-07, which one is missing, and who owns each? Answer from register.csv only, in 8 lines at most. If a row is not there, say NOT IN FILES.",
+      "timeline": [
+        {
+          "t_ms": 5999,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "grep '^E-07,' register.csv",
+            "description": "Show E-07 rows in register"
+          }
+        },
+        {
+          "t_ms": 6995,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 11634,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 11635,
+          "kind": "text",
+          "chunk": "register"
+        },
+        {
+          "t_ms": 11636,
+          "kind": "text",
+          "chunk": ".csv has five"
+        },
+        {
+          "t_ms": 11636,
+          "kind": "text",
+          "chunk": " rows for E-07."
+        },
+        {
+          "t_ms": 11636,
+          "kind": "text",
+          "chunk": " Four pap"
+        },
+        {
+          "t_ms": 11636,
+          "kind": "text",
+          "chunk": "ers are on file and one is miss"
+        },
+        {
+          "t_ms": 11636,
+          "kind": "text",
+          "chunk": "ing. The office manager (E"
+        },
+        {
+          "t_ms": 11637,
+          "kind": "text",
+          "chunk": "-02) owns all"
+        },
+        {
+          "t_ms": 11637,
+          "kind": "text",
+          "chunk": " five.\nOn file: the"
+        },
+        {
+          "t_ms": 11637,
+          "kind": "text",
+          "chunk": " contract dated 2015-"
+        },
+        {
+          "t_ms": 11637,
+          "kind": "text",
+          "chunk": "11-09, held"
+        },
+        {
+          "t_ms": 11637,
+          "kind": "text",
+          "chunk": " in the contracts folder in"
+        },
+        {
+          "t_ms": 11638,
+          "kind": "text",
+          "chunk": " the office.\nOn file: the"
+        },
+        {
+          "t_ms": 11638,
+          "kind": "text",
+          "chunk": " registration dated 2015-"
+        },
+        {
+          "t_ms": 11638,
+          "kind": "text",
+          "chunk": "11-05, held in the"
+        },
+        {
+          "t_ms": 11638,
+          "kind": "text",
+          "chunk": " Employment Agency print-out"
+        },
+        {
+          "t_ms": 11638,
+          "kind": "text",
+          "chunk": "s.\nOn file: the med"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": "ical exam dated 2026"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": "-02-11 "
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": "and valid until 2028-"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": "02-11, held in the health"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": " centre slips.\nOn file"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": ": the leave decision dated"
+        },
+        {
+          "t_ms": 11639,
+          "kind": "text",
+          "chunk": " 2026-02-06,"
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": " held in the leave decisions"
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": ".\nMissing: the over"
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": "time notice."
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": " Its row"
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": " says MISSING and"
+        },
+        {
+          "t_ms": 11640,
+          "kind": "text",
+          "chunk": " it bel"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": "ongs in the overtime not"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": "ices folder.\nAll five r"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": "ows have approved_by NO"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": "T IN FILES, so"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": " the"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": " register shows no approver"
+        },
+        {
+          "t_ms": 11641,
+          "kind": "text",
+          "chunk": " for any of them.\nThe miss"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": "ing overtime notice needs"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " a"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " new dated paper from"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " the office manager (E-02"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": "), and"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " it"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " counts only once"
+        },
+        {
+          "t_ms": 11642,
+          "kind": "text",
+          "chunk": " a named person signs it on"
+        },
+        {
+          "t_ms": 11643,
+          "kind": "text",
+          "chunk": " a sign-off line."
+        }
+      ],
+      "final_text": "register.csv has five rows for E-07. Four papers are on file and one is missing. The office manager (E-02) owns all five.\nOn file: the contract dated 2015-11-09, held in the contracts folder in the office.\nOn file: the registration dated 2015-11-05, held in the Employment Agency print-outs.\nOn file: the medical exam dated 2026-02-11 and valid until 2028-02-11, held in the health centre slips.\nOn file: the leave decision dated 2026-02-06, held in the leave decisions.\nMissing: the overtime notice. Its row says MISSING and it belongs in the overtime notices folder.\nAll five rows have approved_by NOT IN FILES, so the register shows no approver for any of them.\nThe missing overtime notice needs a new dated paper from the office manager (E-02), and it counts only once a named person signs it on a sign-off line.",
+      "stats": {
+        "duration_ms": 11251,
+        "duration_api_ms": 61501,
+        "ttft_ms": 5583,
+        "num_turns": 2,
+        "output_tokens": 449
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "build_register.py",
+      "path": "build_register.py",
+      "bytes": 2271,
+      "sha256": "4cfe6043b24866ce4426b96708683f5d9d0117e5a5453a59e22774e5d17f1e68",
+      "stored_as": "en-register-1.build_register.py",
+      "text": "# Builds register.csv from the folder files. Skips lines starting with #.\nimport csv, datetime as dt\nF = \"folder/\"\nD = dt.date.fromisoformat\ndef rows(name):\n    with open(F + name, newline=\"\") as fh:\n        return list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\ndef add_months(d, n):\n    y, m = divmod(d.month - 1 + n, 12)\n    y += d.year; m += 1\n    import calendar\n    return dt.date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\nNIF = \"NOT IN FILES\"\nOM = \"office manager (E-02)\"\nCUT = dt.date(2026, 11, 26)\npeople = [r[\"id\"] for r in rows(\"employee_records_2026.csv\")]\nstart = {r[\"id\"]: D(r[\"f09\"]) for r in rows(\"employee_records_2026.csv\")}\ncon = {r[\"id\"]: r[\"start_date\"] for r in rows(\"contracts_register_2026.csv\")}\nreg = {r[\"id\"]: r[\"date_filed\"] for r in rows(\"registration_M1M2_2026.csv\")}\nmed = {r[\"id\"]: r[\"last_exam_date\"] for r in rows(\"medical_exams.csv\")}\nlev = {r[\"id\"]: r[\"decision_date\"] for r in rows(\"leave_decisions_2026.csv\")}\not_people = sorted({r[\"id\"] for r in rows(\"overtime_weekly_2026.csv\") if float(r[\"overtime_hours\"]) > 0})\n# overtime_notices_folder.txt lists \"2026: (empty)\", so no 2026 notice exists for anyone.\nnotices_2026 = {}\n\nout = []\nfor p in people:\n    out.append([p, \"contract\", con.get(p, \"MISSING\"), \"\", OM, \"contracts folder in the office\", NIF])\n    out.append([p, \"registration\", reg.get(p, \"MISSING\"), \"\", OM, \"Employment Agency print-outs\", NIF])\n    m = med.get(p)\n    out.append([p, \"medical-exam\", m or \"MISSING\", add_months(D(m), 24).isoformat() if m else \"\", OM, \"health centre slips\", NIF])\n    if add_months(start[p], 6) <= CUT:\n        out.append([p, \"leave-decision\", lev.get(p, \"MISSING\"), \"\", OM, \"leave decisions\", NIF])\n    if p in ot_people:\n        out.append([p, \"overtime-notice\", notices_2026.get(p, \"MISSING\"), \"\", OM, \"overtime notices folder\", NIF])\nout.append([\"FIRM\", \"safety-statement\", \"2019-03-14\", \"\", \"person with the binder (no job title in files)\", \"safety_statement_2019.md\", NIF])\n\nwith open(\"register.csv\", \"w\", newline=\"\") as fh:\n    fh.write(\"# Fictional training material, invented for the exercise.\\n\")\n    w = csv.writer(fh)\n    w.writerow([\"person_id\", \"paper\", \"date\", \"valid_until\", \"owner\", \"where\", \"approved_by\"])\n    w.writerows(out)\nprint(len(out), \"rows\")\n"
+    },
+    {
+      "name": "check.py",
+      "path": "check.py",
+      "bytes": 984,
+      "sha256": "b68970685928dac5fa40d473889ffa18849d8000fed031a6f9a33b61aae0c959",
+      "stored_as": "en-register-1.check.py",
+      "text": "# Reads register.csv and prints expired, expiring in the next 60 days, and missing papers.\n# Usage: python3 check.py [YYYY-MM-DD]\nimport csv, sys, datetime as dt\ntoday = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()\nlimit = today + dt.timedelta(days=60)\nwith open(\"register.csv\", newline=\"\") as fh:\n    rows = list(csv.DictReader(l for l in fh if not l.startswith(\"#\")))\nexpired, expiring, missing = [], [], []\nfor r in rows:\n    tag = f'{r[\"person_id\"]} {r[\"paper\"]} {r[\"valid_until\"] or r[\"date\"]}'\n    if r[\"date\"] == \"MISSING\":\n        missing.append(tag); continue\n    if r[\"valid_until\"]:\n        v = dt.date.fromisoformat(r[\"valid_until\"])\n        if v < today: expired.append(tag)\n        elif v <= limit: expiring.append(tag)\nprint(f\"Today {today}. Data rows read: {len(rows)}\")\nfor name, lst in ((\"EXPIRED\", expired), (\"EXPIRING IN 60 DAYS\", expiring), (\"MISSING\", missing)):\n    print(f\"{name}: {len(lst)}\")\n    for t in lst: print(\"  \" + t)\n"
+    },
+    {
+      "name": "register.csv",
+      "path": "register.csv",
+      "bytes": 9158,
+      "sha256": "3916e0c2e235515d09c08dcf33ba82d751fc457cd4316c57f45df4a92b3a4d86",
+      "stored_as": "en-register-1.register.csv",
+      "text": "# Fictional training material, invented for the exercise.\nperson_id,paper,date,valid_until,owner,where,approved_by\r\nE-01,contract,2022-12-26,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-01,registration,2022-12-16,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-01,medical-exam,2026-03-12,2028-03-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-01,leave-decision,2026-02-25,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-02,contract,2021-04-12,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-02,registration,2021-04-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-02,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-02,leave-decision,2026-02-02,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-03,contract,2013-10-28,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-03,registration,2013-10-22,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-03,medical-exam,2024-12-03,2026-12-03,office manager (E-02),health centre slips,NOT IN FILES\r\nE-03,leave-decision,2026-01-02,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-04,contract,2021-08-16,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-04,registration,2021-08-10,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-04,medical-exam,2026-02-20,2028-02-20,office manager (E-02),health centre slips,NOT IN FILES\r\nE-04,leave-decision,2026-01-05,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-05,contract,2026-03-02,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-05,registration,2026-03-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-05,medical-exam,2026-07-23,2028-07-23,office manager (E-02),health centre slips,NOT IN FILES\r\nE-05,leave-decision,2026-09-03,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-06,contract,2019-09-30,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-06,registration,2019-09-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-06,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-06,leave-decision,2026-01-05,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-07,contract,2015-11-09,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-07,registration,2015-11-05,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-07,medical-exam,2026-02-11,2028-02-11,office manager (E-02),health centre slips,NOT IN FILES\r\nE-07,leave-decision,2026-02-06,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-07,overtime-notice,MISSING,,office manager (E-02),overtime notices folder,NOT IN FILES\r\nE-08,contract,2024-03-04,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-08,registration,2024-02-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-08,medical-exam,2026-03-19,2028-03-19,office manager (E-02),health centre slips,NOT IN FILES\r\nE-08,leave-decision,2026-02-11,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-08,overtime-notice,MISSING,,office manager (E-02),overtime notices folder,NOT IN FILES\r\nE-09,contract,2024-05-20,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-09,registration,2024-05-13,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-09,medical-exam,2026-06-22,2028-06-22,office manager (E-02),health centre slips,NOT IN FILES\r\nE-09,leave-decision,2026-01-08,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-10,contract,2021-01-25,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-10,registration,2021-01-18,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-10,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-10,leave-decision,2026-02-09,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-11,contract,2024-04-01,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-11,registration,2024-03-22,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-11,medical-exam,2026-05-11,2028-05-11,office manager (E-02),health centre slips,NOT IN FILES\r\nE-11,leave-decision,MISSING,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-12,contract,2021-01-04,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-12,registration,2020-12-31,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-12,medical-exam,2026-09-28,2028-09-28,office manager (E-02),health centre slips,NOT IN FILES\r\nE-12,leave-decision,2026-02-16,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-13,contract,2014-01-27,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-13,registration,2014-01-21,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-13,medical-exam,2026-05-12,2028-05-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-13,leave-decision,2026-01-26,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-14,contract,2023-09-04,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-14,registration,2023-08-29,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-14,medical-exam,2025-12-05,2027-12-05,office manager (E-02),health centre slips,NOT IN FILES\r\nE-14,leave-decision,2026-01-06,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-15,contract,2016-02-01,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-15,registration,2016-01-28,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-15,medical-exam,2025-05-02,2027-05-02,office manager (E-02),health centre slips,NOT IN FILES\r\nE-15,leave-decision,2026-02-16,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-16,contract,2022-12-19,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-16,registration,2022-12-09,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-16,medical-exam,2024-09-12,2026-09-12,office manager (E-02),health centre slips,NOT IN FILES\r\nE-16,leave-decision,2026-02-26,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-17,contract,2022-02-07,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-17,registration,2022-01-28,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-17,medical-exam,2025-03-03,2027-03-03,office manager (E-02),health centre slips,NOT IN FILES\r\nE-17,leave-decision,2026-02-04,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-18,contract,2021-01-11,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-18,registration,2020-12-31,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-18,medical-exam,2026-06-29,2028-06-29,office manager (E-02),health centre slips,NOT IN FILES\r\nE-18,leave-decision,2026-01-26,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-19,contract,2025-12-01,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-19,registration,2025-11-25,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-19,medical-exam,2026-05-22,2028-05-22,office manager (E-02),health centre slips,NOT IN FILES\r\nE-19,leave-decision,MISSING,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-20,contract,2018-05-14,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-20,registration,2018-05-10,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-20,medical-exam,2025-03-20,2027-03-20,office manager (E-02),health centre slips,NOT IN FILES\r\nE-20,leave-decision,2026-02-17,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-21,contract,2021-04-12,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-21,registration,2021-04-07,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-21,medical-exam,2026-10-05,2028-10-05,office manager (E-02),health centre slips,NOT IN FILES\r\nE-21,leave-decision,2026-02-17,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-22,contract,2026-06-01,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-22,registration,2026-05-29,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-22,medical-exam,2025-03-05,2027-03-05,office manager (E-02),health centre slips,NOT IN FILES\r\nE-23,contract,2020-10-26,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-23,registration,2020-10-19,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-23,medical-exam,2025-05-06,2027-05-06,office manager (E-02),health centre slips,NOT IN FILES\r\nE-23,leave-decision,2026-02-11,,office manager (E-02),leave decisions,NOT IN FILES\r\nE-24,contract,2019-06-03,,office manager (E-02),contracts folder in the office,NOT IN FILES\r\nE-24,registration,2019-05-23,,office manager (E-02),Employment Agency print-outs,NOT IN FILES\r\nE-24,medical-exam,2025-08-25,2027-08-25,office manager (E-02),health centre slips,NOT IN FILES\r\nE-24,leave-decision,2026-02-25,,office manager (E-02),leave decisions,NOT IN FILES\r\nFIRM,safety-statement,2019-03-14,,person with the binder (no job title in files),safety_statement_2019.md,NOT IN FILES\r\n"
+    }
+  ],
+  "edited": false
+}

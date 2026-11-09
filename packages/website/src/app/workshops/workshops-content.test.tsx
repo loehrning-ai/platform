@@ -235,7 +235,7 @@ describe("<WorkshopsContent>", () => {
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
     expect(within(rows[2]).getByText(/Das erfundene Weingut Crvena Zemja muss Importeur, Marketing und Bank antworten/).tagName).toBe("P");
     expect(rows[2].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[1]).getByText(/Vardar Works hat elf Dateien für acht Anforderungen/).tagName).toBe("P");
+    expect(within(rows[1]).getByText(/Eine erfundene Firma bekommt Besuch vom Arbeitsinspektor/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(within(rows[0]).getByText(/Angebote auf einer Basis/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
@@ -308,7 +308,7 @@ describe("<WorkshopsContent>", () => {
       "Neu · Live 90 Min. · Selbstlernen 45 Min.",
     );
     expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Live 90 Min. · Selbstlernen 60 Min.",
+      "Live 90 Min. · Selbstlernen 90 Min.",
     );
     expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -351,7 +351,7 @@ describe("<WorkshopsContent>", () => {
     const times = rows[1].querySelectorAll("[data-workshop-meta] > span.whitespace-nowrap");
     expect([...times].map((time) => time.textContent)).toEqual([
       "Live 90 Min. ·",
-      "Selbstlernen 60 Min.",
+      "Selbstlernen 90 Min.",
     ]);
     // The H1 is the old display head at the leading the highlight band is
     // built for (0.9): a 36px phone size, fluid from sm.

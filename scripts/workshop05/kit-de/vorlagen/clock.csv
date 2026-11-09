@@ -1,0 +1,4 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+event,rule,date
+example: delete this row,3 calendar days after a written request,2026-01-12

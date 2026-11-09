@@ -1,0 +1,12 @@
+# Fictional training material, invented for the exercise.
+# Erfundenes Übungsmaterial, für die Übung erfunden.
+event,rule,date
+notice of a regular inspection received,date of the notice 22-0487/1,2026-11-23
+name one employee present,notice: before the visit,2026-11-26
+visit,notice: 27 November 2026 09:00,2026-11-27
+notice period met,"at least 3 working days, ZIN Art. 57(2),(3); working days between: 2026-11-24 2026-11-25 2026-11-26",2026-11-26
+papers the inspector asks for,"within 3 calendar days of the written request, ZIN Art. 53(1); the inspector can set the time, Art. 55","open, set on the visit day"
+documents taken,"at most 15 days against a receipt, ZIN Art. 52(3)",open
+act,"at the latest 8 days after the minutes, ZIN Art. 68; if minutes on 27 Nov",2026-12-05
+appeal,"within 15 days of receipt of the act, ZIN Art. 70",open
+labour fine halved,"paid within 8 days of issue, not for a safety fine",open

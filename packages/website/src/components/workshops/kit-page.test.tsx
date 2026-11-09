@@ -163,16 +163,16 @@ describe("<KitPage>", () => {
     }
   }
 
-  it("shows Workshop 05 as three steps with the four tests of the Project", () => {
+  it("shows Workshop 05 as four steps with the four tests of the Project", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(<KitPage workshop={workshop} locale={locale} />);
-      expect(screen.getAllByRole("tab")).toHaveLength(3);
+      expect(screen.getAllByRole("tab")).toHaveLength(4);
       expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual(
         workshop.kit!.steps.map((step, index) => `${index + 1}${step.title}`),
       );
       expect(screen.getByRole("heading", { name: workshop.kit!.stepsHeading })).toBeInTheDocument();
-      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["19", "3", "13"]);
+      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["41", "4", "13"]);
       expect(document.querySelectorAll("[data-kit-rules] ol > li")).toHaveLength(4);
       unmount();
     }

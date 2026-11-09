@@ -1,0 +1,225 @@
+/* w05-fx.css: tokens, overrides and the few effects of the Workshop 05 deck. Linked after deck.css on slides.html and en/slides.html only.
+   engine.css is frozen: the three places where it fills a surface with ink are overridden here (V3 of the visual law).
+   Every motion is a pure function of --p (0 to 1), which lib/scenes.js writes on each [data-step] element; only the cover title has a CSS entry.
+   No loops, no timers. Under prefers-reduced-motion and with ?preview=1 every final state shows at once.
+   Sections: 1 tokens, 2 engine overrides, 3 type, 4 cover entry, 5 the scan band, 6 take highlight, 8 icons, 9 field,
+   10 3D primitives, 11 presenter controls, 7 reduced motion (last). */
+
+/* 1 ── tokens (defined once) ─────────────────────────────────────────── */
+:root{
+  --w05-sage-50:#EEF3EE;
+  --w05-sage-100:#DFE9E0;
+  --w05-sage-200:#C8D8CB;
+  --w05-sage-400:#8DAA95;
+  --w05-sage-600:#5B7F68;
+  --w05-green:#1F4A38;
+  --w05-hair:rgba(18,18,18,.14);
+  --w05-accent-soft:rgba(183,58,21,.10);
+  --surface:#FFFEFB;
+  --tint:#EFEBE0;
+  --claude-clay:#D97757;
+  --claude-ivory:#FAF9F5;
+  --claude-cloud:#E8E6DC;
+  --claude-slate:#141413;
+  --claude-tl-red:#FF5F57;
+  --claude-tl-amber:#FEBC2E;
+  --claude-tl-green:#28C840;
+}
+
+/* boot cost: an inactive slide is not laid out or painted (the stage hides it anyway), so a cold load lays out the cover alone */
+@media screen{deck-stage > section.slide:not([data-deck-active]){content-visibility:hidden}}
+
+/* 2 ── engine overrides: no ink fill ─────────────────────────────────── */
+.strip > li[data-on]{background:var(--w05-sage-200);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.cw-file > i{background:var(--w05-sage-400);color:var(--ink)}
+.tile > .face--back[data-tone="belegt"]{background:var(--w05-sage-200);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+/* the Claude window (engine .cw): no drop shadow or halo (D7), a 2 px ink edge; the window dots in sage, not traffic light colours */
+.slide .cw{border:0;box-shadow:inset 0 0 0 2px var(--ink)}
+.slide .cw-dots b,.slide .cw-dots b:nth-child(n){background:var(--w05-sage-200);box-shadow:inset 0 0 0 1.5px var(--ink)}
+
+/* 2b ── Claude's UI (round 5, D4). Every place where the room uses Claude looks like the Claude desktop app, and the orange says
+   "this is Claude": it is drawn only inside .cl-ui (V12 below in the visual test, V9 in the deck e2e spec). The --claude-* colours
+   are Anthropic's own: clay #D97757 and ivory #FAF9F5 are the fills of the Claude spark and icon files of Anthropic's press kit,
+   cloud #E8E6DC and slate #141413 the light grey and dark of Anthropic's brand guidelines (anthropics/skills, brand-guidelines).
+   No Claude logo: Anthropic's trademark guidelines allow their marks only in materials they approve beforehand, so the chrome
+   carries the word "Claude" and a plain spark of our own (slides-parts.mjs spark). */
+/* round 6: the drawn app, as close to the real Claude desktop app as our own drawing gets (studied on Anthropic's product
+   pages and help centre): the macOS window with its three lights and a soft frame, the sidebar on a slightly darker warm
+   surface (collapsed to its rail on the take slides, open on the kit), the crumbs with the project, the user's prompt in a
+   warm bubble, Claude's reply as plain text in a serif with no bubble, tool use as a compact chip, files as cards with a
+   type badge, and the prompt box with attach, tools, the model of the recording and the clay send button. The window's
+   own soft shadow is the one drop shadow of the deck, on purpose and inside the Claude UI only (V13 in the visual test). */
+.slide .cl-ui{--cl-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--cw-bg:var(--claude-ivory);--cw-bubble:var(--claude-cloud);--cw-t1:var(--claude-slate);--cw-accent:var(--claude-clay);--cl-serif:ui-serif,Charter,'Iowan Old Style',Georgia,serif;--cl-edge:rgba(20,20,19,.13);--cl-drop:0 0 0 1px rgba(20,20,19,.13),0 2px 4px rgba(20,20,19,.05),0 26px 54px -22px rgba(20,20,19,.30)}
+.slide .cw.cl-ui{border:0;border-radius:.8em;outline:0;box-shadow:var(--cl-drop)}
+/* the small Claude panels that are no full window (today's project card, watch's weekly answer): the same frame */
+.slide .cl-ui.tproj,.slide .cl-ui.wres{background:var(--claude-ivory);box-shadow:var(--cl-drop)}
+.cl-ui :is(.cw-bar,.cw-rail,.cw-sbar,.cw-comp,.tk-tool,.cw-file,.kw__t,.wp__m,.tproj__bar) svg:not(.cl-spark){fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cl-spark{flex:none;width:1.15em;height:1.15em;fill:var(--claude-clay)}
+/* the title bar: the window lights, the sidebar button, the spark and "Claude" in the app's serif, the crumbs, Share */
+.cl-ui .cw-bar,.cl-ui .cw-bar.fig{gap:.5em;height:2.35em;padding:0 .7em 0 .85em;background:var(--cw-bg);border-bottom:1px solid var(--cw-line2);font:500 .74em/1 var(--cw-sans);color:var(--cw-t2)}
+.slide .cl-ui .cw-dots{gap:.42em;margin-right:.3em}
+.slide .cl-ui .cw-dots b{width:.7em;height:.7em;background:var(--claude-tl-red);box-shadow:inset 0 0 0 .5px rgba(20,20,19,.16)}
+.slide .cl-ui .cw-dots b:nth-child(2){background:var(--claude-tl-amber)}
+.slide .cl-ui .cw-dots b:nth-child(3){background:var(--claude-tl-green)}
+.cw-tg{display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:.4em;color:var(--cw-t3)}
+.cw-tg svg{width:1.1em;height:1.1em}
+.cw-brand-l{display:inline-flex;align-items:center;gap:.28em;margin:0 .45em 0 .15em;font:400 1.24em/1 var(--cl-serif);letter-spacing:-.02em;color:var(--cw-t1)}
+.cw-brand-l b{font-weight:400}
+.cw-brand-l .cl-spark{width:.95em;height:.95em}
+/* the state of a scheduled task: a green dot of the window lights before "Active" */
+.cl-ui .wp__on::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--claude-tl-green)}
+.cl-ui .cw-crumb{display:inline-flex;align-items:center;gap:.38em;white-space:nowrap;color:var(--cw-t2)}
+.cl-ui .cw-crumb + .cw-crumb::before{margin:0 .1em 0 0;color:var(--cw-t3)}
+.cl-ui .cw-crumb--now{font-weight:600;color:var(--cw-t1)}
+.cw-crumb__i{width:1.1em;height:1.1em;color:var(--cw-t3)}
+.cw-crumb__c{width:.9em;height:.9em;margin-left:-.05em;color:var(--cw-t3)}
+.cw-share{margin-left:auto;padding:.42em .9em;border-radius:.55em;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font-weight:500;color:var(--cw-t1)}
+/* the sidebar, collapsed to its rail: new chat (the clay disc), chats, Projects (on), artifacts, the account at the foot */
+.cl-ui :is(.cw-body--rail,.cw-body--full){grid-template-columns:auto minmax(0,1fr)}
+.cw-rail{display:flex;flex-direction:column;align-items:center;gap:.3em;width:2.3em;padding:.6em 0 .55em;background:var(--cw-side);border-right:1px solid var(--cw-line2)}
+.cw-rail.fig{font-family:var(--cw-sans)}
+.cw-rail i{display:grid;place-items:center;width:1.45em;height:1.45em;border-radius:.42em;font-style:normal;color:var(--cw-t2)}
+.cw-rail svg{width:.85em;height:.85em}
+.cl-ui i.cw-rail__new{width:1.22em;height:1.22em;margin-bottom:.12em;border-radius:50%;background:var(--claude-clay);color:var(--claude-ivory)}
+.cl-ui i.cw-rail__new svg{width:.72em;height:.72em;stroke-width:2.6}
+.cw-rail i.is-on{background:var(--claude-cloud);color:var(--cw-t1)}
+.cl-ui i.cw-me{display:grid;place-items:center;flex:none;width:2.05em;height:2.05em;border-radius:50%;background:var(--claude-cloud);box-shadow:inset 0 0 0 1px var(--cl-edge);font:600 .6em/1 var(--cw-sans);font-style:normal;color:var(--cw-t1)}
+.cw-rail i.cw-me{margin-top:auto}
+/* the sidebar, open (the kit): the same items with their names, the project's recent chats, the account */
+.cw-sbar{display:flex;flex-direction:column;gap:.12em;min-width:0;width:10.6em;padding:.6em .5em .55em;background:var(--cw-side);border-right:1px solid var(--cw-line2);font:500 .74em/1.2 var(--cw-sans);color:var(--cw-t2)}
+.cw-sbar .cw-nav{gap:.55em;height:2em;padding:0 .5em}
+.cw-sbar .cw-nav svg{flex:none;width:1.15em;height:1.15em}
+.cw-sbar .cw-nav.is-on{background:var(--claude-cloud);color:var(--cw-t1)}
+.cw-sbar .cw-nav--new{margin-bottom:.25em;padding-left:.3em;font-weight:600;color:var(--cw-accent-ink)}
+.cw-sbar .cw-nav--new i.cw-rail__new{width:1.45em;height:1.45em;display:grid;place-items:center}
+.cw-sbar .cw-nav--new i.cw-rail__new svg{width:.9em;height:.9em}
+.cw-sbar .cw-sec{margin:.75em 0 .2em .5em;font-size:.86em;font-weight:500;color:var(--cw-t3)}
+.cw-rec{display:block;padding:.38em .5em;border-radius:.45em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400;color:var(--cw-t2)}
+.cw-acct{display:flex;align-items:center;gap:.5em;margin-top:auto;padding:.55em .3em 0;border-top:1px solid var(--cw-line2);color:var(--cw-t1);white-space:nowrap}
+.cw-acct i.cw-me{font-size:.8em}
+/* the prompt box: the empty field, then attach, tools, the model of the recording, the clay send button */
+.cl-ui .cw-main.cw-main--comp{grid-template-rows:minmax(0,1fr) auto}
+.cl-ui .cw-main--comp > .tk-thread{padding-top:.55em;padding-bottom:.3em}
+.cl-ui .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{margin-bottom:12px}
+.cw-comp,.cw-comp.fig{display:grid;gap:.22em;margin:0 .75em .55em;padding:.48em .45em .42em .78em;border-radius:.85em;background:var(--cw-white);box-shadow:0 0 0 1px var(--cl-edge),0 4px 16px -6px rgba(20,20,19,.14);font:400 .72em/1.25 var(--cw-sans);color:var(--cw-t3)}
+.cw-comp__f{margin:0;padding-left:.1em}
+.cw-comp__t{display:flex;align-items:center;gap:.4em}
+.cw-comp__t > i{display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:.45em;box-shadow:inset 0 0 0 1px var(--cl-edge);color:var(--cw-t2)}
+.cw-comp__t svg{width:1em;height:1em}
+.cw-comp__m{display:inline-flex;align-items:center;gap:.25em;margin-left:auto;font-weight:500;color:var(--cw-t2)}
+.cw-comp__m svg{width:.9em;height:.9em}
+.cw-comp .cw-send{display:grid;place-items:center;width:1.5em;height:1.5em;margin-left:.35em;border-radius:.45em;background:var(--claude-clay);color:var(--claude-ivory)}
+.cw-comp .cw-send svg{width:1em;height:1em;stroke-width:2.4}
+/* the thread: the user's prompt in its warm bubble; tool use as the app's compact chip (what ran, the chevron that opens it) */
+.cl-ui .cw-user{border-radius:.75em;background:var(--cw-bubble)}
+.cl-ui .tk-tools{gap:10px;margin:0 0 8px}
+.cl-ui .tk-tool{display:inline-flex;align-items:center;gap:10px;padding:5px 12px 5px 11px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font:500 21px/1.25 var(--cw-sans);color:var(--cw-t2)}
+.cl-ui .tk-tool > span{display:inline-block}
+.cl-ui .tk-tool > span::first-letter{text-transform:uppercase}
+.cl-ui .tk-tool svg{width:23px;height:23px}
+.cl-ui .tk-tool svg:last-child{width:18px;height:18px;color:var(--cw-t3)}
+/* a produced file: a card with a document mark, its name and its type badge */
+.cl-ui .cw-file{gap:12px;padding:9px 12px 9px 12px;border:0;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font:500 21px/1.2 var(--cw-sans)}
+.cl-ui .cw-file__d{flex:none;width:26px;height:26px;color:var(--cw-t2)}
+.cl-ui .cw-file > i{width:auto;height:auto;padding:4px 7px;border-radius:6px;background:var(--claude-cloud);color:var(--cw-t2);font:700 15px/1 var(--cw-sans);letter-spacing:.04em}
+/* Claude's reply: plain text, no bubble, in the app's serif. A recorded line that the build cut into rows for the stagger
+   flows again as one paragraph (the rows are inline, a new line starts a new block): nothing is cut and nothing edited */
+.cl-ui .tk-flow{font-family:var(--cl-serif);font-size:27px;line-height:1.36;font-variant-numeric:lining-nums}
+.slide:is(.step2,.step3) .cl-ui .tk-flow{font-size:23px;line-height:1.3}
+.slide .cl-ui .tk-flow > .out.rec:not(.is-pipe,.is-code,.is-fence){display:inline;padding:0;font-family:var(--cl-serif);font-size:inherit;line-height:inherit}
+.cl-ui .tk-flow > .out.rec:not(.is-pipe,.is-code,.is-fence,[data-cont])::before{content:"";display:block;height:.28em}
+.cl-ui .tk-flow > .out.rec[data-cont]:not(.is-pipe,.is-code,.is-fence)::before{content:" "}
+/* a code block of the reply (the lines between two ``` lines): one rounded box on the sidebar tone, the lines in mono */
+.cl-ui .tk-flow > .out.rec.is-code{padding:2px 18px;border-left:0;background:var(--cw-side);box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge)}
+.cl-ui .tk-flow > .out.rec.is-fence + .out.rec.is-code{padding-top:12px;border-radius:12px 12px 0 0;box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge),inset 0 1px 0 var(--cl-edge)}
+.cl-ui .tk-flow > .out.rec.is-code:has(+ .out.rec.is-fence){padding-bottom:12px;border-radius:0 0 12px 12px;box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge),inset 0 -1px 0 var(--cl-edge)}
+/* the step tables of the reply in the app's sans, on hair lines */
+.cl-ui .rec th{border-bottom:1px solid var(--cl-edge);color:var(--cw-t1)}
+
+/* the strip of S11: four rungs, outlined, the filled ones sage */
+.rg .strip{gap:14px}
+.rg .strip > li{height:110px;padding-bottom:0;place-items:center;border-radius:16px;background:var(--w05-sage-50);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 28px/1.15 var(--sans);letter-spacing:-.01em;color:var(--ink);text-align:center;padding-inline:12px}
+.rg .strip > li[data-on]{transform:none;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
+.rg a{display:block;color:inherit;text-decoration:none}
+
+/* poll chips: a 2 px ink outline on paper (round 5, D3: colour only where it means something); the vote share is a sage bar behind the label */
+.poll__opt{border:0;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+/* the bar sits inside the 2 px outline (inset 2px), so a chip with votes keeps its edge on the paper and its hover ring */
+.poll__opt::before{inset:2px;border-radius:18px;background:var(--w05-sage-200)}
+.poll__opt[data-lead]::before{background:var(--w05-sage-400)}
+.poll__opt[data-lead] [data-poll-n]{color:var(--ink)}
+.poll__opt:hover,.poll__opt:focus-visible{box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}
+.poll__opt:hover [data-poll-n],.poll__opt:focus-visible [data-poll-n]{color:var(--accent)}
+/* on the leading (sage-400) bar the orange label is 2.3:1: the label stays ink, the orange ring alone says hover */
+.poll__opt[data-lead]:hover,.poll__opt[data-lead]:focus-visible,.poll__opt[data-lead]:hover [data-poll-n],.poll__opt[data-lead]:focus-visible [data-poll-n]{color:var(--ink)}
+
+/* 3 ── type ─────────────────────────────────────────────────────────── */
+/* quoted Macedonian: the Cyrillic subset first (lib/fonts.css), the Latin Typing files for digits and punctuation */
+.qd,.qd *{font-family:'Typing Cyrillic','Typing',system-ui,-apple-system,'Segoe UI','Noto Sans','Arial',sans-serif}
+
+/* 4 ── cover entry: CSS only, no press (title 8 px rise over 300 ms, subtitle 150 ms later) ── */
+@keyframes w05-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cover__title{animation:w05-rise 300ms var(--e-spring) both}
+.cover__sub{animation:w05-rise 300ms var(--e-spring) 150ms both}
+html[data-deck-preview] .cover__title,html[data-deck-preview] .cover__sub{animation:none}
+
+/* 5 ── w05-sweep: the scan band of S08. A 3 px line runs across the answer while --p runs; at --p 1 it is gone. ── */
+.w05-sweep{position:absolute;inset:0;overflow:hidden;pointer-events:none;container-type:size}
+.w05-sweep::before,.w05-sweep::after{content:"";position:absolute;top:0;bottom:0;left:0}
+.w05-sweep::before{width:3px;background:var(--accent);transform:translateX(calc(var(--p,1) * 100cqw));opacity:min(1,calc(var(--p,1) * 20),calc((1 - var(--p,1)) * 20))}
+.w05-sweep::after{width:200px;background:var(--w05-accent-soft);transform:translateX(calc(var(--p,1) * 100cqw - 100%));opacity:min(1,calc(var(--p,1) * 20),calc((1 - var(--p,1)) * 20))}
+
+/* 6 ── take highlight: the first answer line that names a finding (nothing edited) ── */
+.out.rec.is-hit{background:var(--w05-sage-200)}
+
+/* 8 ── icons: the W05 set (lib/w05-icons.svg) is 1.5 on the 24 grid; large drawings thin out so the line stays a line ── */
+svg.ico--w05{stroke-width:1.5}
+svg.ico--w05.dr{stroke-width:1.1}
+/* a drawing icon shows nothing at p 0 (no dots of zero length), then draws: the engine's draw sets the dash */
+svg.ico--w05[data-step][data-fx="draw"]{opacity:min(1,calc(var(--p,1) * 8))}
+
+/* 9 ── the dot field (lib/w05-field.js reads these colours from the canvas) ── */
+[data-w05-field]{--w05-field-dot:var(--w05-sage-600);--w05-field-line:var(--w05-sage-400);--w05-field-mark:var(--accent);--w05-field-ink:var(--ink);--w05-field-near:var(--w05-green)}
+.w05-field{position:relative}
+.w05-field__c{display:block}
+.w05-field__plane{position:absolute;inset:0;isolation:isolate}
+.w05-drive{position:absolute;width:0;height:0;overflow:hidden}
+
+/* 10 ── card motions (T1). Flat by default (round 5, D2): .w05-rise rises 28 px into its place and fades in; .w05-plane (the
+   Claude window) slides up 40 px. Depth only where it is the idea: .w05-s3d holds a perspective and .w05-card stands up around
+   its bottom edge (the safety stair); .w05-floor tilts back as its host's --p runs (Today's map; --tilt, --lift, --sink, --grow
+   set per use). No shadow, no blur, no gradient. */
+.w05-rise[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 28px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.w05-s3d{perspective:1800px;perspective-origin:50% 30%;transform-style:preserve-3d}
+.w05-card[data-step][data-fx]{transform-origin:50% 100%;transform:rotateX(calc((1 - var(--p,1)) * 88deg));opacity:min(1,calc(var(--p,1) * 5));backface-visibility:hidden}
+.w05-plane[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 40px));opacity:min(1,calc(var(--p,1) * 3))}
+.w05-floor{--tilt:58deg;--lift:0px;--sink:0px;--grow:1;transform-origin:50% 100%}
+.w05-floor[data-step][data-fx]{transform:translate3d(calc(var(--p,1) * var(--lift)),calc(var(--p,1) * var(--sink)),0) scale(calc(1 + (var(--grow) - 1) * var(--p,1))) rotateX(calc(var(--p,1) * var(--tilt)))}
+/* the binder (scene.mjs binder): a back board, a stack of sheets and a front cover that swings open on its spine as --p runs */
+.w05-binder{position:relative;transform-style:preserve-3d;--open:158deg}
+.w05-binder > i{position:absolute;inset:0;border-radius:10px 18px 18px 10px;box-shadow:inset 0 0 0 2px var(--ink)}
+.w05-binder__back{background:var(--w05-sage-200)}
+.w05-binder > i.w05-binder__sheet{inset:10px 12px 10px 18px;background:var(--surface)}
+.w05-binder__front{background:var(--w05-sage-100);transform-origin:0 50%;backface-visibility:hidden}
+.w05-binder[data-step][data-fx] .w05-binder__front{transform:rotateY(calc(var(--p,1) * var(--open) * -1))}
+/* the engine envelope (engine.css), drawn in W05 surfaces: paper tones only (round 5, D3), a 2 px ink edge, no shadow */
+.w05-env .envelope__back{background:var(--paper);box-shadow:inset 0 0 0 2px var(--ink)}
+.w05-env .envelope__front{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.w05-env .envelope__flap{background:var(--tint)}
+.w05-env .envelope__letter{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* 11 ── presenter controls (lib/w05-scrub.js): paper buttons in a row, the pressed one sage-400; never moves the deck ── */
+.w05-ctl{display:flex;flex-wrap:wrap;gap:12px}
+.w05-btn{appearance:none;border:0;margin:0;padding:12px 22px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:600 24px/1.2 var(--mono);cursor:pointer;transition:background-color .2s ease-out}
+.w05-btn[aria-pressed="true"]{background:var(--w05-sage-400)}
+.w05-btn:hover,.w05-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+[data-w05-name]{--at:0}
+/* a scrub playhead: inside a target, .w05-head moves --pitch per value of --at (set by the scrubber buttons) */
+.w05-head{--pitch:120px;transform:translateX(calc(var(--at) * var(--pitch)));transition:transform .3s ease-out}
+
+/* 7 ── reduced motion: the final state at once ───────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .cover__title,.cover__sub{animation:none}
+  .poll__opt::before{transition:none}
+  .w05-btn,.w05-head{transition:none}
+}

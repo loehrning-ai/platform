@@ -1,665 +1,1210 @@
-/* deck.css: Workshop 05 deck, 1920 × 1080 canvas inside lib/deck-stage.js.
-   Every slide stands on Kalkweiß with Druckschwarz text; no slide and no block has a Druckschwarz
-   ground. One Mennige accent per slide marks what fails. Motion hooks, chrome and the shared
-   components (surfaces, pills, files, chips, polls, the Claude window) live in lib/engine.css;
-   lib/scenes.js writes --p per element. */
+/* deck.css: Workshop 05 deck, 1920 x 1080 canvas inside lib/deck-stage.js.
+   Every slide stands on the paper ground with ink text; no surface is filled with ink (the fills are the sage tokens of
+   lib/w05-fx.css, which is linked after this file). One Mennige accent per press at most. Motion hooks, chrome and the shared
+   components (pills, chips, polls, the Claude window) come from lib/engine.css, which is frozen; its three ink rules are
+   overridden in lib/w05-fx.css. lib/scenes.js writes --p per element.
+   Layout model: an element names its place with data-zone; the slide CSS maps a zone to a grid cell, and elements of one zone
+   share the cell (they are never on screen together: the one that leaves goes first, see motion.mjs).
+   Sections: 1 frame, 2 type and shared pieces, 3 zone grids, 4 take slides and the Claude window, 5 slide pieces, 6 appendix. */
 
 *,*::before,*::after{box-sizing:border-box}
-html,body{height:100%;margin:0;background:#F3F0E9}
+html,body{height:100%;margin:0;background:var(--paper)}
 body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
-deck-stage{--cover-ground:#F3F0E9}
 b,strong{font-weight:700}
+a{color:inherit}
 
-/* ── slide frame ────────────────────────────────────────────────────── */
+/* 1 ── frame ───────────────────────────────────────────────────────── */
 .slide{display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:88px 112px 0;background:var(--paper);color:var(--ink);font-size:28px;line-height:1.35;overflow:hidden}
-:where(.slide) :where(p,ol,figure,blockquote,h1,h2){margin:0}
-:where(.slide) ol{padding:0;list-style:none}
-.hd{position:relative;display:grid;gap:14px;align-content:start;padding-right:380px}
-.hd__now{position:absolute;right:0;top:4px;margin:0}
+:where(.slide) :where(p,ol,figure,blockquote,h1,h2,table){margin:0}
+:where(.slide) :where(ol,ul){padding:0;list-style:none;margin:0}
+.hd{position:relative;display:grid;gap:14px;align-content:start}
+.hd--empty{height:0}
+.hd .pill{position:absolute;right:0;top:0}
 .stage{position:relative;min-height:0;margin-top:18px}
-.slide .q{font:inherit}
-.moral{font:700 52px/1.1 var(--sans);letter-spacing:-.025em;text-wrap:balance}
-.moral em{font-style:normal;color:var(--accent)}
-.flag{display:inline-flex;align-items:center;gap:.4em;height:1.8em;padding:0 .75em;border-radius:999px;background:var(--e-accent-soft);box-shadow:inset 0 0 0 1px var(--e-accent-line);font:700 16px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
-.flag--solid{background:var(--accent);color:#fff;box-shadow:0 10px 22px -12px rgba(183,58,21,.6)}
-.sk{display:block;height:12px;border-radius:6px;background:rgba(18,18,18,.10)}
-.map{position:relative;overflow:hidden;background:#EFEBE2}
-.map canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.pin{position:absolute;z-index:2;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 10px;translate:-22px -50%;border-radius:999px;background:rgba(255,253,248,.94);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font:700 20px/1 var(--mono);white-space:nowrap}
-.pin svg.ico{width:24px;height:24px;color:var(--accent);stroke-width:2}
-.pin--sk{flex-direction:row-reverse;padding:0 10px 0 16px;translate:calc(-100% + 22px) -50%}
-.pin small{font:500 15px/1 var(--mono);color:var(--muted)}
-.poll__q{display:flex;align-items:center;gap:12px;font:700 30px/1.15 var(--sans);letter-spacing:-.01em}
-.poll__q svg.ico{width:30px;height:30px;color:var(--accent)}
-.poll--row .poll__opts{display:grid;grid-template-columns:repeat(9,1fr);gap:10px}
-.poll--row .poll__opt{grid-template-columns:1fr;justify-items:center;gap:6px;min-height:92px;padding:10px 0}
-.poll--row .poll__key{width:auto;height:auto;background:none;font:700 32px/1 var(--sans)}
-.poll--row .poll__opt [data-poll-n]{font-size:18px;color:var(--muted)}
+.headline--s{font-size:56px;letter-spacing:-.025em;line-height:1.02}
 
-/* ── shared with W04: Tim drives Claude, the room predicts and checks ── */
-/* Tim's clicks in Claude Desktop, in the label row: number disks, the current one lit, done ones checked */
-.tsteps-row{display:flex;align-items:center;gap:26px;min-height:30px}
-.tsteps__kick{flex:none;color:var(--muted)}
-.tsteps{display:flex;align-items:center;gap:22px;margin:0;padding:0;list-style:none;font:600 18px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.tsteps > li{position:relative;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.tsteps > li + li::before{content:"";position:absolute;left:-14px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:rgba(18,18,18,.18)}
-.tsteps__n{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(18,18,18,.22);font:700 15px/1 var(--mono);letter-spacing:0;color:var(--muted)}
-.tsteps__on{position:absolute;inset:0;display:flex;align-items:center;gap:10px;font-style:normal;color:var(--ink);font-weight:700}
-.tsteps__on .tsteps__n{background:var(--accent);box-shadow:0 0 0 5px var(--e-accent-soft);color:#fff}
-.tsteps__on > span{background:var(--paper)}
-.tsteps__done{position:absolute;left:0;top:50%;display:grid;place-items:center;width:28px;height:28px;margin-top:-14px;border-radius:50%;background:var(--ink);color:#fff}
-.tsteps__done svg.ico{width:16px;height:16px;stroke-width:2.6}
-.hd:has(.tsteps-row){padding-right:330px;gap:8px}
-.hd:has(.tsteps-row) .tsteps-row{margin-top:14px}
-.hd:has(.tsteps-row) .hd__now{top:29px;translate:0 -50%}
-.slide:has(.hd .tsteps-row) .stage{margin-top:10px}
-.hd .now--live{font-size:22px}
-/* the room's job on a slide: one line, ink, never the accent */
-.job{display:flex;align-items:flex-start;gap:14px;padding:16px 22px;border-radius:22px;background:var(--e-glass-strong);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font:400 27px/1.25 var(--sans);color:var(--ink)}
-.job svg.ico{flex:none;width:30px;height:30px;margin-top:1px;color:var(--ink)}
-.job b{font-weight:700}
+/* 2 ── type and shared pieces ──────────────────────────────────────── */
+.t{max-width:1500px;font:500 42px/1.24 var(--sans);letter-spacing:-.012em;text-wrap:pretty}
+.t--lead{font-size:68px;font-weight:700;line-height:1.06;letter-spacing:-.03em;text-wrap:balance}
+.t--s{font-size:32px}
+.t--q{font-size:84px;line-height:1.08;max-width:1560px;text-wrap:balance}
+.t--tpl{font-size:46px;font-weight:600}
+.slide .src{max-width:1400px;font:500 24px/1.35 var(--sans);color:var(--muted)}
+.src a,.t a{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.22em}
+.src a:hover,.src a:focus-visible,.t a:hover,.t a:focus-visible{color:var(--accent)}
+.qd{font-weight:700;letter-spacing:-.01em;line-height:1.12}
+.qd-gloss{display:block;font:500 28px/1.3 var(--mono);color:var(--muted)}
+.fig{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.focus{font-style:normal}
+.gapword{color:var(--accent)}
+.chip--lg{font-size:26px}
 
-/* ── 1 cover ────────────────────────────────────────────────────────── */
-.slide.cover{grid-template-rows:minmax(0,1fr) auto}
-.cover__globe{position:absolute;inset:0;z-index:0;pointer-events:none}
-.cover__globe canvas{display:block;width:100%;height:100%}
-.cover__main{position:relative;z-index:1;align-self:center;display:grid;justify-items:start}
-.cover__title{margin:28px 0 32px;font:700 108px/.95 var(--sans);letter-spacing:-.045em}
-.cover__title em{font-style:normal;color:var(--accent)}
-.cover__sub{max-width:880px;font:400 36px/1.25 var(--sans);color:var(--muted);text-wrap:pretty}
-.cover__meta{display:flex;gap:14px;margin-top:56px}
-.cover__route svg.ico{width:20px;height:20px}
+/* 3 ── zone grids ──────────────────────────────────────────────────── */
+.slide:not(.slide--take) .stage{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:auto;align-content:center;align-items:start;justify-items:start;row-gap:30px}
+.stage > [data-zone="a"]{grid-area:1/1}
+.stage > [data-zone="b"]{grid-area:2/1}
+.stage > [data-zone="c"]{grid-area:3/1}
+.stage > [data-zone="d"]{grid-area:4/1}
+.stage > [data-zone="z"]{grid-area:5/1}
+
+/* S01 cover */
+.slide.cover{grid-template-rows:minmax(0,1fr) auto;background:var(--w05-sage-50)}
+/* the one entry host (the inspection year, about 5 s): the whole slide box under the title column; the map and the counter sit in it */
+.slide.cover .cover__year{position:absolute;inset:0;z-index:0;pointer-events:none}
+/* the dot field (lib/w05-field.js): placed by its inline left and top, the same place as the floor of S02 (one shot) */
+.slide.cover .cover__map{position:absolute;z-index:0;pointer-events:none}
+/* the Bitola pin: a 2 px line rises 90 px from the dot as the year closes, the label stands on its top */
+.fmark{position:absolute;display:grid;justify-items:start;transform:translate(-1px,-100%)}
+.fmark__ln{display:block;width:0;height:90px;border-left:2px solid var(--ink);transform-origin:50% 100%;transform:scaleY(clamp(0,calc((var(--p,1) - .7) * 5),1))}
+.fmark b{margin-left:-2px;opacity:clamp(0,calc((var(--p,1) - .86) * 8),1);padding:8px 16px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 26px/1.2 var(--mono);letter-spacing:-.01em;white-space:nowrap}
+.fmark__near,.fmark__start{margin:6px 0 0 -2px;padding:4px 14px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-green);color:var(--w05-green);font:600 24px/1.2 var(--mono);font-style:normal;white-space:nowrap}
+.fmark__near{opacity:clamp(0,calc((var(--p,1) - .8) * 6),1)}
+/* the phases of the cover, from the host's linear --p: --d the dust (0 to --y0), --e the close on Bitola (--y1 to 1) */
+.cover__map,.today__floor{--tx:0px;--ty:0px}
+/* the dust condenses into the country on the flat page, then holds still through the year; the last part is a calm 6 %
+   push-in centred on Bitola (--tx/--ty from the origin, written at build time) */
+.slide.cover .cover__map[data-step][data-fx]{--d:clamp(0,calc(var(--p,1) / var(--y0,.12)),1);--e:clamp(0,calc((var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86))),1);--push:calc(1 + .06 * var(--e) * (2 - var(--e)));transform:translate(var(--tx),var(--ty)) scale(var(--push)) translate(calc(-1 * var(--tx)),calc(-1 * var(--ty)));transform-origin:50% 60%}
+.slide.cover .cover__map .fmark__ln{transform:scaleY(clamp(0,calc((var(--e) - .7) * 5),1))}
+.slide.cover .cover__map .fmark b{opacity:clamp(0,calc((var(--e) - .86) * 8),1)}
+.slide.cover .cover__map .fmark__near{opacity:clamp(0,calc((var(--e) - .8) * 6),1)}
+.flegend{position:absolute;right:0;top:calc(100% + 10px);display:flex;align-items:baseline;gap:12px;max-width:440px;font:500 20px/1.35 var(--mono);color:var(--muted);opacity:clamp(0,calc((var(--p,1) - .7) * 4),1)}
+.slide.cover .cover__map .flegend{opacity:clamp(0,calc((var(--d) - .7) * 4),1)}
+.flegend__dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--w05-sage-600);transform:translateY(-2px)}
+/* cover and today: the legend sits inside the field box (the push-in grows the box by 6 %, the footer stays clear) */
+.cover__map .flegend,.today__floor .flegend{top:calc(100% - 64px)}
+/* the year: the counter runs with the waves (engine count, linear), the bar under it fills from January to December */
+.ccount{position:absolute;left:112px;top:742px;display:grid;justify-items:start;width:620px}
+.ccount__k,.ccount__u,.ccount__r{font:600 24px/1.3 var(--mono);color:var(--muted)}
+/* the counter arrives with the year (not as a bare 0 over the dust); the shade legend lives only while the year is shaded */
+.slide.cover .ccount{opacity:clamp(0,calc((var(--p,1) - var(--y0,.12)) * 20 + 1),1)}
+.ccount__r{display:flex;align-items:center;gap:10px;font-size:20px;white-space:nowrap;opacity:clamp(0,calc(1 - (var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86)) * 3),1)}
+/* the shade key: three dots from light to deep in the field's green, the tones a region ends in (lib/w05-field.js waves) */
+.ccount__shade{display:flex;gap:6px}
+.ccount__shade > i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 6px var(--w05-green);opacity:.3}
+.ccount__shade > i + i{opacity:.6}
+.ccount__shade > i + i + i{opacity:.9}
+.ccount__n{margin:4px 0 2px;font:600 96px/1 var(--mono);letter-spacing:-.045em;color:var(--w05-green)}
+.cyear{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:16px;width:100%;margin-top:16px;font:600 24px/1 var(--mono);color:var(--muted)}
+.cyear__bar{position:relative;display:block;height:2px;background:var(--w05-sage-200)}
+.cyear__bar > i{position:absolute;inset:-1px 0;background:var(--w05-sage-600);transform-origin:0 50%;transform:scaleX(clamp(0,calc((var(--p,1) - var(--y0,.12)) / (var(--y1,.86) - var(--y0,.12))),1))}
+.cover__main{position:relative;z-index:1;align-self:start;margin-top:64px;display:grid;justify-items:start;max-width:760px}
+.cover__pill{margin:0 0 34px}
+.cover__num{font:700 132px/.9 var(--sans);letter-spacing:-.05em;color:var(--w05-green)}
+.cover__title{margin:18px 0 22px;font:700 84px/.98 var(--sans);letter-spacing:-.045em}
+.cover__sub{max-width:900px;font:400 44px/1.25 var(--sans);color:var(--muted);text-wrap:pretty}
 .slide.cover .foot{position:relative;z-index:1}
 
-/* ── 2 host (the same card as every workshop deck) ──────────────────── */
-.slide.host{grid-template-columns:760px minmax(0,1fr);grid-template-rows:minmax(0,1fr);padding:0}
-.host__photo{position:relative;margin:0;overflow:hidden;background:var(--faint)}
-.host__photo img{display:block;width:calc(100% + 56px);height:100%;margin-left:-56px;object-fit:cover;object-position:50% 35%}
-.host__body{display:grid;grid-template-rows:minmax(0,1fr) auto;min-height:0;padding:84px 112px 0 96px}
-.host__main{align-self:center;display:grid;justify-items:start}
-.host__kicker{font:700 26px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-.host__name{margin-top:22px;font:700 150px/.92 var(--sans);letter-spacing:-.05em}
-.host__role{margin-top:26px;font:700 40px/1.15 var(--sans);letter-spacing:-.015em}
-.host__career{position:relative;margin-top:64px;height:200px;width:960px}
-.host__track,.host__fill{position:absolute;left:14px;width:720px;display:block;border-radius:3px}
-.host__track{top:12px;height:4px;background:rgba(18,18,18,.10)}
-.host__fill{top:12px;height:4px;background:var(--ink)}
-.host__stops{position:relative;display:flex;margin:0;padding:0;list-style:none}
-.host__stop{width:240px;--origin:14px 14px}
-.host__stop:last-child{width:auto}
-.host__dot{display:block;width:28px;height:28px;border-radius:50%;background:#FFFDF8;box-shadow:inset 0 0 0 6px var(--ink),0 8px 18px -10px rgba(18,18,18,.5)}
-.host__own .host__dot{box-shadow:inset 0 0 0 14px var(--accent),0 0 0 8px rgba(183,58,21,.14)}
-.host__stop b{display:block;margin-top:24px;font:700 44px/1 var(--sans);letter-spacing:-.03em}
-.host__own b{color:var(--accent)}
-.host__stop span{display:block;margin-top:12px;font:500 22px/1 var(--mono);color:var(--muted);white-space:nowrap}
-.host__msc{margin-top:30px;display:flex;align-items:center;gap:18px;font-size:30px;line-height:1.3}
-.host__msc span{font:400 26px/1.3 var(--mono);color:var(--muted)}
-.host__msc svg.ico,.host__line svg.ico{width:34px;height:34px;color:var(--ink)}
-.host__line{margin-top:22px;display:flex;align-items:center;gap:18px;max-width:960px;font:400 28px/1.3 var(--sans);color:var(--muted)}
-.slide.host .foot__inv{visibility:hidden}
 
-/* ── 3 the real case ────────────────────────────────────────────────── */
-.stage.case{height:790px}
-.case__map{position:absolute;left:0;top:0;width:520px;height:646px}
-.report{position:absolute;left:568px;top:0;width:760px;height:540px;padding:26px 34px;display:grid;align-content:start;gap:13px}
-.report__head{display:flex;align-items:center;gap:12px;font:700 22px/1.2 var(--mono)}
-.report__head svg.ico{width:26px;height:26px}
-.report__head b{white-space:nowrap}
-.report__head .pill{margin-left:auto;font-size:16px}
-.report__body{display:grid;gap:11px;padding:2px 0}
-.report__quote{display:grid;gap:11px;padding:16px 20px;border-radius:18px;background:rgba(18,18,18,.035)}
-.report__qhead{display:flex;align-items:center;gap:12px;font:700 24px/1.2 var(--sans)}
-.report__qhead svg.ico{width:26px;height:26px;color:var(--muted)}
-.report__qhead .flag{margin-left:auto}
-.refs{display:grid;gap:8px}
-.ref{display:grid;grid-template-columns:52px minmax(0,1fr) 200px;align-items:center;gap:12px;height:32px}
-.ref__n{font:600 17px/1 var(--mono);color:var(--muted)}
-.ref__line{position:relative;display:block}
-.ref__line > i[data-fx="strike"]{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:2px;background:var(--accent)}
-.ref .flag{justify-self:start}
-.report__model{display:flex;align-items:center;gap:14px;font:400 20px/1.2 var(--mono);color:var(--muted)}
-/* the fee: one bar for 440.000 A$; the refund's share drains out of its right end into the counter */
-.fee{position:absolute;left:568px;top:572px;width:1128px;display:grid;gap:10px}
-.fee__label{display:flex;align-items:center;gap:12px;height:28px;font:600 19px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.fee__label svg.ico{width:22px;height:22px;color:var(--ink)}
-.fee__label b{font:700 24px/1 var(--sans);letter-spacing:-.01em;text-transform:none;color:var(--ink)}
-.fee__bar{position:relative;height:36px;border-radius:999px;background:rgba(18,18,18,.06);box-shadow:inset 0 0 0 1px rgba(18,18,18,.06)}
-.fee__fill{position:absolute;inset:0;border-radius:inherit;background:#E7E0D2;box-shadow:inset 0 0 0 2px var(--ink)}
-.fee__hole{position:absolute;right:0;top:0;bottom:0;border-radius:0 999px 999px 0;background:var(--paper);box-shadow:inset 0 0 0 2px var(--accent);outline:2px dashed var(--e-accent-line);outline-offset:4px}
-.fee__pct{position:absolute;right:0;bottom:calc(100% + 14px);display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;background:var(--accent);color:#fff;font:700 20px/1 var(--mono);white-space:nowrap;--origin:right bottom}
-.fee__drain{position:absolute;z-index:6;width:128px;height:18px;border-radius:999px;background:var(--accent);box-shadow:0 12px 24px -10px rgba(183,58,21,.6)}
-.slide.case .fee__drain[data-step]{opacity:calc(min(1,var(--p,1) * 4) * (1 - max(0,var(--p,1) - .8) * 5))}
-.coin{position:absolute;z-index:7;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#FFFDF8;color:var(--ink);
-  box-shadow:inset 0 0 0 3px var(--ink),inset 0 0 0 7px #FFFDF8,inset 0 0 0 8px rgba(18,18,18,.25),0 1px 2px rgba(18,18,18,.1),0 16px 26px -14px rgba(70,35,10,.5)}
-.coin b{font:800 19px/1 var(--mono);letter-spacing:-.03em}
-.case__refund{position:absolute;left:1376px;top:236px;width:320px;display:grid;gap:8px;justify-items:start}
-.case__money{display:flex;align-items:baseline;gap:8px;font:700 72px/1 var(--sans);letter-spacing:-.045em;color:var(--ink);white-space:nowrap}
-.case__money b{font-variant-numeric:tabular-nums}
-.case__unit{font-size:36px;letter-spacing:-.02em}
-.case__word{font:400 30px/1.1 var(--sans);color:var(--muted)}
-.case__moral{position:absolute;left:0;right:0;top:700px;font-size:58px}
 
-/* ── 4 the company ──────────────────────────────────────────────────── */
-.slide.company .hd,.slide.request .hd{padding-right:0}
-.stage.co{height:790px}
-.co__card{position:absolute;left:0;top:0;width:700px;height:790px;display:grid;align-content:space-between;justify-items:start;padding:26px 28px 30px}
-.co__office{display:block;width:644px;height:254px}
-.co__hill{fill:rgba(18,18,18,.05)}
-.co__house{fill:#ECE5D6;stroke:var(--ink);stroke-width:2.5}
-.co__plate{fill:#FFFDF8;stroke:var(--ink);stroke-width:2}
-.co__sign{font:700 21px var(--mono);letter-spacing:.14em;fill:var(--ink)}
-.co__win{fill:rgba(18,18,18,.12);transition:fill 240ms ease}
-.co__win[data-on]{fill:#FFF8E4;stroke:var(--ink);stroke-width:1.5}
-.co__door{fill:#FFFDF8;stroke:var(--ink);stroke-width:2}
-.co__ground{stroke:rgba(18,18,18,.25);stroke-width:2;fill:none}
-.co__place{font-size:20px;--origin:left center}
-.co__place svg.ico{color:var(--accent)}
-.co__stat{display:flex;align-items:baseline;gap:14px}
-.co__stat b{font:700 88px/.9 var(--sans);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
-.co__stat span{font:600 22px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.co__people{display:grid;grid-template-columns:repeat(20,22px);gap:10px 8.4px}
-.co__people > i{display:block;width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(18,18,18,.16);transition:background-color 200ms ease,box-shadow 200ms ease}
-.co__people > i[data-on]{background:var(--ink);box-shadow:none}
-.co__cust{position:absolute;display:flex;align-items:center;gap:18px;padding:0 26px}
-.co__cust .ico-tile{font-size:26px}
-.co__cust p{display:grid;gap:8px}
-.co__cust b{font:700 32px/1.05 var(--sans);letter-spacing:-.02em}
-.co__cust p span{font:500 20px/1 var(--mono);color:var(--muted)}
-.co__wires path{stroke:var(--ink);stroke-width:3;fill:none;opacity:.7}
-.co__wires circle{fill:var(--ink)}
-.co__since{position:absolute;left:770px;top:52px;display:inline-flex;align-items:center;gap:10px;font:600 19px/1 var(--mono);color:var(--muted)}
-.co__since svg.ico{width:22px;height:22px}
-.co__flow{position:absolute;z-index:3;width:300px;height:52px;font-size:22px}
-.co__flow svg.ico{width:24px;height:24px}
-.co__contract{position:absolute;z-index:2;height:52px;font-size:21px;--origin:left center}
-.co__contract svg.ico{width:22px;height:22px}
-.co__glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
-.co__audit{position:absolute;left:756px;right:0;top:470px;bottom:0;display:grid;align-content:start;gap:18px;padding:34px 40px}
-.co__kick{display:flex;align-items:center;gap:12px;font:700 20px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
-.co__kick svg.ico{width:24px;height:24px}
-.co__line{font:700 58px/1.05 var(--sans);letter-spacing:-.03em;text-wrap:balance}
-.co__src{font:500 22px/1.35 var(--mono);color:var(--muted);max-width:860px}
-.co__pks{position:absolute;left:0;top:0;width:0;height:0;z-index:4}
-.co__pk{position:absolute;left:0;top:0;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#FFFDF8;box-shadow:inset 0 0 0 2px var(--ink),0 10px 20px -10px rgba(70,35,10,.5);offset-rotate:0deg;offset-anchor:center}
-.co__pk svg.ico{width:22px;height:22px}
-.slide.company .co__pk[data-step]{offset-distance:calc(var(--p,1) * 100%);opacity:calc(min(1,var(--p,1) * 6) * (1 - max(0,var(--p,1) - .86) * 8))}
+/* 4 ── take slides and the Claude window ───────────────────────────── */
+.slide--take .stage{display:grid;grid-template-columns:440px minmax(0,1fr);grid-template-rows:repeat(4,auto) minmax(0,1fr);column-gap:44px;row-gap:16px;align-items:start}
+.slide--take .stage > [data-zone="h"]{grid-area:1/1}
+.slide--take .stage > [data-zone="l1"]{grid-area:2/1}
+.slide--take .stage > [data-zone="l2"]{grid-area:3/1}
+.slide--take .stage > [data-zone="l3"]{grid-area:4/1}
+.slide--take .stage > [data-zone="w"]{grid-area:1/2/6/3;align-self:stretch;min-height:0}
+.slide--take .t{font-size:34px;line-height:1.26}
+.slide--take .t--s{font-size:30px}
+.slide--take .t--lead{font-size:58px}
+.slide--take .src{font-size:22px}
 
-/* ── 5 the request ──────────────────────────────────────────────────── */
-.stage.req{height:790px}
-.req__map{position:absolute;left:0;top:0;width:760px;height:790px}
-.req__env{position:absolute;z-index:6;width:220px;height:150px;filter:drop-shadow(0 22px 26px rgba(70,35,10,.28))}
-.req__env-move,.req__env-fade{width:100%;height:100%}
-.slide.request .req__env-move[data-step]{opacity:1}
-.req__env svg{display:block;width:100%;height:100%;overflow:visible}
-.env__body{fill:#FBF6EC;stroke:rgba(18,18,18,.38);stroke-width:2.5}
-.env__fold{fill:none;stroke:rgba(18,18,18,.3);stroke-width:2.5;stroke-linejoin:round}
-.env__flap path{fill:#F3E9D6;stroke:rgba(18,18,18,.38);stroke-width:2.5;stroke-linejoin:round}
-.env__flap circle{fill:var(--accent)}
-.stage.req .env__flap[data-step]{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(calc(1 - 2 * var(--p,1)))}
-.stake{display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 24px 0 18px;border-radius:999px;background:var(--accent);color:#fff;font:700 24px/1 var(--sans);letter-spacing:-.01em;white-space:nowrap;box-shadow:0 1px 2px rgba(18,18,18,.08),0 18px 36px -16px rgba(183,58,21,.6)}
-.stake svg.ico{width:26px;height:26px;stroke-width:2}
-.letter{position:absolute;left:808px;top:0;right:0;display:grid;gap:18px;padding:26px 36px 26px}
-.req__stake{justify-self:end;height:50px;font-size:22px}
-.slide.request .tl__pt{gap:10px;padding:0 18px 0 14px;font-size:20px}
-.slide.request .tl__pt b{font-size:24px}
-.letter__from{display:flex;align-items:center;gap:12px;font:600 21px/1.2 var(--mono);color:var(--muted)}
-.letter__from svg.ico{width:26px;height:26px;color:var(--ink)}
-.letter__said{display:grid;gap:6px}
-.letter__quote{font:700 46px/1.1 var(--sans);letter-spacing:-.025em}
-.letter__gloss{font:400 24px/1.2 var(--sans);color:var(--muted)}
-.letter__lang{margin-left:auto;padding:5px 12px;border-radius:999px;background:var(--faint);font:600 15px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.letter__quote::before{content:"„";color:var(--muted)}
-.letter__quote::after{content:"“";color:var(--muted)}
-html[lang="en"] .letter__quote::before,html[lang="en"] .lk-q::before,html[lang="en"] .cand__q::before,html[lang="en"] .mc__line--q .q::before{content:"“"}
-html[lang="en"] .letter__quote::after,html[lang="en"] .lk-q::after,html[lang="en"] .cand__q::after,html[lang="en"] .mc__line--q .q::after{content:"”"}
-.ritems{display:grid;grid-template-columns:repeat(4,196px);gap:14px}
-.ritem{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px 14px;height:112px;padding:14px 18px;border-radius:22px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm)}
-.ritem .ico-tile{font-size:24px}
-.ritem b{font:700 30px/1 var(--mono)}
-.ritem span:last-child{grid-column:1 / -1;font:500 22px/1.1 var(--sans);letter-spacing:-.01em;white-space:nowrap}
-/* the three dates on one line: the request, documents due, the audit */
-.tl{position:relative;display:flex;justify-content:space-between;align-items:center;height:56px;padding:0 4px}
-.tl__line{position:absolute;left:36px;right:36px;top:50%;height:3px;margin-top:-1.5px;border-radius:2px;background:rgba(18,18,18,.18)}
-.tl__pt{position:relative;display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 22px 0 16px;border-radius:999px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font:500 22px/1 var(--sans);white-space:nowrap}
-.tl__pt b{font:700 26px/1 var(--mono);letter-spacing:-.02em}
-.tl__pt svg.ico{width:24px;height:24px;color:var(--muted)}
-.tl__pt--end{background:#2A2622;color:#FFFDF8;border-color:transparent}
-.tl__pt--end svg.ico{color:#fff}
-.req__poll{position:absolute;left:808px;right:0;top:604px;padding:20px 26px;border-radius:26px;background:var(--e-glass);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift)}
-.req__poll .poll__opt{min-height:74px}
+.tk-cw{font-size:27px;height:100%;min-height:0}
+.tk-cw--small{height:auto;max-height:100%}
+/* the step windows (M7): small while they only hold the prompt, full height when the answer arrives; calm out-easing */
+/* the window grows to the answer only as its first lines arrive (.3 of the press), so it never stands tall and empty */
+.slide.step1 .tk-cw,.slide.step2 .tk-cw,.slide.step3 .tk-cw,.slide.register .tk-cw{transition:height .6s cubic-bezier(.22,1,.36,1) .4s}
+.slide.step1[data-view="0"] .tk-cw,.slide.step1[data-view="1"] .tk-cw,.slide.step2[data-view="0"] .tk-cw,.slide.step2[data-view="1"] .tk-cw,.slide.step3[data-view="0"] .tk-cw,.slide.register[data-view="1"] .tk-cw{height:340px}
+@media (prefers-reduced-motion:reduce){.slide.step1 .tk-cw,.slide.step2 .tk-cw,.slide.step3 .tk-cw,.slide.register .tk-cw{transition:none}}
+/* the files a prompt reads: sheets of paper in the band under the small window (and on the empty register sheet). Each sheet
+   rises 24 px into its place during its press and fades as it leaves (flat, round 5); its edge is a second outline offset
+   behind its face (no shadow) */
+.slide--take .stage > [data-zone="in"]{grid-area:1/2/6/3;align-self:end;z-index:1;margin:0 0 40px}
+.tk-in{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:34px;margin:0;padding:0 28px;list-style:none}
+.tk-in li{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr);justify-items:center;align-content:start;gap:16px;width:236px;height:300px;padding:40px 18px 18px;text-align:center;font:600 24px/1.18 var(--mono);overflow-wrap:normal}
+.tk-in li > :not(i){position:relative}
+.pp__e,.pp__f{position:absolute;inset:0;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.pp__e{translate:8px 8px}
+.slide--take .tk-in li[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.tk-in li svg.ico{width:96px;height:96px;stroke-width:1.2}
+.tk-in--many{gap:20px 10px}
+.tk-in--many li{width:154px;height:178px;gap:6px;padding:16px 4px 8px;font-size:18px;line-height:1.15;letter-spacing:-.03em}
+.tk-in--many li svg.ico{width:48px;height:48px;stroke-width:1.4}
+.tk-in--many li > span{overflow-wrap:anywhere}
+.tk-in--many .pp__e{translate:6px 6px}
+/* the focus on a Claude window: a touch smaller before its press, full size after it (flat, round 5) */
+.tk-dolly{display:grid;grid-template-rows:minmax(0,1fr);align-items:start;min-height:0;transform-origin:50% 0}
+.slide--take .tk-dolly[data-step][data-fx]{transform:scale(calc(.97 + .03 * var(--p,1)))}
+.tk-dolly > .tk-cw{height:100%}
+.slide--take .tk-dolly > .tk-cw--small{height:auto}
+.tk-cw .cw-main{grid-template-rows:minmax(0,1fr)}
+.tk-thread{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;width:100%;max-width:none;margin:0;padding:.8em 1em .5em;gap:.6em;overflow:hidden}
+/* what is not on screen takes no room: the thread is a flow of the items that show now (out first, then in, see motion.mjs) */
+.tk-thread > *{flex:none}
+.tk-thread > [data-off]{display:none}
+.tk-slot{display:grid;justify-items:end}
+.tk-cw .cw-user{max-width:94%;font-size:.8em}
+.tk-cw .cw-user.prompt .prompt__text{font:400 1em/1.45 var(--cw-sans)}
+.tk-cw .prompt__copy{font-size:.68em}
+/* no soft shadow and no gradient fade: the copy button gets a hairline, a clamped prompt ends on a hard cut with a dashed rule */
+.slide .prompt__copy{box-shadow:inset 0 0 0 1.5px var(--w05-hair)}
+.slide .prompt:not([data-open]) .prompt-body{-webkit-mask-image:none;mask-image:none;border-bottom:2px dashed var(--w05-hair)}
+.tk-cw .cw-bar{font-size:.66em}
+.tk-cw--register .tk-thread{gap:.4em}
+/* the question to the register: its 17 recorded rows fit above the prompt box (round 5), so its first line is never cut */
+.slide.register [data-id="win2"] .out.rec{line-height:1.24}
+/* the register take: a tighter top (thread, tool chip, gap to the prompt box) gives back the room the prompt box took, and the
+   cut is set per edition on a whole line, as on step 2 (the two recordings wrap differently) */
+.slide.register [data-id="win"] .cw-main--comp > .tk-thread{padding-top:6px}
+.slide.register [data-id="win"] .tk-tools{margin-bottom:9px}
+.slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:731px;margin-bottom:4px}
+html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{height:751px}
 
-/* ── 6 the draft reply ──────────────────────────────────────────────── */
-.stage.draft{display:grid;grid-template-columns:1120px minmax(0,1fr);gap:48px;align-items:center}
-.mail{display:grid;align-content:start;gap:20px;padding:30px 34px}
-.mail__head{display:flex;align-items:center;gap:12px;font:700 21px/1.2 var(--mono)}
-.mail__head svg.ico{width:26px;height:26px}
-.mail__head .pill{margin-left:auto;font-size:16px}
-.claims{display:grid;gap:18px}
-.claim{display:grid;grid-template-columns:52px minmax(0,1fr) 60px;align-items:center;gap:18px;padding:22px 22px;border-radius:22px;background:rgba(255,255,255,.65);border:1px solid var(--e-hair)}
-.claim__n{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--faint);font:700 21px/1 var(--mono)}
-.slide .claim__t{font:700 35px/1.15 var(--sans);letter-spacing:-.02em;white-space:nowrap}
-.qmark{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#FFFEFB;color:var(--ink);box-shadow:inset 0 0 0 2.5px var(--ink),var(--e-lift-sm);font:700 34px/1 var(--sans)}
-.slide.draft .qmark[data-step]{transform:scale(calc(.6 + .4 * var(--p,1))) rotate(calc((1 - var(--p,1)) * -28deg))}
-.draft__poll{gap:12px}
-.draft__poll .poll__q{margin-bottom:6px}
-.poll__q em{font-style:normal;color:var(--accent)}
-.slide.draft .poll__q svg.ico{color:var(--ink)}
+/* the recorded answer: verbatim lines at 27 px (20 px on screen at 1440 wide). The viewport fills what is left of the window; the
+   flow inside it scrolls up while its rows come in (--p runs .3 to 1 with the rows), so a long answer shows its newest rows and
+   the hair line at the top says there is more above. Nothing is cut and nothing is edited. */
+.tk-thread > .cw-answer.tk{position:relative;flex:1 1 0;min-height:0;overflow:hidden;container-type:size;font:400 27px/1.3 var(--cw-sans);color:var(--cw-t1)}
+/* a hard cut, no gradient (D7): a long answer scrolls up under a hair line that says there is more above. The box itself is
+   cut there (margin, border, overflow), so no row can show through a cover inside the 3D window plane */
+.tk-thread > .cw-answer.tk{margin-top:22px;border-top:2px solid var(--w05-hair)}
+.cw-answer.tk > .tk-flow[data-step]{padding-top:6px;transform:translateY(calc(-1 * max(0px, calc(100% * var(--p,1) - 100cqh))))}
+/* the head variant shows the start of a long answer: a clean cut on a hair line, the window paper below it */
+.tk-thread > .cw-answer.tk.tk--head{margin-top:0;margin-bottom:28px;border-top:0;border-bottom:2px solid var(--w05-hair)}
+.cw-answer.tk.tk--head > .tk-flow[data-step]{padding-top:6px;transform:none}
+/* the long recorded answers of steps 2 and 3: a tighter size so the key lines (the findings, every L line) stay in the window */
+.slide.step2 .out.rec:not(.is-code):not(.is-fence),.slide.step3 .out.rec:not(.is-code):not(.is-fence){font-size:23px;line-height:1.26}
+/* step 2: the whole answer, down to the near-miss line, fits the window */
+.slide.step2 .out.rec:not(.is-code):not(.is-fence){line-height:1.17}
+.slide.step2 .out.rec.is-pipe{padding-top:2px;padding-bottom:2px}
+/* a script row with a count of 0 is no finding: it steps back, so the ten findings are the rows that read */
+.out.rec.is-nil{opacity:.4}
+/* the window ends on a whole line (a hair line under it), never through the middle of one: the cut is set per edition, since
+   the two recordings wrap differently (measured at the stage size, which every viewport scales) */
+.slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:734px}
+html[lang="de"] .slide.step2 .tk-thread > .cw-answer.tk.tk--head{height:711px}
+.out.rec{margin:0;padding:2px 6px;font:400 27px/1.32 var(--cw-sans)}
+.out.rec b{font-weight:700}
+.out.rec.is-pipe{display:grid;grid-template-columns:3.2em minmax(0,1.05fr) 1.4em minmax(0,1.6fr);column-gap:.7em;align-items:baseline;padding-top:3px;padding-bottom:3px;border-bottom:1px solid var(--w05-hair)}
+.tk-flow .out.rec.is-pipe > .pp{display:none}
+.out.rec.is-pipe > .pc:first-child{font-weight:700}
+.out.rec.is-pipe > .pc:nth-child(5){text-align:right;font-family:var(--mono)}
+.out.rec .md{display:none}
+.out.rec.is-li{padding-left:12px}
+.out.rec.is-li[data-cont]{padding-left:44px}
+/* the ``` lines of a fence stay in the text (verbatim) but draw as a gap; the code lines carry the left rule */
+.out.rec.is-fence{height:10px;overflow:hidden;font:500 21px/1.3 var(--mono);visibility:hidden}
+/* a table pipe in a recorded line stays in the text (verbatim) but draws as a thin divider */
+.tk-flow .out.rec .pp{display:inline-block;width:0;height:26px;margin:0 .45em;vertical-align:-4px;border-left:2px solid var(--w05-sage-400);font-size:0;overflow:hidden}
+.out.rec.is-code{font:500 21px/1.3 var(--mono);overflow-wrap:anywhere;padding-left:18px;border-left:3px solid var(--w05-sage-200)}
+/* step 1: the recorded table leans in on the two rows without an owner (L10, L11) once it is complete; the other rows step back */
+/* the engine's [data-step][data-fx="none"] sets transform none, so the lean-in is a type zoom: the lit rows grow to 1.25x in the
+   window's own width (they rewrap, nothing is cut), the others step back to 40 % and a smaller size so the table still fits */
+.tk-zoom{--z:var(--p,1)}
+.slide.step1 .tk-zoom tr.is-hit > *{font-size:calc(20px + 5px * var(--z));line-height:1.12;padding-top:calc(1px + 5px * var(--z));padding-bottom:calc(1px + 5px * var(--z))}
+.slide.step1 .tk-zoom tr:not(.is-hit) > td{font-size:calc(20px - 5px * var(--z));opacity:calc(1 - .6 * var(--z))}
+.slide.step1 .tk-zoom tr.is-hit > td:first-child{font-weight:700}
+table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixed;font:500 23px/1.25 var(--cw-sans)}
+.rec th{padding:3px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--ink);overflow-wrap:break-word;hyphens:auto}
+.rec th:nth-child(1){width:8%}
+.rec th:nth-child(2){width:17%}
+.rec th:nth-child(3){width:23%}
+.rec th:nth-child(4){width:23%}
+.rec td{padding:2px 10px;border-bottom:1px solid var(--cw-line2);vertical-align:top;overflow-wrap:break-word;hyphens:auto}
+.rec tr.is-hit td{background:var(--w05-sage-200)}
+.cl-ui .rec tr.is-hit td{background:var(--claude-cloud)}
+/* step 1: the whole table of 13 rows fits the window, so the two rows the key names (L10, L11) are in view */
+.slide.step1 table.rec{font-size:20px;line-height:1.04}
+.slide.step1 .rec td,.slide.step1 .rec th{padding:1px 6px}
+.slide.step1 .rec th{hyphens:none;white-space:nowrap}
+.slide.step1 .rec th:nth-child(1){width:8%}
+.slide.step1 .rec th:nth-child(2){width:15%}
+.slide.step1 .rec th:nth-child(3){width:22%}
+.slide.step1 .rec th:nth-child(4){width:20%}
+.tk-tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.tk-tool{display:inline-block;padding:3px 14px;border-radius:999px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-line);font:600 22px/1.3 var(--cw-sans);color:var(--cw-t2)}
+.tk-files,.tk-filesbox .tk-files{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 0}
+.tk-cw .cw-file{font-size:.82em}
+.tk-chip{font:600 22px/1.3 var(--mono);color:var(--muted)}
+.tk-key{font:500 30px/1.28 var(--sans);letter-spacing:-.01em}
+.tk-n{font:700 1em/1 var(--mono);font-variant-numeric:tabular-nums}
+.slide--take .tk-key{font-size:28px}
+.st__slot{display:grid;gap:18px;padding:24px 28px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.st__slot-t{font:600 30px/1.25 var(--sans)}
+.st__slot-b{display:flex;flex-wrap:wrap;gap:12px}
+.st__btn{display:inline-block;padding:10px 20px;border-radius:14px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 24px/1.2 var(--sans)}
+.tk-doc{padding:18px 22px;border-radius:14px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cw-line);font:500 25px/1.4 var(--cw-sans)}
+.tk-doc.fig{font-family:var(--cw-sans)}
+.tk-doc li{padding:8px 0;border-bottom:1px solid var(--cw-line2)}
+.tk-doc li:last-child{border-bottom:0}
+.tk-doc b{margin-right:.5em;font:700 .86em/1 var(--mono)}
+.tk-side{display:grid;gap:6px;align-content:start;font:500 26px/1.2 var(--cw-mono)}
+.tk-side li{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:10px}
+.tk-side li:first-child{background:var(--w05-sage-100)}
+.tk-side svg.ico{width:30px;height:30px;stroke-width:1.7}
 
-/* ── 7 today: the question, the route, the roles ───────────────────── */
-.slide.today .hd{padding-right:0}
-.stage.today{display:grid;grid-template-rows:auto auto auto;align-content:start;gap:14px;margin-top:22px}
-.road{position:relative;height:134px}
-.road__track,.road__fill{position:absolute;left:17px;top:15px;width:1272px;height:4px;border-radius:3px}
-.road__track{background:rgba(18,18,18,.10)}
-.road__fill{background:var(--ink)}
-.road__stops{position:relative;display:grid;grid-template-columns:repeat(4,1fr)}
-.road__n{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#FFFDF8;box-shadow:inset 0 0 0 3px var(--ink),0 8px 18px -10px rgba(18,18,18,.5);font:700 16px/1 var(--mono)}
-.today__where{display:inline-flex;align-items:center;gap:12px;justify-self:start;font:600 24px/1.2 var(--mono);color:var(--ink)}
-.today__where svg.ico{width:26px;height:26px;color:var(--accent)}
-.road__name{display:flex;align-items:center;gap:14px;margin-top:16px}
-.road__name .ico-tile{font-size:20px}
-.road__name b{font:700 36px/1 var(--sans);letter-spacing:-.02em}
-.road__sub{margin-top:8px;font:500 19px/1.2 var(--mono);color:var(--muted);white-space:nowrap}
-.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;align-items:start;min-height:0}
-.role{display:grid;align-content:start;justify-items:start;gap:18px;padding:26px 30px}
-.role__pill{font-size:22px}
-.role__tile{font-size:24px}
-.role__t{margin:0;font:700 36px/1.12 var(--sans);letter-spacing:-.02em}
-.tsteps--col{display:grid;gap:18px;font-size:23px}
-.tsteps--col .tsteps__n,.tsteps--col .tsteps__done{width:34px;height:34px;font-size:17px}
-.tsteps--col .tsteps__done{margin-top:-17px}
-.tsteps--col > li + li::before{display:none}
-.role__note{font:500 18px/1.3 var(--mono);color:var(--muted)}
-.loop{position:relative;width:360px;height:240px}
-.loop__nodes{display:grid;gap:36px;margin:0;padding:0;list-style:none}
-.loop__node{display:flex;align-items:center;gap:10px;width:240px;height:56px;padding:0 18px;border-radius:999px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font:600 23px/1 var(--sans)}
-.loop__node svg.ico{width:24px;height:24px}
-.loop__node--claude{box-shadow:inset 0 0 0 2px var(--ink),var(--e-lift-sm)}
-.loop__art{position:absolute;inset:0;width:360px;height:240px;overflow:visible}
-.loop__art path{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.role__kit{width:100%;padding:16px;gap:8px}
-.role__kit .kit-folder__head{font-size:19px}
-.role__file .file{width:100%;padding:6px 14px 6px 6px}
-.role__file .file__ext{width:34px;height:40px;font-size:10px}
-.role__file .file__name{font-size:18px}
-.role__file .file__meta{font-size:14px}
+/* polls: two to four outlined chips on a sage-100 surface */
+.pb{grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:20px;width:100%;max-width:1500px}
+.pb--2{--n:2}.pb--3{--n:3}.pb--4{--n:4}
+.pb .poll__opt{grid-template-columns:minmax(0,1fr) auto;min-height:96px;padding:0 28px;font-size:34px;line-height:1.1}
+.pb .poll__opt [data-poll-n]{font-size:34px}
+.pb--grid{max-width:none}
+.slide--take .pb .poll__opt{min-height:84px;padding:0 20px;font-size:30px}
 
-/* ── 8 the folder ───────────────────────────────────────────────────── */
-.stage.fold{height:790px}
-.fold__src{position:absolute;left:560px;top:110px;width:320px;display:grid;justify-items:center;gap:14px}
-.fd{width:300px;height:225px;overflow:visible;filter:drop-shadow(0 30px 40px rgba(70,35,10,.25))}
-.fd__back{fill:#D9C39A;stroke:rgba(90,60,20,.25);stroke-width:2}
-.fd__paper{fill:#FFFEFB;stroke:rgba(18,18,18,.12);stroke-width:2}
-.fd__lid path{fill:#E8D4AC;stroke:rgba(90,60,20,.25);stroke-width:2}
-.slide.folder .fd__lid[data-step]{transform-box:fill-box;transform-origin:50% 100%;transform:skewX(calc(var(--p,1) * -10deg)) scaleY(calc(1 - .38 * var(--p,1)))}
-.fr{position:absolute;left:0;width:330px;height:62px;display:flex;align-items:center;gap:14px;padding:0 18px 0 8px;border-radius:18px;background:var(--e-glass-strong);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font-size:24px}
-.fr .ico-tile{font-size:18px}
-.fr b{font:700 20px/1 var(--mono)}
-.ff{position:absolute;left:1080px;width:616px}
-.slide.folder .ff[data-fx="fly"]{transform:translate(calc((1 - var(--p,1)) * var(--dx,0px)),calc((1 - var(--p,1)) * var(--dy,0px))) scale(calc(var(--s,1) + (1 - var(--s,1)) * var(--p,1))) rotate(calc((1 - var(--p,1)) * var(--r,0deg)))}
-.ff .file{width:100%;height:50px;padding:4px 16px 4px 8px}
-.ff .file__ext{width:34px;height:40px;font-size:10px}
-.ff .file__name{font-size:20px}
-.ff__dim{position:absolute;inset:0;border-radius:var(--e-r-chip);background:rgba(243,240,233,.66)}
-.stage.fold .wires path{stroke:var(--ink);stroke-width:3;opacity:.72}
-.stage.fold .wires path.wire--dash{stroke:rgba(18,18,18,.3);stroke-dasharray:.012 .012;opacity:1}
-.fold__hits{position:absolute;right:0;top:0;display:flex;align-items:center;gap:18px;margin:0;--origin:right center}
-.fold__n{display:grid;place-items:center;width:124px;height:124px;border-radius:50%;background:#FFFDF8;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-lg);font:700 88px/1 var(--sans);letter-spacing:-.05em;color:var(--ink);font-variant-numeric:tabular-nums}
-.fold__n > i[data-fx="strike"]{left:18px;right:18px;top:50%;height:7px;margin-top:-3.5px;border-radius:4px}
-.fold__hits .pill{font-size:19px}
-.fold__twist{position:absolute;left:50%;top:654px;translate:-50% 0;padding:24px 44px;white-space:nowrap;text-align:center;font:700 54px/1.1 var(--sans);letter-spacing:-.025em}
-.fold__twist em{font-style:normal;color:var(--accent)}
+/* 5 ── slide pieces ────────────────────────────────────────────────── */
+.zipbtn{display:inline-flex;align-items:center;gap:16px;padding:14px 26px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);text-decoration:none;font:600 28px/1.2 var(--mono)}
+.zipbtn svg.ico{width:36px;height:36px}
+.zipbtn:hover,.zipbtn:focus-visible{color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
 
-/* ── 9 four gates ───────────────────────────────────────────────────── */
-.stage.four{display:grid;grid-template-rows:auto auto auto;align-content:start}
-.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;align-items:start}
-.gate{display:grid;gap:22px;align-content:start}
-.gate__tile{display:grid;grid-template-rows:auto auto 2.5em;gap:12px;justify-items:start;padding:26px 28px}
-.gate__ico{font-size:52px}
-.gate__ico > svg.ico{stroke-width:1.4}
-.gate__tile b{font:700 44px/1 var(--mono);letter-spacing:.03em}
-.gate__tile span:not(.ico-tile){font:400 23px/1.25 var(--sans);color:var(--muted)}
-.gate__hit{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
-.tcard{display:grid;gap:14px;padding:20px 22px}
-.tcard__file{display:flex;align-items:center;gap:8px;font:600 16px/1.2 var(--mono);color:var(--muted);white-space:nowrap}
-.tcard__dots{display:flex;gap:5px;margin-left:auto}
-.tcard__dots .tdot{width:26px;height:26px;border-radius:8px}
-.tcard__dots .tdot svg.ico{width:17px;height:17px}
-.tcard__text{font:500 22px/1.45 var(--mono)}
-.tcard__text mark{position:relative;white-space:nowrap;background:var(--e-accent-soft);color:var(--ink);border-radius:6px;padding:0 4px}
-.tcard__why{display:flex;align-items:center;gap:10px;font:700 25px/1.2 var(--sans);color:var(--accent)}
-.tcard__why svg.ico{width:24px;height:24px}
-.four__status{display:flex;gap:56px;margin-top:26px}
-.four__st{display:flex;align-items:center;gap:16px;--origin:left center}
-.four__st > span:last-child{font:500 26px/1.2 var(--sans);color:var(--muted)}
-/* the rule as its file: the first line shows, the rest opens on hover or focus */
-.four__file{position:relative;z-index:4;justify-self:start;width:1240px;margin-top:22px;padding:16px 24px 18px;border-radius:22px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift);outline:none;cursor:default}
-.four__fhead{display:flex;align-items:center;gap:10px;font:600 17px/1.2 var(--mono);color:var(--muted)}
-.four__fhead b{color:var(--ink)}
-.four__fhead svg.ico{width:20px;height:20px}
-.four__more{display:grid;place-items:center;margin-left:auto;width:30px;height:30px;border-radius:50%;background:var(--faint);transition:transform 320ms var(--e-spring)}
-.four__ftext{display:grid;gap:8px;margin-top:10px;max-height:1.4em;overflow:hidden;font:400 22px/1.4 var(--sans);color:var(--muted);transition:max-height 420ms var(--e-spring);
-  -webkit-mask-image:linear-gradient(to right,#000 72%,transparent);mask-image:linear-gradient(to right,#000 72%,transparent)}
-.four__fline{font-weight:700;color:var(--ink)}
-.four__file:hover .four__ftext,.four__file:focus-visible .four__ftext{max-height:9em;-webkit-mask-image:none;mask-image:none}
-.four__file:hover .four__more,.four__file:focus-visible .four__more{transform:rotate(45deg)}
-@media (prefers-reduced-motion:reduce){.four__ftext,.four__more{transition:none}}
+/* S09 tests */
+.rw{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:0;max-width:1700px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font-size:24px}
+.rw__c{padding:16px 20px;border-left:1px solid var(--w05-hair)}
+.rw__c--0{border-left:0;font-weight:700}
+.rw__c--1{font-family:var(--sans)}
 
-/* the test tiles (Step 2, the gates, R7) */
-.tdot{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:rgba(18,18,18,.05);--origin:center}
-.tdot svg.ico{width:17px;height:17px}
-.tdot--pass{background:rgba(18,18,18,.07);color:var(--ink)}
-.tdot--fail{background:#FFFDF8;color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
-.tdot--skip{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(18,18,18,.12)}
+/* S12 register */
+.rcs{display:flex;flex-wrap:wrap;gap:10px 40px;font:600 28px/1.2 var(--sans)}
+.rc{display:inline-flex;align-items:baseline;gap:12px}
+.rc__n{font:700 60px/1 var(--mono);font-variant-numeric:tabular-nums}
+.hm{display:flex;flex-wrap:wrap;gap:14px}
+.hm__c{padding:10px 24px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 30px/1.2 var(--mono)}
 
-/* ── 10 project setup ────────────────────────────────────────────────── */
-.stage.proj{display:grid;grid-template-columns:470px minmax(0,1fr);gap:48px;align-items:start}
-.proj__left{display:grid;gap:26px;justify-items:start}
-.proj__left>.job,.proj__left>.proj__qr,.proj__left>.proj__capability{grid-area:2/1;align-self:start}
-.proj__left .kit-folder{width:100%}
-.proj__left .file{position:relative}
-.proj__left .file__name{font-size:20px}
-.kit-count{font-variant-numeric:tabular-nums;color:var(--ink)}
-.proj__capability{display:flex;align-items:flex-start;gap:12px;padding:18px 22px;border:1px solid var(--e-hair);border-radius:18px;background:var(--e-glass-strong);font:500 23px/1.3 var(--sans)}
-.proj__capability svg{flex:none;margin-top:2px}
-.slide.project .cw-proj{position:relative}
-.cw-proj__glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
-.kit-glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
-.proj__qr img,.slide .qr img{display:block;width:200px;height:200px;border-radius:12px}
-.proj__cw{height:780px;font-size:21px}
-.pj{max-width:none;gap:.75em}
-.pj__head{display:flex;align-items:center;gap:.5em;font:600 1.1em/1.2 var(--cw-sans)}
-.pj__box{display:grid;gap:.5em;padding:.75em .9em;border-radius:.8em;background:var(--cw-white);border:1px solid var(--cw-line)}
-.pj__label{display:flex;align-items:center;gap:.6em;min-height:1.6em;font:600 .68em/1.2 var(--cw-sans);color:var(--cw-t3);text-transform:uppercase;letter-spacing:.06em}
-.pj__text{display:grid;gap:.3em;font:400 .76em/1.45 var(--cw-serif);color:var(--cw-t1)}
-.pj__files{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35em .5em}
-.pfile{visibility:hidden}
-.pfile .cw-file,.pj-fly .cw-file{width:100%}
-.pfile .cw-file > span,.pj-fly .cw-file > span{min-width:0}
-/* the layer the kit's files fly in: over the whole stage, so nothing clips them; they land on the slots */
-.pj-layer{position:absolute;inset:0;z-index:8;pointer-events:none;
-  --cw-white:#fff;--cw-line:rgba(31,30,29,.15);--cw-t1:#141413;--cw-t3:#696862;--cw-accent-soft:rgba(198,97,63,.13);--cw-accent-ink:#A34A2B;--cw-mono:ui-monospace,'SF Mono',Menlo,monospace;--cw-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-  font:400 21px/1.35 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--cw-t1)}
-.pj-fly{position:absolute;display:flex;filter:drop-shadow(0 10px 16px rgba(60,30,10,.18))}
-.pj-fly--src{display:inline-flex;align-items:center;gap:.45em;height:1.7em;padding:0 .7em;translate:-100% -50%;border-radius:999px;background:#FBEDE6;color:var(--cw-accent-ink);font:600 .68em/1 var(--cw-mono);white-space:nowrap;--origin:right center}
-.pj-fly--src svg.ico{width:1.1em;height:1.1em}
 
-/* ── 11 step 1 ───────────────────────────────────────────────────────── */
-.stage.m1{display:grid;grid-template-columns:480px minmax(0,1fr);gap:44px;align-items:start}
-.m1__left{display:grid;gap:24px;align-content:start}
-.m1__left .poll__opt{min-height:60px;font-size:26px}
-.m1__stat .stat__n{font-size:132px}
-.m1__stat .stat__n small{font-size:.4em}
-.m1__eight{display:inline-block}
-.poll__ring{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 3px var(--accent),0 0 0 6px var(--e-accent-soft)}
-.m1__cw{height:780px;font-size:21px}
-.cw-thread > [data-step][data-off]:not([data-keep]),.lk-rows > [data-step][data-off]:not([data-keep]){display:none}
-.m1__table td,.m1__table th{padding:.28em .55em}
-.m1__table .fn{font-family:var(--mono);font-size:.92em}
-.m1__table td.ok svg.ico{color:#3E7B4F}
-.m1__table td.no svg.ico{color:var(--accent)}
-.m1__table td svg.ico{width:1.05em;height:1.05em}
+.gb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:100%;max-width:1500px;height:22px}
+.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);background:var(--w05-sage-400)}
+.qrs{display:flex;gap:36px}
+.qr img{display:block;width:210px;height:210px;border-radius:12px}
+.qr figcaption{max-width:250px;font:600 21px/1.25 var(--mono)}
+.qr__url{display:block;margin-top:4px;font-size:17px;font-weight:500;color:var(--muted)}
 
-/* ── 12 step 2: the reality run inside Claude ───────────────────────── */
-.stage.m2{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:start}
-.m2__cw{height:780px;font-size:22px}
-.m2__thread{max-width:none;gap:.55em;padding:.6em 1.1em .5em}
-.m2__thread .cw-user{max-width:78%}
-.m2__thread .cw-activity{display:flex;align-items:center;gap:1.4em;padding:.4em .8em}
-.m2__thread .cw-act-head em{display:none}
-.m2__run{font-family:var(--cw-sans)}
-.m2__cols,.lk-row{display:grid;grid-template-columns:56px 236px minmax(0,1fr) 140px 124px;gap:12px}
-.m2__cols{padding:0 12px 4px;font:600 .56em/1.2 var(--cw-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--cw-t3)}
-.lk-rows{display:grid;gap:5px;margin:0;padding:0;list-style:none}
-.lk-row{position:relative;align-items:start;min-height:0;padding:6px 12px;border-radius:14px;background:var(--cw-white);border:1px solid var(--cw-line2);box-shadow:0 1px 2px rgba(31,30,29,.04);transition:box-shadow 360ms var(--e-spring),background-color 360ms ease}
-.lk-row > *:not(.lk-wire){position:relative;z-index:1;transition:opacity 360ms ease}
-.lk-wire{position:absolute;z-index:0;left:316px;right:140px;top:22px;height:2px;border-radius:1px;background:rgba(198,97,63,.55)}
-/* one band at a time: the rows of the current press stand out, the others step back */
-.slide.mission-2[data-view="1"] .lk-row:nth-child(n+5) > *,
-.slide.mission-2[data-view="2"] .lk-row:nth-child(-n+4) > *{opacity:.3}
-.slide.mission-2[data-view="1"] .lk-row:nth-child(-n+4),
-.slide.mission-2[data-view="2"] .lk-row:nth-child(n+5){background:#FFFDFB;box-shadow:0 0 0 2px rgba(198,97,63,.38),0 10px 24px -14px rgba(120,50,20,.35)}
-@media (prefers-reduced-motion:reduce){.lk-row,.lk-row > *{transition:none}}
-.lk-req{display:flex;align-items:center;gap:8px;height:30px}
-.lk-req .ico-tile{font-size:13px}
-.lk-req b{font:700 .86em/1 var(--mono)}
-.lk-file{display:flex;align-items:center;min-height:30px}
-.fname{padding-right:8px;background:var(--cw-white);font:600 .7em/1.2 var(--mono);color:var(--cw-t1)}
-.lk-mid{display:grid;justify-items:start;gap:2px;min-width:0}
-.lk-q{display:inline-block;max-width:100%;padding:2px 10px;border-radius:8px;background:#FFF8F2;box-shadow:inset 0 0 0 1px rgba(198,97,63,.28);font:500 .84em/1.38 var(--cw-mono);color:var(--cw-t1)}
-.lk-q::before{content:"„";color:var(--cw-accent-ink)}
-.lk-q::after{content:"“";color:var(--cw-accent-ink)}
-.lk-why{display:inline-flex;align-items:center;gap:.4em;padding-left:10px;font:500 .64em/1.3 var(--cw-sans);color:var(--cw-t3)}
-.lk-why--gap{color:var(--accent)}
-.lk-why svg.ico{width:1.1em;height:1.1em}
-.lk-tests{display:flex;gap:5px;height:30px;padding:0 6px;background:var(--cw-white)}
-.lk-tests .tdot{width:28px;height:28px}
-.lk-chip{display:flex;align-items:center;height:30px;padding-left:4px;background:var(--cw-white);--origin:left center}
-.lk-chip .chip{font-size:14px}
-.m2__side{display:grid;gap:20px;align-content:start}
-.m2__side .job{font-size:25px;padding:14px 18px}
-.m2__code{display:grid;gap:8px;padding:24px 28px;border-radius:26px;background:#FFFDF8;border:1px solid var(--e-accent-line);box-shadow:var(--e-hi),0 0 0 4px var(--e-accent-soft),var(--e-lift)}
-.m2__codehead{display:flex;align-items:center;gap:10px;font:600 18px/1.2 var(--mono);color:var(--muted)}
-.m2__codehead b{color:var(--ink)}
-.m2__codehead code{margin-left:auto;padding:4px 8px;border-radius:8px;background:var(--faint);font:500 16px/1 var(--mono)}
-.m2__frac{display:flex;align-items:baseline;gap:10px;font:700 48px/1 var(--sans);letter-spacing:-.03em}
-.m2__frac span{color:var(--muted)}
-.m2__share{display:flex;align-items:baseline;gap:6px;font:700 104px/.95 var(--sans);letter-spacing:-.05em;color:var(--accent)}
-.m2__share b{font-variant-numeric:tabular-nums}
-.m2__share span{font-size:52px}
-.m2__need{display:grid;gap:6px;font:600 26px/1.2 var(--sans)}
-.m2__lt{font:700 22px/1.2 var(--mono);color:var(--muted)}
-.tally{position:relative;display:grid;gap:14px;padding:24px;border-radius:24px;background:var(--e-glass-strong);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift)}
-.tally > span{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.tally b{font:700 64px/1 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-.tally > span:last-child b{color:var(--accent)}
-.tally__glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
-/* a dot thrown from each status chip into its counter; it melts into the number as it lands */
-.tfly{position:absolute;right:34px;top:50%;z-index:9;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--ink);box-shadow:0 6px 14px -6px rgba(18,18,18,.6)}
-.tally > span:last-child .tfly{background:var(--accent)}
-.tally .tfly[data-step]{opacity:calc(min(1,var(--p,1) * 5) * (1 - max(0,var(--p,1) - .8) * 6)) !important}
-.slide.mission-2[data-view="4"] .tally,.slide.mission-2[data-view="5"] .tally{opacity:0;transition:opacity .3s}
-.m2__r7poll{justify-self:start;width:760px;gap:12px;padding:20px 24px;border-radius:22px;background:#fff;border:1px solid var(--cw-line);font-family:var(--sans)}
-.m2__r7opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.m2__r7poll .poll__opt{min-height:64px;font-size:26px}
-/* R7: the follow-up inside the same Claude window */
-.m2__r7{position:absolute;inset:-6px -6px 0;z-index:5;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:22px;padding:0 0 4px;background:var(--paper)}
-.m2__r7cw{height:100%;font-size:22px}
-.m2__r7thread{max-width:none;gap:.8em;padding:1em 1.6em .6em}
-.m2__r7thread .cw-user{max-width:62%}
-.prompt[data-short] .prompt__text{-webkit-mask-image:none;mask-image:none}
-.m2__r7ans{display:grid;gap:.7em;font-size:1em}
-.m2__r7head{display:flex;align-items:center;gap:14px;margin:0;font:600 1.05em/1.2 var(--cw-sans)}
-.m2__r7head .ico-tile{font-size:18px}
-.cands{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;margin:0;padding:0;list-style:none}
-.cand{display:grid;align-content:start;gap:14px;padding:20px 22px;border-radius:20px;background:#fff;border:1px solid var(--cw-line);box-shadow:0 1px 2px rgba(31,30,29,.05)}
-.cand--record{border-color:rgba(198,97,63,.45);box-shadow:0 0 0 4px rgba(198,97,63,.1)}
-.cand__file .cw-file{font-size:.72em}
-.cand__q{font:600 1.15em/1.25 var(--cw-serif);color:var(--cw-t1)}
-.cand__q::before{content:"„";color:var(--cw-t3)}
-.cand__q::after{content:"“";color:var(--cw-t3)}
-.cand__tests{display:flex;flex-wrap:wrap;gap:8px}
-.tchip{position:relative;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 9px;border-radius:999px;background:rgba(18,18,18,.07);font:700 14px/1 var(--mono);letter-spacing:.06em;color:var(--ink)}
-.tchip svg.ico{width:15px;height:15px}
-.tchip--fail{background:#FFFDF8;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--e-accent-line)}
-.tchip > i[data-fx="strike"]{left:6px;right:6px;height:2.5px;margin-top:-1px}
-.cand__why{display:flex;align-items:center;gap:10px;font:700 24px/1.25 var(--sans);color:var(--accent)}
-.cand__why svg.ico{width:22px;height:22px;flex:none}
-.m2__moral{font-size:42px;padding-left:4px}
+/* 5a ── scenes of S02 to S05: one grid per slide, the headline and the drawing stay, the caption swaps ───────── */
+.hl{font-size:72px;line-height:1.02;letter-spacing:-.03em;max-width:1380px}
+.cap{max-width:none}
+.slide.today .stage{display:grid;align-content:start;align-items:start;justify-items:stretch;row-gap:22px;margin-top:0}
+.stage > [data-zone="h"]{grid-area:h}
+.stage > [data-zone="cap"]{grid-area:cap}
+.stage > [data-zone="src"]{grid-area:src}
 
-/* ── 13 where Claude goes wrong ─────────────────────────────────────── */
-.stage.mist{display:grid;align-items:center}
-.mcards{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
-.mc{display:grid;grid-template-rows:330px 300px;gap:16px}
-.mc__top{display:grid;align-content:start;gap:20px;padding:24px 26px;border-radius:28px;background:var(--e-glass-strong);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift)}
-.mc__who{display:flex;align-items:center;gap:10px;font:600 18px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.mc__item{display:flex;align-items:center;gap:12px;margin-left:auto;color:var(--ink);letter-spacing:0}
-.mc__item .ico-tile{font-size:18px}
-.mc__item b{font:700 30px/1 var(--mono)}
-.mc__wrong{position:relative}
-.mc__dim{display:grid;gap:16px;justify-items:start}
-.mc__line{display:block;justify-self:stretch;padding:20px 22px;border-radius:20px 20px 20px 6px;background:#F0EEE6;font:700 32px/1.25 var(--sans);letter-spacing:-.02em}
-.mc__line--file{font:600 20px/1.3 var(--mono);white-space:nowrap}
-.mc__line--q .q::before{content:"„"}
-.mc__line--q .q::after{content:"“"}
-/* the strike: a straight 3px line through every text line, drawn left to right */
-.mc__strike{background:linear-gradient(var(--accent),var(--accent)) no-repeat 0 58% / calc(var(--p,1) * 100%) 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.mc__claim{display:flex;flex-wrap:wrap;align-items:center;gap:10px;min-height:52px;padding-right:58px}
-.mc__claim .chip--lg{font-size:24px}
-.mc__tag{display:inline-flex;align-items:center;height:46px;padding:0 18px;border-radius:999px;background:rgba(18,18,18,.07);font:700 24px/1 var(--mono);letter-spacing:.02em;color:var(--ink)}
-.mc__bad{position:absolute;right:-6px;bottom:3px;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 12px 22px -10px rgba(183,58,21,.7)}
-.mc__bad svg.ico{width:24px;height:24px;stroke-width:2.6}
-.mc__flip{position:relative}
-.mc__flip > .face{display:grid;align-content:center;gap:16px;padding:24px 26px;border-radius:28px}
-.mc__front{justify-items:center;text-align:center;background:rgba(255,253,248,.5);border:1.5px dashed rgba(18,18,18,.18);color:var(--muted)}
-.mc__front .ico-tile{font-size:26px}
-.mc__front b{font:700 30px/1.1 var(--sans);letter-spacing:-.015em}
-.mc__flip > .mc__back{align-content:start;padding-top:28px;background:#FFFEFB;border:1px solid var(--e-accent-line);box-shadow:var(--e-hi),0 0 0 4px var(--e-accent-soft),var(--e-lift)}
-.mc__rule{font:700 22px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
-.mc__text{font:700 27px/1.25 var(--sans);letter-spacing:-.015em}
-.mc__src{display:flex;align-items:center;gap:10px;font:500 16px/1.2 var(--mono);color:var(--muted)}
 
-/* ── 14 step 3: gaps become tasks ───────────────────────────────────── */
-.stage.gaps{display:grid;grid-template-columns:520px minmax(0,1fr);gap:48px;align-items:start}
-.gaps__left{position:relative;z-index:3;display:grid;gap:20px;align-content:start;min-height:790px}
-.pile{position:absolute;left:0;top:10px;width:520px;display:grid;justify-items:center;gap:6px;text-align:center}
-.pile__n{font:700 150px/.9 var(--sans);letter-spacing:-.05em;color:var(--accent)}
-.pile span{font:500 28px/1.2 var(--sans);color:var(--muted)}
-.days{display:grid;gap:10px;padding:20px 26px}
-.slide.gaps[data-view="3"] .days[data-step]{opacity:.38;transition:opacity .4s}
-.days__head{display:flex;align-items:center;gap:12px;font:600 19px/1.2 var(--mono);color:var(--muted)}
-.days__head b{font-size:22px;color:var(--ink)}
-.days__head .ico-tile{font-size:16px}
-.days__n b{font:700 92px/.9 var(--sans);letter-spacing:-.05em;color:var(--accent);font-variant-numeric:tabular-nums}
-.days__bar{position:relative;height:10px;border-radius:5px;background:var(--faint)}
-.days__bar i{position:absolute;inset:0;border-radius:5px;background:var(--accent)}
-.days__ends{display:flex;justify-content:space-between;font:500 16px/1 var(--mono);color:var(--muted)}
-.gaps__cw{width:568px;height:500px;font-size:19px}
-.gaps__cw .cw-thread{max-width:none;gap:.6em}
-.gaps__mail{font-size:1em;line-height:1.5}
-.gaps__to{display:flex;align-items:center;gap:.5em;margin:0 0 .4em;font:600 .82em/1.2 var(--cw-sans)}
-.gaps__to span{margin-left:auto;padding:.15em .5em;border-radius:.4em;background:var(--cw-side);font:600 .8em/1.2 var(--cw-mono)}
-.gaps__body{margin:0 0 .5em;line-height:1.55}
-.gaps__fail{display:inline-flex;align-items:center;gap:.45em;padding:.3em .75em;border-radius:999px;background:var(--cw-accent-soft);color:var(--cw-accent-ink);font:600 .8em/1.2 var(--cw-sans)}
-.gaps__fail svg.ico{width:1em;height:1em}
-.slot{display:inline;padding:1px 6px;border-radius:6px;background:var(--cw-accent-soft,var(--e-accent-soft));color:var(--cw-accent-ink,var(--accent));font-weight:600}
-.board{position:relative;z-index:4;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
-.gaps__poll{position:absolute;left:0;top:398px;width:520px;gap:10px}
-.gaps__poll .poll__q{margin-bottom:4px;font-size:28px}
-.gaps__poll .poll__opt{min-height:62px;font-size:24px}
-.col{display:grid;gap:14px;align-content:start;min-height:120px;padding:22px 18px}
-.col__head{display:flex;align-items:center;gap:10px;font:700 26px/1.1 var(--sans)}
-.col__head svg.ico{width:28px;height:28px}
-.col__due{justify-self:start;font-size:16px}
-.col__tasks{display:grid;gap:14px}
-.task{position:relative;z-index:2;display:grid;gap:10px;padding:16px 18px;border-radius:18px;background:#FFFEFB;border:1px solid rgba(18,18,18,.1);box-shadow:var(--e-hi),var(--e-lift-sm)}
-/* on the pile only the top card shows its words; the others are bare card edges */
-.slide.gaps[data-view="0"] .task:not(.task--top) > *{visibility:hidden}
-.task__id{display:flex;align-items:center;gap:10px}
-.task__id .ico-tile{font-size:15px}
-.task__id b{font:700 22px/1 var(--mono)}
-.task__id .chip{margin-left:auto;font-size:14px}
-.task__t{font:400 22px/1.25 var(--sans)}
-.task__glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.slide.today{background:var(--w05-sage-50)}
+/* S02 today: one shot from the cover. The stage (1696 x 920) holds the headline and the world: three nested camera wrappers
+   (one per press, each adds its dolly as a smoothstep of its own --p), the floor (the cover's field, tilted back on press 0)
+   and on the floor the route, the Bitola tag and three station cards that stand up and face the room. */
+.slide.today .stage{display:block;perspective:1500px;perspective-origin:50% 40%}
+.slide.today .stage > *{position:absolute}
+.slide.today .stage > [data-zone="h"]{left:0;top:0;z-index:2}
+.slide.today .tcam{left:0;top:0;width:1696px;height:920px;pointer-events:none;transform-style:preserve-3d}
+.slide.today .tcam .tcam{position:absolute}
+.slide.today .tcam[data-step][data-fx]{--s:calc(var(--p,1) * var(--p,1) * (3 - 2 * var(--p,1)));transform:translate3d(calc(var(--s) * var(--cx,0px)),calc(var(--s) * var(--cy,0px)),calc(var(--s) * var(--cz,0px))) rotateY(calc(var(--s) * var(--ry,0deg)))}
+.slide.today .today__floor{position:absolute;z-index:0;pointer-events:none;transform-style:preserve-3d;--tilt:62deg;--grow:1.7;--lift:-330px;--sink:-40px}
+.fgrid{position:absolute;inset:0;width:100%;height:100%;z-index:-1;stroke:var(--w05-hair);stroke-width:1.5;overflow:visible}
+/* the cut eases in and out (linear --p through a smoothstep), so the first frame of S02 is the last frame of S01, still */
+.slide.today .today__floor[data-step][data-fx]{--q:calc(var(--p,1) * var(--p,1) * (3 - 2 * var(--p,1)));transform:translate3d(calc(var(--q) * var(--lift)),calc(var(--q) * var(--sink)),0) scale(calc(1 + (var(--grow) - 1) * var(--q))) rotateX(calc(var(--q) * var(--tilt))) translate(var(--tx),var(--ty)) scale(1.06) translate(calc(-1 * var(--tx)),calc(-1 * var(--ty)))}
+/* the route lies in the floor's own plane: the legs draw press by press, the three stops are rings */
+.troute{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.troute__leg{stroke:var(--w05-green);stroke-width:5;stroke-linecap:round}
+.troute__stop{stroke:var(--w05-green);stroke-width:3}
+/* an anchor on the floor that stands upright: it undoes the floor's tilt and growth (both follow --q), so what it holds faces the room */
+.tst{position:absolute;width:0;height:0;transform-style:preserve-3d;transform:rotateX(calc(var(--q,1) * var(--tilt) * -1)) scale(calc(1 / (1 + (var(--grow) - 1) * var(--q,1))))}
+.tst--tag .fmark{left:0;top:0}
+.fmark--today .fmark__ln{transform:none}
+.fmark--today b{opacity:1}
+.fmark--today .fmark__near,.fmark--today .fmark__start{grid-area:2/1}
+.fmark--today .fmark__near{opacity:clamp(0,calc(1 - var(--q,1) * 2.5),1)}
+.fmark--today .fmark__start{font-size:28px;opacity:clamp(0,calc(var(--q,1) * 2.5 - 1.5),1)}
+.flegend.flegend--out{opacity:clamp(0,calc(1 - var(--p,1) * 3.4),1)}
+/* a station: the card in focus stands up out of the floor and forward (--fwd); on the next press its wrapper steps it back */
+.slide.today .tback{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.slide.today .tback[data-step][data-fx]{--s:calc(var(--p,1) * var(--p,1) * (3 - 2 * var(--p,1)));transform:translate3d(calc(var(--s) * var(--bx,0px)),calc(var(--s) * var(--by,0px)),calc(var(--s) * var(--bz,0px)))}
+.slide.today .tcard{position:absolute;left:-250px;bottom:0;width:500px;display:grid;align-content:start;gap:16px;padding:24px 28px 28px;border-radius:26px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);backface-visibility:hidden}
+.slide.today .tcard[data-step][data-fx]{transform-origin:50% 100%;transform:translateZ(calc(var(--p,1) * var(--fwd,0px))) rotateX(calc((1 - var(--p,1)) * var(--tilt)))}
+.tcard__hd{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:20px}
+.tcard .dr{width:92px;height:92px}
+.tcard__part{display:grid;gap:6px;justify-items:start}
+.tcard__part b{font:700 34px/1.1 var(--sans);letter-spacing:-.015em;color:var(--w05-green)}
+.tcard__part span{padding:4px 14px;border-radius:10px;box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 32px/1.15 var(--mono);white-space:nowrap}
+.tcard__o{font:700 46px/1.05 var(--sans);letter-spacing:-.024em;text-wrap:balance}
+.tcard__tag{justify-self:start;padding:6px 16px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 32px/1.2 var(--mono)}
+.slide.today .tcard__note{font:500 34px/1.2 var(--sans);letter-spacing:-.012em}
+/* the kit station: three real files of the kit fly into a Claude project */
+/* the Claude project on the kit station: Claude's own look (D4, lib/w05-fx.css 2b): ivory, the clay edge, the spark */
+/* the project on the kit station: a small window of the app (round 6): its lights, the spark and the project, its four files */
+.tproj{display:grid;gap:10px;padding:0 14px 14px;border-radius:16px;overflow:hidden}
+.cl-ui .tproj__bar{display:flex;align-items:center;height:36px;margin:0 -14px;padding:0 14px;font-size:22px;background:var(--claude-ivory);border-bottom:1px solid var(--w05-hair)}
+.tproj__h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px;font:600 30px/1.15 var(--cl-sans)}
+.tproj__h .cl-spark{grid-row:span 2;width:38px;height:38px;margin:0 4px}
+.tproj__h span{font-size:26px;font-weight:500;color:var(--muted)}
+.tproj__files{display:grid;gap:6px}
+.tproj .tfile{border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 23px/1.12 var(--cl-sans)}
+.tfile{display:flex;align-items:center;gap:10px;padding:4px 12px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);font:600 24px/1.12 var(--mono);white-space:nowrap}
+.tfile .ico{width:34px;height:34px;flex:none}
+.tfile b{font-weight:600;min-width:0;overflow-wrap:normal}
 
-/* ── 15 the reply ───────────────────────────────────────────────────── */
-.stage.reply{height:790px}
-.reply__draft{position:absolute;left:0;top:70px;width:700px}
-.reply__held{position:absolute;left:0;top:0;height:50px;font-size:21px}
-.reply__held svg.ico{width:22px;height:22px}
-.rp-est{position:absolute;left:0;top:734px;width:700px;display:flex;align-items:center;gap:8px}
-.rp-est__label{display:inline-flex;align-items:center;gap:8px;margin-right:6px;font:600 16px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-.rp-est__label svg.ico{width:20px;height:20px}
-.rp-est__cell{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:999px;background:var(--faint);font:500 17px/1 var(--sans);white-space:nowrap}
-.rp-est__cell i{font-style:normal}
-.rp-est__cell b.rp-est__n{padding-left:8px;border-left:1.5px solid rgba(18,18,18,.22);font:700 17px/1 var(--mono)}
-.rp-est__cell[data-lead]{background:#FFFDF8;box-shadow:inset 0 0 0 1.5px var(--ink)}
-.rp-est__cell--truth{box-shadow:inset 0 0 0 2px var(--accent)}
-.mail--draft{gap:20px;padding:26px 28px}
-.mail--draft .claims{gap:14px}
-.claim--done{grid-template-columns:44px minmax(0,1fr);height:120px;padding:14px 18px;align-items:start}
-.claim--done .claim__n{width:40px;height:40px;font-size:17px}
-.claim__body{display:grid;gap:10px}
-.slide .claim--done .claim__t{position:relative;display:inline-block;justify-self:start;font-size:24px;white-space:nowrap}
-.claim--done .claim__t > i[data-fx="strike"]{position:absolute;left:-4px;right:-4px;top:55%;height:4px;border-radius:2px;background:var(--accent)}
-.claim__why{display:flex;align-items:center;gap:12px}
-.claim__why .pill{height:30px;font-size:14px}
-.claim__ev{font:500 18px/1.3 var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.reply__cw{position:absolute;left:780px;top:0;right:0;height:722px;font-size:21px}
-.reply__signer{position:absolute;left:780px;right:0;top:744px;display:flex;align-items:center;gap:12px;font:700 26px/1.2 var(--sans);letter-spacing:-.01em}
-.reply__signer svg.ico{width:28px;height:28px;color:var(--ink)}
-.reply__cw .cw-thread{max-width:none;padding:.9em 1.6em .6em}
-.rp h4{margin:0 0 .5em;font:600 1em/1.3 var(--cw-sans)}
-.rp-lines{display:grid;gap:12px;margin:0 0 1.1em;padding:0;list-style:none}
-.rp-line{height:62px;display:flex;align-items:center;padding:0 .6em;border-radius:.5em;font:400 1.25em/1.3 var(--cw-serif);white-space:nowrap}
-.cw-hl{padding:.05em .3em;border-radius:.3em;background:var(--cw-accent-soft);color:var(--cw-accent-ink);font-weight:600}
-.rp-full__head{display:flex;align-items:center;gap:.5em;margin:0 0 .4em;font:600 .7em/1.2 var(--cw-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--cw-t3)}
-.rp-full{max-height:12em;overflow:hidden;font:400 .8em/1.5 var(--cw-serif);color:var(--cw-t2);
-  -webkit-mask-image:linear-gradient(to bottom,#000 40%,transparent);mask-image:linear-gradient(to bottom,#000 40%,transparent)}
-.rp-full p{margin:0 0 .4em}
-.reply__wires{z-index:4}
-.reply__wires path{stroke-width:3.5}
-/* the participant's own line, as a draft in Claude's composer: you change one sentence, you sign */
-.reply__composer{color:var(--cw-t1)}
-.reply__composer > svg.ico{color:var(--cw-accent-ink)}
-.reply__sign{flex:1;font-weight:600;white-space:nowrap}
+/* dim: from press n on, a part of the drawing steps back (the engine writes data-view on the slide) */
+.slide:is([data-view="1"],[data-view="2"],[data-view="3"],[data-view="4"],[data-view="5"],[data-view="6"],[data-view="7"]) [data-dim="1"],
+.slide:is([data-view="2"],[data-view="3"],[data-view="4"],[data-view="5"],[data-view="6"],[data-view="7"]) [data-dim="2"],
+.slide:is([data-view="3"],[data-view="4"],[data-view="5"],[data-view="6"],[data-view="7"]) [data-dim="3"],
+.slide:is([data-view="4"],[data-view="5"],[data-view="6"],[data-view="7"]) [data-dim="4"],
+.slide:is([data-view="5"],[data-view="6"],[data-view="7"]) [data-dim="5"],
+.slide:is([data-view="6"],[data-view="7"]) [data-dim="6"],
+.slide[data-view="7"] [data-dim="7"]{opacity:.55}
 
-/* ── 16 result ──────────────────────────────────────────────────────── */
-.slide.result .hd{padding-right:0}
-.stage.res{display:grid;grid-template-columns:980px minmax(0,1fr);grid-template-rows:auto auto;gap:30px 48px;align-content:start}
-.res__est{display:grid;gap:12px;padding:24px 30px 20px}
-.res__label{display:flex;align-items:center;gap:10px}
-.ebars{position:relative;display:grid;grid-template-columns:repeat(9,1fr);gap:16px;align-items:end;height:330px}
-.ebar{display:grid;grid-template-rows:auto 1fr auto;justify-items:center;gap:8px;height:100%}
-.ebar i{align-self:end;width:100%;height:calc(14px + var(--share,0) * 230px);border-radius:12px;background:rgba(18,18,18,.14);transition:height 520ms var(--e-spring)}
-.ebar b{align-self:end;font:700 20px/1 var(--mono);color:var(--muted)}
-.ebar span{font:700 30px/1 var(--sans)}
-.ebar--truth i{background:var(--e-accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
-.ebar--truth span{color:var(--accent)}
-/* no votes yet: the counts step back and a hint says where the estimate comes from */
-.res__ghost{position:absolute;left:50%;top:38%;translate:-50% -50%;display:none;align-items:center;gap:12px;padding:14px 24px;border-radius:999px;border:1.5px dashed rgba(18,18,18,.22);font:500 24px/1 var(--sans);color:var(--muted);white-space:nowrap}
-.res__ghost svg.ico{width:26px;height:26px}
-.ebars:not(:has([data-lead])) .res__ghost{display:inline-flex}
-.ebars:not(:has([data-lead])) .ebar b{visibility:hidden}
-.res__marker{position:absolute;z-index:2;left:calc((var(--truth) + .5) / 9 * 100%);bottom:46px;translate:-50% 0;display:grid;justify-items:center;margin:0}
-.res__marker span{display:inline-flex;align-items:center;height:48px;padding:0 20px;border-radius:999px;background:var(--accent);color:#fff;font:700 24px/1 var(--mono);white-space:nowrap;box-shadow:0 14px 28px -14px rgba(183,58,21,.65)}
-.res__marker i{width:3px;height:150px;border-radius:2px;background:var(--accent)}
-.ebars:not(:has([data-lead])) .res__marker i{height:60px}
-.res__tiles{align-self:center;gap:18px}
-.res__tiles .tile{aspect-ratio:auto;height:150px}
-.res__tiles .face{font-size:40px}
-.res__tiles .face svg.ico{width:28px;height:28px}
-.slide.result .tile > .face--back[data-tone="belegt"]{background:var(--e-glass-strong);color:var(--ink);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift)}
-.slide.result .tile > .face--back[data-tone="belegt"] svg.ico{width:36px;height:36px;padding:6px;border-radius:50%;background:rgba(18,18,18,.07);color:var(--ink);stroke-width:2.4}
-.slide.result .tile > .face--back[data-tone="luecke"]{background:rgba(255,253,248,.75);box-shadow:inset 0 0 0 2px var(--e-accent-line)}
-.slide.result .tile > .face--back[data-tone="schwach"]{background:#FFFDF8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M-3 3l6-6M0 12L12 0M9 15l6-6' stroke='%23121212' stroke-opacity='.18' stroke-width='2.4'/%3E%3C/svg%3E");box-shadow:inset 0 0 0 1px rgba(18,18,18,.18),var(--e-lift-sm)}
-.res__out{grid-column:1 / -1;display:flex;align-items:flex-end;gap:28px}
-.res__home{display:grid;gap:12px}
-.res__home .label{display:flex;align-items:center;gap:10px}
-.res__home .label svg.ico{width:22px;height:22px}
-.res__qrs{display:flex;gap:28px}
-.res__out .qr{padding:14px 14px 12px}
-.res__out .qr img{width:170px;height:170px}
-.res__out .qr figcaption b{font-weight:700;color:var(--ink)}
-.res__appx{display:grid;gap:12px;margin-left:auto;justify-items:start}
-.res__appx a{text-decoration:none}
+/* 5b ── scenes of S06 to S15 ─────────────────────────────────────────────────────────────────────────────── */
+.slide.step3 .tk-filesbox{display:block}
+.slide.step3 .tk-filesbox[data-off]{display:none}
 
-/* ── appendix ───────────────────────────────────────────────────────── */
+.zipbtn{display:grid;justify-items:center;gap:4px;padding:16px 26px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);text-decoration:none;font:600 24px/1.2 var(--mono)}
+.zipbtn b{font:700 26px/1.2 var(--mono)}
+.zipbtn:hover,.zipbtn:focus-visible{color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.tk-side svg.ico{width:30px;height:30px;stroke-width:1.7}
+
+/* take slides: progress dots, measured time, file previews, the fix card pair */
+.slide--take .stage > [data-zone="p"]{grid-area:5/1;align-self:end}
+.slide--take .stage > [data-zone="w2"],.slide--take .stage > [data-zone="reg"],.slide--take .stage > [data-zone="pay"]{grid-area:1/2/6/3;align-self:stretch;min-height:0}
+.slide--take .stage > [data-zone="w"],.slide--take .stage > [data-zone="w2"]{position:relative;z-index:2}
+.slide--take .stage > [data-zone="reg"]{z-index:1}
+.slide--take .stage > [data-zone="pay"]{z-index:3}
+.slide--take .stage > [data-zone="l3"]{grid-area:4/1}
+.slide--take .headline--s{font-size:56px;line-height:1.04}
+.tk-prog{display:flex;gap:14px;margin:0}
+.tk-prog i{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ink);font:700 24px/1 var(--mono);font-style:normal;color:var(--ink)}
+.tk-prog i.is-done{background:var(--w05-sage-200)}
+.tk-prog i.is-now{background:var(--w05-sage-400)}
+.tk-time{display:grid;gap:4px;margin:0}
+.tk-time b{font:700 84px/.95 var(--mono);letter-spacing:-.04em}
+.tk-time small{font:600 22px/1.25 var(--mono);color:var(--muted)}
+.scan{display:grid;gap:10px;width:100%}
+.scan__top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.scan__n,.scan__t{display:grid;gap:2px;margin:0}
+.scan__n b,.scan__t b{font:700 108px/.86 var(--mono);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.scan__t b{font-size:60px}
+.scan__n small,.scan__t small{font:600 22px/1.2 var(--mono);color:var(--muted)}
+.scan__t{text-align:right}
+.scan__grid{position:relative;max-width:100%;overflow:hidden}
+.scan__tex{position:absolute;inset:0;width:100%;height:100%;shape-rendering:crispEdges}
+.scan__cell{fill:var(--w05-sage-200)}
+.scan__m{position:absolute;width:28px;height:28px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.scan__lg{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:0;font:600 22px/1.2 var(--sans)}
+.scan__last{margin:0;font:600 25px/1.22 var(--sans)}
+.scan__k{flex:none;margin-right:6px;font:700 22px/1.2 var(--mono);font-style:normal;color:var(--muted)}
+.scan__lg b{font:700 30px/1 var(--mono)}
+.scan__lg span{margin-right:6px}
+.scan__lg .scan__m{position:static;flex:none;align-self:center;width:22px;height:22px;margin:0}
+.board{display:grid;gap:14px;width:100%;transition:opacity .4s ease-out}
+/* step 3, press 3: the status board stays, dimmed, under the rule for mistakes (build, do not replace) */
+.slide.step3[data-view="3"] .board{opacity:.35}
+@media (prefers-reduced-motion:reduce){.board{transition:none}}
+.board__g{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.board__t{display:grid;place-items:center;height:56px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 24px/1 var(--mono)}
+.board__t--covered{background:var(--w05-sage-400)}
+.board__t span{position:relative}
+.board__t--weak{position:relative;overflow:hidden}
+.board__t--weak::before{content:"";position:absolute;inset:0 50% 0 0;background:var(--w05-sage-400)}
+.board__lg{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0;font:600 24px/1.2 var(--sans)}
+.board__k{display:inline-flex;align-items:center;gap:8px}
+.board__k i{flex:none;width:26px;height:26px;border-radius:7px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.board__k--covered i{background:var(--w05-sage-400)}
+.board__k--weak i{position:relative;overflow:hidden}
+.board__k--weak i::before{content:"";position:absolute;inset:0 50% 0 0;background:var(--w05-sage-400)}
+.board__k b{font:700 30px/1 var(--mono)}
+/* step 3: the produced files rise as pages, one after another (flat, round 5); each shows its name and its first recorded lines */
+.tk-prevs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 28px;margin-top:10px}
+.tk-prev{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;height:372px;padding:20px 22px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-t3);overflow:hidden}
+.slide.step3 .tk-prev[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.tk-prev > b{padding-bottom:12px;border-bottom:2px solid var(--w05-hair);font:700 28px/1.18 var(--mono);overflow-wrap:normal}
+.tk-prev__b{display:grid;align-content:start;gap:6px;min-height:0;overflow:hidden}
+/* each page shows its key line in up to four lines, so nothing runs out of the card */
+.tk-prev__l{display:-webkit-box;margin:0;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:4;font:500 24px/1.3 var(--sans);color:var(--ink);overflow-wrap:anywhere}
+.tk-prev__b > i{display:block;height:8px;border-radius:4px;background:var(--w05-sage-200)}
+/* round 6: in the Claude window (rail and composer) the pages are Claude's file cards: both rows fit above the composer, a hairline
+   edge, and the name and lines stay inside the card (the column never grows to a long name) */
+.cl-ui .tk-prevs{gap:18px 20px;margin-top:4px}
+.cl-ui .tk-prev{grid-template-columns:minmax(0,1fr);height:296px;padding:18px 20px;border-radius:.6em;box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.cl-ui .tk-prev > b{padding-bottom:10px;border-bottom:1px solid var(--cl-edge);font-size:22px;overflow-wrap:anywhere}
+.fixsc{display:grid;grid-template-columns:1fr 96px 1fr;grid-template-rows:minmax(0,560px);gap:0;align-content:center;height:100%}
+.fixsc__c{position:relative;display:grid;justify-items:center;align-content:center;gap:24px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.fixsc__c svg.dr{width:260px;height:260px}
+.fixsc__c small{font:600 34px/1.2 var(--sans)}
+.fixsc__c--new{background:var(--w05-sage-100)}
+.fixsc__link{align-self:center;height:0;border-top:2px solid var(--ink);transform:scaleX(var(--p,1));transform-origin:left center}
+
+/* S09 tests */
+.slide.tests .stage{align-content:start;row-gap:16px;grid-template-rows:auto auto auto 100px;grid-template-areas:"h pill" "row row" "cap cap" "scale scale";grid-template-columns:minmax(0,1fr) auto}
+.slide.tests .stage > [data-zone="pill"]{grid-area:pill;justify-self:end;align-self:center}
+.slide.tests .stage > [data-zone="row"]{grid-area:row}
+.slide.tests .stage > [data-zone="scale"]{grid-area:scale}
+.slide.tests .stage > [data-zone="pb"]{grid-area:scale}
+.slide.tests .cap{font-size:44px;max-width:none}
+.slide.tests .pb .poll__opt{min-height:100px}
+.rwcard{position:relative;display:grid;gap:26px;padding:30px 40px 34px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.rwcard [data-step][data-off]{visibility:hidden}
+.rwcard .tt__i:not([data-off]) .jobs__slots[data-off]{visibility:visible}
+.rw{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"id q" "id m";gap:8px 40px;align-items:center;max-width:none;border-radius:0;background:none;box-shadow:none;font-size:30px}
+.rw__c{padding:0;border:0}
+.rw__c--0{grid-area:id;padding:0;font:700 112px/1 var(--mono);letter-spacing:-.05em}
+.rw__c--1{grid-area:q;font:600 48px/1.14 var(--sans);letter-spacing:-.015em}
+.rw__m{grid-area:m;display:flex;flex-wrap:wrap;gap:6px 44px}
+.rw__m .rw__c{font:600 28px/1.2 var(--mono)}
+/* the four slots on the row are drawn from the start (hairline outlines); each test settles into its own */
+.tt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;margin:0;padding:0;list-style:none}
+.tt__s{position:relative;display:grid;min-height:300px;border-radius:18px;box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.tt__g{position:absolute;inset:0;display:grid;place-items:center;color:var(--w05-hair)}
+.tt__g svg{width:112px;height:112px;stroke-width:1.1}
+.slide.tests:not(:is([data-view="0"],[data-view="1"])) .tt__g{visibility:hidden}
+.tt__i{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:10px 16px;padding:18px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 30px/1.22 var(--sans)}
+/* flat (round 5): the empty slots rise on the entry; on press 1 each test settles down onto its slot and covers its drawing */
+.slide.tests .tt__s[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.slide.tests .tt__i[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * -24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.tt__f b{display:block;font:700 28px/1.25 var(--mono)}
+svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
+.tt__i > .ttj{grid-column:1/-1}
+.tt__r{grid-row:3;grid-column:1/-1;display:grid;gap:8px;justify-items:start;align-self:end}
+.tt__r b{padding:4px 14px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 26px/1.2 var(--mono)}
+/* the failing test is dashed in ink: the GAP verdict chip is the press's one accent */
+.tt__r--fail b{box-shadow:none;outline:2px dashed var(--ink);outline-offset:-2px}
+/* a test that does not decide this line (no deadline, no named owner): a quiet hairline chip with its reason */
+.tt__r--open b{box-shadow:inset 0 0 0 2px var(--w05-hair);color:var(--ink);font:600 24px/1.22 var(--sans)}
+/* the register's ten jobs under the row (presses 0 and 1) */
+.crowd{display:flex;align-items:center;gap:34px;height:100%}
+.crowd__l{font:600 30px/1.2 var(--mono);white-space:nowrap}
+.crowd__p{display:flex;gap:14px}
+.crowd__p svg{width:84px;height:84px;stroke-width:1.3}
+.tt__q{font:600 24px/1.25 var(--mono)}
+.ttj{display:grid;align-content:start;gap:10px}
+.jobs__l{font:600 22px/1.2 var(--mono)}
+.jobs__slots{display:grid;grid-template-columns:repeat(5,50px);gap:8px}
+.jobs__slots > i{display:grid;place-items:center;height:50px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--w05-hair);color:var(--w05-hair)}
+.jobs__slots svg{width:36px;height:36px}
+.jobs__slots > i[data-on]{background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+.jobs__names{display:flex;flex-wrap:wrap;gap:6px 8px}
+.jobs__nm{padding:3px 10px;border-radius:10px;box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:700 22px/1.2 var(--sans)}
+/* one accent per press (V8): on this slide only the result chip carries it */
+#tests .chip[data-tone="luecke"]:not(.rwv),#tests .gapword{color:var(--ink)}
+.rwv{position:absolute;right:40px;top:36px}
+.slide.tests[data-view="4"] .tt__i--3{box-shadow:inset 0 0 0 2px var(--accent)}
+.sc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.sc .chip[data-tone]{background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink)}
+.sc__i{display:flex;align-items:center;gap:18px;min-height:100px;padding:14px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:500 30px/1.25 var(--sans)}
+.gapword{color:var(--accent)}
+
+
+/* S12 register */
+.reg{display:grid;align-content:start;gap:0;padding:24px 34px;overflow:hidden;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 23px/1.2 var(--mono)}
+.reg__f{margin:0 0 10px;font:600 24px/1.2 var(--mono);color:var(--muted)}
+.reg__h,.reg__r{display:grid;grid-template-columns:70px 215px 150px 165px minmax(0,1fr) 225px;gap:0 12px;margin:0;padding:11px 0;border-bottom:2px solid var(--w05-hair);white-space:nowrap}
+.reg__h{border-bottom:2px solid var(--ink);font-weight:700}
+.reg__r span{overflow:hidden;text-overflow:ellipsis}
+.reg__na{color:var(--muted)}
+.reg__n{display:flex;align-items:baseline;gap:16px;margin:14px 0 4px;font:600 24px/1.2 var(--mono)}
+.reg__n b{font:700 76px/.9 var(--mono);letter-spacing:-.04em}
+/* the 98 rows as a 14 x 7 micro grid at the right of the count: cells fill in file order; from press 4 the expired (deep sage),
+   expiring (light sage) and missing (dashed) rows take their tone */
+.reg__gz{margin-left:auto;align-self:center;transform-origin:100% 0}
+.slide.register .reg__gz[data-step][data-fx]{transform:scale(calc(1.18 - .18 * var(--p,1)))}
+.reg__g{--z:var(--p,1);display:grid;grid-template-columns:repeat(20,26px);gap:5px}
+.reg__g > i{display:block;height:26px;border-radius:5px;box-shadow:inset 0 0 0 2px var(--w05-hair);opacity:clamp(0,calc(var(--z) * (var(--n) + 12) - var(--i)) / 12,1)}
+.slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="x"]{background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="s"]{background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
+.slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="m"]{box-shadow:none;outline:2px dashed var(--ink);outline-offset:-2px}
+/* the key under the count: the same three looks as the cells */
+.reg__n{position:relative}
+.reg__lg{position:absolute;left:102px;top:78px;display:flex;gap:14px;font:600 21px/1.2 var(--mono);white-space:nowrap}
+.reg__lg span{display:inline-flex;align-items:center;gap:8px}
+.reg__lg i{display:block;width:24px;height:24px;border-radius:5px}
+.reg__lg i[data-s="x"]{background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.reg__lg i[data-s="s"]{background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
+.reg__lg i[data-s="m"]{outline:2px dashed var(--ink);outline-offset:-2px}
+.ct{display:grid;grid-template-rows:minmax(0,.8fr) minmax(0,1.3fr);gap:30px;height:100%}
+.ct__l{display:block;margin-bottom:12px;font:600 26px/1.2 var(--mono);color:var(--muted)}
+.ct__old{display:grid;align-content:center;padding:30px 36px;border-radius:24px;box-shadow:inset 0 0 0 2px var(--w05-hair);opacity:.72}
+.ct__old ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.ct__old li{display:grid;gap:4px;padding-left:18px;border-left:3px solid var(--w05-hair)}
+.ct__old b{font:700 52px/1.1 var(--mono)}
+.ct__old span{font:500 32px/1.2 var(--sans)}
+.ct__new{display:grid;align-content:center;gap:14px;padding:30px 36px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.ct__row{display:grid;grid-template-columns:80px 230px 160px 180px minmax(0,1fr);gap:0 14px;margin:0;padding:14px 0;border-top:2px solid var(--w05-hair);font:500 25px/1.2 var(--mono);overflow:hidden;white-space:nowrap}
+.ct__row + .ct__row{border-top:0}
+.ct__row:last-of-type{border-bottom:2px solid var(--w05-hair)}
+
+.yours__line{display:block;height:0;border-top:5px solid var(--accent);transform:scaleX(var(--p,1));transform-origin:left center}
+
+.doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;height:100%}
+.doors li{display:grid;justify-items:center;align-content:center;gap:28px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 44px/1.1 var(--sans)}
+.doors svg.dr{width:210px;height:210px}
+.gb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:100%;max-width:none;height:22px}
+/* a ghost bar stands on the paper alone and carries the first vote with no number: an ink ring keeps its length readable */
+.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);border-radius:6px;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.qrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.qr{margin:0;display:grid;grid-template-rows:auto 1fr;gap:12px;padding:18px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.qr img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:10px}
+.qr figcaption{display:grid;align-content:start;gap:4px;font:700 28px/1.2 var(--mono)}
+.qr__url{display:block;font-size:21px;font-weight:500;color:var(--muted);overflow-wrap:anywhere}
+
+/* 5c ── the evidence act, S03 to S07: block stages, every part placed on the stage (1696 x 920); the caption swaps in place ── */
+.slide:is(.why,.sectors,.we,.letter,.time) .stage{display:block;margin-top:0}
+.slide:is(.why,.sectors,.we,.letter,.time) .stage > *{position:absolute}
+.slide:is(.why,.sectors,.we,.letter,.time) .stage > [data-zone="h"]{left:0;top:0;margin:0}
+.slide:is(.we,.letter,.time) .stage > [data-zone="pill"]{right:0;top:12px}
+.slide:is(.why,.sectors,.we,.letter,.time) .cap{max-width:none;font:500 38px/1.2 var(--sans);letter-spacing:-.012em;text-wrap:pretty}
+.slide:is(.why,.sectors,.we,.letter,.time) .src{max-width:none}
+/* footer number: 4.5:1 on the sage stage (the engine default is 3.4:1) */
+.foot{color:rgba(18,18,18,.75)}
+.bk{position:absolute;right:0;bottom:6px;left:auto}
+/* the link to the sources appendix: the book and its name, so it never reads as a stray glyph */
+.slide .bk.fig{display:inline-flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;font:500 22px/1.2 var(--mono)}
+.slide .bk.fig .ico{width:30px;height:30px;color:var(--ink)}
+.slide .bk.fig:hover,.slide .bk.fig:focus-visible{color:var(--accent)}
+.ask{margin:0}
+.ask.t--lead{font-size:64px}
+
+/* S03 why (round 4): number, caption and source on the left; on the right a wall of news cards in depth, then the field,
+   which tilts into a floor on press 6 where the eight regions rise as towers */
+.slide.why .stage > [data-zone="n"]{left:0;top:118px;width:560px}
+.slide.why .stage > [data-zone="cap"]{left:0;top:420px;width:540px}
+.slide.why .stage > [data-zone="src"]{left:0;top:700px;width:540px}
+.slide.why .stage > [data-zone="wall"]{left:590px;top:96px;width:1110px;height:772px;z-index:2}
+.slide.why .stage > [data-zone="map"]{left:676px;top:110px;width:1000px;height:760px}
+.slide.why .stage > [data-zone="bit"]{left:0;top:620px;width:540px}
+/* a leaving or arriving host fades with its own --p (fx none keeps opacity 1 in the engine) */
+.slide.why .wall[data-step],.slide.sectors .sf[data-step],.slide.why .wf[data-step][data-fx]{opacity:var(--p,1)}
+/* presses 1 to 4: the map steps back to a quarter behind the cards and stays in view */
+.slide.why .wf[data-step][data-fx]{transition:opacity .5s cubic-bezier(.22,1,.36,1)}
+.slide.why:is([data-view="1"],[data-view="2"],[data-view="3"],[data-view="4"]) .wf[data-step][data-fx]{opacity:.25}
+@media (prefers-reduced-motion:reduce){.slide.why .wf[data-step][data-fx]{transition:none}}
+.slide.why .bk{left:0;right:auto}
+.slide.why .ask.cap{font:700 60px/1.06 var(--sans);letter-spacing:-.03em}
+.bign{display:grid;gap:22px;justify-items:start}
+.bign__n{font:700 136px/.9 var(--sans);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.bign__l{max-width:540px;font:600 28px/1.25 var(--sans)}
+/* the wall (flat, round 5): each card rises into its cell (.w05-rise); the card before dims a little as the next arrives */
+.wall__grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:20px}
+.eback{display:grid}
+.eback[data-step][data-fx]{opacity:calc(1 - .22 * var(--p,1))}
+.ecard{display:grid;align-content:start;gap:10px;padding:18px 26px;border-radius:26px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);min-height:0;overflow:hidden}
+.ecard__meta{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;padding-bottom:8px;border-bottom:2px solid var(--w05-hair);font:600 24px/1.2 var(--mono)}
+.ecard__meta b{font-size:30px}
+.ecard__meta span{color:var(--muted)}
+.ecard__mk{font-size:32px;line-height:1.07;letter-spacing:-.01em}
+.ecard__gl{font:500 24px/1.2 var(--mono);color:var(--ink)}
+.ecard--2 .ecard__mk{font-size:29px}
+.wf__kind{position:absolute;translate:-50% 0;width:200px;text-align:center;display:grid;justify-items:center;gap:4px;font:600 26px/1.15 var(--sans);white-space:nowrap}
+.wf__kind b{font:700 44px/1 var(--sans);letter-spacing:-.02em}
+/* the decisions bracket: open downwards over the three kind columns, its count at the middle */
+.wf__dec{position:absolute;height:22px;box-sizing:border-box;border:2px solid var(--ink);border-bottom:0;border-radius:10px 10px 0 0}
+.wf__dec b{position:absolute;left:50%;top:-14px;translate:-50% -100%;padding:8px 16px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 28px/1.2 var(--sans);white-space:nowrap}
+.slide.sectors .sf__legend{left:0;right:auto;top:auto;bottom:0}
+/* the dot legend stands in the left column under the source line, never on the dots */
+.slide.why .wf__legend{left:-676px;right:auto;top:660px;bottom:auto;max-width:640px;font-size:22px}
+/* press 6: the map tilts back into a floor; the towers stand on it (three outlined sage faces each, no shade, no shadow) */
+.wfl{transform-style:preserve-3d;transform-origin:50% 70%}
+/* the entry: the map comes up from Today's floor (rotateX 54 to 0) with its dots in place; after press 0 the host is flat */
+.wup{transform-style:preserve-3d;transform-origin:50% 70%}
+.wup > .wfl{position:absolute;inset:0}
+.slide.why[data-view="0"] .wup[data-step][data-fx]{transform:perspective(1700px) translateY(calc((1 - var(--p,1)) * 40px)) rotateX(calc((1 - var(--p,1)) * 54deg))}
+.wfl[data-step][data-fx]{transform:perspective(1700px) translateY(calc(var(--p,1) * 40px)) rotateX(calc(var(--p,1) * 54deg)) scale(calc(1 + .16 * var(--p,1)))}
+.slide.why .wf{transform-style:preserve-3d}
+.wt{position:absolute;width:0;height:0;transform-style:preserve-3d}
+.wt__b{position:absolute;left:-23px;bottom:0;width:46px;height:calc(var(--h,0px) * var(--p,1));transform-origin:50% 100%}
+.wt__b[data-step][data-fx]{transform:rotateZ(calc(var(--yaw,0deg) * -1)) rotateX(-54deg)}
+/* each tower is drawn as a box in its own upright plane (an oblique view: front, a lit top and a shaded side of fixed depth), so
+   the drawing's full height is exactly --h and the faces read as 3D from every seat on the map */
+.wt__b > i{position:absolute;box-sizing:border-box;border:2px solid var(--ink)}
+.wt__f{left:0;right:14px;top:14px;bottom:0;background:var(--w05-sage-200)}
+.wt__t{left:0;top:0;width:32px;height:16px;transform-origin:0 100%;transform:skewX(-45deg);background:var(--w05-sage-100)}
+.wt__s{left:30px;top:14px;bottom:0;width:16px;transform-origin:0 0;transform:skewY(-45deg);background:var(--w05-sage-400)}
+.wyaw{--yaw:0deg;position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:500px 532px}
+.wyaw[data-step][data-fx]{transform:rotateZ(calc(var(--yaw,0deg) * var(--p,1)))}
+
+.slide.why .stage > [data-zone="wtl"]{left:0;top:0;width:0;height:0;z-index:3}
+.wtl__i{position:absolute;translate:-50% calc(-100% - 10px);display:grid;justify-items:center;padding:2px 10px;border-radius:10px;background:var(--paper);font:600 24px/1.1 var(--sans);white-space:nowrap}
+.wtl__i b{font:800 34px/1.05 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.wtl__i--foot{translate:-50% 14px}
+/* Vardar stands just in front of Northeast: its label steps 64 px east with a short leader, so it never covers Northeast's tower */
+.wtl__i--vardar{translate:calc(-50% + 64px) calc(-100% + 4px)}
+.wtl__i--vardar::before{content:"";position:absolute;right:100%;bottom:10px;width:40px;height:0;border-top:2px solid var(--ink)}
+.slide.why[data-view="7"] .wt--pelagonia .wt__f{border-color:var(--accent)}
+/* the dots no longer count once the towers stand: the legend leaves with the flat map */
+.slide.why:is([data-view="1"],[data-view="2"],[data-view="3"],[data-view="4"],[data-view="6"],[data-view="7"]) .wf__legend{visibility:hidden}
+.slide.why .wt__b[data-off]{visibility:hidden}
+/* press 7: Bitola, plan against done, true to scale */
+.wb7{display:grid;gap:12px;padding:18px 22px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.wb7__h{font:700 28px/1.2 var(--sans)}
+.wb7__r{display:grid;grid-template-columns:minmax(0,380px) auto;align-items:center;gap:12px;height:34px}
+.wb7__r > span{display:block;height:100%}
+.wb7__r b{font:700 28px/1 var(--sans);font-variant-numeric:tabular-nums}
+.wb7__bar{display:block;height:100%;border-radius:8px;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
+.wb7__bar--done{background:var(--w05-sage-400)}
+
+/* S04 sectors (round 4): the field is the hero on the right (every firm, then the sector columns); then the nine risk tiles
+   fly in from depth over the same place; on press 4 the poll and a large panel of who else checks fill the left column */
+.slide.sectors .stage > [data-zone="cap"]{left:0;top:120px;width:500px}
+.slide.sectors .stage > [data-zone="src"]{left:0;top:330px;width:500px}
+.slide.sectors .stage > [data-zone="pb"]{left:0;top:236px;width:500px}
+.slide.sectors .stage > [data-zone="map"]{left:608px;top:166px}
+.slide.sectors .stage > [data-zone="wall"]{left:560px;top:100px;width:1136px}
+.slide.sectors .stage > [data-zone="panel"]{left:0;top:448px;width:500px}
+.slide.sectors .bk{left:auto;right:0;top:0;bottom:auto}
+/* the bar tracks come with their bars on press 3 (no empty boxes before) */
+.slide.sectors[data-view="2"] .st__bar{visibility:hidden}
+.slide.sectors .pb{--n:2;gap:16px}
+.slide.sectors .pb .poll__opt{min-height:84px;font-size:30px}
+/* the column labels stand on top of their columns: drawing, sector, count */
+.sf__lb{position:absolute;translate:-50% -100%;display:grid;justify-items:center;gap:4px;width:158px;text-align:center;font:600 25px/1.08 var(--sans)}
+.sf__lb b{font:700 26px/1.1 var(--sans);font-variant-numeric:tabular-nums}
+svg.sf__i{width:52px;height:52px;margin-bottom:2px}
+.sf__lb--on{font-weight:800}
+.sf__lb--on b{font-size:34px}
+/* the wall (flat, round 5): nine tiles, faint from the first frame, rise into place one after the other */
+.stw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,212px) auto;gap:18px 22px}
+.slide.sectors .stw .w05-rise[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(.35 + var(--p,1) * 2))}
+.st{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);grid-template-rows:76px minmax(0,1fr) auto;column-gap:18px;align-content:start;padding:18px 24px 20px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);translate:0 0 0;transition:translate .3s ease-out,background-color .3s ease-out}
+.st--ra{box-shadow:none;outline:2px dashed var(--ink);outline-offset:-2px}
+.st--on{background:var(--w05-sage-200)}
+.st:has(.st__b[aria-pressed="true"]){background:var(--w05-sage-400);outline:2px solid var(--ink);outline-offset:-10px}
+svg.st__i{width:76px;height:76px}
+/* a tile with no bar: its icon large and centred, the name under it */
+.st:not(:has(.st__bar)){grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;justify-items:center;align-content:stretch;text-align:center}
+.st:not(:has(.st__bar)) svg.st__i{width:104px;height:104px;align-self:center;stroke-width:1.2}
+/* while another tile is open, trade gives up its tint (one tinted tile at a time) */
+.stw:has(.st__b[aria-pressed="true"]) .st--on:not(:has(.st__b[aria-pressed="true"])){background:var(--surface)}
+.st__n{align-self:center;font:700 32px/1.06 var(--sans);letter-spacing:-.015em}
+/* the bar's edge is a border, not an inset shadow, so the fill sits inside the ink ring and never touches the tile; the
+   fill is sage-600 (4.5:1 on the paper track), so a bar reads on a white, a trade or a selected sage tile alike */
+.st__bar{position:relative;grid-column:1/-1;align-self:end;display:block;height:22px;border-radius:11px;background:var(--surface);border:2px solid var(--ink);overflow:hidden}
+i.st__fill{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 1%);background:var(--w05-sage-600)}
+.st__v{grid-column:1/-1;margin-top:8px;font:700 26px/1.2 var(--sans)}
+.st__b{position:absolute;inset:0;z-index:1;margin:0;padding:0;border:0;border-radius:22px;background:transparent;cursor:pointer}
+.st__b:hover,.st__b:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.stw__l{grid-column:1/-1;font:600 24px/1.3 var(--mono)}
+.st__dot{position:absolute;right:18px;top:18px;width:16px;height:16px;border-radius:50%;background:var(--w05-sage-600)}
+/* on the selected (sage-400) tile the sage-600 dot alone is 1.8:1: a thin ink ring keeps it */
+.st:has(.st__b[aria-pressed="true"]) .st__dot{box-shadow:inset 0 0 0 2px var(--ink)}
+/* who else checks: one face, large enough to read from the back of the room */
+.sp,.sp *{font-family:var(--sans)}
+.sp{display:grid;align-content:start;gap:12px;min-height:440px;padding:22px 26px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 27px/1.3 var(--sans)}
+.sp__h{font:700 27px/1.2 var(--sans)}
+.sp__b{display:none}
+.sp[data-w05-hot="trade"] .sp__b--trade,.sp[data-w05-hot="build"] .sp__b--build,.sp[data-w05-hot="make"] .sp__b--make,.sp[data-w05-hot="food"] .sp__b--food{display:grid;gap:10px}
+.sp__b p{padding-left:16px;border-left:3px solid var(--w05-sage-400)}
+.sp__all{font:500 24px/1.3 var(--sans);color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.st{transition:none}}
+
+/* S05 we (round 4): the crew fills the left, the caption and on press 2 the rhythm clock the right, the time line across */
+.slide.we .stage > [data-zone="crew"]{left:0;top:96px;width:800px}
+.slide.we .stage > [data-zone="cap"]{left:830px;top:112px;width:866px}
+.slide.we .stage > [data-zone="src"]{left:0;top:548px;width:800px}
+.slide.we .stage > [data-zone="clk"]{left:830px;top:244px;width:866px}
+.slide.we .stage > [data-zone="tl"]{left:0;top:652px;width:1696px;height:200px}
+.slide.we .stage > [data-zone="sc"]{left:0;top:884px}
+.slide.we .w05-btn{padding:8px 18px;font-size:24px}
+/* the crew on paper (round 5, D2: flat, no floor): four rows of drawn people on hairlines; the people draw themselves on the entry */
+.crew2{display:grid;gap:12px;padding:10px 0 14px}
+.crew__p{border-bottom:2px solid var(--w05-hair)}
+.crew__g{display:grid;grid-template-columns:178px auto auto;justify-content:start;align-items:center;column-gap:14px}
+.crew__l{font:600 28px/1.1 var(--sans);white-space:nowrap}
+.crew__l b{font-family:var(--mono)}
+.crew__p{display:flex;gap:4px}
+.pp{display:grid;place-items:center;width:70px;height:84px}
+svg.pp__i{width:66px;height:66px}
+/* the two named people: a thin ink frame, no fill */
+.pp--who{border-radius:14px;box-shadow:inset 0 0 0 2px var(--ink)}
+.crew__who{display:grid;gap:2px;font:600 24px/1.15 var(--sans)}
+.crew__who span{white-space:nowrap}
+/* the clock: it fades in sliding 32 px from the right as it arrives; arcs and hand draw inside it */
+.wclk{display:grid;grid-template-columns:440px minmax(0,1fr);column-gap:26px;align-items:center}
+.wclk[data-step][data-fx]{transform:translateX(calc((1 - var(--p,1)) * 32px));opacity:min(1,calc(var(--p,1) * 3))}
+.wclk__dial{position:relative;width:440px;height:440px}
+.wclk__svg{display:block;width:100%;height:100%}
+.wclk__face{stroke:var(--w05-hair);stroke-width:2}
+.wclk__ticks{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.wclk__arc{stroke-linecap:round}
+.wclk__arc--0{stroke:var(--w05-sage-400);stroke-width:10}
+.wclk__arc--1{stroke:var(--w05-green);stroke-width:16}
+.wclk__arc--2{stroke:var(--w05-green);stroke-width:4}
+.wclk__hand{stroke:var(--accent);stroke-width:5;stroke-linecap:round}
+.wclk__hub{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+.wclk__start{position:absolute;left:50%;top:-6px;translate:-50% -100%;font:700 24px/1 var(--mono);white-space:nowrap}
+.wclk__now{position:absolute;translate:calc(-50% - 14px) calc(-50% - 14px);padding:2px 8px;border-radius:8px;background:var(--paper);font:700 24px/1 var(--mono);white-space:nowrap}
+.wclk__od{position:absolute;left:50%;top:calc(100% + 6px);translate:-50% 0;padding:2px 8px;border-radius:8px;background:var(--paper);color:var(--ink);font:700 24px/1 var(--mono)}
+.wclk__legend{display:grid;gap:6px}
+.wclk__lg{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:12px;align-items:center;padding:8px 12px;border-radius:14px}
+.wclk__lg i{grid-row:1/3;display:block;width:40px;height:0;border-top:10px solid var(--w05-sage-400);border-radius:5px}
+.wclk__lg b{font:700 25px/1.12 var(--sans)}
+.wclk__lg span{font:500 22px/1.18 var(--sans)}
+.wclk__lg--1{background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
+.wclk__lg--1 i{border-top:16px solid var(--w05-green);border-radius:8px}
+.wclk__lg--2 i{border-top:4px solid var(--w05-green);border-radius:2px}
+.wclk__legend small{font:500 22px/1.3 var(--mono);color:var(--muted)}
+.tl2__axis{position:absolute;left:0;right:0;top:100px;height:0;border-top:2px solid var(--ink)}
+.tl2__yr{position:absolute;top:100px;padding:12px 0 0 8px;white-space:nowrap;border-left:2px solid var(--ink);font:600 26px/1 var(--mono)}
+.tl2__yr--end{translate:-100% 0;padding:12px 8px 0 0;border-left:0;border-right:2px solid var(--ink)}
+.tl2__a{position:absolute;top:6px;display:grid;align-content:start;gap:2px;height:94px;padding-left:12px;border-left:2px solid var(--ink)}
+.tl2__a b{font:700 28px/1.1 var(--sans)}
+.tl2__a small{font:600 24px/1.1 var(--mono)}
+.tl2__a i{position:absolute;left:-9px;top:86px;width:16px;height:16px;border-radius:50%;background:var(--w05-sage-600)}
+.tl2__gap{position:absolute;top:91px;height:16px;border-radius:10px;border:2px solid var(--w05-green);background:var(--w05-sage-200)}
+.tl2__g{position:absolute;top:50px;font:600 26px/1.1 var(--sans)}
+.tl2__pt{position:absolute;top:6px;height:94px;padding-left:10px;border-left:2px dashed var(--ink);font:600 24px/1.1 var(--mono)}
+.tl2__pt i{display:none}
+.tl2__band{position:absolute;left:0;right:0;top:150px;height:18px;border-radius:9px;background:var(--w05-sage-400)}
+.tl2__bl{position:absolute;right:0;top:174px;font:600 24px/1.1 var(--mono)}
+.tl2__head{position:absolute;top:66px;transition:left .3s ease-out}
+.tl2__head i{display:block;width:6px;height:70px;margin-left:-3px;border-radius:3px;background:var(--w05-sage-600)}
+.tl2[data-w05-at="0"] .tl2__head{left:8.57%}
+.tl2[data-w05-at="1"] .tl2__head{left:42.86%}
+.tl2[data-w05-at="2"] .tl2__head{left:77.14%}
+.tl2[data-w05-at="3"] .tl2__head{left:97.14%}
+.tl2__ro{position:absolute;left:760px;top:240px;white-space:nowrap}
+/* the axis and its years stand from the entry; the scrub head and its read-out join with the first date (press 1) */
+.slide.we[data-view="0"] .tl2__head,.slide.we[data-view="0"] .tl2__ro{visibility:hidden}
+.tl2__r{display:none;font:600 28px/1.2 var(--sans)}
+.tl2[data-w05-at="0"] .tl2__r--0,.tl2[data-w05-at="1"] .tl2__r--1,.tl2[data-w05-at="2"] .tl2__r--2,.tl2[data-w05-at="3"] .tl2__r--3{display:inline}
+
+/* S06 letter: the envelope rises from lying flat and opens (an object, 3D); the week is a flat calendar strip of working days
+   (pitch 224 px, round 5) that slides left on press 6 to the four steps after the visit; caption, poll, scrubber and the law
+   on the right */
+.slide.letter .stage > [data-zone="env"]{left:40px;top:276px}
+.slide.letter .stage > [data-zone="cap"]{left:700px;top:112px;width:996px}
+.slide.letter .stage > [data-zone="pb"]{left:700px;top:250px;width:460px}
+.slide.letter .stage > [data-zone="sc"]{left:700px;top:362px}
+.slide.letter .stage > [data-zone="ro"]{left:700px;top:444px}
+.slide.letter .stage > [data-zone="law"]{left:700px;top:250px;width:780px}
+.slide.letter .stage > [data-zone="src"]{left:700px;top:444px;width:780px}
+.slide.letter .stage > [data-zone="ins"]{left:1536px;top:240px;width:150px;height:150px}
+.slide.letter .stage > [data-zone="floor"]{left:0;top:560px;width:1696px;height:340px}
+.slide.letter .bk{left:0;right:auto;top:auto;bottom:-26px}
+.slide.letter .pb .poll__opt{min-height:84px}
+.slide.letter .w05-btn{padding:10px 22px}
+/* the envelope: lying flat it tips up (first third of press 0), the flap opens, then the letter rises and comes forward */
+.slide.letter .lt-env[data-step][data-fx]{transform-origin:50% 100%;transform:perspective(1400px) rotateX(calc((1 - clamp(0,calc(var(--p,1) / .35),1)) * 72deg)) translateY(calc((1 - clamp(0,calc(var(--p,1) / .35),1)) * 40px))}
+.lt-env .envelope{width:520px;height:290px}
+.lt-env .envelope__flap{transform:rotateX(calc(clamp(0,calc((var(--p,1) - .25) / .3),1) * 180deg))}
+.lt-env .envelope__letter{height:262px;padding:16px 24px;transform:translateY(calc(clamp(0,calc((var(--p,1) - .5) / .5),1) * -70%)) translateZ(calc(clamp(0,calc((var(--p,1) - .5) / .5),1) * 60px))}
+.lt-env .envelope__letter svg.ico{position:absolute;right:24px;top:20px;width:48px;height:48px}
+.lt-env__t{margin:0;padding-right:56px;font-size:30px;line-height:1.05}
+.lt-env__g{margin:4px 0 0;font-size:21px;line-height:1.2}
+.lt-env__d{margin-top:4px;font:600 23px/1.2 var(--sans)}
+.lt-law{padding:14px 20px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.3 var(--mono)}
+.lt-wc{padding:18px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 27px/1.3 var(--sans)}
+/* the strip: flat on the page, clipped to the stage so the slide never shows past the frame */
+.slide.letter .ltf[data-step][data-fx]{overflow:hidden}
+.slide.letter .ltf__cam[data-step][data-fx]{position:relative;display:grid;grid-template-columns:repeat(6,200px) 1248px;column-gap:24px;width:max-content;height:100%;padding-top:110px;transform:translateX(calc(var(--p,1) * -896px))}
+.ltd{position:relative;display:grid;align-content:start;gap:12px;height:224px;padding:16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.ltd--4{background:var(--w05-sage-100)}
+.ltd__h{font:700 34px/1.1 var(--mono)}
+.ltd__ev{display:flex;align-items:center;gap:8px;font:600 25px/1.2 var(--sans)}
+.ltd__ev svg.ico{width:34px;height:34px}
+.ltd__ev--v{font-weight:700}
+.ltd--after{position:relative}
+.ltd__chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:20px}
+.ltc{display:grid;align-content:start;gap:8px;height:224px;padding:16px 18px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.ltc__t{font:600 26px/1.15 var(--sans)}
+.ltc__d{font:700 30px/1.15 var(--mono)}
+.ltw-host{position:absolute;left:0;top:110px;width:1344px;height:224px;pointer-events:none}
+.ltw{position:absolute;top:74px;width:184px;padding:8px 10px;border-radius:12px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.15 var(--sans)}
+.ltw--1{left:232px}.ltw--2{left:456px}.ltw--3{left:680px}
+.lt-mk{position:absolute;left:224px;top:30px;width:200px;height:80px}
+.lt-mk__h{position:absolute;inset:0;display:grid;justify-items:center;align-content:start;gap:4px;transform:translateX(calc(var(--at) * 224px));transition:transform .3s ease-out}
+.lt-mk__h b{padding:4px 14px;border-radius:999px;background:var(--surface);outline:2px dashed var(--ink);outline-offset:-2px;font:600 24px/1.2 var(--sans)}
+.lt-mk__h i{display:block;width:0;height:30px;border-left:2px solid var(--ink)}
+.lt-br{position:absolute;top:90px;height:0;border-top:2px solid var(--ink)}
+.lt-br::before,.lt-br::after{content:"";position:absolute;top:-10px;height:20px;border-left:2px solid var(--ink)}
+.lt-br::before{left:0}.lt-br::after{right:0}
+.lt-br--3,.lt-brl--3{left:224px;width:648px}
+.lt-br--5,.lt-brl--5{left:896px;width:424px}
+.lt-br--6,.lt-brl--6{left:1344px;width:1248px}
+.lt-brl{position:absolute;top:56px;text-align:center;font:600 24px/1.1 var(--mono);white-space:nowrap}
+.lt-brl.lt-brl--5{top:28px;white-space:normal}
+.lt-ro__r{display:none;font:600 26px/1.2 var(--sans)}
+.ltf[data-w05-at="0"] ~ .lt-rob .lt-ro__r--0,.ltf[data-w05-at="1"] ~ .lt-rob .lt-ro__r--1,.ltf[data-w05-at="2"] ~ .lt-rob .lt-ro__r--2,.ltf[data-w05-at="3"] ~ .lt-rob .lt-ro__r--3{display:inline}
+svg.lt-ins{width:150px;height:150px}
+
+/* S07 time: one calendar of four days, two lanes with one hero number each. By hand: four flat day cards rise (round 5).
+   With Claude: a hairline at Monday is the true scale of the recorded run; a loupe lays the same steps out large. */
+.slide.time .stage > [data-zone="tg"]{right:250px;top:4px;flex-direction:row;gap:10px;z-index:3}
+.slide.time .stage > [data-zone="cap"]{left:0;top:96px;width:1696px}
+.slide.time .stage > [data-zone="ax"]{left:0;top:164px;width:1696px;height:84px}
+.slide.time .stage > [data-zone="lanes"]{left:0;top:256px;width:1696px;z-index:1}
+.slide.time .stage > [data-zone="src"]{left:0;top:916px;width:1040px}
+.slide.time .stage > [data-zone="wb"]{left:1366px;top:600px;width:330px;z-index:2}
+.slide.time .w05-btn{padding:8px 20px;font-size:26px}
+.tf{position:relative;display:grid;grid-template-columns:320px repeat(4,minmax(0,1fr))}
+.tf__d{grid-row:1;padding-left:14px;border-left:2px solid var(--ink);font:700 32px/1 var(--mono)}
+.tf__d--0{grid-column:2}.tf__d--1{grid-column:3}.tf__d--2{grid-column:4}.tf__d--3{grid-column:5}
+.tf__yard{position:absolute;left:calc(320px + (100% - 320px) / 4);right:0;top:42px;height:12px;border-radius:6px;background:var(--w05-sage-400)}
+.tf__yl{position:absolute;z-index:1;left:calc(320px + (100% - 320px) / 4 + 10px);top:58px;padding:0 6px;background:var(--paper);font:600 24px/1.15 var(--mono)}
+.tf__ev{position:absolute;display:flex;align-items:center;gap:8px;font:600 26px/1.15 var(--mono);white-space:nowrap}
+.tf__ev svg.ico{width:36px;height:36px}
+.tf__ev--letter{left:334px;top:44px}
+.tf__ev--visit{right:0;top:58px}
+.tl2s{position:relative;display:grid;grid-template-rows:270px 330px;row-gap:20px}
+/* the calendar floor: the four day lines run down through both lanes from the entry on */
+.tl2s__grid{position:absolute;left:320px;right:0;top:-8px;bottom:-8px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));pointer-events:none}
+.tl2s__grid i{border-left:2px dashed var(--w05-hair)}
+.tln{position:relative;display:grid;grid-template-columns:320px minmax(0,1fr);transform-origin:50% 0;transition:transform .3s ease-out,opacity .3s ease-out}
+.tln__l{align-self:start;display:grid;gap:10px;padding-top:6px}
+.tln__l > b{font:700 34px/1.1 var(--sans)}
+.tln__n{margin:0}
+.tln__hero{position:relative;display:grid;gap:6px}
+.tln__q{position:absolute;left:0;top:0}
+.tln .tln__n.tln__q b{color:var(--muted)}
+.tln__rl{margin:0;font:700 24px/1.15 var(--mono);color:var(--muted)}
+.tln__hon{margin:4px 0 0;max-width:300px;font:600 22px/1.25 var(--sans);color:var(--muted)}
+.tl-mon{grid-row:1;grid-column:1;align-self:center;justify-self:center;z-index:0}
+.tl-mon svg.dr{width:150px;height:150px;color:var(--ink)}
+.tln__n b{display:block;font:800 92px/.92 var(--sans);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.tln--claude .tln__n b{color:var(--w05-green)}
+.tln__days{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px}
+.tl2s[data-w05-state="hand"] .tln--claude,.tl2s[data-w05-state="claude"] .tln--hand{transform:translateY(-16px);opacity:0;pointer-events:none}
+/* the outlined slots of the four days, there from the entry: the week the room is about to fill */
+.tl-g{grid-row:1;align-self:stretch;border-radius:18px;border:2px dashed var(--w05-hair)}
+.tl-g--0{grid-column:1}.tl-g--1{grid-column:2}.tl-g--2{grid-column:3}.tl-g--3{grid-column:4}
+/* the day cards by hand: flat paper cards with an ink edge, one per day */
+.tln--hand .tln__days{grid-template-rows:minmax(0,1fr);column-gap:24px;padding:0 14px 14px 0}
+.tl-c{grid-row:1;align-self:stretch;display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:start;gap:8px;padding:16px 22px 20px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 30px/1.15 var(--sans)}
+.tl-c svg.dr{width:112px;height:112px}
+.tl-c--0{grid-column:1}.tl-c--1{grid-column:2}.tl-c--2{grid-column:3}.tl-c--3{grid-column:4}
+/* with Claude: the same four days as a track; a 2 px hairline at Monday morning is the run true to scale */
+.tln__days.tc{display:block}
+.tc__track{position:absolute;left:0;right:0;top:0;height:48px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.slide.time:is([data-view="0"],[data-view="1"]) .tc__track{box-shadow:none;border:2px dashed var(--w05-hair)}
+.tc > i.tc__hair{position:absolute;left:0;top:-8px;width:2px;height:64px;background:var(--accent)}
+.tc__true{position:absolute;z-index:1;left:16px;top:8px;font:700 26px/1.2 var(--mono);white-space:nowrap}
+.tc__wedge{position:absolute;left:0;top:48px;width:calc(75% - 12px);height:28px}
+.tc__wedge svg{display:block;width:100%;height:100%}
+.tc__wedge polygon{fill:none;stroke:var(--w05-hair);stroke-width:2;vector-effect:non-scaling-stroke}
+.tc__loupe{position:absolute;left:0;width:calc(75% - 12px);top:76px;bottom:0;padding:12px 22px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.tc__lt{margin:0;font:700 26px/1.2 var(--mono)}
+.tc__bar{position:relative;height:64px;margin:10px 0 0}
+.tc__s{position:absolute;top:0;height:64px}
+.tc__f{position:absolute;inset:0 5px 0 0;border-radius:12px;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.tc__no{position:absolute;inset:0 5px 0 0;display:grid;place-items:center;font:800 30px/1 var(--mono)}
+.tc__legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0 0}
+.tc__lg{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;align-items:baseline;font:700 28px/1.15 var(--sans)}
+.tc__lg b{grid-row:1/3;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ink);font:800 22px/1 var(--mono)}
+.tc__lg em{font-style:normal}
+.tc__lg small{font:600 26px/1.15 var(--mono)}
+.tc__chip{margin:10px 0 0;font:600 22px/1.2 var(--mono);color:var(--muted)}
+.tc__chip--none{position:absolute;left:40px;top:12px;margin:0}
+.wb{display:grid;gap:12px;padding:12px 16px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.wb__sc{font:600 22px/1.3 var(--mono);color:var(--muted);white-space:nowrap}
+.wb__r{display:grid;gap:8px}
+/* as the sectors bars: a border keeps the fill inside the ink ring, and the sage-600 fill reads 4.5:1 on the paper track */
+.wb__t{position:relative;display:block;height:26px;border-radius:13px;background:var(--surface);border:2px solid var(--ink);overflow:hidden}
+i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%);background:var(--w05-sage-600)}
+.wb__l{font:600 24px/1.2 var(--sans)}
+@media (prefers-reduced-motion:reduce){.tl2__head,.lt-mk__h,.tln{transition:none}}
+
+/* appendix: a1 holds the laws and the ladder, a4 the matrix and the blanks; the rows stay one line where they can */
+.slide.a1 .appx__rows,.slide.a4 .appx__rows{gap:4px}
+.slide.a1 .appx__row,.slide.a4 .appx__row{padding:4px 14px}
+.slide.a1 .appx__row,.slide.a1 .appx__mk.qd{font-size:19px}
+.slide.a1 .stage.appx,.slide.a4 .stage.appx{gap:14px}
+
+/* 5d ── the method and the close, S08 and S14 to S16: block stages (1696 x 920), every part placed; the caption swaps in place ── */
+.slide:is(.kit,.watch,.safety,.close) .stage{display:block;margin-top:0}
+.slide:is(.kit,.watch,.safety,.close) .stage > *{position:absolute}
+.slide:is(.kit,.watch,.safety,.close) .stage > [data-zone="h"]{left:0;top:0;margin:0}
+.slide:is(.kit,.watch,.safety,.close) .cap{max-width:none;font:500 38px/1.2 var(--sans);letter-spacing:-.012em;text-wrap:pretty}
+.slide:is(.kit,.watch,.safety,.close) .stage > [data-zone="cap"]{left:0;top:104px;width:1696px}
+
+/* S08 kit: the binder (an object, its 3D stays) stands up from the desk (entry) and opens on its spine (press 1); on press 2
+   four files arc flat from its sheet into the project's slots (round 5: no camera turn, no depth) */
+.slide.kit .stage > [data-zone="zip"]{left:0;top:212px}
+.slide.kit .zipbtn{grid-auto-flow:column;align-items:center;gap:14px;padding:10px 22px}
+.slide.kit .zipbtn svg.ico{width:30px;height:30px}
+.slide.kit .stage > [data-zone="cam"]{left:0;top:190px;width:1696px;height:730px}
+/* the desk: the binder lies flat at the start of the entry and stands up on its bottom edge */
+.kb-host{position:absolute;left:0;top:122px;width:880px;height:584px;transform-style:preserve-3d}
+/* round 6: the desk steps 120 px left and a little smaller, so the project window gets the width of the app's open sidebar */
+.slide.kit .kb-host[data-step][data-fx]{transform-origin:100% 100%;transform:translateX(-120px) perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg)) scale(.84);opacity:min(1,calc(var(--p,1) * 4))}
+.kb{position:absolute;left:430px;top:0;width:470px;height:584px}
+/* the open cover stays inside the 112 px margin (w05-fx.css sets 158 deg for every binder) */
+.slide.kit .kb{--open:130deg}
+.kb .w05-binder__front{display:grid;place-items:center;backface-visibility:visible}
+.slide.kit .kb[data-step][data-fx] .w05-binder__front{transform:translateZ(3px) rotateY(calc(var(--p,1) * var(--open) * -1))}
+.kb[data-step] .kb__cover{opacity:clamp(0,calc(1 - var(--p,1) * 2.5),1)}
+.kb__cover{display:grid;justify-items:center;gap:16px;padding:24px;text-align:center}
+.kb__cover svg.dr{width:190px;height:190px}
+.kb__cover b{font:700 28px/1.2 var(--mono);overflow-wrap:anywhere}
+.kb__cover small{font:600 26px/1.2 var(--mono)}
+/* the inside of the open cover: the zip name and its file count, mirrored so it reads once the cover has swung past 90 degrees */
+.kb__inside{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;gap:10px;padding:24px;text-align:center;transform:rotateY(180deg)}
+.kb__inside b{font:700 28px/1.2 var(--mono);overflow-wrap:normal}
+.kb__inside small{font:600 26px/1.2 var(--mono)}
+.kb[data-step] .kb__inside{opacity:clamp(0,calc((var(--p,1) - .55) * 4),1)}
+.kb__tree{position:absolute;inset:24px 22px 24px 32px;display:grid;align-content:start;gap:3px;margin:0;padding:0;list-style:none;transform:translateZ(1px)}
+.kb__tree li{display:flex;align-items:center;gap:12px;min-width:0;min-height:40px;font:500 23px/1.12 var(--mono)}
+.kb__tree li span{flex:1 1 auto;min-width:0;overflow-wrap:normal}
+.kb__tree svg.ico{flex:none;width:28px;height:28px}
+.kb__tree em{margin-left:auto;padding:1px 12px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink);font:600 20px/1.2 var(--mono);font-style:normal}
+.slide.kit .kw-host{position:absolute;left:800px;top:22px;width:896px;height:452px}
+.slide.kit .kw{position:absolute;inset:0;font-size:26px}
+.kw__p{display:grid;gap:8px}
+.slide.kit .kw .tk-thread{padding:.55em .85em .5em}
+/* the project page: its name in the app's serif, then its instructions and its files (sentence case, as the app writes them) */
+.kw__t{display:flex;align-items:center;gap:12px;margin:0;font:400 29px/1.15 var(--cl-serif);letter-spacing:-.015em;color:var(--cw-t1)}
+.kw__t b{font-weight:400}
+.kw__t svg{flex:none;width:28px;height:28px;color:var(--cw-t3)}
+.kw__h{margin:2px 0 0;font:600 20px/1.2 var(--cw-sans);color:var(--cw-t2)}
+.kw__ins{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;align-items:center;margin:0;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__ins svg{grid-row:1/3;width:30px;height:30px;color:var(--cw-t2)}
+.kw__ins b{font:600 22px/1.2 var(--cw-sans)}
+.kw__ins small{font:400 20px/1.25 var(--cw-sans);color:var(--cw-t2)}
+.kw__files{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:88px;margin:0;padding:0;list-style:none}
+.kw__slot{min-height:72px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__files > .kw__ghost{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:40px 40px;gap:8px;padding:0;background:none;box-shadow:none;pointer-events:none}
+.kw__files > .kw__ghost > i{position:static;display:block;height:40px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
+/* the flying files: above the window (later in the scene, so painted on top), each placed on its slot and flown from its tree row */
+.kfly-l{--cw-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+/* a file of the project: a white card with a hair edge (round 6), the name in the app's sans */
+.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:320px;height:40px;padding:6px 12px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 20px/1.2 var(--cw-sans);white-space:nowrap;overflow:hidden}
+.slide.kit .kfly[data-step][data-fx]{transform:translate(calc((1 - var(--p,1)) * var(--dx)),calc((1 - var(--p,1)) * var(--dy) - var(--p,1) * (1 - var(--p,1)) * 240px))}
+.kfly svg{flex:none;width:24px;height:24px}
+.kfly span{min-width:0;overflow-wrap:normal;white-space:nowrap;font-size:20px}
+.nobr{white-space:nowrap}
+.kw__made{display:flex;align-items:center;gap:10px;margin-top:2px;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__made svg{flex:none;width:34px;height:34px}
+.kw__made span{display:grid;gap:2px;margin-left:6px}
+.kw__made b{font:600 22px/1.2 var(--cw-sans)}
+.kw__made small{font:500 19px/1.2 var(--mono);color:var(--muted)}
+.slide.kit .stage > [data-zone="steps"]{left:800px;top:688px;width:896px}
+.ksteps ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.ksteps li{display:grid;align-content:start;gap:8px;min-height:160px;padding:14px 16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 26px/1.2 var(--sans)}
+.ksteps li b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 22px/1 var(--mono)}
+.ksteps small{display:block;margin-top:8px;font:500 21px/1.2 var(--mono);color:var(--muted)}
+
+/* the status tiles of step 3: a blank paper tile whose status shows through as --p runs (flat, round 5: the blank cover
+   fades, nothing turns) */
+.flip3[data-step][data-fx]{position:relative}
+.flip3__b{position:absolute;inset:0;z-index:1;border-radius:inherit;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.flip3[data-step][data-fx] > .flip3__b{opacity:calc(1 - var(--p,1))}
+.flip3__f{display:contents}
+
+/* S13 register: each row's cells slide from their place in the file to their place by due date; the due rows light up */
+.reg__r{position:relative;display:block;height:50px;box-sizing:border-box;padding:0;overflow:visible}
+.reg__in{--d:0;display:grid;grid-template-columns:70px 215px 150px 165px minmax(0,1fr) 225px;gap:0 12px;align-items:center;height:100%;white-space:nowrap}
+.reg__in span{overflow:hidden;text-overflow:ellipsis}
+/* a moving row carries its own paper, so rows that pass each other cover cleanly instead of overprinting */
+.reg__in[data-step][data-fx]{position:relative;z-index:1;background:var(--surface);transform:translateY(calc((1 - var(--p,1)) * var(--d,0) * 50px))}
+.slide.register:is([data-view="4"],[data-view="5"],[data-view="6"]) .reg__r--due,.slide.register:is([data-view="4"],[data-view="5"],[data-view="6"]) .reg__r--due .reg__in{background:var(--w05-sage-100)}
+
+/* the time machine: one check day, four counts in large type; each is a strip of its three values and rolls to the date the
+   chips set (--at on the panel); the panel rises into place on press 4 (flat, round 5) */
+.scr{position:relative;margin-top:22px}
+.slide.register .scr[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.scr__r{display:grid;gap:12px;margin:0;padding:18px 28px;border-radius:20px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.tm{display:block;height:112px;overflow:hidden}
+.tm__s{display:grid;transform:translateY(calc(var(--at,0) * -112px));transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.tm__r,.scr__lb{display:grid;grid-template-columns:330px repeat(4,minmax(0,1fr));gap:0 18px;align-items:center}
+.tm__r{height:112px}
+.scr__d{font:700 44px/1 var(--sans);letter-spacing:-.02em}
+.scr__c{font:700 92px/1 var(--mono);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.scr__lb small{font:600 26px/1.15 var(--mono);color:var(--muted)}
+.reg-sc{flex-direction:column;align-items:flex-start;gap:14px;margin-top:10px;padding-left:22px;border-left:3px solid var(--w05-sage-400)}
+.reg-sc .w05-btn{font-size:30px;padding:14px 26px}
+@media (prefers-reduced-motion:reduce){.tm__s{transition:none}}
+/* from press 5 the three check days stand stacked (the counts change is visible without a click); a date chip lights its row */
+.slide.register:is([data-view="5"],[data-view="7"]) .tm{height:auto}
+.slide.register:is([data-view="5"],[data-view="7"]) .tm__s{transform:none;gap:2px}
+.slide.register:is([data-view="5"],[data-view="7"]) .tm__r{height:58px;opacity:.42;transition:opacity .3s ease-out}
+.slide.register:is([data-view="5"],[data-view="7"]) .scr__c{font-size:54px;line-height:1}
+.slide.register:is([data-view="5"],[data-view="7"]) .scr__d{font-size:34px}
+.slide.register .scr:is([data-w05-at="0"],:not([data-w05-at])) .tm__r:nth-child(1),.slide.register .scr[data-w05-at="1"] .tm__r:nth-child(2),.slide.register .scr[data-w05-at="2"] .tm__r:nth-child(3){opacity:1}
+@media (prefers-reduced-motion:reduce){.tm__r{transition:none !important}}
+
+/* S14 watch: the weekly loop is the hero: a calendar ring of four weeks around the register on the left, the check fixed at
+   twelve o'clock; each press 1 to 3 turns the ring a quarter back so the next week arrives under it. Plans, result, watch list
+   and sentence on the right */
+.slide.watch .stage > [data-zone="pill"]{right:0;top:12px}
+/* the outlines of the coming cards (stage pixels of the plans card, the result card and the three watch cards) */
+.wgh{position:absolute;inset:0;pointer-events:none}
+.wgh i{position:absolute;box-sizing:border-box;border-radius:22px;outline:2px dashed var(--w05-hair);outline-offset:-2px}
+.wgh__p{left:820px;top:234px;width:876px;height:113px}
+.wgh__r{left:820px;top:440px;width:876px;height:144px}
+.wgh__l{top:626px;width:280px;height:231px}
+.wgh__l:nth-child(3){left:820px}.wgh__l:nth-child(4){left:1118px}.wgh__l:nth-child(5){left:1416px}
+.slide.watch:not([data-view="0"]) .wgh__p,.slide.watch:is([data-view="2"],[data-view="3"],[data-view="4"]) .wgh__r,.slide.watch:is([data-view="3"],[data-view="4"]) .wgh__l{visibility:hidden}
+.wv{position:absolute;inset:0;pointer-events:none}
+.wv > *{position:absolute;pointer-events:auto}
+.wr{left:0;top:196px;width:760px;height:760px}
+.wr__rot{position:absolute;inset:0;transform-origin:50% 50%}
+/* the playhead: one full turn per press, a pure function of --p (nested, so each press adds its own turn) */
+.wr__orb{position:absolute;inset:0;transform-origin:50% 50%;pointer-events:none}
+.slide.watch .wr__orb[data-step][data-fx]{transform:rotate(calc(var(--p,1) * 360deg))}
+.wr__ph{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:var(--w05-sage-400);stroke:var(--ink);stroke-width:2.5}
+/* the plans and the result rise into place as they arrive (flat, round 5) */
+.slide.watch .wup3[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.slide.watch .wr__rot[data-step][data-fx]{transform:rotate(calc(var(--p,1) * -90deg))}
+.wr__ring,.wr__loop,.wr__ticks{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.wr__ring{stroke:var(--ink);stroke-width:3}
+.wr__n{fill:var(--surface);stroke-width:3;transition:opacity .3s ease-out}
+.wr__t{stroke:var(--ink);stroke-width:5;transition:opacity .3s ease-out}
+.wr__loop{stroke:var(--w05-green);stroke-width:4}
+.wr svg.wr__bell{position:absolute;width:84px;height:84px;margin:-42px 0 0 -42px;padding:12px;box-sizing:border-box;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);stroke-width:1.6}
+.wr__c{position:absolute;left:190px;top:215px;width:380px;height:330px;display:grid;justify-items:center;align-content:center;gap:8px;border-radius:26px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);text-align:center}
+.wr__c svg.dr{width:116px;height:116px}
+.wr__c b{font:700 30px/1.2 var(--mono)}
+.wr__c span{font:600 28px/1.2 var(--mono)}
+.wr__c em{font:700 52px/1 var(--mono);font-style:normal}
+.wr__l{font:600 24px/1.25 var(--sans);color:var(--muted)}
+.wr__l--free{display:none}
+.slide.watch[data-view="0"] .wr__l{visibility:hidden}
+.wv[data-w05-state="free"] .wr__l--paid{display:none}
+.wv[data-w05-state="free"] .wr__l--free{display:block}
+.wv[data-w05-state="free"] :is(.wr__n--1,.wr__n--2,.wr__n--3,.wr__t--1,.wr__t--2,.wr__t--3){opacity:.18}
+/* the toggle shows one plan at a time, so the choice reads at a glance */
+.wv[data-w05-state="free"] .wp__c--paid,.wv[data-w05-state="paid"] .wp__c--free{display:none}
+/* the toggle leads the right column: two large segments, the chosen one filled */
+.slide.watch .stage > [data-zone="tg"]{left:820px;top:150px;flex-direction:row;gap:0}
+.slide.watch .w05-ctl--toggle .w05-btn{min-width:220px;padding:14px 30px;font:700 28px/1.2 var(--sans)}
+.slide.watch .w05-ctl--toggle .w05-btn:first-child{border-radius:16px 0 0 16px}
+.slide.watch .w05-ctl--toggle .w05-btn:last-child{border-radius:0 16px 16px 0}
+.wp{left:820px;top:234px;width:876px;display:grid;gap:4px}
+/* the plans in Claude's own window (D4): the chrome, then the plan of the toggle without a frame of its own */
+.wp > .cl-panel{font-size:28px;border-radius:18px}
+.wp .cl-panel__b{display:grid}
+.wp .cl-panel .wp__c{padding:10px 26px 12px;border-radius:0;background:transparent;box-shadow:none}
+.wp > .cl-panel > .cw-bar{height:1.65em}
+/* the paid plan as the app's task: the card says what it does, the bar its schedule, its next run and its state (paid only) */
+.wp .cl-panel .wp__c b{font-size:32px}
+.wp .cl-panel .wp__c > span{font-size:27px}
+.cw-tail{margin-left:auto}
+.wp .wp__m{display:flex;align-items:center;gap:8px}
+.wp .wp__m em{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:7px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font-style:normal;font-weight:500;color:var(--cw-t2)}
+.wp .wp__m svg{width:18px;height:18px}
+.wp .wp__m em.wp__on{color:var(--cw-t1)}
+.wv[data-w05-state="free"] .wp .cw-tail{visibility:hidden}
+.wp__c{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 22px;align-items:center;margin:0;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);transition:opacity .3s ease-out}
+.wp__c svg{grid-row:1/3;width:60px;height:60px}
+.wp__c b{font:700 34px/1.2 var(--sans)}
+.wp__c span{font:500 29px/1.25 var(--sans)}
+.wp small,.wl__src,.wres__note{font:500 23px/1.25 var(--mono);color:var(--muted)}
+/* the weekly task's answer, as Claude's reply (D4): ivory, the clay edge, the spark on its first line */
+.wres{left:820px;top:449px;width:876px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 32px;align-items:center;padding:8px 26px;border-radius:20px}
+.wres p{margin:0}
+.wres__h{grid-column:1/-1;display:flex;align-items:center;gap:12px;font:600 25px/1.2 var(--cl-sans)}
+.wres__h .cl-spark{width:28px;height:28px}
+.wres__note{align-self:center}
+.wres__n{display:flex;gap:40px}
+.wres__n span{display:flex;align-items:baseline;gap:12px}
+.wres__n b{font:700 64px/1 var(--mono)}
+.wres__n small{font:600 25px/1.2 var(--mono)}
+.wl{left:820px;top:626px;width:876px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.wl__c{display:grid;grid-template-columns:auto minmax(0,1fr);align-content:start;gap:4px 12px;padding:16px 18px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.wl__c svg{grid-row:1/3;width:46px;height:46px}
+.wl__c > :not(svg){grid-column:2}
+.wl__c > small{grid-column:1/-1}
+.wl__c b{font:700 30px/1.15 var(--sans)}
+.wl__c span{font:500 23px/1.25 var(--sans)}
+.wl__c small{margin-top:auto;padding-top:10px;border-top:2px solid var(--w05-hair);font:600 23px/1.25 var(--mono)}
+.wl__src{grid-column:1/-1;margin:0}
+.wy{left:820px;top:626px;width:876px;display:grid;gap:16px}
+.wy p{margin:0}
+.wy__tp{font:600 40px/1.2 var(--sans);letter-spacing:-.015em}
+.wy__ex{padding:14px 24px;border-radius:20px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 29px/1.3 var(--sans)}
+.wy__line{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:end;gap:24px;padding-top:12px}
+.wy__line span{font:600 30px/1.2 var(--mono)}
+
+/* S15 safety: the left column holds the two rules and one card at a time; the stair of four levels climbs on the right and links to A2 */
+.slide.safety .stage > [data-zone="cap"]{width:840px}
+.slide.safety .stage > [data-zone="r"]{left:0;top:236px;width:840px}
+.slide.safety .stage > [data-zone="a"]{left:0;top:378px;width:840px}
+.slide.safety .stage > [data-zone="l"]{left:0;top:642px;width:840px}
+.sfr,.sff,.sfn{display:grid;gap:14px}
+.sfl{display:grid;gap:14px}
+.sff p,.sfl p{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin:0;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 30px/1.24 var(--sans)}
+/* the two rules stay as two plain lines at the top of the column (the slide's core), no box */
+.sfr{gap:10px;padding-bottom:18px;border-bottom:2px solid var(--w05-hair)}
+.sfr p{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;margin:0;font:600 34px/1.2 var(--sans)}
+.sfr svg{width:48px;height:48px}
+.sff svg,.sfl svg{width:50px;height:50px}
+.sff small,.sfn small,.sfl small{font:500 22px/1.25 var(--mono);color:var(--muted)}
+.slide.safety .pb{--n:2;gap:16px;width:840px}
+.slide.safety .pb .poll__opt{min-height:96px;font-size:30px}
+.sfn{gap:12px;padding:20px 28px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.sfn > b{font:700 34px/1.2 var(--sans)}
+.sfn ul{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.sfn li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;font:500 30px/1.2 var(--sans)}
+.sfn li svg{width:42px;height:42px}
+.sfl p{padding-top:12px;padding-bottom:12px;font-size:28px}
+.sfl__g{display:grid;gap:10px;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.sfl__g > b{font:700 32px/1.2 var(--sans)}
+.sfl__g ul{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin:0;padding:0;list-style:none;font:500 28px/1.25 var(--sans)}
+.sfl__g li{padding-left:16px;border-left:3px solid var(--w05-sage-400)}
+/* the stair in depth: the host turns 22 degrees and leans 8; each step stands one level (40 px) higher in z; the lit step comes forward */
+.slide.safety .stage > [data-zone="st"]{left:870px;top:110px;width:826px;height:760px}
+.sf3{perspective:none}
+.sf3 a{position:absolute;inset:0 0 0 -70px;color:inherit;text-decoration:none;transform:perspective(1800px) rotateY(-18deg) rotateX(8deg) scale(.94);transform-origin:40% 60%;transform-style:preserve-3d}
+.sf3__s,.sf3 .sf3__g{--i:0}
+.sf3__s{position:absolute;width:470px;height:176px;box-sizing:border-box;display:grid;align-content:start;gap:4px;padding:16px 24px;border-radius:20px;transform-style:preserve-3d;translate:0 0 calc(var(--i) * 40px);transition:opacity .3s ease-out,translate .5s cubic-bezier(.22,1,.36,1)}
+.sf3__s > :not(i){position:relative}
+.sf3__face{position:absolute;inset:0;border-radius:20px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.sf3__edge{position:absolute;inset:0;border-radius:20px;border:2px solid var(--ink);translate:6px 6px}
+.sf3__s--1{left:0;top:604px}.sf3__s--1 .sf3__face{background:var(--w05-sage-50)}
+.sf3__s--2{left:120px;top:424px}.sf3__s--2 .sf3__face{background:var(--w05-sage-100)}
+.sf3__s--3{left:240px;top:244px}.sf3__s--3 .sf3__face{background:var(--w05-sage-200)}
+.sf3__s--4{left:360px;top:64px}.sf3__s--4 .sf3__face{background:var(--w05-sage-400)}
+.slide.safety[data-view="3"] .sf3__s--3,.slide.safety[data-view="4"] .sf3__s--3,.slide.safety[data-view="5"] .sf3__s--4{translate:0 0 calc(var(--i) * 40px + 40px)}
+.sf3 .sf3__g{position:absolute;width:470px;height:176px;border-radius:20px;background:none;box-shadow:none;border:2px dashed var(--w05-hair);translate:0 0 calc(var(--i) * 40px)}
+.sf3__l{font:600 22px/1.2 var(--mono)}
+.sf3__n{font:700 36px/1.12 var(--sans)}
+.sf3__s small{font:500 25px/1.25 var(--sans)}
+@media (prefers-reduced-motion:reduce){.sf3__s{transition:none}}
+/* the answer and the gates: the other steps step back */
+.slide.safety[data-view="3"] :is(.sf3__s--1,.sf3__s--2,.sf3__s--4),.slide.safety[data-view="5"] :is(.sf3__s--1,.sf3__s--2,.sf3__s--3){opacity:.4}
+
+/* S16 close: last time (four greyed days), the fold into one register row and the weekly loop, then the doors and the poll, then
+   the take-away and the QR cards. The fold is one scene (children read the host's --p): the four day cards gather onto Monday
+   one after another and flatten to the row's height, the gathered card unrolls to the right as the register row, and the weekly
+   check rises under it. --q is each card's own share of the press (Thursday first) */
+.slide.close .stage > [data-zone="pay"]{left:0;top:200px;width:1696px;height:660px}
+.cpw{height:100%}
+.cp{position:relative;height:100%}
+.cp__old,.cp__new{position:absolute;inset:170px 0 auto 0}
+.cp__l{display:block;margin-bottom:22px;font:600 30px/1.2 var(--mono);color:var(--muted)}
+.cp__old ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none}
+.cp__old li{--q:clamp(0,calc((var(--p,1) - (3 - var(--i,0)) * .07) / .34),1);display:grid;align-content:start;gap:14px;height:300px;padding:34px 34px;box-sizing:border-box;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);color:var(--muted);transform-origin:0 0}
+.cp__old li b{font:700 72px/1 var(--mono)}
+.cp__old li span{font:500 40px/1.2 var(--sans)}
+.slide.close .cp[data-step] .cp__old li{transform:translateX(calc(var(--q) * var(--dx,0px))) scaleY(calc(1 - var(--q) * .567));opacity:calc(1 - clamp(0,(var(--p,1) - .58) / .14,1))}
+.slide.close .cp[data-step] .cp__old .cp__l{opacity:calc(1 - var(--p,1) * 2.5)}
+.slide.close .cp[data-step] .cp__new .cp__l{opacity:clamp(0,calc((var(--p,1) - .4) * 4),1)}
+.slide.close .cp[data-step] .cp__row{clip-path:inset(0 calc((1 - clamp(0,(var(--p,1) - .5) / .3,1)) * (100% - 409px)) 0 0 round 22px);opacity:clamp(0,calc((var(--p,1) - .44) * 8),1)}
+.slide.close .cp[data-step] .cp__wk{transform:translateY(calc((1 - clamp(0,(var(--p,1) - .62) / .38,1)) * 90px));opacity:clamp(0,calc((var(--p,1) - .62) * 5),1)}
+.cp__row{display:grid;grid-template-columns:130px 390px 320px 270px minmax(0,1fr);align-items:center;margin:0;padding:0 36px;height:130px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 42px/1.2 var(--mono);white-space:nowrap}
+.cp__row span{overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.cp__wk{display:flex;align-items:center;gap:44px;margin:30px 0 0;padding:36px 40px;border-radius:22px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
+.cp__wk > b{font:700 56px/1.1 var(--sans)}
+.cp__wk span{display:flex;align-items:baseline;gap:14px}
+.cp__wk span b{font:700 112px/1 var(--mono)}
+.cp__wk small{font:600 32px/1.2 var(--mono)}
+.cp svg.cp__loop{flex:none;width:128px;height:128px;stroke-width:1.3}
+.slide.close .stage > [data-zone="doors"]{left:0;top:200px;width:1696px;height:360px}
+.slide.close .doors svg.dr{width:180px;height:180px}
+.slide.close .doors li{gap:16px;font-size:40px}
+.slide.close .stage > [data-zone="pb"]{left:0;top:600px;width:1696px}
+.slide.close .pb{max-width:none}
+.slide.close .pb .poll__opt{min-height:96px;font-size:32px}
+.slide.close .stage > [data-zone="gb"]{left:0;top:720px;width:1696px}
+.slide.close .stage > [data-zone="cap"]{top:104px}
+.slide.close .stage > [data-zone="qr"]{left:0;top:150px;width:1290px;height:720px;align-content:center}
+.slide.close .qr img{width:360px;height:360px}
+.slide.close .qr figcaption{font-size:30px}
+.slide.close .qr__url{font-size:22px}
+.slide.close .qr{grid-template-columns:auto;justify-items:center;text-align:center}
+.slide.close .stage > [data-zone="qs"]{left:1330px;top:420px;width:366px;font:700 72px/1.04 var(--sans);letter-spacing:-.03em}
+
+/* 6 ── appendix: one figure row per entry, no motion ──────────────── */
+.appx__rows{display:grid;gap:7px;width:100%}
+.appx__row{display:grid;gap:8px 18px;align-items:center;padding:9px 18px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 21px/1.25 var(--mono)}
+.appx__c{min-width:0}
+.appx__name{font-weight:700}
+.appx__mk.qd{font-size:21px}
+.appx__rows--laws .appx__row{grid-template-columns:215px minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1fr)}
+.appx__rows--levels .appx__row{grid-template-columns:60px minmax(0,1fr)}
+.appx__rows--blanks{grid-template-columns:repeat(3,1fr)}
+.appx__note{margin:0;font:600 24px/1.3 var(--sans);color:var(--muted)}
 .appx__back{position:absolute;right:0;top:0;text-decoration:none}
-.stage.appx{display:grid;gap:22px;align-content:start}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.facts--2{grid-template-columns:repeat(2,1fr)}
-.facts li{display:grid;gap:12px;align-content:start;padding:24px 28px}
-.fact__head{font:700 26px/1.2 var(--sans)}
-.fact__text{font:400 23px/1.4 var(--sans)}
-.appx__rule{display:flex;gap:16px;align-items:flex-start;padding:22px 28px;font:400 24px/1.4 var(--sans)}
-.appx__rule svg.ico{width:32px;height:32px;color:var(--accent);flex:none}
-.sources{display:grid;gap:8px}
-.sources li{display:grid;gap:2px}
-.sources b{font:700 22px/1.3 var(--sans)}
-.sources code{font:500 16px/1.3 var(--mono);color:var(--muted);overflow-wrap:anywhere}
-/* the project's knowledge counts up as the files land; the result headline asks before it answers */
-.pj__count{margin-left:auto;font-style:normal;font-weight:500;text-transform:none;letter-spacing:0;color:var(--cw-t2)}
-.pj__count b{font-variant-numeric:tabular-nums;color:var(--cw-t1)}
-.swap{display:inline-grid}
-.swap>span{grid-area:1/1}
+.appx__back:hover,.appx__back:focus-visible{color:var(--accent)}
+.stage.appx{display:grid;gap:22px;align-content:start;align-items:start}
+.tk-def{margin:0;padding:16px 22px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 28px/1.25 var(--sans)}
+.cap.fig{font-family:var(--sans)}

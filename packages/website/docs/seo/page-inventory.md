@@ -85,7 +85,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Eine Datei, drei Antworten | Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene K… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie bel… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Die Lückenliste | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Ordner und Register | Dreizehn Fragen des Arbeitsinspektors, ein Ordner mit den Papieren einer erfundenen Firma. Rate den Status de… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/angebote-mit-ki-vergleichen | Die Vergleichsbasis | Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst,… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
@@ -221,6 +221,10 @@ _None._
 | `/workshops/ki-im-unternehmen-sicher-nutzen` | The previous slug of Workshop 05 resolves to the audit preparation workshop. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/kit` | The previous kit page of Workshop 05 resolves to the new kit page. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip` | The previous kit zip of Workshop 05 resolves to the new kit zip. |
+| `/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip` | The first kit zip of the rebuilt Workshop 05 resolves to the new kit zip. |
+| `/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip` | The first German kit zip of the rebuilt Workshop 05 resolves to the new German kit zip. |
+| `/vorlagen/luecken-anfrage.md` | The retired gap-request template resolves to its replacement, the new-paper note. |
+| `/vorlagen/luecken-anfrage.en.md` | The retired English gap-request template resolves to its replacement, the new-paper note. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/slides.html` | The previous deck of Workshop 05 resolves to the rebuilt deck. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html` | The previous presenter view of Workshop 05 resolves to the rebuilt presenter view. |
 | `/demos/ki-im-unternehmen-sicher-nutzen` | The previous demo of Workshop 05 resolves to its evidence check demo. |

@@ -1,16 +1,16 @@
 import type { TileMotion, Track } from "@/lib/demo-tiles/types";
 
 /*
- * W05 "Die Lückenliste", hub miniature motion. Every request starts linked
- * to a file (solid lines, 8/8). A test bar sweeps down row by row: where a
- * test fails the solid line gives way to a dashed one (SCHWACH), where the
- * record says "not met" the line breaks and its halves pull apart (LÜCKE).
- * Then the counter drops to 2/8. Import-free apart from types. The last key
- * of a track is the base style, the finished still frame.
+ * W05 "Ordner und Register", hub miniature motion. Every question starts linked to a
+ * paper (solid lines, 13/13). A test bar sweeps down row by row: where a test
+ * fails the solid line gives way to a dashed one (weak), where the record
+ * shows the rule broken the line gives way to a broken one (gap). Then the
+ * counter drops to 2/13. Import-free apart from types. The last key of a
+ * track is the base style, the finished still frame.
  */
-const ROWS = 8;
+const ROWS = 13;
 /** Mirrors tile.tsx STATES: covered, weak, gap per row. */
-const STATES = ["c", "w", "w", "w", "g", "c", "g", "w"] as const;
+const STATES = ["c", "g", "g", "g", "g", "g", "g", "g", "g", "g", "w", "g", "c"] as const;
 const SWEEP_FROM = 0.14;
 const SWEEP_TO = 0.74;
 const at = (i: number) => SWEEP_FROM + ((SWEEP_TO - SWEEP_FROM) * (i + 0.5)) / ROWS;
@@ -19,14 +19,8 @@ const rows: Track[] = STATES.flatMap((state, i): Track[] => {
   if (state === "c") return [];
   const t = at(i);
   const solid: Track = { id: `s${i}`, prop: "o", keys: [[0, 1], [t, 1], [t + 0.03, 0], [1, 0]] };
-  if (state === "w") return [solid, { id: `d${i}`, prop: "o", keys: [[0, 0], [t, 0], [t + 0.03, 1], [1, 1]] }];
-  return [
-    solid,
-    { id: `a${i}`, prop: "o", keys: [[0, 0], [t, 0], [t + 0.02, 1], [1, 1]] },
-    { id: `b${i}`, prop: "o", keys: [[0, 0], [t, 0], [t + 0.02, 1], [1, 1]] },
-    { id: `a${i}`, prop: "tx", keys: [[0, 10], [t, 10], [t + 0.08, 0, "ease"], [1, 0]] },
-    { id: `b${i}`, prop: "tx", keys: [[0, -10], [t, -10], [t + 0.08, 0, "ease"], [1, 0]] },
-  ];
+  const next: Track = { id: state === "w" ? `d${i}` : `a${i}`, prop: "o", keys: [[0, 0], [t, 0], [t + 0.03, 1], [1, 1]] };
+  return [solid, next];
 });
 
 const COUNT = SWEEP_TO + 0.06;

@@ -1,0 +1,2450 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-chain-1",
+  "slug": "audit-vorbereitung-mit-ki",
+  "locale": "de",
+  "prompt_id": "chain",
+  "take": 1,
+  "recorded_at": "2026-11-08T16:01:10Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.319",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands",
+    "--append-system-prompt",
+    "<project-instructions>"
+  ],
+  "prompt": "Lies die drei Auszüge der Prüfliste. Mach eine Tabelle mit einer Zeile pro Frage der Prüfliste: Zeilen-Id, Artikel, das Papier, das die Frage beantwortet, wer dafür zuständig ist, wo es liegt (nimm ordner-index.md). Öffne die Dateien im Ordner noch nicht. Fehlt ein Papier in den Dateien, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen. Antworte nur mit der Tabelle.",
+  "kit_zip": "public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip",
+  "kit_files": [
+    {
+      "name": "faelle/fall-A-arbeit.md",
+      "path": "gradba-audit-kit-de/faelle/fall-A-arbeit.md",
+      "bytes": 6857,
+      "sha256": "010e2efd88c897bc05b6d9a9aa00a6d81172ce77bb806ddd4abb6b1b0b1b4fdc"
+    },
+    {
+      "name": "listen/pruefliste_arbeit_auszug.md",
+      "path": "gradba-audit-kit-de/listen/pruefliste_arbeit_auszug.md",
+      "bytes": 2275,
+      "sha256": "1755871befd3d386078f095f768820af39cc6124028dc1154208d848c32fba92"
+    },
+    {
+      "name": "listen/pruefliste_sicherheit_auszug.md",
+      "path": "gradba-audit-kit-de/listen/pruefliste_sicherheit_auszug.md",
+      "bytes": 1461,
+      "sha256": "cfd85685e54bfb532037eb6d9b0ed19ce1b047bb4558eea1eee3b04e54c4be9c"
+    },
+    {
+      "name": "listen/pruefliste_unterlagen_auszug.md",
+      "path": "gradba-audit-kit-de/listen/pruefliste_unterlagen_auszug.md",
+      "bytes": 464,
+      "sha256": "9de30e82d4498eb57720b467614f142c97404c892d2e7d1c719cc17469ec4ea3"
+    },
+    {
+      "name": "mitteilung_DIT_2026-11-23.md",
+      "path": "gradba-audit-kit-de/mitteilung_DIT_2026-11-23.md",
+      "bytes": 862,
+      "sha256": "bc702bfccad3f4c4035f8dec023e49088bcba55a3017654296a6dfe77a2e8e4a"
+    },
+    {
+      "name": "ordner/absences_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/absences_2026.csv",
+      "bytes": 168,
+      "sha256": "22c2a412549929eb782a8fd4ae5a702843fff145064a78f492a73dc433e663ac"
+    },
+    {
+      "name": "ordner/attendance_2026-11.csv",
+      "path": "gradba-audit-kit-de/ordner/attendance_2026-11.csv",
+      "bytes": 12880,
+      "sha256": "14fe32bf347e3eac60d1171fb6ae7a9bf24e113da2b1e1573100f381c1a9b83c"
+    },
+    {
+      "name": "ordner/contracts_register_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/contracts_register_2026.csv",
+      "bytes": 1190,
+      "sha256": "b63cbd5c2d633fdcee32558ae31f8871d68ad3d3fae76551027f8e3286fd6ad8"
+    },
+    {
+      "name": "ordner/employee_records_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/employee_records_2026.csv",
+      "bytes": 3512,
+      "sha256": "e6e76f7cc6560669facbcc381004770f7dd5b64b276dea9e34c14c8113874f4b"
+    },
+    {
+      "name": "ordner/leave_decisions_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/leave_decisions_2026.csv",
+      "bytes": 535,
+      "sha256": "382ab7b4b9d632bcc1b0d292543e172c09578a91ca40944dd2ef6ed6de5b7a3a"
+    },
+    {
+      "name": "ordner/medical_exams.csv",
+      "path": "gradba-audit-kit-de/ordner/medical_exams.csv",
+      "bytes": 516,
+      "sha256": "5be40c99760d62560b085ff798e77cc55ff36ef1d7e1a86c20ebe1016a1f27f7"
+    },
+    {
+      "name": "ordner/meldungen_ueberstunden_ordner.txt",
+      "path": "gradba-audit-kit-de/ordner/meldungen_ueberstunden_ordner.txt",
+      "bytes": 341,
+      "sha256": "ac8024d28e781198e932f276ec26f8ed070d6b47243e5d7edecac02ef34ba154"
+    },
+    {
+      "name": "ordner/ordner-index.md",
+      "path": "gradba-audit-kit-de/ordner/ordner-index.md",
+      "bytes": 3349,
+      "sha256": "dbb925015ca729d093157a6e90f964ffcddf5cb295b1092ab4197b529bc0e4c0"
+    },
+    {
+      "name": "ordner/overtime_weekly_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/overtime_weekly_2026.csv",
+      "bytes": 755,
+      "sha256": "c0942e2078cc3fe88df4da31314637b82f09989bba130989f79a4f2f1b254170"
+    },
+    {
+      "name": "ordner/payroll_lines_2026-07_to_10.csv",
+      "path": "gradba-audit-kit-de/ordner/payroll_lines_2026-07_to_10.csv",
+      "bytes": 1971,
+      "sha256": "1038d5e56c7089e9d0b2bb7d742e0aceca48761d99abce2b8327f932cecee87e"
+    },
+    {
+      "name": "ordner/payroll_runs_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/payroll_runs_2026.csv",
+      "bytes": 354,
+      "sha256": "1b416fc24cdc7684d6d10e9bfac7b169b27dea0a76a84ac4b84d47e5600630fc"
+    },
+    {
+      "name": "ordner/registration_M1M2_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/registration_M1M2_2026.csv",
+      "bytes": 512,
+      "sha256": "762d96863676c02146f82d63c45adcd2be11c15c14c2b76f2365520466701494"
+    },
+    {
+      "name": "ordner/sicherheitserklaerung_2019.md",
+      "path": "gradba-audit-kit-de/ordner/sicherheitserklaerung_2019.md",
+      "bytes": 693,
+      "sha256": "c8b26ad4974a7f1b5295093c5b6db7de149a9da4e828a213892026409914812e"
+    },
+    {
+      "name": "ordner/training_proofs_2026.csv",
+      "path": "gradba-audit-kit-de/ordner/training_proofs_2026.csv",
+      "bytes": 222,
+      "sha256": "4efc22dfbe7ab9bef63701c14da988213a71c85393c8b9d9d465a74ef6c71378"
+    },
+    {
+      "name": "vorlagen/clock.csv",
+      "path": "gradba-audit-kit-de/vorlagen/clock.csv",
+      "bytes": 206,
+      "sha256": "f38e6f63c32f61f291d5bcf6022e1349b5a5a71a6a8501d92f7182cd4a247ebb"
+    },
+    {
+      "name": "vorlagen/evidence-index.csv",
+      "path": "gradba-audit-kit-de/vorlagen/evidence-index.csv",
+      "bytes": 199,
+      "sha256": "d7f0d7ea12ab6afbaddb65396a47a4a075a5fbc2849b0589103167d0e796d8f2"
+    },
+    {
+      "name": "vorlagen/neues-papier.md",
+      "path": "gradba-audit-kit-de/vorlagen/neues-papier.md",
+      "bytes": 617,
+      "sha256": "2083653c971a3fb781741e088af8651db2f34965fe348bbfc98bc6ee6e5eaabf"
+    }
+  ],
+  "instructions": {
+    "name": "projektanweisungen.md",
+    "path": "gradba-audit-kit-de/projektanweisungen.md",
+    "bytes": 2952,
+    "sha256": "bdd3cd6cf6d0fc27a2b808eb80c706e12a0ee458a258fb156b6684c30d187b00"
+  },
+  "skill": null,
+  "skill_name": "audit-nachweise",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 4535,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | sort",
+        "description": "List all project files"
+      }
+    },
+    {
+      "t_ms": 5856,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 9240,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in listen/*.md ordner/ordner-index.md; do echo \"=== $f\"; cat \"$f\"; echo; done",
+        "description": "Read checklist excerpts and folder index"
+      }
+    },
+    {
+      "t_ms": 9371,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 27946,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 27946,
+      "kind": "text",
+      "chunk": "|"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " Zeilen-Id |"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " Artikel | Papier"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": ", das die Frage beant"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "wortet | Zuständ"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "ig | Ablageort |"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "\n|---|---|---|"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "---|---|\n| L01"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " | ZRO Art"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": ". 15(2),(3"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": ") | Verträge |"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " Büroleiterin (E"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "-02) | Vertrag"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "sordner im Büro,"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " aufgeführt in cont"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "racts_register_2026."
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "csv |\n| L02 "
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "| ZRO Art."
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " 13(3),(7)"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": " | Anmeldung M"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "1/M2 | Bü"
+    },
+    {
+      "t_ms": 27947,
+      "kind": "text",
+      "chunk": "roleiterin (E-"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "02) | Ausdr"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "ucke der Arbeit"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "sagentur, aufg"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "eführt in registration_M"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "1M2_2026.cs"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "v |\n| L03 |"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Gesetz über die"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Aufzeichnungen"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Art. 8(1)"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " | Personalakten |"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Büroleiterin (E"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "-02) | employee_records"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "_2026.csv |"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "\n| L04 | ZR"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "O Art. 116(8"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": ") | Anwesenhe"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "itslisten | Büro"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "leiterin (E-02"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": ") | attendance_2026"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "-11.csv |\n|"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " L05 | ZRO"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Art. 117(2)"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " | Überstunden |"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": " Büroleiterin (E"
+    },
+    {
+      "t_ms": 27948,
+      "kind": "text",
+      "chunk": "-02) | overtime_"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "weekly_2026.cs"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "v |\n| L06 |"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " ZRO Art. "
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "117(6) (Verst"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "oß aufgeführt"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " in Art. 265(1"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": ")) | Überstunden"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "meldungen | Bü"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "roleiterin (E-"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "02) | Li"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "ste im Aktenordner"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": ", meldungen_ue"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "berstunden_ordner"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": ".txt |\n| L07"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " | ZRO Art"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": ". 117(5), 110"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "(2) | Lohn"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " (Zeilen der"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " Lohnabrechn"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "ung) | die externe Bu"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "chhaltung |"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " Dateien der Buchh"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "altung, aufge"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "führt in payroll_l"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "ines_2026-07_to"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": "_10.csv |\n|"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " L08 | ZRO"
+    },
+    {
+      "t_ms": 27949,
+      "kind": "text",
+      "chunk": " Art. 109(2),"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "(3) | Lohn"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " (Zahlungs"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "läufe) | die externe"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " Buchhaltung |"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " Dateien der Buch"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "haltung, aufg"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "eführt in payroll_"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "runs_2026.csv"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " |\n| L09 | "
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "ZRO Art. 137"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "(1),(4) |"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " Urlaubsbesche"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "ide | Büroleiter"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "in (E-02) | le"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "ave_decisions_2026"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": ".csv, Abwes"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "enheiten in absences_"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "2026.csv |\n|"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " L10 | ZBZ"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "R Art. 11(1"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": ") | Sicherheit"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "serklärung | NICH"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "T IN DATEI"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "EN (der Index nenn"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "t n"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "ur „"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": "die Person mit dem"
+    },
+    {
+      "t_ms": 27950,
+      "kind": "text",
+      "chunk": " Aktenordner“"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " und keine Berufsb"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ezeichnung) | s"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "icherheitserklaer"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ung_2019.md |"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "\n| L11 | ZB"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ZR Art. 11("
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "2) | Stellungn"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ahme der Arbeit"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "nehmervertretung:"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " NICHT IN DAT"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "EIEN (der Index"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " führt kein sol"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ches Papier) | NIC"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "HT IN DATEI"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "EN | NICHT I"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "N DATEIEN |"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "\n| L12 | Z"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "BZR Art. 22"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "(1) | Gesund"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "heitspapiere |"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " Büroleiterin (E"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "-02) | Zettel"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " vom Gesundheit"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "szentrum, aufg"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "eführt in medical_ex"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "ams.csv (nur"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " Daten) |\n| L13"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " | ZBZR,"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " Artikelnummer:"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": " NICHT IN DAT"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "EIEN | Nach"
+    },
+    {
+      "t_ms": 27951,
+      "kind": "text",
+      "chunk": "weise der Sicherhe"
+    },
+    {
+      "t_ms": 27952,
+      "kind": "text",
+      "chunk": "itsunterweisung |"
+    },
+    {
+      "t_ms": 27952,
+      "kind": "text",
+      "chunk": " Büroleiterin ("
+    },
+    {
+      "t_ms": 27952,
+      "kind": "text",
+      "chunk": "E-02) | training_pro"
+    },
+    {
+      "t_ms": 27952,
+      "kind": "text",
+      "chunk": "ofs_2026.csv"
+    },
+    {
+      "t_ms": 27952,
+      "kind": "text",
+      "chunk": " |"
+    }
+  ],
+  "final_text": "| Zeilen-Id | Artikel | Papier, das die Frage beantwortet | Zuständig | Ablageort |\n|---|---|---|---|---|\n| L01 | ZRO Art. 15(2),(3) | Verträge | Büroleiterin (E-02) | Vertragsordner im Büro, aufgeführt in contracts_register_2026.csv |\n| L02 | ZRO Art. 13(3),(7) | Anmeldung M1/M2 | Büroleiterin (E-02) | Ausdrucke der Arbeitsagentur, aufgeführt in registration_M1M2_2026.csv |\n| L03 | Gesetz über die Aufzeichnungen Art. 8(1) | Personalakten | Büroleiterin (E-02) | employee_records_2026.csv |\n| L04 | ZRO Art. 116(8) | Anwesenheitslisten | Büroleiterin (E-02) | attendance_2026-11.csv |\n| L05 | ZRO Art. 117(2) | Überstunden | Büroleiterin (E-02) | overtime_weekly_2026.csv |\n| L06 | ZRO Art. 117(6) (Verstoß aufgeführt in Art. 265(1)) | Überstundenmeldungen | Büroleiterin (E-02) | Liste im Aktenordner, meldungen_ueberstunden_ordner.txt |\n| L07 | ZRO Art. 117(5), 110(2) | Lohn (Zeilen der Lohnabrechnung) | die externe Buchhaltung | Dateien der Buchhaltung, aufgeführt in payroll_lines_2026-07_to_10.csv |\n| L08 | ZRO Art. 109(2),(3) | Lohn (Zahlungsläufe) | die externe Buchhaltung | Dateien der Buchhaltung, aufgeführt in payroll_runs_2026.csv |\n| L09 | ZRO Art. 137(1),(4) | Urlaubsbescheide | Büroleiterin (E-02) | leave_decisions_2026.csv, Abwesenheiten in absences_2026.csv |\n| L10 | ZBZR Art. 11(1) | Sicherheitserklärung | NICHT IN DATEIEN (der Index nennt nur „die Person mit dem Aktenordner“ und keine Berufsbezeichnung) | sicherheitserklaerung_2019.md |\n| L11 | ZBZR Art. 11(2) | Stellungnahme der Arbeitnehmervertretung: NICHT IN DATEIEN (der Index führt kein solches Papier) | NICHT IN DATEIEN | NICHT IN DATEIEN |\n| L12 | ZBZR Art. 22(1) | Gesundheitspapiere | Büroleiterin (E-02) | Zettel vom Gesundheitszentrum, aufgeführt in medical_exams.csv (nur Daten) |\n| L13 | ZBZR, Artikelnummer: NICHT IN DATEIEN | Nachweise der Sicherheitsunterweisung | Büroleiterin (E-02) | training_proofs_2026.csv |",
+  "stats": {
+    "duration_ms": 27574,
+    "duration_api_ms": 26052,
+    "ttft_ms": 3228,
+    "num_turns": 3,
+    "output_tokens": 1790
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Schreibe einen Check für die CSV-, txt- und md-Dateien im Ordner und führe ihn aus; überspringe CSV-Zeilen, die mit # beginnen. Gib aus, wie viele Zeilen du in jeder Datei gelesen hast. Gib zu jedem Fund Kennung, Regel und Zahl aus: Anmeldung später als am Tag vor der ersten Schicht; Überstundenwochen über 8 Stunden; Überstundenwochen ohne Meldung; Lohnzeilen ohne Überstundenzeile; Anwesenheitszeilen ohne Beginn und Ende; Lohn später als 15 Tage nach der Periode (ein freier Tag verschiebt es); fehlende Urlaubsbescheide oder unter 20 Tagen (geschuldet nach 6 Monaten); leere Felder in den Akten; Untersuchungen, die am 27. Nov. 2026 älter als 24 Monate sind; Stellenbezeichnungen, die in der Sicherheitserklärung fehlen; Unterweisung später als der Einstellungstag. Liste dann jeden Grenzfall auf, den du ausgeschlossen hast, mit dem Grund. Schließe mit einer Zeile Summen: Zeilen gelesen, Funde, Grenzfälle geprüft. Ändere keine Datei. Antworte in höchstens 16 Zeilen.",
+      "timeline": [
+        {
+          "t_ms": 4782,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd ordner && for f in *.csv; do echo \"=== $f ($(wc -l <$f))\"; head -5 \"$f\"; done; echo; cat meldungen_ueberstunden_ordner.txt; echo; cat sicherheitserklaerung_2019.md; cat ../vorlagen/clock.csv; cat ../mitteilung_DIT_2026-11-23.md",
+            "description": "Inspect file headers and text files"
+          }
+        },
+        {
+          "t_ms": 5886,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 12253,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "for f in contracts_register_2026.csv registration_M1M2_2026.csv leave_decisions_2026.csv medical_exams.csv overtime_weekly_2026.csv payroll_runs_2026.csv training_proofs_2026.csv absences_2026.csv employee_records_2026.csv; do echo \"=== $f\"; grep -v '^#' $f; done; grep -v '^#' payroll_lines_2026-07_to_10.csv | awk -F, '$4!=\"0\"'; grep -v '^#' attendance_2026-11.csv | awk -F, '$3==\"\"||$4==\"\"||$5!=\"\"||$6!=\"\"'; cut -d, -f2 attendance_2026-11.csv | sort | uniq -c",
+            "description": "Dump data rows of CSV files"
+          }
+        },
+        {
+          "t_ms": 12473,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 55883,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "mkdir -p \"$TMPDIR/check\" && cat > \"$TMPDIR/check/check.py\" <<'EOF'\nimport csv, sys, os\nfrom datetime import date, timedelta\nD = sys.argv[1]\nP = date(2026,11,27)\ndef d(s): return date.fromisoformat(s)\nread = {}\ndef load(name):\n    with open(os.path.join(D,name), encoding=\"utf-8\") as f:\n        lines = [l for l in f if l.strip() and not l.startswith(\"#\")]\n    rows = list(csv.DictReader(lines)); read[name] = len(rows); return rows\ncon = load(\"contracts_register_2026.csv\"); reg = {r[\"id\"]:r for r in load(\"registration_M1M2_2026.csv\")}\nrec = load(\"employee_records_2026.csv\"); att = load(\"attendance_2026-11.csv\")\not = load(\"overtime_weekly_2026.csv\"); pl = load(\"payroll_lines_2026-07_to_10.csv\")\npr = load(\"payroll_runs_2026.csv\"); lv = {r[\"id\"]:r for r in load(\"leave_decisions_2026.csv\")}\nmed = load(\"medical_exams.csv\"); tr = {r[\"id\"]:r for r in load(\"training_proofs_2026.csv\")}\nab = load(\"absences_2026.csv\")\ntxt = {}\nfor n in [\"meldungen_ueberstunden_ordner.txt\",\"sicherheitserklaerung_2019.md\",\"ordner-index.md\"]:\n    txt[n] = open(os.path.join(D,n),encoding=\"utf-8\").read().splitlines()\nF, G = [], []\nstart = {r[\"id\"]:d(r[\"start_date\"]) for r in con}\n# M1/M2\nlate = [i for i,s in start.items() if i not in reg or d(reg[i][\"date_filed\"]) > s - timedelta(1)]\nF.append((\"L02\",\"M1/M2 nicht spätestens am Tag vor Arbeitsbeginn\",late,\"\"))\nfor i,s in start.items():\n    if i in reg and 0 <= (s-d(reg[i][\"date_filed\"])).days <= 3 and i not in late: G.append((i,\"M1/M2 knapp vor Arbeitsbeginn\"))\n# Overtime\nover = sorted({r[\"id\"] for r in ot if float(r[\"overtime_hours\"])>8})\nF.append((\"L05\",\"Überstunden über 8 Std./Woche\",over,f'{sum(float(r[\"overtime_hours\"])>8 for r in ot)} Wochen'))\nfor i in sorted({r[\"id\"] for r in ot if 7<=float(r[\"overtime_hours\"])<=8}): G.append((i,\"Überstunden 7 bis 8 Std./Woche, Grenze eingehalten\"))\nmel = txt[\"meldungen_ueberstunden_ordner.txt\"]\nhas2026 = any(l.startswith(\"2026-\") for l in mel)\nnoml = sorted({r[\"id\"] for r in ot if float(r[\"overtime_hours\"])>0}) if not has2026 else []\nF.append((\"L06\",\"Überstundenwochen ohne Meldung\",noml,f'{sum(float(r[\"overtime_hours\"])>0 for r in ot)} Wochen'))\notm = {(r[\"id\"],r[\"week_start\"][:7]) for r in ot if float(r[\"overtime_hours\"])>0}\nnol = sorted({r[\"id\"] for r in pl if (r[\"id\"],r[\"month\"]) in otm and r[\"overtime_line_hours\"].strip() in (\"\",\"0\")})\nF.append((\"L07\",\"Lohnzeile ohne Überstundenzeile\",nol,f'{sum((r[\"id\"],r[\"month\"]) in otm and r[\"overtime_line_hours\"].strip() in (\"\",\"0\") for r in pl)} Lohnzeilen'))\n# Attendance\nabsd = set()\nfor a in ab:\n    x=d(a[\"from\"])\n    while x<=d(a[\"to\"]): absd.add((a[\"id\"],x.isoformat())); x+=timedelta(1)\nbad = [r for r in att if (not r[\"start\"] or not r[\"end\"]) and (r[\"id\"],r[\"date\"]) not in absd]\nF.append((\"L04\",\"Anwesenheit ohne Beginn und Ende\",sorted({r[\"id\"] for r in bad}),f\"{len(bad)} Tageszeilen\"))\nexc = [r for r in att if (not r[\"start\"] or not r[\"end\"]) and (r[\"id\"],r[\"date\"]) in absd]\nif exc: G.append((exc[0][\"id\"],f\"{len(exc)} leere Tage mit Code ABS, gedeckt durch absences_2026.csv\"))\n# Pay\nlp=[]\nfor r in pr:\n    dl = d(r[\"period_end\"])+timedelta(15)\n    while dl.weekday()>=5: dl+=timedelta(1)\n    pd = d(r[\"pay_date\"])\n    if pd>dl: lp.append(f'{r[\"period_end\"][:7]} ({(pd-dl).days} Tage)')\n    elif (dl-pd).days<=1: G.append((r[\"period_end\"][:7],f\"Lohn am {pd}, Frist fiel auf Wochenende und verschob auf {dl}\"))\nF.append((\"L08\",\"Lohn später als 15 Tage (Wochenende verschiebt)\",lp,\"\"))\n# Leave\ndef plus6(s):\n    m=s.month+6; y=s.year+(m-1)//12; m=(m-1)%12+1; return date(y,m,min(s.day,28))\nmiss=[i for i,s in start.items() if plus6(s)<=P and i not in lv]\nlow=[i for i in lv if int(lv[i][\"days\"])<20]\nF.append((\"L09\",\"Urlaubsbescheid fehlt\",miss,\"\")); F.append((\"L09\",\"Urlaubsbescheid unter 20 Tagen\",low,\"\"))\nfor i,s in start.items():\n    if plus6(s)>P: G.append((i,f\"6 Monate erst am {plus6(s)}, noch kein Bescheid geschuldet\"))\nfor i in lv:\n    if int(lv[i][\"days\"])==20: G.append((i,\"Bescheid genau 20 Tage\"))\n# Records\nemp=[(r[\"id\"],k) for r in rec for k in r if k!=\"id\" and not r[k].strip()]\nF.append((\"L03\",\"Leere Felder in der Akte\",sorted({i for i,_ in emp}),f\"{len(emp)} Felder\"))\n# Medical\nlim=date(2024,11,27)\nold=[r[\"id\"] for r in med if d(r[\"last_exam_date\"])<lim]\nF.append((\"L12\",\"Untersuchung älter als 24 Monate\",old,\"\"))\nfor r in med:\n    x=d(r[\"last_exam_date\"])\n    if lim<=x<=lim+timedelta(31): G.append((r[\"id\"],f\"Untersuchung {x}, knapp unter 24 Monaten\"))\n# Safety statement\nse=[l[2:].strip() for l in txt[\"sicherheitserklaerung_2019.md\"] if l.startswith(\"- \")]\nroles=sorted({r[\"role\"] for r in con}); mr=[x for x in roles if x not in se]\nF.append((\"L10\",\"Stellenbezeichnung fehlt in Sicherheitserklärung\",mr,f'{sum(r[\"role\"] in mr for r in con)} Personen betroffen'))\n# Training\nnew=[i for i,s in start.items() if P-timedelta(365)<=s<=P]\nlt=[i for i in new if i not in tr or d(tr[i][\"training_date\"])>start[i]]\nF.append((\"L13\",\"Unterweisung fehlt oder später als Einstellungstag\",lt,f\"{len(new)} Neueinstellungen geprüft\"))\nfor i in new:\n    if i in tr and tr[i][\"training_date\"]==start[i].isoformat(): G.append((i,\"Unterweisung am Einstellungstag\"))\nprint(\"GELESEN\", read, {k:len([l for l in v if l.strip()]) for k,v in txt.items()})\nfor f in F: print(\"FUND\" if f[2] else \"OK\", f[0], f[1], len(f[2]), \",\".join(f[2]), f[3])\nfor g in G: print(\"GRENZ\", *g)\nprint(\"SUMME\", sum(read.values()), sum(1 for f in F if f[2]), len(G))\nEOF\npython3 -I \"$TMPDIR/check/check.py\" \"$PWD\"",
+            "description": "Write and run the read-only check script"
+          }
+        },
+        {
+          "t_ms": 56053,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 68815,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 68816,
+          "kind": "text",
+          "chunk": "**"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "Gelesene"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": " Zeilen** (C"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "SV-Datenze"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "ilen, ohne # und"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": " Kopf"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "zeile): contracts "
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "24, registration 24, employ"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "ee_records 24, attend"
+        },
+        {
+          "t_ms": 68817,
+          "kind": "text",
+          "chunk": "ance 432, overtime "
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "34, payroll_lines"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": " 96, payroll_run"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "s 10, leave_dec"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "isions 21, medical_"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "exams 24, training_pro"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "ofs 3, absences "
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "1."
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": " Die"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": " Text"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "dateien hab"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "e ich nur g"
+        },
+        {
+          "t_ms": 68818,
+          "kind": "text",
+          "chunk": "elesen, sie z"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "ählen nicht m"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "it: meldungen "
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "5,"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": " sicherheitserkla"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "erung 17, ordner"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "-index 50.\n\n**"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "Funde** (Regel,"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": " Z"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "ahl, Kennungen"
+        },
+        {
+          "t_ms": 68819,
+          "kind": "text",
+          "chunk": "):\n-"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": " L02,"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": " M1/M2 später als"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": " am Tag vor Ar"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "beitsbeginn"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": ": 1 (E-05"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": ")"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "\n- L05, Überst"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "unden über 8 Std"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": ". pro Woche: "
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "1 (E-07, "
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "17 Wochen m"
+        },
+        {
+          "t_ms": 68820,
+          "kind": "text",
+          "chunk": "it je"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": " 9 "
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "Std.)\n- L06"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": ", Überstundenwoch"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "en ohne Meldung"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": ": 2 (E-07"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": ", E-08, "
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "34 Wochen;"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": " im Ordner steht für"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": " 2026 „("
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "leer)“)\n- L"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "07, Lohnze"
+        },
+        {
+          "t_ms": 68821,
+          "kind": "text",
+          "chunk": "ilen ohne Überst"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": "undenzeile: 2"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": " (E-07, E-"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": "08, 8 Loh"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": "nzeilen)\n-"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": " L04, Anwesen"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": "heit"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": " ohne Beginn und"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": " Ende: 2 ("
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": "E-12, E-13,"
+        },
+        {
+          "t_ms": 68822,
+          "kind": "text",
+          "chunk": " 20 Tagesze"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "ilen n"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "ur mit"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": " Ha"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "ken)\n- L08,"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": " Lohn später als 15 "
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "Tage: 1 "
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "Periode (2"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "026-09, 4 "
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "Tage nach der"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": " Frist)"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "\n- L09, Url"
+        },
+        {
+          "t_ms": 68823,
+          "kind": "text",
+          "chunk": "aubsbescheid f"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "ehlt: 2 ("
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "E-11, E-19);"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": " Urlaubsbesc"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "heid unter 20 "
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "Tagen: 1 ("
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "E-14)\n- L03"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": ", leere Felder in der"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": " Akte: 3 ("
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "E-04, E-15,"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": " E-21, z"
+        },
+        {
+          "t_ms": 68824,
+          "kind": "text",
+          "chunk": "usammen 7 Fel"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "der)\n- L12,"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " Untersuchung am"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " 27."
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "11.2026 älter als"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " 24 Monate: "
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "4 (E-02, E"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "-06, E-10, E"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "-16)\n- L10,"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " Stellenbezeich"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "nung fehlt in der"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " Sicherheitserkl"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "ärung: 2 (order"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": " picker, forklift operator"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "; 8 Personen bet"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": "roffen)\n- L13"
+        },
+        {
+          "t_ms": 68825,
+          "kind": "text",
+          "chunk": ", Unterweisung später"
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": " als der Einstellungst"
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": "ag: 0 (3 "
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": "Neueinstellungen"
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": " geprüft)\n\n**"
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": "Grenzfälle, "
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": "ausgeschlossen:"
+        },
+        {
+          "t_ms": 68826,
+          "kind": "text",
+          "chunk": "** E-07 hat "
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "6 leere Tage m"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "it "
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "ABS, die"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": " abs"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "ences_2026.csv ab"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "deckt. E-08"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": " hat 7 Std"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": ". pro Woche und"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": " b"
+        },
+        {
+          "t_ms": 68827,
+          "kind": "text",
+          "chunk": "leibt unter der Gr"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "enze. Lohn "
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "2026-10:"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " Die Frist fiel a"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "ufs Wochenende und"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " verschob sich auf den"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "16.11.,"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " gezahlt wurde"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " am 16.11. E-"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "22 hat "
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": "6 Monate erst am"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " 01.12.2026,"
+        },
+        {
+          "t_ms": 68828,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "ein Bescheid ist"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " also"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " noch nicht geschu"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "ldet. E-09 h"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "at genau 20 T"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "age. E-03 w"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "urde am 03.12."
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "2024 untersucht,"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " das ist knapp unter"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " 24 Monaten."
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " E-05 und E-22"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": " wurden am Einst"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "ellungstag unterwi"
+        },
+        {
+          "t_ms": 68829,
+          "kind": "text",
+          "chunk": "esen. E-22 h"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "at M1/M2 am"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": " Fre"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "itag vor d"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "em Mont"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "ag des"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": " Arbeitsbe"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "ginns eingereicht."
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "\n\n**"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "Gr"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "enze des"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": " Checks:** Er"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": " rechnet nur W"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "ochenenden als freie"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": " Tage. G"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "esetzliche Fei"
+        },
+        {
+          "t_ms": 68830,
+          "kind": "text",
+          "chunk": "ertage stehen NICH"
+        },
+        {
+          "t_ms": 68831,
+          "kind": "text",
+          "chunk": "T IN DATEIE"
+        },
+        {
+          "t_ms": 68831,
+          "kind": "text",
+          "chunk": "N. "
+        },
+        {
+          "t_ms": 68831,
+          "kind": "text",
+          "chunk": "Ich habe keine Datei"
+        },
+        {
+          "t_ms": 68852,
+          "kind": "text",
+          "chunk": " geändert; das"
+        },
+        {
+          "t_ms": 68903,
+          "kind": "text",
+          "chunk": " Skript li"
+        },
+        {
+          "t_ms": 68954,
+          "kind": "text",
+          "chunk": "egt in"
+        },
+        {
+          "t_ms": 69003,
+          "kind": "text",
+          "chunk": " $TMPDIR/"
+        },
+        {
+          "t_ms": 69055,
+          "kind": "text",
+          "chunk": "check.\n\n**Summen:"
+        },
+        {
+          "t_ms": 69192,
+          "kind": "text",
+          "chunk": "** Zeilen gel"
+        },
+        {
+          "t_ms": 69194,
+          "kind": "text",
+          "chunk": "esen 693, Funde"
+        },
+        {
+          "t_ms": 69202,
+          "kind": "text",
+          "chunk": " 11, Grenzf"
+        },
+        {
+          "t_ms": 69253,
+          "kind": "text",
+          "chunk": "älle geprüft 9"
+        },
+        {
+          "t_ms": 69323,
+          "kind": "text",
+          "chunk": "."
+        }
+      ],
+      "final_text": "**Gelesene Zeilen** (CSV-Datenzeilen, ohne # und Kopfzeile): contracts 24, registration 24, employee_records 24, attendance 432, overtime 34, payroll_lines 96, payroll_runs 10, leave_decisions 21, medical_exams 24, training_proofs 3, absences 1. Die Textdateien habe ich nur gelesen, sie zählen nicht mit: meldungen 5, sicherheitserklaerung 17, ordner-index 50.\n\n**Funde** (Regel, Zahl, Kennungen):\n- L02, M1/M2 später als am Tag vor Arbeitsbeginn: 1 (E-05)\n- L05, Überstunden über 8 Std. pro Woche: 1 (E-07, 17 Wochen mit je 9 Std.)\n- L06, Überstundenwochen ohne Meldung: 2 (E-07, E-08, 34 Wochen; im Ordner steht für 2026 „(leer)“)\n- L07, Lohnzeilen ohne Überstundenzeile: 2 (E-07, E-08, 8 Lohnzeilen)\n- L04, Anwesenheit ohne Beginn und Ende: 2 (E-12, E-13, 20 Tageszeilen nur mit Haken)\n- L08, Lohn später als 15 Tage: 1 Periode (2026-09, 4 Tage nach der Frist)\n- L09, Urlaubsbescheid fehlt: 2 (E-11, E-19); Urlaubsbescheid unter 20 Tagen: 1 (E-14)\n- L03, leere Felder in der Akte: 3 (E-04, E-15, E-21, zusammen 7 Felder)\n- L12, Untersuchung am 27.11.2026 älter als 24 Monate: 4 (E-02, E-06, E-10, E-16)\n- L10, Stellenbezeichnung fehlt in der Sicherheitserklärung: 2 (order picker, forklift operator; 8 Personen betroffen)\n- L13, Unterweisung später als der Einstellungstag: 0 (3 Neueinstellungen geprüft)\n\n**Grenzfälle, ausgeschlossen:** E-07 hat 6 leere Tage mit ABS, die absences_2026.csv abdeckt. E-08 hat 7 Std. pro Woche und bleibt unter der Grenze. Lohn 2026-10: Die Frist fiel aufs Wochenende und verschob sich auf den 16.11., gezahlt wurde am 16.11. E-22 hat 6 Monate erst am 01.12.2026, ein Bescheid ist also noch nicht geschuldet. E-09 hat genau 20 Tage. E-03 wurde am 03.12.2024 untersucht, das ist knapp unter 24 Monaten. E-05 und E-22 wurden am Einstellungstag unterwiesen. E-22 hat M1/M2 am Freitag vor dem Montag des Arbeitsbeginns eingereicht.\n\n**Grenze des Checks:** Er rechnet nur Wochenenden als freie Tage. Gesetzliche Feiertage stehen NICHT IN DATEIEN. Ich habe keine Datei geändert; das Skript liegt in $TMPDIR/check.\n\n**Summen:** Zeilen gelesen 693, Funde 11, Grenzfälle geprüft 9.",
+      "stats": {
+        "duration_ms": 68975,
+        "duration_api_ms": 93416,
+        "ttft_ms": 3072,
+        "num_turns": 4,
+        "output_tokens": 6747
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    },
+    {
+      "prompt": "Gib jeder Frage BELEGT, SCHWACH oder LÜCKE mit den vier Prüfungen und einem Zitat. LÜCKE: für jemanden fehlt das Papier, oder der Nachweis zeigt die Regel verletzt. SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmt nicht. Nenne für jede SCHWACH und LÜCKE das neue Papier, das sie schließt (nie eine Änderung an einem alten), die zuständige Rolle und den Tag; heute ist der 26. Nov. 2026. Fülle vorlagen/evidence-index.csv. Schreibe vorlagen/clock.csv aus der Mitteilung und lass das Datum der Papiere offen (der Inspektor setzt es am Besuchstag). Schreibe eine Seite für die anwesende Person am 27. Nov.: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf Notizen zu neuen Papieren für E-11 und E-19 (Urlaub) und die Überstundenmeldung aus vorlagen/neues-papier.md. Lass jede Unterschriftszeile leer. Antworte mit einer Zeile pro Frage: Zeilen-Id, Status, höchstens 8 Wörter Grund. Alles andere kommt in die Dateien. Höchstens 16 Zeilen.",
+      "timeline": [
+        {
+          "t_ms": 4380,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cat vorlagen/evidence-index.csv; echo ===; cat vorlagen/neues-papier.md; echo ===; cat faelle/fall-A-arbeit.md",
+            "description": "Read templates and case file"
+          }
+        },
+        {
+          "t_ms": 5382,
+          "kind": "tool_result",
+          "is_error": true
+        },
+        {
+          "t_ms": 8793,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cat vorlagen/neues-papier.md; echo \"-----\"; cat faelle/fall-A-arbeit.md",
+            "description": "Read paper template and case file"
+          }
+        },
+        {
+          "t_ms": 8905,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 83617,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cat > \"$TMPDIR/check/write_index.py\" <<'EOF'\nimport csv, sys\nout = sys.argv[1]\nE2 = \"Büroleiterin (E-02)\"; BU = \"die externe Buchhaltung\"; NI = \"NICHT IN DATEIEN\"\nT = \"2026-11-26\"\nrows = [\n(\"L01\",\"ZRO Art. 15(2),(3)\",\"Verträge (REGISTER)\",E2,\"Vertragsordner im Büro; contracts_register_2026.csv\",\n \"E-01,director,office,2022-12-26,40,yes\",\"ja: keine Frist in der Regel\",\"ja: 24 von 24 mit yes\",\"ja: zuständig \"+E2,\"BELEGT\",\"\",\"\"),\n(\"L02\",\"ZRO Art. 13(3),(7)\",\"Anmeldung M1/M2 (REGISTER)\",E2,\"Ausdrucke der Arbeitsagentur; registration_M1M2_2026.csv\",\n \"E-05,2026-03-05\",\"nein: E-05 eingereicht nach Arbeitsbeginn 2026-03-02\",\"ja: 24 von 24 haben ein Datum\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neue datierte Notiz zur späten Anmeldung von E-05 (Tatsachen, kein Rückdatum)\",T),\n(\"L03\",\"Gesetz über die Aufzeichnungen Art. 8(1)\",\"Personalakten (REGISTER)\",E2,\"employee_records_2026.csv\",\n \"MK,Mogila,,,T03,office,2021-08-16\",\"ja: keine Frist in der Regel\",\"nein: leere Felder bei E-04 (2), E-15 (3), E-21 (2)\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neues datiertes Ergänzungsblatt je Akte für E-04, E-15, E-21\",T),\n(\"L04\",\"ZRO Art. 116(8)\",\"Anwesenheitslisten (REGISTER)\",E2,\"attendance_2026-11.csv\",\n \"E-12,2026-11-02,,,x,\",\"nein: 20 Arbeitstage ohne Beginn und Ende\",\"nein: E-12, E-13 nur Haken; E-07 ABS gedeckt\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neue Anwesenheitsliste mit Beginn und Ende ab heute für alle; Notiz zu E-12, E-13\",T),\n(\"L05\",\"ZRO Art. 117(2)\",\"Überstunden (REGISTER)\",E2,\"overtime_weekly_2026.csv\",\n \"E-07,2026-07-06,9\",\"nein: 17 Wochen über 8 Std.\",\"nein: E-07 über der Grenze; E-08 mit 7 Std. darunter\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neue datierte Anordnung: Überstunden höchstens 8 Std. pro Woche, Schichtplan für die Kommissionierung\",T),\n(\"L06\",\"ZRO Art. 117(6), Art. 265(1)\",\"Überstundenmeldungen (PROTOKOLL fehlt)\",E2,\"meldungen_ueberstunden_ordner.txt\",\n \"2026: (leer)\",\"nein: keine Meldung für 2026\",\"nein: E-07, E-08, 34 Wochen ohne Meldung\",\"nein: 2019 Zeile mit leerer Unterschrift\",\"LÜCKE\",\n \"Neue Überstundenmeldung vor jedem künftigen Zeitraum, mit Name der unterschreibenden Person; Notiz zu 2026 (Entwurf in entwuerfe/)\",T),\n(\"L07\",\"ZRO Art. 117(5), 110(2)\",\"Lohnabrechnung (PROTOKOLL)\",BU,\"payroll_lines_2026-07_to_10.csv\",\n \"E-07,2026-07,166,\",\"ja: Monate 2026-07 bis 2026-10 geprüft\",\"nein: E-07, E-08 ohne Überstundenzeile, 8 Lohnzeilen\",\"ja: zuständig \"+BU,\"LÜCKE\",\n \"Neue datierte Abrechnung der Buchhaltung mit eigener Überstundenzeile für E-07, E-08\",T),\n(\"L08\",\"ZRO Art. 109(2),(3)\",\"Lohnläufe (PROTOKOLL)\",BU,\"payroll_runs_2026.csv\",\n \"2026-09-30,2026-10-19\",\"nein: Periode 2026-09 vier Tage nach der Frist 2026-10-15\",\"ja: 10 Perioden geprüft; Feiertage NICHT IN DATEIEN\",\"ja: zuständig \"+BU,\"LÜCKE\",\n \"Neue datierte Notiz der Buchhaltung zur späten Zahlung 2026-09 (Tatsachen, kein Rückdatum)\",T),\n(\"L09\",\"ZRO Art. 137(1),(4)\",\"Urlaubsbescheide (REGISTER)\",E2,\"leave_decisions_2026.csv; absences_2026.csv\",\n \"E-14,18,2026-01-06\",\"ja: Bescheide 2026 datiert\",\"nein: E-11, E-19 ohne Bescheid; E-14 mit 18 Tagen; E-22 noch nicht fällig\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neue Urlaubsbescheide 2026 für E-11, E-19 und neuer Bescheid mit mindestens 20 Tagen für E-14 (Entwürfe in entwuerfe/)\",T),\n(\"L10\",\"ZBZR Art. 11(1)\",\"Sicherheitserklärung (RICHTLINIE)\",NI,\"sicherheitserklaerung_2019.md\",\n \"Datum: 2019-03-14\",\"nein: vor dem Regalanbau 2023\",\"nein: order picker und forklift operator fehlen, 8 Personen\",\"nein: keine Unterschrift im Text; Rolle \"+NI,\"LÜCKE\",\n \"Neue datierte Sicherheitserklärung mit allen 10 Stellenbezeichnungen; zuständige Rolle \"+NI,T+\" Auftrag; Fertigstellung \"+NI),\n(\"L11\",\"ZBZR Art. 11(2)\",\"Stellungnahme der Arbeitnehmervertretung (AUSSAGE)\",\"Arbeitnehmervertretung\",\"sicherheitserklaerung_2019.md\",\n \"Stellungnahme der Arbeitnehmervertretung: liegt zu diesem Text vor, datiert 2019-03-20\",\"nein: datiert vor der Änderung 2023\",\"ja: zum ganzen Text\",\"ja: datiert, Rolle genannt\",\"SCHWACH\",\n \"Neue datierte Stellungnahme der Arbeitnehmervertretung zur neuen Sicherheitserklärung aus L10\",\"nach L10; Datum \"+NI),\n(\"L12\",\"ZBZR Art. 22(1)\",\"Untersuchungen (REGISTER, nur Daten)\",E2,\"medical_exams.csv\",\n \"E-02,2024-09-12\",\"nein: 4 Untersuchungen älter als 24 Monate am 2026-11-27\",\"nein: E-02, E-06, E-10, E-16\",\"ja: zuständig \"+E2,\"LÜCKE\",\n \"Neue Untersuchung mit Zettel vom Gesundheitszentrum für E-02, E-06, E-10, E-16; heute Termin buchen\",T+\" Buchung; Termin \"+NI),\n(\"L13\",\"ZBZR, Artikelnummer \"+NI,\"Nachweise der Sicherheitsunterweisung (PROTOKOLL)\",E2,\"training_proofs_2026.csv\",\n \"E-19,2025-12-01,2025-11-28\",\"ja: alle spätestens am Einstellungstag\",\"ja: 3 von 3 Neueinstellungen (E-05, E-19, E-22)\",\"ja: zuständig \"+E2,\"BELEGT\",\"\",\"\"),\n]\nwith open(out, \"w\", encoding=\"utf-8\", newline=\"\") as f:\n    f.write(\"# Fictional training material, invented for the exercise.\\n# Erfundenes Übungsmaterial, für die Übung erfunden.\\n\")\n    w = csv.writer(f)\n    w.writerow(\"line_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due\".split(\",\"))\n    w.writerows(rows)\nEOF\npython3 -I \"$TMPDIR/check/write_index.py\" vorlagen/evidence-index.csv\n# verify quotes exist\npython3 -I - <<'EOF'\nimport csv\nsrc={\"contracts_register_2026.csv\",\"registration_M1M2_2026.csv\",\"employee_records_2026.csv\",\"attendance_2026-11.csv\",\"overtime_weekly_2026.csv\",\"meldungen_ueberstunden_ordner.txt\",\"payroll_lines_2026-07_to_10.csv\",\"payroll_runs_2026.csv\",\"leave_decisions_2026.csv\",\"sicherheitserklaerung_2019.md\",\"medical_exams.csv\",\"training_proofs_2026.csv\"}\nallt=\"\".join(open(\"ordner/\"+s,encoding=\"utf-8\").read() for s in src)\nfor r in csv.reader(l for l in open(\"vorlagen/evidence-index.csv\",encoding=\"utf-8\") if not l.startswith(\"#\")):\n    print(r[0], r[9], r[5] in allt if r[0]!=\"line_id\" else \"\")\nEOF",
+            "description": "Fill evidence index and verify quotes"
+          }
+        },
+        {
+          "t_ms": 83787,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 97752,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "mkdir -p entwuerfe && cat > vorlagen/clock.csv <<'EOF'\n# Fictional training material, invented for the exercise.\n# Erfundenes Übungsmaterial, für die Übung erfunden.\nevent,rule,date\nMitteilung über eine reguläre Kontrolle (Aktenzeichen 22-0487/1),Datum der Mitteilung; mindestens 3 Arbeitstage vor dem Besuch (ZIN Art. 57(2)),2026-11-23\nBesuch des Inspektors 09:00 Uhr,Datum aus der Mitteilung; eine beschäftigte Person ist anwesend,2026-11-27\nPapiere, die der Inspektor verlangt,binnen 3 Kalendertagen nach dem Verlangen (ZIN Art. 53(1)); der Inspektor kann die Zeit setzen (Art. 55),\nUnterlagen gegen Quittung mitgenommen,höchstens 15 Tage (ZIN Art. 52(3)),\nBescheid des Inspektors,spätestens 8 Tage nach dem Tag des Protokolls (ZIN Art. 68),\nWiderspruch gegen den Bescheid,binnen 15 Tagen nach Erhalt; hemmt den Bescheid nicht (ZIN Art. 70),\nEOF\npython3 -I - <<'EOF'\nimport csv;print([len(r) for r in csv.reader(l for l in open(\"vorlagen/clock.csv\") if not l.startswith(\"#\"))])\nEOF",
+            "description": "Write deadline clock file and check columns"
+          }
+        },
+        {
+          "t_ms": 97904,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 104932,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "python3 -I - <<'EOF'\np=\"vorlagen/clock.csv\"; s=open(p,encoding=\"utf-8\").read().replace(\"Papiere, die der Inspektor verlangt\",\"Papiere auf Verlangen des Inspektors\")\nopen(p,\"w\",encoding=\"utf-8\").write(s)\nimport csv;print([len(r) for r in csv.reader(l for l in open(p) if not l.startswith(\"#\"))])\nEOF",
+            "description": "Fix comma in clock row and recheck"
+          }
+        },
+        {
+          "t_ms": 105078,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "Index und"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": " Fr"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "ist-"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "U"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "hr sind fertig."
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": " Ich schreibe j"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "etzt die Einweis"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": "ungsseite und die drei"
+        },
+        {
+          "t_ms": 107468,
+          "kind": "text",
+          "chunk": " Entwürfe."
+        },
+        {
+          "t_ms": 132116,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd entwuerfe && cat > einweisung_2026-11-27.md <<'EOF'\nErfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\n# Einweisung für die anwesende Person am 27. Nov. 2026\n\nEntwurf vom 2026-11-26. Die anwesende Person ist in den Dateien nicht genannt: NICHT IN DATEIEN. Die Geschäftsleitung bestimmt sie.\n\n## Was passiert\n1. Um 09:00 Uhr kommt ein Inspektor des DIT, vielleicht zwei (Arbeit und Sicherheit). Grundlage ist die Mitteilung 22-0487/1 vom 2026-11-23.\n2. Er prüft die drei Prüflisten: Arbeit, Arbeitssicherheit, Unterlagen. Du bekommst eine Kopie jeder Prüfliste.\n3. Zuerst verlangt er meist: Verträge, Anwesenheitslisten, Überstundenmeldungen, Lohnabrechnungen mit Überstundenzeile, Urlaubsbescheide. Danach die Sicherheitserklärung und die Untersuchungen.\n4. Du darfst ihn begleiten.\n5. Das Protokoll wird vor Ort geschrieben, und beide Seiten unterschreiben es.\n\n## Was du antwortest\n- Sag nur Tatsachen. Zeig, wo ein Papier liegt. Nimm dafür vorlagen/evidence-index.csv.\n- Liegt ein Papier nicht vor, sag: „Dieses Papier liegt nicht vor.“ Rate nicht und versprich nichts.\n- Ein neues Papier vom 2026-11-26 zeigst du nur, wenn eine benannte Person es datiert und unterschrieben hat. Sag dazu, dass es neu ist und welches Datum es trägt.\n- Verlangt er Papiere später, schreib dir das Datum des Verlangens auf. Die Frist ist 3 Kalendertage, außer er setzt eine andere Zeit.\n- Nimmt er Unterlagen mit, verlange eine Quittung. Er darf sie höchstens 15 Tage behalten.\n- Weißt du etwas nicht, sag: „Das weiß ich nicht. Die Büroleiterin (E-02) klärt es.“\n\n## Was du nicht unterschreibst\n- Kein Protokoll, das nicht zu den Tatsachen passt. Du darfst eine begründete Stellungnahme anfügen.\n- Kein Papier mit einem früheren Datum als dem Tag, an dem es geschrieben wurde.\n- Kein Papier, das du nicht gelesen hast.\n- Keine Aussage, die Unterlagen seien ohne Mangel.\n\n## Wo die Lücken liegen (Stand 2026-11-26)\nL02, L03, L04, L05, L06, L07, L08, L09, L10, L12 sind LÜCKE. L11 ist SCHWACH. L01 und L13 sind BELEGT. Die Gründe stehen in vorlagen/evidence-index.csv.\n\nGelesen von: ______  Datum: ______\nEOF\ncat > notiz_urlaub_E-11.md <<'EOF'\nErfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Urlaubsbescheid 2026 für E-11\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: In leave_decisions_2026.csv steht keine Zeile für E-11.\nWas heute bekannt ist: E-11 hat am 2024-04-01 angefangen (contracts_register_2026.csv: „E-11,sales adviser,shop,2024-04-01,40,yes“). Damit hat E-11 die 6 Monate Betriebszugehörigkeit. In der Akte steht f18 mit dem Wert 20 (employee_records_2026.csv). In absences_2026.csv steht für E-11 keine Abwesenheit.\nWas nicht bekannt ist: Ob E-11 in diesem Jahr schon Urlaub genommen hat, steht in keiner Datei.\nNächster Schritt: Neuen Urlaubsbescheid 2026 für E-11 mit mindestens 20 Arbeitstagen schreiben, zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\nEOF\ncat > notiz_urlaub_E-19.md <<'EOF'\nErfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Urlaubsbescheid 2026 für E-19\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: In leave_decisions_2026.csv steht keine Zeile für E-19.\nWas heute bekannt ist: E-19 hat am 2025-12-01 angefangen (contracts_register_2026.csv: „E-19,order picker,hall,2025-12-01,40,yes“). Die 6 Monate waren am 2026-06-01 erreicht. In der Akte steht f18 mit dem Wert 20 (employee_records_2026.csv). In absences_2026.csv steht für E-19 keine Abwesenheit.\nWas nicht bekannt ist: Ob E-19 in diesem Jahr schon Urlaub genommen hat, steht in keiner Datei.\nNächster Schritt: Neuen Urlaubsbescheid 2026 für E-19 mit mindestens 20 Arbeitstagen schreiben, zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\nEOF\ncat > notiz_ueberstundenmeldung.md <<'EOF'\nErfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Überstundenmeldung an den Arbeitsinspektor, 2026\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: Für 2026 liegt keine schriftliche Meldung an den Arbeitsinspektor vor (meldungen_ueberstunden_ordner.txt: „2026: (leer)“). Die Zeile von 2019 hat ein leeres Feld „Unterschrift:“.\nWas heute bekannt ist: overtime_weekly_2026.csv zeigt Überstunden für E-07 mit 9 Stunden pro Woche und für E-08 mit 7 Stunden pro Woche, jeweils 17 Wochen vom 2026-07-06 bis zur Woche ab 2026-10-26. Die 9 Stunden bei E-07 liegen über der Grenze von 8 Stunden pro Woche. Eine Meldung behebt das nicht.\nWas nicht bekannt ist: Ob es nach der Woche ab 2026-10-26 noch Überstunden gab, steht in keiner Datei.\nNächster Schritt: Vor jedem künftigen Überstundenzeitraum eine schriftliche Meldung an den Arbeitsinspektor schreiben, mit Zeitraum, Kennungen, Stunden und dem Namen der Person, die unterschreibt. Für 2026 eine Notiz mit heutigem Datum, dass keine Meldung vorlag. Keine Meldung zurückdatieren. Zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\nEOF\ngrep -n '[–—→]' *.md ../vorlagen/*.csv || echo \"keine Gedankenstriche/Pfeile\"; for q in \"E-11,sales adviser,shop,2024-04-01,40,yes\" \"E-19,order picker,hall,2025-12-01,40,yes\" \"2026: (leer)\"; do grep -rqF \"$q\" ../ordner && echo \"ok: $q\"; done",
+            "description": "Write briefing page and three draft notes"
+          }
+        },
+        {
+          "t_ms": 132284,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 142785,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 142785,
+          "kind": "text",
+          "chunk": "L"
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": "01 BELEGT:"
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": " Vertrag und"
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": " Kopie für alle "
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": "24"
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": "\nL02 LÜCK"
+        },
+        {
+          "t_ms": 142786,
+          "kind": "text",
+          "chunk": "E: E-05 n"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "ach Arbeitsb"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "eginn angemeldet"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "\nL03 LÜC"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "KE: E-04, E"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "-15, E-21 m"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "it leeren Feldern"
+        },
+        {
+          "t_ms": 142787,
+          "kind": "text",
+          "chunk": "\nL04 LÜC"
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": "KE: E-12, E"
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": "-13 nur Haken"
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": ", ohne Zei"
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": "ten\nL05 LÜ"
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": "CKE: E-07 "
+        },
+        {
+          "t_ms": 142788,
+          "kind": "text",
+          "chunk": "h"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "at 17 Wochen"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": " mit 9 Stun"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "den\nL06 LÜ"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "CKE:"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": " Keine Meldung "
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "2026, Unterschr"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "ift 2019 leer"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "\nL07 LÜCK"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "E: E-07, E-"
+        },
+        {
+          "t_ms": 142789,
+          "kind": "text",
+          "chunk": "08 "
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "ohne Überstundenz"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "eile\nL08 L"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "ÜCKE: Loh"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "n "
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "2026-09 vier"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": " Tage zu spät\nL"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "09 LÜCKE"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": ": E-11, E-19"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": "ohne Bescheid,"
+        },
+        {
+          "t_ms": 142790,
+          "kind": "text",
+          "chunk": " E-14 18"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": " Tage\nL10 "
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "LÜCKE: order"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": " picker,"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": " forklift operator fehl"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "en\nL11 SCH"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "WACH: Stellung"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "nahme "
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "2019, vor dem"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": " Regalanbau 2023"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "\nL12 LÜC"
+        },
+        {
+          "t_ms": 142791,
+          "kind": "text",
+          "chunk": "KE: E-02, E"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "-06, E-10, E"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "-16 über 24 "
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "Monate\nL13 BEL"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "EGT: Alle dr"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "ei Neu"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "en spätestens am Ein"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "stellungstag unterw"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "iesen\nDateien"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": ": vorlagen/ev"
+        },
+        {
+          "t_ms": 142792,
+          "kind": "text",
+          "chunk": "idence-index.csv,"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": " vorlagen/clock"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": ".csv, entwuer"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": "fe/"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": " (Einweisung,"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": " Not"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": "iz"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": "en E-11, E-19"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": ", Überstundenme"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": "ldung). Alle Un"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": "terschriftszeilen"
+        },
+        {
+          "t_ms": 142793,
+          "kind": "text",
+          "chunk": " sind leer."
+        }
+      ],
+      "final_text": "L01 BELEGT: Vertrag und Kopie für alle 24\nL02 LÜCKE: E-05 nach Arbeitsbeginn angemeldet\nL03 LÜCKE: E-04, E-15, E-21 mit leeren Feldern\nL04 LÜCKE: E-12, E-13 nur Haken, ohne Zeiten\nL05 LÜCKE: E-07 hat 17 Wochen mit 9 Stunden\nL06 LÜCKE: Keine Meldung 2026, Unterschrift 2019 leer\nL07 LÜCKE: E-07, E-08 ohne Überstundenzeile\nL08 LÜCKE: Lohn 2026-09 vier Tage zu spät\nL09 LÜCKE: E-11, E-19 ohne Bescheid, E-14 18 Tage\nL10 LÜCKE: order picker, forklift operator fehlen\nL11 SCHWACH: Stellungnahme 2019, vor dem Regalanbau 2023\nL12 LÜCKE: E-02, E-06, E-10, E-16 über 24 Monate\nL13 BELEGT: Alle drei Neuen spätestens am Einstellungstag unterwiesen\nDateien: vorlagen/evidence-index.csv, vorlagen/clock.csv, entwuerfe/ (Einweisung, Notizen E-11, E-19, Überstundenmeldung). Alle Unterschriftszeilen sind leer.",
+      "stats": {
+        "duration_ms": 142423,
+        "duration_api_ms": 234199,
+        "ttft_ms": 2752,
+        "num_turns": 7,
+        "output_tokens": 13553
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "einweisung_2026-11-27.md",
+      "path": "entwuerfe/einweisung_2026-11-27.md",
+      "bytes": 2094,
+      "sha256": "e6b24527eca3e33eb317ecc06336b750da1b2413d45b596c47bf817aca2ee50e",
+      "stored_as": "de-chain-1.einweisung_2026-11-27.md",
+      "text": "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\n# Einweisung für die anwesende Person am 27. Nov. 2026\n\nEntwurf vom 2026-11-26. Die anwesende Person ist in den Dateien nicht genannt: NICHT IN DATEIEN. Die Geschäftsleitung bestimmt sie.\n\n## Was passiert\n1. Um 09:00 Uhr kommt ein Inspektor des DIT, vielleicht zwei (Arbeit und Sicherheit). Grundlage ist die Mitteilung 22-0487/1 vom 2026-11-23.\n2. Er prüft die drei Prüflisten: Arbeit, Arbeitssicherheit, Unterlagen. Du bekommst eine Kopie jeder Prüfliste.\n3. Zuerst verlangt er meist: Verträge, Anwesenheitslisten, Überstundenmeldungen, Lohnabrechnungen mit Überstundenzeile, Urlaubsbescheide. Danach die Sicherheitserklärung und die Untersuchungen.\n4. Du darfst ihn begleiten.\n5. Das Protokoll wird vor Ort geschrieben, und beide Seiten unterschreiben es.\n\n## Was du antwortest\n- Sag nur Tatsachen. Zeig, wo ein Papier liegt. Nimm dafür vorlagen/evidence-index.csv.\n- Liegt ein Papier nicht vor, sag: „Dieses Papier liegt nicht vor.“ Rate nicht und versprich nichts.\n- Ein neues Papier vom 2026-11-26 zeigst du nur, wenn eine benannte Person es datiert und unterschrieben hat. Sag dazu, dass es neu ist und welches Datum es trägt.\n- Verlangt er Papiere später, schreib dir das Datum des Verlangens auf. Die Frist ist 3 Kalendertage, außer er setzt eine andere Zeit.\n- Nimmt er Unterlagen mit, verlange eine Quittung. Er darf sie höchstens 15 Tage behalten.\n- Weißt du etwas nicht, sag: „Das weiß ich nicht. Die Büroleiterin (E-02) klärt es.“\n\n## Was du nicht unterschreibst\n- Kein Protokoll, das nicht zu den Tatsachen passt. Du darfst eine begründete Stellungnahme anfügen.\n- Kein Papier mit einem früheren Datum als dem Tag, an dem es geschrieben wurde.\n- Kein Papier, das du nicht gelesen hast.\n- Keine Aussage, die Unterlagen seien ohne Mangel.\n\n## Wo die Lücken liegen (Stand 2026-11-26)\nL02, L03, L04, L05, L06, L07, L08, L09, L10, L12 sind LÜCKE. L11 ist SCHWACH. L01 und L13 sind BELEGT. Die Gründe stehen in vorlagen/evidence-index.csv.\n\nGelesen von: ______  Datum: ______\n"
+    },
+    {
+      "name": "notiz_ueberstundenmeldung.md",
+      "path": "entwuerfe/notiz_ueberstundenmeldung.md",
+      "bytes": 1405,
+      "sha256": "b226c26732f49916ff45746a1e02146dec3c8b19c3ab5deee4e0aa43853466dc",
+      "stored_as": "de-chain-1.notiz_ueberstundenmeldung.md",
+      "text": "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Überstundenmeldung an den Arbeitsinspektor, 2026\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: Für 2026 liegt keine schriftliche Meldung an den Arbeitsinspektor vor (meldungen_ueberstunden_ordner.txt: „2026: (leer)“). Die Zeile von 2019 hat ein leeres Feld „Unterschrift:“.\nWas heute bekannt ist: overtime_weekly_2026.csv zeigt Überstunden für E-07 mit 9 Stunden pro Woche und für E-08 mit 7 Stunden pro Woche, jeweils 17 Wochen vom 2026-07-06 bis zur Woche ab 2026-10-26. Die 9 Stunden bei E-07 liegen über der Grenze von 8 Stunden pro Woche. Eine Meldung behebt das nicht.\nWas nicht bekannt ist: Ob es nach der Woche ab 2026-10-26 noch Überstunden gab, steht in keiner Datei.\nNächster Schritt: Vor jedem künftigen Überstundenzeitraum eine schriftliche Meldung an den Arbeitsinspektor schreiben, mit Zeitraum, Kennungen, Stunden und dem Namen der Person, die unterschreibt. Für 2026 eine Notiz mit heutigem Datum, dass keine Meldung vorlag. Keine Meldung zurückdatieren. Zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\n"
+    },
+    {
+      "name": "notiz_urlaub_E-11.md",
+      "path": "entwuerfe/notiz_urlaub_E-11.md",
+      "bytes": 1053,
+      "sha256": "99e8977d0743934bb747fd63c615ad02a6b2dce8f715389ddba8caab942a6755",
+      "stored_as": "de-chain-1.notiz_urlaub_E-11.md",
+      "text": "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Urlaubsbescheid 2026 für E-11\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: In leave_decisions_2026.csv steht keine Zeile für E-11.\nWas heute bekannt ist: E-11 hat am 2024-04-01 angefangen (contracts_register_2026.csv: „E-11,sales adviser,shop,2024-04-01,40,yes“). Damit hat E-11 die 6 Monate Betriebszugehörigkeit. In der Akte steht f18 mit dem Wert 20 (employee_records_2026.csv). In absences_2026.csv steht für E-11 keine Abwesenheit.\nWas nicht bekannt ist: Ob E-11 in diesem Jahr schon Urlaub genommen hat, steht in keiner Datei.\nNächster Schritt: Neuen Urlaubsbescheid 2026 für E-11 mit mindestens 20 Arbeitstagen schreiben, zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\n"
+    },
+    {
+      "name": "notiz_urlaub_E-19.md",
+      "path": "entwuerfe/notiz_urlaub_E-19.md",
+      "bytes": 1043,
+      "sha256": "46118634d21488f8053ad54a4b81aff1a9055406bac70285b233e36bbe7e7187",
+      "stored_as": "de-chain-1.notiz_urlaub_E-19.md",
+      "text": "Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.\n\nNotiz zu einem neuen Papier. Das ist ein Entwurfsformular: Es wird erst ein Papier, wenn eine benannte Person es datiert und unterschreibt.\n\nTitel: Urlaubsbescheid 2026 für E-19\nGeschrieben am: 2026-11-26\nVon: Büroleiterin (E-02)\n\nWas fehlte: In leave_decisions_2026.csv steht keine Zeile für E-19.\nWas heute bekannt ist: E-19 hat am 2025-12-01 angefangen (contracts_register_2026.csv: „E-19,order picker,hall,2025-12-01,40,yes“). Die 6 Monate waren am 2026-06-01 erreicht. In der Akte steht f18 mit dem Wert 20 (employee_records_2026.csv). In absences_2026.csv steht für E-19 keine Abwesenheit.\nWas nicht bekannt ist: Ob E-19 in diesem Jahr schon Urlaub genommen hat, steht in keiner Datei.\nNächster Schritt: Neuen Urlaubsbescheid 2026 für E-19 mit mindestens 20 Arbeitstagen schreiben, zuständig Büroleiterin (E-02), bis 2026-11-26.\n\nDas alte Papier bleibt unberührt. Diese Notiz ist ein neues Papier mit dem heutigen Datum.\n\nUnterschrift von: ______\n"
+    },
+    {
+      "name": "clock.csv",
+      "path": "vorlagen/clock.csv",
+      "bytes": 799,
+      "sha256": "95b98e8b6bd1f76f2970cb3d2440c029e8607833a2be5252a3bc28c6346cdbee",
+      "stored_as": "de-chain-1.clock.csv",
+      "text": "# Fictional training material, invented for the exercise.\n# Erfundenes Übungsmaterial, für die Übung erfunden.\nevent,rule,date\nMitteilung über eine reguläre Kontrolle (Aktenzeichen 22-0487/1),Datum der Mitteilung; mindestens 3 Arbeitstage vor dem Besuch (ZIN Art. 57(2)),2026-11-23\nBesuch des Inspektors 09:00 Uhr,Datum aus der Mitteilung; eine beschäftigte Person ist anwesend,2026-11-27\nPapiere auf Verlangen des Inspektors,binnen 3 Kalendertagen nach dem Verlangen (ZIN Art. 53(1)); der Inspektor kann die Zeit setzen (Art. 55),\nUnterlagen gegen Quittung mitgenommen,höchstens 15 Tage (ZIN Art. 52(3)),\nBescheid des Inspektors,spätestens 8 Tage nach dem Tag des Protokolls (ZIN Art. 68),\nWiderspruch gegen den Bescheid,binnen 15 Tagen nach Erhalt; hemmt den Bescheid nicht (ZIN Art. 70),\n"
+    },
+    {
+      "name": "evidence-index.csv",
+      "path": "vorlagen/evidence-index.csv",
+      "bytes": 5048,
+      "sha256": "7c1d41f9c0cdb4c97a44b0252d1d05347e4bc4eb3d907c85d83e032861ce84a1",
+      "stored_as": "de-chain-1.evidence-index.csv",
+      "text": "# Fictional training material, invented for the exercise.\n# Erfundenes Übungsmaterial, für die Übung erfunden.\nline_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due\r\nL01,\"ZRO Art. 15(2),(3)\",Verträge (REGISTER),Büroleiterin (E-02),Vertragsordner im Büro; contracts_register_2026.csv,\"E-01,director,office,2022-12-26,40,yes\",ja: keine Frist in der Regel,ja: 24 von 24 mit yes,ja: zuständig Büroleiterin (E-02),BELEGT,,\r\nL02,\"ZRO Art. 13(3),(7)\",Anmeldung M1/M2 (REGISTER),Büroleiterin (E-02),Ausdrucke der Arbeitsagentur; registration_M1M2_2026.csv,\"E-05,2026-03-05\",nein: E-05 eingereicht nach Arbeitsbeginn 2026-03-02,ja: 24 von 24 haben ein Datum,ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neue datierte Notiz zur späten Anmeldung von E-05 (Tatsachen, kein Rückdatum)\",2026-11-26\r\nL03,Gesetz über die Aufzeichnungen Art. 8(1),Personalakten (REGISTER),Büroleiterin (E-02),employee_records_2026.csv,\"MK,Mogila,,,T03,office,2021-08-16\",ja: keine Frist in der Regel,\"nein: leere Felder bei E-04 (2), E-15 (3), E-21 (2)\",ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neues datiertes Ergänzungsblatt je Akte für E-04, E-15, E-21\",2026-11-26\r\nL04,ZRO Art. 116(8),Anwesenheitslisten (REGISTER),Büroleiterin (E-02),attendance_2026-11.csv,\"E-12,2026-11-02,,,x,\",nein: 20 Arbeitstage ohne Beginn und Ende,\"nein: E-12, E-13 nur Haken; E-07 ABS gedeckt\",ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neue Anwesenheitsliste mit Beginn und Ende ab heute für alle; Notiz zu E-12, E-13\",2026-11-26\r\nL05,ZRO Art. 117(2),Überstunden (REGISTER),Büroleiterin (E-02),overtime_weekly_2026.csv,\"E-07,2026-07-06,9\",nein: 17 Wochen über 8 Std.,nein: E-07 über der Grenze; E-08 mit 7 Std. darunter,ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neue datierte Anordnung: Überstunden höchstens 8 Std. pro Woche, Schichtplan für die Kommissionierung\",2026-11-26\r\nL06,\"ZRO Art. 117(6), Art. 265(1)\",Überstundenmeldungen (PROTOKOLL fehlt),Büroleiterin (E-02),meldungen_ueberstunden_ordner.txt,2026: (leer),nein: keine Meldung für 2026,\"nein: E-07, E-08, 34 Wochen ohne Meldung\",nein: 2019 Zeile mit leerer Unterschrift,LÜCKE,\"Neue Überstundenmeldung vor jedem künftigen Zeitraum, mit Name der unterschreibenden Person; Notiz zu 2026 (Entwurf in entwuerfe/)\",2026-11-26\r\nL07,\"ZRO Art. 117(5), 110(2)\",Lohnabrechnung (PROTOKOLL),die externe Buchhaltung,payroll_lines_2026-07_to_10.csv,\"E-07,2026-07,166,\",ja: Monate 2026-07 bis 2026-10 geprüft,\"nein: E-07, E-08 ohne Überstundenzeile, 8 Lohnzeilen\",ja: zuständig die externe Buchhaltung,LÜCKE,\"Neue datierte Abrechnung der Buchhaltung mit eigener Überstundenzeile für E-07, E-08\",2026-11-26\r\nL08,\"ZRO Art. 109(2),(3)\",Lohnläufe (PROTOKOLL),die externe Buchhaltung,payroll_runs_2026.csv,\"2026-09-30,2026-10-19\",nein: Periode 2026-09 vier Tage nach der Frist 2026-10-15,ja: 10 Perioden geprüft; Feiertage NICHT IN DATEIEN,ja: zuständig die externe Buchhaltung,LÜCKE,\"Neue datierte Notiz der Buchhaltung zur späten Zahlung 2026-09 (Tatsachen, kein Rückdatum)\",2026-11-26\r\nL09,\"ZRO Art. 137(1),(4)\",Urlaubsbescheide (REGISTER),Büroleiterin (E-02),leave_decisions_2026.csv; absences_2026.csv,\"E-14,18,2026-01-06\",ja: Bescheide 2026 datiert,\"nein: E-11, E-19 ohne Bescheid; E-14 mit 18 Tagen; E-22 noch nicht fällig\",ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neue Urlaubsbescheide 2026 für E-11, E-19 und neuer Bescheid mit mindestens 20 Tagen für E-14 (Entwürfe in entwuerfe/)\",2026-11-26\r\nL10,ZBZR Art. 11(1),Sicherheitserklärung (RICHTLINIE),NICHT IN DATEIEN,sicherheitserklaerung_2019.md,Datum: 2019-03-14,nein: vor dem Regalanbau 2023,\"nein: order picker und forklift operator fehlen, 8 Personen\",nein: keine Unterschrift im Text; Rolle NICHT IN DATEIEN,LÜCKE,Neue datierte Sicherheitserklärung mit allen 10 Stellenbezeichnungen; zuständige Rolle NICHT IN DATEIEN,2026-11-26 Auftrag; Fertigstellung NICHT IN DATEIEN\r\nL11,ZBZR Art. 11(2),Stellungnahme der Arbeitnehmervertretung (AUSSAGE),Arbeitnehmervertretung,sicherheitserklaerung_2019.md,\"Stellungnahme der Arbeitnehmervertretung: liegt zu diesem Text vor, datiert 2019-03-20\",nein: datiert vor der Änderung 2023,ja: zum ganzen Text,\"ja: datiert, Rolle genannt\",SCHWACH,Neue datierte Stellungnahme der Arbeitnehmervertretung zur neuen Sicherheitserklärung aus L10,nach L10; Datum NICHT IN DATEIEN\r\nL12,ZBZR Art. 22(1),\"Untersuchungen (REGISTER, nur Daten)\",Büroleiterin (E-02),medical_exams.csv,\"E-02,2024-09-12\",nein: 4 Untersuchungen älter als 24 Monate am 2026-11-27,\"nein: E-02, E-06, E-10, E-16\",ja: zuständig Büroleiterin (E-02),LÜCKE,\"Neue Untersuchung mit Zettel vom Gesundheitszentrum für E-02, E-06, E-10, E-16; heute Termin buchen\",2026-11-26 Buchung; Termin NICHT IN DATEIEN\r\nL13,\"ZBZR, Artikelnummer NICHT IN DATEIEN\",Nachweise der Sicherheitsunterweisung (PROTOKOLL),Büroleiterin (E-02),training_proofs_2026.csv,\"E-19,2025-12-01,2025-11-28\",ja: alle spätestens am Einstellungstag,\"ja: 3 von 3 Neueinstellungen (E-05, E-19, E-22)\",ja: zuständig Büroleiterin (E-02),BELEGT,,\r\n"
+    }
+  ],
+  "edited": false
+}

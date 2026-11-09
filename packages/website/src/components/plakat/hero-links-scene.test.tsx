@@ -42,24 +42,37 @@ describe("the links scene", () => {
     expect(svg.querySelectorAll("defs, linearGradient, radialGradient, filter, clipPath, mask, pattern")).toHaveLength(0);
   });
 
-  it("tells the demo's first screen: eight requests, eight files, eight links; two hold, four turn dashed, two break", () => {
+  it("tells four days, thirteen questions, one door: 13 sheets, 10 crosses in 5 groups, 1 weak marker, 1 door", () => {
     const { container } = render(<LinksScene />);
-    expect(container.querySelectorAll(".hk-request")).toHaveLength(8);
-    expect(container.querySelectorAll(".hk-file")).toHaveLength(8);
-    expect(container.querySelector(".hk-links")!.getAttribute("d")!.match(/M/g)).toHaveLength(8);
-    expect(container.querySelectorAll(".hk-fail")).toHaveLength(6);
-    expect(container.querySelectorAll(".hk-weak")).toHaveLength(4);
-    expect(container.querySelectorAll(".hk-gap")).toHaveLength(2);
-    // A broken link is two pieces and a cut: the shape says it, not the colour.
-    for (const gap of container.querySelectorAll(".hk-gap")) expect(gap.getAttribute("d")!.match(/M/g)).toHaveLength(2);
-    expect(container.querySelectorAll(".hk-gap-cut")).toHaveLength(2);
-    // Every failing row marks exactly the one test it failed.
-    for (const fail of container.querySelectorAll(".hk-fail")) expect(fail.querySelectorAll(".hk-tick-fail")).toHaveLength(1);
+    expect(container.querySelectorAll(".hk-sheet")).toHaveLength(13);
+    expect(container.querySelectorAll(".hk-sheet-plain")).toHaveLength(2);
+    // Rows of 5, 4 and 4.
+    const rows = new Map<string, number>();
+    for (const sheet of container.querySelectorAll(".hk-sheet")) rows.set(sheet.getAttribute("y")!, (rows.get(sheet.getAttribute("y")!) ?? 0) + 1);
+    expect([...rows.values()]).toEqual([5, 4, 4]);
+    // Four day tiles fill, a fifth outlined tile stays.
+    expect(container.querySelectorAll(".hk-links .hk-tile")).toHaveLength(5);
+    expect(container.querySelectorAll(".hk-links .hk-day")).toHaveLength(4);
+    expect(container.querySelectorAll(".hk-tile-last")).toHaveLength(1);
+    // Ten crosses in five groups of two; the fifth group keeps its e2e hook.
+    expect(container.querySelectorAll(".hk-fail")).toHaveLength(5);
+    expect(container.querySelectorAll(".hk-fail-5")).toHaveLength(1);
+    for (const group of container.querySelectorAll(".hk-fail")) expect(group.querySelectorAll(".hk-x")).toHaveLength(2);
+    expect(container.querySelectorAll(".hk-x")).toHaveLength(10);
+    expect(container.querySelectorAll(".hk-weak")).toHaveLength(1);
+    // One scan bar, one door, one knock group of three arcs, an old and a new sheet.
+    expect(container.querySelectorAll(".hk-scan")).toHaveLength(1);
+    expect(container.querySelectorAll(".hk-far")).toHaveLength(1);
+    expect(container.querySelectorAll(".hk-knock .hk-arc")).toHaveLength(3);
+    expect(container.querySelectorAll(".hk-paper-old")).toHaveLength(1);
+    expect(container.querySelectorAll(".hk-paper-new")).toHaveLength(1);
   });
 
-  it("keeps the cards inside the safe area (x 50..550, y 50..450)", () => {
+  it("keeps every shape inside the safe area (x 50..550, y 50..450)", () => {
     const { container } = render(<LinksScene />);
-    for (const shape of container.querySelectorAll(".hk-request, .hk-file")) {
+    const shapes = container.querySelectorAll(".hk-tile, .hk-sheet, .hk-doorway, .hk-door, .hk-paper-old, .hk-paper-new, .hk-scan, .hk-weak");
+    expect(shapes.length).toBeGreaterThan(20);
+    for (const shape of shapes) {
       const x = Number(shape.getAttribute("x"));
       const y = Number(shape.getAttribute("y"));
       expect(x).toBeGreaterThanOrEqual(50);
@@ -134,5 +147,30 @@ describe("hero-links.css", () => {
     expect(declarations((d) => d.prop === "will-change")).toHaveLength(0);
     const scanOpacity = declarations((d) => d.prop === "opacity" && (d.parent as Rule).selector === ".hk-scan" && !inside(d.parent as Container, NO_PREFERENCE));
     expect(scanOpacity.map((d) => d.value)).toEqual(["0"]);
+  });
+});
+
+describe("no ink fill (visual law V1/V2)", () => {
+  /** Ink fills that stay: the doorway wash is 0.14 alpha, the scan bar is 6 px wide, the knob is a 10 px dot. */
+  const ALLOWED_INK_FILL = new Set([".hk-doorway", ".hk-scan", ".hk-knob"]);
+
+  it("fills no surface with ink or a near black in hero-links.css, apart from the three small marks", () => {
+    ROOT.walkRules((rule: Rule) => {
+      if ((rule.parent as Container).type === "atrule" && (rule.parent as AtRule).name === "keyframes") return;
+      rule.walkDecls(/^(?:fill|background(?:-color)?)$/, (declaration) => {
+        if (!/var\(--hk-ink\)|#000|black|#121212/.test(declaration.value)) return;
+        for (const selector of rule.selectors) expect(ALLOWED_INK_FILL.has(selector.trim()), `${selector}: ${declaration.prop}`).toBe(true);
+      });
+    });
+  });
+
+  it("paints the four day tiles in the mid tone, not in ink", () => {
+    const day = declarations((d) => d.prop === "fill" && (d.parent as Rule).selector === ".hk-day" && !inside(d.parent as Container, NO_PREFERENCE));
+    expect(day.map((d) => d.value)).toEqual(["var(--hk-mid)"]);
+  });
+
+  it("sets no inline or attribute fill in the scene source", () => {
+    expect(SOURCE).not.toMatch(/\bfill=["'](?:#|black|var\(--hk-ink)/);
+    expect(SOURCE).not.toMatch(/\bfill=/);
   });
 });

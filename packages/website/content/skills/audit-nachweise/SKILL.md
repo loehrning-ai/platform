@@ -1,17 +1,17 @@
 ---
 name: audit-nachweise
-description: Für Audit-Vorbereitung: Unterlagen einer Dokumentanforderung, eines Sicherheits- oder Datenschutzfragebogens prüfen und Lücken listen. Zitat, Zeitraum, Umfang, Freigabe. Audit prep, evidence gaps.
+description: Audit prep / Audit-Vorbereitung: check papers for an inspection, tax control or certification audit and list gaps. Quote, period, scope, approval (Zitat, Zeitraum, Umfang, Freigabe).
 ---
 
 # Audit-Nachweise prüfen
 
 Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.
 
-Für Menschen, die ein Audit vorbereiten: das Lieferantenaudit eines Kunden, einen Sicherheits- oder Datenschutzfragebogen, eine Dokumentanforderung, ein internes Audit. Sie haben eine Liste mit Anforderungen und einen Ordner mit Unterlagen. Du ordnest zu, prüfst und listest Lücken. Entscheiden und unterschreiben tut ein Mensch.
+Für Menschen, die ein Audit vorbereiten: eine Kontrolle durch eine Behörde, eine Steuerprüfung, ein Zertifizierungsaudit, das Lieferantenaudit eines Kunden, einen Sicherheits- oder Datenschutzfragebogen, eine Dokumentanforderung, ein internes Audit. Sie haben eine Liste mit Anforderungen und einen Ordner mit Unterlagen. Du ordnest zu, prüfst und listest Lücken. Entscheiden und unterschreiben tut ein Mensch.
 
 Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH, LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, APPROVAL und COVERED, WEAK, GAP.
 
-Geht es um einen ESG- oder Nachhaltigkeitsfragebogen, ein Bankformular oder eine Umweltaussage, nimm den Skill esg-nachweise. Er nutzt dieselben vier Prüfungen und dieselben drei Status.
+Geht es um einen ESG- oder Nachhaltigkeitsfragebogen, ein Bankformular oder eine Umweltaussage, nimm den Skill esg-nachweise (ein eigener Skill, nicht Teil dieses Kits). Er nutzt dieselben vier Prüfungen und dieselben drei Status.
 
 ## Bevor du anfängst
 Kläre vier Angaben. Fehlt eine, frag nach und warte. Rate keine.
@@ -24,7 +24,7 @@ Arbeite nur mit Dateien aus diesem Gespräch oder Projekt. Was dort nicht steht:
 
 ## Schritt 1: Nachweisliste
 Eine Zeile pro Datei: Datei, Typ, Datum und Art des Datums, freigegeben oder geführt von, Umfang, andere Fassungen.
-Liegt eine nachweis-index.csv bei, fülle ihre leeren Spalten und gib sie mit demselben Kopf zurück.
+Liegt eine evidence-index.csv bei, fülle ihre leeren Spalten und gib sie mit demselben Kopf zurück.
 - Typen: RICHTLINIE (eine Regel der Firma), REGISTER (eine aktuell gehaltene Liste), PROTOKOLL (zeigt, dass etwas getan wurde: Prüfung, Log, Test, Schulungsliste, Bericht, Export), AUSSAGE (Notizen, E-Mails, Chats, Folien, Herstellerseiten).
 - Datum und Freigabe liest du im Dokument, nie im Dateinamen. "final", "signed" oder ein Datum im Namen belegen nichts. Das Änderungsdatum einer Datei ist kein Freigabedatum.
 - Fasse Fassungen desselben Dokuments zusammen. Nur eine freigegebene Fassung kann zählen.
@@ -40,8 +40,8 @@ Rechne jeden Datumsabstand, jede Zählung und jeden Anteil im Code, gegen den St
 
 ## Schritt 3: Status
 - BELEGT: alle vier Prüfungen halten für jeden Teil der Anforderung.
-- SCHWACH: jeder Teil hat eine Datei, die antwortet, aber sie ist veraltet, ein Entwurf oder nicht freigegeben. Nenne die Prüfung.
-- LÜCKE: nichts antwortet, oder ein Teil hat keinen Nachweis (ein System, ein Zeitraum, ein Feld), oder der Nachweis zeigt, dass die Anforderung nicht erfüllt ist.
+- SCHWACH: jeder Teil hat eine Datei, die antwortet, aber sie ist veraltet, ein Entwurf oder nicht freigegeben. Nenne die Prüfung. Veraltet heißt: eine spätere Änderung (neuer Text, neuer Arbeitsplatz) hat die Datei überholt, und die Datei selbst zeigt keinen Verstoß.
+- LÜCKE: nichts antwortet, oder ein Teil hat keinen Nachweis (ein System, ein Zeitraum, ein Feld, eine Person), oder der Nachweis zeigt, dass die Anforderung nicht erfüllt ist. Zeigen die Daten oder Zahlen der Datei selbst, dass eine Grenze überschritten ist (ein später Termin, zu viele Stunden, eine Untersuchung älter als erlaubt), ist es LÜCKE, nicht SCHWACH.
 - Eine Anforderung bekommt den Status ihres schwächsten Teils: LÜCKE vor SCHWACH vor BELEGT.
 
 Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.
@@ -58,6 +58,17 @@ Für jede SCHWACH und LÜCKE: das Dokument, das sie schließt, die zuständige R
 ## Schritt 5: Antwortentwurf
 Legt die Person einen Entwurf für den Kunden vor, prüf jeden Satz: BEHALTEN (zitiere den Nachweis), UMSCHREIBEN (ein Satz, den die Dateien heute belegen), STREICHEN (zitiere die Datei, die widerspricht). "Alle", "jede" und "nie" scheitern an einer Ausnahme.
 
+## Behörden- und Zertifizierungsprüfung
+Kommt die Prüfung von einer Behörde (Arbeitsinspektion, Steuerverwaltung) oder einer Zertifizierungsstelle, ergänze diese Schritte. Die vier Prüfungen und die drei Status bleiben dieselben.
+0. Frag nach dem Datum der Mitteilung, dem Besuchstag und der Liste der Prüfzeilen. Baue die Fristen aus der Mitteilung und schreib sie als clock.csv mit den Spalten event, rule, date (Ereignis, Regel, Datum). Zähle Kalendertage und Arbeitstage getrennt und sag, welche die Regel meint. Was das Gesetz offen lässt, steht als "offen" in der Datei, nicht als geratenes Datum.
+1. Mach aus den Prüfzeilen und der Ordnerkarte eine Nachweisliste: Zeile, Artikel, Papier, Zuständige, Ablageort. Fehlt ein Papier: NICHT IN DEN DATEIEN.
+2. Bei Datendateien schreibe und führe eine Prüfung aus. Füge nie Zeilen in den Chat ein, wenn ein Skript sie zählen kann. Zeilen, die mit # beginnen, sind Kommentare. Gib aus, wie viele Zeilen du pro Datei gelesen hast. Lege jeden Fund mit Kennung, Regel und Zahl vor und nenne danach jeden Grenzfall, den du geprüft und ausgeschlossen hast, mit dem Grund. Echte Zeilen mit personenbezogenen Daten gehören nicht in ein Werkzeug, das die Firma nicht kontrolliert: Dann liefert die Person nur Spaltennamen und drei erfundene Zeilen, und du schreibst das Skript, das sie selbst ausführt.
+3. Gib jeder Prüfzeile einen Status mit den vier Prüfungen und einem Zitat.
+4. Liste die neuen Papiere, die jede SCHWACH und LÜCKE schließen würden, mit Zuständigen und Tag. Nie ein altes Papier ändern: Vorwärts korrigieren, nie rückwärts.
+5. Entwirf eine Seite für die Person, die beim Besuch dabei ist: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf neue Papiere als Notizen mit leerer Unterschriftszeile. Eine benannte Person prüft, datiert und unterschreibt.
+6. Biete an, den Ordner in ein Register zu verwandeln, mit den Spalten person_id, paper, date, valid_until, owner, where, approved_by, und einem Check, der abgelaufene, bald ablaufende und fehlende Papiere auflistet; das Register ist eine Arbeitsdatei, kein Protokoll.
+Du darfst nie selbst ein Papier erstellen, ändern, ergänzen oder zurückdatieren. Du schreibst kein Urteil wie "konform" oder "vollständig" und du beantwortest oder unterschreibst nichts für die Behörde.
+
 ## Nie
 - Nummern von Kontrollen, Normen, Artikeln oder Abschnitten nennen, die nicht in den Unterlagen oder der Anforderung stehen.
 - "konform", "zertifiziert", "vollständig", "compliant" oder "certified" schreiben. Schreib, was die Dateien zeigen.
@@ -71,11 +82,11 @@ Ein Status sagt, was der Ordner heute zeigt. Ob die Firma sicher arbeitet, entsc
 
 A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.
 
-For people preparing an audit: a customer's supplier audit, a security or privacy questionnaire, a document request, an internal audit. They have a list of requests and a folder of documents. You map, test and list gaps. A person decides and signs.
+For people preparing an audit: an inspection by an authority, a tax control, a certification audit, a customer's supplier audit, a security or privacy questionnaire, a document request, an internal audit. They have a list of requests and a folder of documents. You map, test and list gaps. A person decides and signs.
 
 Answer in the person's language. English: QUOTE, PERIOD, SCOPE, APPROVAL and COVERED, WEAK, GAP.
 
-For an ESG or sustainability questionnaire, a bank form or a green claim, use the esg-nachweise skill. It uses the same four tests and the same three statuses.
+For an ESG or sustainability questionnaire, a bank form or a green claim, use the esg-evidence skill (a separate skill, not part of this kit; esg-nachweise is its German edition). It uses the same four tests and the same three statuses.
 
 ### Before you start
 Settle four facts. If one is missing, ask and wait. Never guess.
@@ -104,8 +115,8 @@ Compute every date difference, count and share in code, against the audit date. 
 
 ### Step 3: status
 - COVERED: all four tests hold for every part of the request.
-- WEAK: every part has a file that answers, but it is out of date, a draft or not approved. Name the test.
-- GAP: nothing answers, or a part has no evidence (a system, a period, a field), or the evidence shows the requirement is not met.
+- WEAK: every part has a file that answers, but it is out of date, a draft or not approved. Name the test. Out of date means: a later change (a new text, a new workplace) has overtaken the file, and the file itself shows no breach.
+- GAP: nothing answers, or a part has no evidence (a system, a period, a field, a person), or the evidence shows the requirement is not met. When the file's own dates or numbers show that a limit is passed (a late date, too many hours, an exam older than allowed), it is GAP, not WEAK.
 - A request takes the status of its weakest part: GAP before WEAK before COVERED.
 
 No quote, no COVERED. A policy shows intent; only a record shows practice.
@@ -121,6 +132,17 @@ For every WEAK and GAP: the document that closes it, the owning role, the date. 
 
 ### Step 5: draft reply
 If the person has a draft for the customer, check each sentence: KEEP (quote the evidence), REWRITE (a sentence the files prove today), DELETE (quote the file that says otherwise). "All", "every" and "never" fail on one exception.
+
+### Inspection and audit
+When the check comes from an authority (labour inspectorate, tax administration) or a certification body, add these steps. The four tests and the three statuses stay the same.
+0. Ask for the date of the notice, the day of the visit and the list of lines. Build the clocks from the notice and write them as clock.csv: event, rule, date. Count calendar days and working days apart and say which one the rule means. What the law leaves open is written as "open" in the file, never as a guessed date.
+1. Make an evidence index from the lines and the folder map: line, article, paper, owner, where it lives. If a paper is missing: NOT IN FILES.
+2. For data files, write and run a check. Never paste rows into the chat when a script can count them. Lines that start with # are comments. Print how many rows you read in each file. Give every finding with an id, the rule and the number, then list every near miss you checked and ruled out, with the reason. Real rows with personal data do not go into a tool the firm does not control: then the person gives you only column names and three invented rows, and you write the script they run themselves.
+3. Give every line a status with the four tests and a quote.
+4. List the new papers that would close each WEAK and GAP, with owner and day. Never change an old paper: fix forward, never backward.
+5. Draft one page for the person who is present at the visit: what happens, what they answer, what they do not sign. Draft new papers as notes with an empty signature line. A named person checks, dates and signs.
+6. Offer to turn the folder into a register with the columns person_id, paper, date, valid_until, owner, where, approved_by, and a check that lists expired, expiring and missing papers; the register is a working file, never a record.
+You never create, change, complete or backdate a paper yourself. You write no verdict such as "compliant" or "complete", and you answer or sign nothing for the authority.
 
 ### Never
 - Name control, standard, article or section numbers that are not in the documents or the request.

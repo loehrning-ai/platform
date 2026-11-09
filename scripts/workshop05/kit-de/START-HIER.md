@@ -1,92 +1,82 @@
-# Audit-Vorbereitung mit Claude: der Ordner von Vardar Works
+Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.
 
-Erfundenes Übungsmaterial. Jede Firma, jede Person und jedes Dokument ist erfunden, bis auf die zwei Zeilen von Anthropics öffentlicher Datenschutzseite.
+## Die Regeln in einer Minute
 
-Im Kurs bedient Tim Claude. Du schätzt und prüfst die Zitate. Diese Einrichtung ist zum Wiederholen zu Hause.
+Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.
+BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt.
+Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.
 
-Stichtag der Übung: Montag, 9. November 2026. Lies jedes Datum im Ordner von diesem Tag aus.
+## Was du tust
 
-Vardar Works DOOEL in Skopje (120 Beschäftigte) betreibt den Kundenservice für die Tannwald Haustechnik GmbH in Hamburg. Damit ist Vardar Auftragsverarbeiter von Tannwald. Am 9. November 2026 hat Tannwald eine Dokumentanforderung für ein Lieferantenaudit am 10. Dezember 2026 geschickt. Du hast den Ordner: 11 Dateien, und zu jeder Anforderung gibt es eine Datei, deren Name passt.
+Du bist das Büro einer erfundenen Firma, die eine Mitteilung über eine Inspektion bekommen hat. In vier Schritten hilft dir Claude, eine Tabelle zu bauen, einen Check laufen zu lassen, einen Plan zu schreiben und ein Register zu bauen. Eine Person entscheidet und unterschreibt. Nach der Prüfung hält bereit-bleiben/ das Register aktuell.
+Stufe 2 heißt: Die Dateien sind erfunden, du darfst sie in Claude laden. Stufe 3 ist deine eigene Firma: Claude schreibt ein Skript, du führst es auf deinem eigenen Rechner aus, und Claude sieht nur Spaltennamen und 3 erfundene Zeilen.
 
-Vertrag, Anforderung und Ordner sind englisch, wie bei einem Dienstleister in Skopje für einen Kunden in Hamburg üblich. Claude antwortet auf Deutsch und zitiert wörtlich englisch.
+## Einmal einrichten
 
-Was du übst, in einem Satz: "Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts." Das Ergebnis ist eine Lückenliste, die du vertreten kannst.
+Öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein, füge listen/ und ordner/ hinzu. Diese Dateien sind erfunden, das ist also Stufe 2 der Datenleiter. Eigene Firma später: Stufe 3, nur Spaltennamen und 3 erfundene Zeilen.
 
-| Prüfung | Hält, wenn |
-|---|---|
-| ZITAT | Worte, wörtlich aus der Datei kopiert, beantworten die Anforderung. Eine Richtlinie oder eine Notiz sagt, was passieren soll; nur ein Protokoll zeigt, dass es passiert ist. |
-| ZEITRAUM | Ein Protokoll ist ab dem 10. Dezember 2025 datiert. Eine Richtlinie wurde ab diesem Tag freigegeben oder überprüft. Die Datei gilt für den ganzen Zeitraum. |
-| UMFANG | Sie deckt die Systeme und Personen ab, nach denen die Anforderung fragt. |
-| FREIGABE | Eine Richtlinie nennt in der Datei, wer sie mit Datum freigegeben hat. Ein Register, Log oder Export nennt, wer es führt. Eine Anbieterseite nennt Anbieter und Datum der Seite. DRAFT, "(open)" oder "FINAL" im Dateinamen ist keine Freigabe. |
+Füge faelle/fall-A-arbeit.md und vorlagen/register.csv ebenfalls zum Projekt hinzu. Die Fristen und die Artikelnummern aus Schritt 3 stehen in der Falldatei, die Spalten aus Schritt 4 in der Vorlage. Die Fälle B und C gehören zu anderen Audits und bleiben draußen. Im Free-Tarif müssen alle Projektdateien in das Kontextfenster von Claude passen; passen sie nicht, füge die Dateien eines Schritts nach dem anderen hinzu.
+Freiwillig: der Skill audit-nachweise. Die vier Schritte gehen auch nur mit den Projektanweisungen. Wie du ihn einrichtest, steht im letzten Abschnitt dieser Datei.
 
-Dieselben vier Prüfungen wie in Workshop 04, jetzt für einen ganzen Ordner. BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt. Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.
+## Schritt 1: die Tabelle bauen
 
-## Was du brauchst
-- Claude (claude.ai oder die Desktop-App), jeder Plan, mit eingeschalteter Codeausführung: „Settings“, „Capabilities“, „Code execution and file creation“ (im neuen Layout „Create and edit files“). Auf Team oder Enterprise muss das eventuell dein Admin erlauben. Codex oder Claude Code kann auch den entpackten Ordner lesen, siehe unten.
-- Etwa 60 Minuten. LOESUNGEN.md ist der Schlüssel. Öffne sie nach jedem Schritt, nicht vorher.
-- Optional: Die Demo unter loehrning.ai/demos/audit-vorbereitung-mit-ki geht diesen Ordner in drei Minuten durch.
+Sag es voraus, dann prüf es in LOESUNGEN.md.
+Im Raum 6 Minuten. Am Schreibtisch etwa 20, unsere Schätzung, nicht gemessen.
 
-## Einrichten (5 Minuten)
-1. Öffne in Claude „Projects“ und leg „Vardar Audit“ an.
-2. Öffne „Set project instructions“, füge projektanweisungen.md ganz ein und wähle „Save instructions“.
-3. Wähle im Projektwissen „+“ und lade request_tannwald.md und die 11 Dateien aus ordner/ hoch. Lässt sich eine .md- oder .csv-Datei nicht hochladen, benenne sie in .txt um.
-4. Keine Projekte? Starte einen Chat, häng die 12 Dateien an und füge projektanweisungen.md über deinem ersten Prompt ein.
+    Lies die drei Auszüge der Prüfliste. Mach eine Tabelle mit einer Zeile pro Frage der Prüfliste: Zeilen-Id, Artikel, das Papier, das die Frage beantwortet, wer dafür zuständig ist, wo es liegt (nimm ordner-index.md). Öffne die Dateien im Ordner noch nicht. Fehlt ein Papier in den Dateien, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen. Antworte nur mit der Tabelle.
 
-Starte jeden Schritt in einem neuen Chat im Projekt. Antworten anderer Chats werden nicht geteilt: Lade nach Schritt 1 die Nachweisliste herunter und hänge sie in Schritt 2 an; speichere nach Schritt 2 die R1-bis-R8-Tabelle und hänge sie in Schritt 3 an. Nutze „+“, dann „Add files or photos“. Ohne Projekt bleibst du für alle drei Schritte im selben Chat.
+## Schritt 2: den Check laufen lassen
 
-## Mit Codex oder Claude Code
-Öffne den entpackten Ordner vardar-audit-kit-de in Codex oder starte Claude Code in diesem Ordner. Gib diese Anweisung, danach die drei Prompts unten einzeln:
+Sag es voraus, dann prüf es in LOESUNGEN.md.
+Im Raum 9 Minuten. Am Schreibtisch etwa 20, unsere Schätzung, nicht gemessen.
 
-    Lies projektanweisungen.md und halte dich in dieser Übung daran. Nutze nur request_tannwald.md und die elf Dateien in ordner/ als Nachweise. Lies LOESUNGEN.md nicht. Ändere keine Quelldateien. Stichtag ist der 9. November 2026. Rechne die Zahlen im Code aus und zeige die Rechnung.
+    Schreibe einen Check für die CSV-, txt- und md-Dateien im Ordner und führe ihn aus; überspringe CSV-Zeilen, die mit # beginnen. Gib aus, wie viele Zeilen du in jeder Datei gelesen hast. Gib zu jedem Fund Kennung, Regel und Zahl aus: Anmeldung später als am Tag vor der ersten Schicht; Überstundenwochen über 8 Stunden; Überstundenwochen ohne Meldung; Lohnzeilen ohne Überstundenzeile; Anwesenheitszeilen ohne Beginn und Ende; Lohn später als 15 Tage nach der Periode (ein freier Tag verschiebt es); fehlende Urlaubsbescheide oder unter 20 Tagen (geschuldet nach 6 Monaten); leere Felder in den Akten; Untersuchungen, die am 27. Nov. 2026 älter als 24 Monate sind; Stellenbezeichnungen, die in der Sicherheitserklärung fehlen; Unterweisung später als der Einstellungstag. Liste dann jeden Grenzfall auf, den du ausgeschlossen hast, mit dem Grund. Schließe mit einer Zeile Summen: Zeilen gelesen, Funde, Grenzfälle geprüft. Ändere keine Datei. Antworte in höchstens 16 Zeilen.
 
-Bleib für alle drei Schritte im selben Gespräch. Lies für Schritt 3 zusätzlich vorlagen/luecken-anfrage.md und draft-reply.md. Öffne LOESUNGEN.md nach jedem Schritt selbst. Ein Skill muss für diesen Fall nicht installiert werden.
+Codeausführung ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus. Führe es so aus: python3 check.py ordner/ (Windows: py check.py ordner). Echte Firma: Nimm das Skript und führe es auf deinem eigenen Rechner aus; schick dem Werkzeug nur Spaltennamen und 3 erfundene Zeilen. Zum Üben nimm vorlagen/sample-rows_attendance.csv.
 
-## Schritt 1: die Nachweisliste (15 Minuten)
-Erst auf Papier: Wie viele der 11 Dateien bestehen ZEITRAUM und FREIGABE?
+## Schritt 3: Status, Plan, Briefing
 
-    Bau die Nachweisliste des Ordners: eine Zeile pro Datei, 11 Zeilen.
-    Spalten: Datei | Typ (RICHTLINIE, REGISTER, PROTOKOLL, AUSSAGE) | Datum und Art des Datums (freigegeben, überprüft, erledigt, erzeugt, exportiert, gedruckt, bearbeitet) | Freigegeben oder geführt von | Deckt ab (Systeme, Personen, Zeitraum) | ZEITRAUM | FREIGABE.
-    Übernimm Daten und Rollen aus dem Text der Datei. Steht es dort nicht, schreib NICHT IN DER DATEI.
+Sag es voraus, dann prüf es in LOESUNGEN.md.
+Im Raum 8 Minuten. Am Schreibtisch etwa 30, unsere Schätzung, nicht gemessen. Mach es in zwei Anläufen: erst die Status und die neuen Papiere, dann das Briefing, die Notizen und die Dateien.
+Füge vor diesem Schritt mitteilung_DIT_2026-11-23.md, vorlagen/evidence-index.csv, vorlagen/clock.csv und vorlagen/neues-papier.md zum Projekt hinzu. Der Prompt liest sie.
 
-Vergleiche mit LOESUNGEN.md, Schritt 1. Schau dir die zwei Richtlinien an: Wen hat Claude als Freigebende eingetragen?
+    Gib jeder Frage BELEGT, SCHWACH oder LÜCKE mit den vier Prüfungen und einem Zitat. LÜCKE: für jemanden fehlt das Papier, oder der Nachweis zeigt die Regel verletzt. SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmt nicht. Nenne für jede SCHWACH und LÜCKE das neue Papier, das sie schließt (nie eine Änderung an einem alten), die zuständige Rolle und den Tag; heute ist der 26. Nov. 2026. Fülle vorlagen/evidence-index.csv. Schreibe vorlagen/clock.csv aus der Mitteilung und lass das Datum der Papiere offen (der Inspektor setzt es am Besuchstag). Schreibe eine Seite für die anwesende Person am 27. Nov.: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf Notizen zu neuen Papieren für E-11 und E-19 (Urlaub) und die Überstundenmeldung aus vorlagen/neues-papier.md. Lass jede Unterschriftszeile leer. Antworte mit einer Zeile pro Frage: Zeilen-Id, Status, höchstens 8 Wörter Grund. Alles andere kommt in die Dateien. Höchstens 16 Zeilen.
 
-## Schritt 2: die acht Anforderungen (20 Minuten)
-Hänge im neuen Projektchat deine Nachweisliste aus Schritt 1 an.
-Erst auf Papier: Gib R1 bis R8 einen Status.
+Prüfe nach dem Lauf selbst zwei Dinge. Jede Unterschriftszeile in den Dateien, die Claude geschrieben hat (die Notizen zu neuen Papieren, das Briefing und evidence-index.csv), muss leer sein, und vorlagen/clock.csv muss das Datum der Papiere offen lassen, weil der Inspektor es am Besuchstag setzt. Lösche alles, was Claude ausgefüllt hat. Eine benannte Person unterschreibt, nicht Claude.
 
-    Ordne R1 bis R8 aus request_tannwald.md unseren Dateien zu.
-    Eine Zeile pro Anforderung: Anforderung | Datei | Zitat (wörtlich, in Anführungszeichen) | ZITAT | ZEITRAUM | UMFANG | FREIGABE | Status | Was fehlt.
-    Rechne den Schulungsanteil und die Stunden bis zur Meldung des Vorfalls im Code.
-    Such dann jedes Zitat noch einmal in seiner Datei. Streich jeden Status, dessen Zitat du nicht wörtlich findest, und sag es.
+## Schritt 4: das Register bauen
 
-Dann schick:
+Sag es voraus, dann prüf es in LOESUNGEN.md.
+Im Raum 11 Minuten. Am Schreibtisch etwa 20, unsere Schätzung, nicht gemessen.
 
-    Macht "Backups are restore-tested twice a year" R7 zu BELEGT?
+    Baue das Register. Lies ordner-index.md und die CSV-Dateien im Ordner. Überspringe die Zeilen, die mit # beginnen. Mach register.csv mit den Spalten aus vorlagen/register.csv und einer Zeile pro Person und Papier. Papiere: contract, registration, medical-exam (gültig 24 Monate), leave-decision (nur für Personen mit 6 Monaten Betriebszugehörigkeit am 26. Nov. 2026), overtime-notice (für jede Person mit Überstundenwochen) und safety-statement (eine Zeile für die Firma, person_id FIRM). Nimm die Zuständigkeit aus ordner-index.md. Fehlt ein Papier, schreib MISSING in die Spalte date. Nennt keine Datei eine freigebende Person, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen, und keine Gesundheitsinhalte, nur Daten. Schreibe dann check.py. Es liest register.csv und gibt für heute drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Führe es mit dem heutigen Datum aus, 26. Nov. 2026. Antworte in höchstens 16 Zeilen: die drei Zahlen, dann die ersten fünf Zeilen von register.csv.
 
-Öffne das Code-Fenster und prüf zwei Zahlen: wie viele Beschäftigte geschult sind, und wie viele Stunden bis Tannwald informiert war. Dann LOESUNGEN.md, Schritt 2.
+Dann frag das Register:
 
-Optional: Füge Claudes Tabelle in die Zitat-Probe auf der Demo-Seite ein. Sie prüft jedes Zitat gegen die Dateien, in deinem Browser.
+    Sieh dir register.csv an. Welche Papiere liegen für E-07 vor, welches fehlt, und wer ist jeweils zuständig? Antworte nur aus register.csv, in höchstens 8 Zeilen. Fehlt eine Zeile, sag NICHT IN DATEIEN.
 
-## Schritt 3: Lückenliste und Antwort (20 Minuten)
-Häng deine R1-bis-R8-Tabelle aus Schritt 2, vorlagen/luecken-anfrage.md und draft-reply.md an und schick:
+Codeausführung ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus.
 
-    1. Lückenliste für jede Anforderung mit SCHWACH oder LÜCKE: Anforderung | Was fehlt | Dokument, das es schließt | Zuständig | Bis 2. Dezember 2026.
-    2. Für jede Lücke eine Anfrage-Mail an die zuständige Person nach der angehängten Vorlage.
-    3. Prüf jeden Satz des Antwortentwurfs: BEHALTEN (zitiere den Nachweis), UMSCHREIBEN (ein Satz, den unsere Dateien heute belegen) oder STREICHEN (zitiere die Datei, die widerspricht).
-    4. Eine Antwort an Lena Keller auf Englisch, höchstens 150 Wörter, nur mit Sätzen, die unsere Dateien belegen. Sag für jede Anforderung, die wir nicht belegen können, was folgt und bis wann. Erwähne Klausel 7.
+Die englischen Wörter in der Spalte paper (contract, registration, medical-exam, leave-decision, overtime-notice, safety-statement) und das Wort MISSING sind feste Kennwörter der Tabelle. Sie bleiben englisch, damit check.py sie wiederfindet. Die Spalte where nennt die Dateien so, wie sie im Ordner heißen.
 
-Ändere einen Satz der Antwort selbst. Du unterschreibst sie, nicht Claude.
+Jeden Monat: siehe vorlagen/monatscheck.md.
 
-Vergleiche mit LOESUNGEN.md, Schritt 3.
+## Bereit bleiben
 
-Weicht die Antwort ab, öffne die genannte Datei und prüfe das wörtliche Zitat. Claude kann weitere Lücken finden oder eine Aussage vorsichtiger bewerten. Die Lösung ist eine begründete Auslegung dieses Ordners. Erzwinge weder ihre Formulierung noch ihre Zählung. Fehlen Dateien, hänge sie erneut an. Bei Nutzungslimit oder Ausfall geht es mit LOESUNGEN.md und der Demo weiter, ausdrücklich als vorbereitetem Beispiel.
+Nach der Prüfung bleibt das Register. Der Ordner bereit-bleiben/ hält es aktuell:
 
-## Dein eigenes Audit
-- Installiere den Skill audit-nachweise. Er liegt in diesem Kit unter claude/audit-nachweise/SKILL.md; zum Hochladen in claude.ai lade audit-nachweise.zip von loehrning.ai/skills/audit-nachweise.zip oder von der Demo-Seite. Die Schritte folgen unten.
-- Oder kopier projektanweisungen.md in ein neues Projekt und ändere Kunde, Daten und Schwellen.
-- Jede LÜCKE ist eine Aufgabe mit einer zuständigen Person. Ein Mensch prüft jedes Zitat und unterschreibt jede Antwort. Claude bereitet vor; es bestätigt nichts.
-- Lade Firmendokumente nur in das Firmenkonto, das deine Firma freigegeben hat. Ersetze Namen in Zugriffs- und Schulungslisten vorher durch IDs. Verträge unter NDA und Berichte von Penetrationstests bleiben draußen, außer der Vertrag erlaubt es.
+- bereit-bleiben/wochencheck_geplante-aufgabe.md: der Check als wöchentliche geplante Aufgabe, nur in bezahlten Tarifen.
+- bereit-bleiben/monatscheck_von-hand.md: derselbe Check einmal im Monat von Hand, für den Free-Tarif.
+- bereit-bleiben/register-projektanweisungen.md: die Anweisungen für ein zweites Projekt mit dem Register.
+- bereit-bleiben/sicherheitskarte.md: was hinein darf, was nie, wer unterschreibt.
+- bereit-bleiben/beobachtungsliste.md: wo neue Regeln und Kontrollen erscheinen.
 
-## Skill installieren
+## Nach dem Besuch (optional)
+
+Die zwei Dateien in inspektor/ bleiben zu, bis ihr Tag da ist: das Verlangen am Tag des Besuchs, das Protokoll nach Schritt 3. Öffne inspektor/protokoll_beispiel_2026-11-27.md und nimm vorlagen/stellungnahme-protokoll.md. Schreibe zu jedem Punkt, der nicht zu dem passt, was geschah, höchstens vier Sätze. Das ist nur ein Entwurf: Eine benannte Person unterschreibt oder schreibt ihren Grund neben die Unterschrift.
+
+## Freiwillig: den Skill einrichten
+
+Der Skill ist der Unterordner claude/audit-nachweise/ in diesem Kit, und zusätzlich als ZIP zum Herunterladen unter loehrning.ai/skills/audit-nachweise.zip. Das Kit enthält keine ZIP-Datei. Richte ihn einmal ein, dort wo du Claude nutzt:
 
 <!-- claude-ui:de -->

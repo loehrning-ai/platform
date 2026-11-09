@@ -134,7 +134,7 @@ describe("crawl contract", () => {
   it.each([
     ["/workshops/ki-im-unternehmen-sicher-nutzen", "/workshops/audit-vorbereitung-mit-ki"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/kit", "/workshops/audit-vorbereitung-mit-ki/kit"],
-    ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/slides.html", "/workshops/audit-vorbereitung-mit-ki/slides.html"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html", "/workshops/audit-vorbereitung-mit-ki/presenter.html"],
     ["/demos/ki-im-unternehmen-sicher-nutzen", "/demos/audit-vorbereitung-mit-ki"],
@@ -146,6 +146,25 @@ describe("crawl contract", () => {
     for (const live of ["/workshops/audit-vorbereitung-mit-ki", "/workshops/audit-vorbereitung-mit-ki/kit", "/demos/audit-vorbereitung-mit-ki"]) {
       expect(getCrawlRoute(live).routeClass).not.toBe("retired");
     }
+  });
+
+  // The Workshop 05 rebuild renamed both kit zips and replaced the gap-request template. Each old path must
+  // resolve to its new target with a 301 (the lookup is the contract data; the proxy has its own test).
+  it.each([
+    ["/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip", "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip"],
+    ["/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip", "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip"],
+    ["/en/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip", "/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip"],
+    ["/vorlagen/luecken-anfrage.md", "/vorlagen/neues-papier.md"],
+    ["/vorlagen/luecken-anfrage.en.md", "/vorlagen/neues-papier.en.md"],
+  ])("301s the renamed Workshop 05 file %s to %s", (from, to) => {
+    const entry = getCrawlRoute(from);
+    expect(entry.routeClass).toBe("retired");
+    expect(entry.auth).toBe("redirect");
+    expect(entry.redirectTo).toBe(to);
+    expect(entry.status).toBe(301);
+    expect(isRetiredRoute(from)).toBe(true);
+    // The new targets are live, not retired.
+    expect(getCrawlRoute(to).routeClass).not.toBe("retired");
   });
 
   it("keeps retired blog slugs ahead of the broad blog pattern", () => {

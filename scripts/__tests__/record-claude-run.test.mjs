@@ -3,7 +3,23 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { distill, FORBIDDEN, isolationErrors, producedText, runFlags, scrub, skillDigest } from "../demos/record-claude-run.mjs";
+import {
+  claudeArgs,
+  distill,
+  FORBIDDEN,
+  INSTRUCTIONS_PLACEHOLDER,
+  isolationErrors,
+  kitRelative,
+  parseArgs,
+  preflightProblems,
+  producedPaths,
+  producedText,
+  resolveFlags,
+  runConversation,
+  runFlags,
+  scrub,
+  skillDigest,
+} from "../demos/record-claude-run.mjs";
 
 const event = (t, ev) => ({ t, ev });
 // Machine paths are built at run time, so this file itself never contains one.
@@ -69,4 +85,109 @@ test("digests a skill folder by sorted relative paths and bytes", () => {
   assert.notEqual(skillDigest(dir), first);
   assert.equal(producedText(Buffer.from("print(1)\n")), "print(1)\n");
   assert.equal(producedText(Buffer.from([0, 1, 2])), undefined);
+});
+
+const REQUIRED = ["--slug", "s", "--locale", "en", "--prompt-id", "chain", "--kit-zip", "k.zip", "--prompt-file", "p.txt", "--skill", "sk"];
+
+test("parses --keep-paths, --instructions-file and several --follow-up-file flags; other workshops see no change", () => {
+  const plain = parseArgs(REQUIRED);
+  assert.equal(plain.keepPaths, undefined);
+  assert.equal(plain.instructionsFile, undefined);
+  assert.deepEqual(plain.followUps, []);
+  const options = parseArgs([...REQUIRED, "--keep-paths", "--instructions-file", "kit/project-instructions.md", "--follow-up-file", "b.txt", "--follow-up-file", "c.txt", "--preflight", "--no-skill"]);
+  assert.equal(options.keepPaths, true);
+  assert.equal(options.instructionsFile, "kit/project-instructions.md");
+  assert.deepEqual(options.followUps, ["b.txt", "c.txt"]);
+  assert.equal(options.preflight, true);
+  assert.equal(options.id, "en-chain-without-1");
+});
+
+test("keeps the folder below the kit root with --keep-paths and flattens without it", () => {
+  assert.equal(kitRelative("gradba-audit-kit/folder/attendance_2026-11.csv", true), "folder/attendance_2026-11.csv");
+  assert.equal(kitRelative("gradba-audit-kit/templates/clock.csv", true), "templates/clock.csv");
+  assert.equal(kitRelative("gradba-audit-kit/project-instructions.md", true), "project-instructions.md");
+  assert.equal(kitRelative("gradba-audit-kit/folder/attendance_2026-11.csv", false), "attendance_2026-11.csv");
+});
+
+test("stores the instructions as a placeholder in the flags, never as a path or as text, and hands the text over at spawn", () => {
+  const without = runFlags({ model: "claude-opus-5-5", withSkill: false, allowWrite: true, allowPython: true, persist: true });
+  assert.ok(!without.includes("--append-system-prompt"));
+  const flags = runFlags({ model: "claude-opus-5-5", withSkill: false, allowWrite: true, allowPython: true, persist: true, instructions: true });
+  assert.deepEqual(flags.slice(-2), ["--append-system-prompt", INSTRUCTIONS_PLACEHOLDER]);
+  assert.ok(!flags.some((flag) => flag.includes("/")));
+  assert.equal(FORBIDDEN.test(JSON.stringify(flags)), false);
+  const argv = claudeArgs("Hello", flags, ["--add-dir", "ws"], "Rule 1. Rule 2.");
+  assert.equal(argv[argv.indexOf("--append-system-prompt") + 1], "Rule 1. Rule 2.");
+  assert.ok(!argv.includes(INSTRUCTIONS_PLACEHOLDER));
+  assert.throws(() => resolveFlags(flags, undefined), /no text/);
+  assert.deepEqual(resolveFlags(without, undefined), without);
+});
+
+test("counts a file as produced when it is new or its bytes changed, not when it is untouched", () => {
+  const before = new Map([["work/templates/evidence-index.csv", "aaa"], ["work/templates/clock.csv", "bbb"], ["work/folder/a.csv", "ccc"]]);
+  const after = new Map([["work/templates/evidence-index.csv", "aab"], ["work/templates/clock.csv", "bbb"], ["work/folder/a.csv", "ccc"], ["work/register.csv", "ddd"]]);
+  assert.deepEqual(producedPaths(before, after), ["work/register.csv", "work/templates/evidence-index.csv"]);
+  assert.deepEqual(producedPaths(before, before), []);
+});
+
+test("flags a forbidden word or a machine path in a kit file, the instructions or a prompt before any run", () => {
+  const word = ["sig", "nature"].join("");
+  assert.deepEqual(preflightProblems({ files: [{ name: "a.md", text: "all clear" }], instructions: { name: "i.md", text: "plain" }, prompts: ["one", "two"] }), []);
+  const problems = preflightProblems({
+    files: [{ name: "folder/a.md", text: `the ${word} line` }],
+    instructions: { name: "i.md", text: `see ${HOME}/x` },
+    prompts: ["fine", `a ${word}`],
+  });
+  assert.equal(problems.length, 3);
+  assert.match(problems.join("\n"), /folder\/a.md/);
+  assert.match(problems.join("\n"), /follow-up 1/);
+});
+
+/** A stand-in for one turn of claude: the init event carries one session, the result one answer. */
+function fakeTurn(answer) {
+  return [
+    event(0, { type: "system", subtype: "init", model: "claude-opus-5-5", claude_code_version: "2.1.319", skills: [], mcp_servers: [], plugins: [], memory_paths: {}, session_id: "sess-1" }),
+    event(10, { type: "stream_event", parent_tool_use_id: null, event: { type: "content_block_start", content_block: { type: "text" } } }),
+    event(11, { type: "stream_event", parent_tool_use_id: null, event: { type: "content_block_delta", delta: { type: "text_delta", text: answer } } }),
+    event(20, { type: "result", result: answer, duration_ms: 20, duration_api_ms: 19, ttft_ms: 5, num_turns: 1, usage: { output_tokens: 3 }, is_error: false, stop_reason: "end_turn", permission_denials: [], modelUsage: { "claude-opus-5-5": {} } }),
+  ];
+}
+
+test("runs three turns of one session and passes the project instructions to every one of them", async () => {
+  const flags = runFlags({ model: "claude-opus-5-5", withSkill: false, allowWrite: true, allowPython: true, persist: true, instructions: true });
+  const spawned = [];
+  const run = async (argv) => {
+    spawned.push(argv);
+    return fakeTurn(`answer ${spawned.length}`);
+  };
+  const { first, followTurns, errors } = await runConversation({
+    prompt: "step one",
+    followUps: ["step two", "step three"],
+    flags,
+    extra: ["--add-dir", "ws"],
+    instructionsText: "Project rules.",
+    cwd: "work",
+    raw: [],
+    prefixes: [],
+    check: (turn) => isolationErrors(turn, { skill: "audit-nachweise", withSkill: false, userSkills: [] }),
+    run,
+  });
+  assert.deepEqual(errors, []);
+  assert.equal(spawned.length, 3);
+  for (const argv of spawned) assert.equal(argv[argv.indexOf("--append-system-prompt") + 1], "Project rules.");
+  assert.deepEqual(spawned.map((argv) => argv[1]), ["step one", "step two", "step three"]);
+  assert.ok(!spawned[0].includes("--resume"));
+  for (const argv of spawned.slice(1)) assert.equal(argv[argv.indexOf("--resume") + 1], "sess-1");
+  assert.ok(!spawned.some((argv) => argv.includes("--no-session-persistence")));
+  assert.equal(first.turn.final_text, "answer 1");
+  assert.deepEqual(followTurns.map((turn) => [turn.prompt, turn.final_text]), [["step two", "answer 2"], ["step three", "answer 3"]]);
+});
+
+test("a register take has one follow-up and keeps the instructions on it", async () => {
+  const flags = runFlags({ model: "claude-opus-5-5", withSkill: false, allowWrite: true, allowPython: true, persist: true, instructions: true });
+  const spawned = [];
+  const { followTurns } = await runConversation({ prompt: "build it", followUps: ["ask it"], flags, extra: [], instructionsText: "Rules.", cwd: "w", raw: [], prefixes: [], check: () => [], run: async (argv) => (spawned.push(argv), fakeTurn("ok")) });
+  assert.equal(spawned.length, 2);
+  assert.equal(followTurns.length, 1);
+  assert.ok(spawned.every((argv) => argv.includes("Rules.")));
 });

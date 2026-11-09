@@ -15,8 +15,8 @@ const assetManifest = JSON.parse(readFileSync(path.resolve(process.cwd(), "../..
   assets: Array<{ path: string; sizeBytes: number; sha256: string }>;
 };
 const courses = [
-  { capability: "workshop-w04", slug: "esg-berichte-mit-ki", scene: "weingut", company: "Crvena Zemja" },
-  { capability: "workshop-w05", slug: "audit-vorbereitung-mit-ki", scene: "company", company: "Vardar Works" },
+  { capability: "workshop-w04", slug: "esg-berichte-mit-ki", scene: "weingut", intro: { de: "Crvena Zemja", en: "Crvena Zemja" }, band: { de: "Tim", en: "Tim" } },
+  { capability: "workshop-w05", slug: "audit-vorbereitung-mit-ki", scene: "today", intro: { de: "erfundene Firma", en: "invented firm" }, band: { de: "Am Montag kommt ein Brief", en: "On Monday a letter arrives" } },
 ] as const;
 
 for (const locale of ["de", "en"] as const) {
@@ -71,7 +71,7 @@ for (const locale of ["de", "en"] as const) {
   });
 
   for (const course of courses) {
-    test(`${locale}: ${course.capability} entry, kit, deck and recorded demo`, { tag: tag(course.capability) }, async ({ context }) => {
+    test(`${locale}: ${course.capability} entry, kit, deck and demo`, { tag: tag(course.capability) }, async ({ context }) => {
       let deck = "";
       let demo = "";
       await inNewPage(context, async (page) => {
@@ -81,11 +81,11 @@ for (const locale of ["de", "en"] as const) {
         demo = (await stage.locator('a[href*="/demos/"]').getAttribute("href"))!;
         expect(deck).toContain(`/workshops/${course.slug}/`);
         expect(demo).toContain(`${prefix}/demos/${course.slug}`);
-        await expect(page.locator("[data-cover-band]")).toContainText("Tim");
+        await expect(page.locator("[data-cover-band]")).toContainText(course.band[locale]);
       });
       await inNewPage(context, async (page) => {
         await openApp(page, `${prefix}/workshops/${course.slug}/kit`);
-        await expect(page.locator("main")).toContainText("Codex");
+        await expect(page.locator("main")).toContainText(course.capability === "workshop-w05" ? "Claude" : "Codex");
         if (course.capability === "workshop-w04") {
           await expect(page.locator("[data-kit-setup-step]")).toHaveCount(4);
           await expect(page.locator("[data-kit-setup]")).toContainText("Instructions → Edit");
@@ -123,7 +123,7 @@ for (const locale of ["de", "en"] as const) {
       });
       await inNewPage(context, async (page) => {
         await openApp(page, demo);
-        await expect(page.locator("[data-demo-intro-body]")).toContainText(course.company);
+        await expect(page.locator("[data-demo-intro-body]")).toContainText(course.intro[locale]);
         await page.locator("[data-demo-start]").click();
         if (course.capability === "workshop-w04") {
           const send = page.locator("[data-w4a-send]");
@@ -132,27 +132,9 @@ for (const locale of ["de", "en"] as const) {
           await expect(page.locator('[data-w4a-turn="schritt-1"]')).toHaveAttribute("data-phase", "done");
           await expect(page.locator('[data-w4a-turn="schritt-1"] [data-w4a-answer]')).toContainText("September 2025");
         } else {
-          await expect(page.locator("[data-w05-row]")).toHaveCount(8);
-          await page.getByRole("slider").first().focus();
-          await page.keyboard.press("ArrowRight");
-          await page.locator('[data-w05-commit="keep"]').click();
-          await expect(page.locator("[data-w05-lead]")).toHaveCount(0);
+          await expect(page.locator("[data-demo-stage]")).toBeVisible();
         }
       });
-      if (course.capability === "workshop-w05") {
-        await inNewPage(context, async (page) => {
-          await openApp(page, `${demo}${demo.includes("?") ? "&" : "?"}beat=claude`);
-          const stage = page.locator('[data-demo-stage] [data-w05-probe="recorded"]');
-          const send = stage.locator("[data-w05-send]");
-          await expect(send).toHaveAccessibleName(locale === "de" ? "Aufzeichnung abspielen" : "Play the recording");
-          await send.click();
-          // Reduced motion completes immediately; the full demo suite covers normal-motion stop controls.
-          await expect(send).toHaveAttribute("data-state", "again");
-          await expect(stage).toHaveAttribute("data-w05-done", "");
-          await expect(page.locator("[data-w05-answer]")).not.toBeEmpty();
-          await expect(page.locator("[data-w05-window]")).toContainText("Claude Code");
-        });
-      }
     });
   }
 
