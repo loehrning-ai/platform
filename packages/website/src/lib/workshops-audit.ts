@@ -64,7 +64,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Für Schritt 2 brauchst du einen Claude-Tarif, der Code ausführen kann.",
+      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Schritt 2 führt Code aus: Das geht in jedem Claude-Tarif, sobald die Codeausführung an ist, oder du lässt check.py auf deinem eigenen Rechner laufen.",
     outcome: "Eine Tabelle mit 13 Fragen, ein Status je Frage und ein Briefing für den Besuch",
     stageExplainer: {
       heading: "Was ist das Kit?",
@@ -104,7 +104,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 90,
     needs: [
-      "Einen Browser und einen Claude-Tarif, der Code ausführen kann",
+      "Einen Browser und Claude, in jedem Tarif (Codeausführung an)",
       "Schritt 2 schreibt und startet ein kleines Skript",
     ],
     notNeeded: [
@@ -121,7 +121,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-11-07",
       data: "synthetic",
-      note: "Nordmazedonien, Stand 7. November 2026: Gesetze und Jahresberichte der Behörden, dazu Pressemeldungen, Anbieterseiten und Bedingungen, jeweils mit Quelle und Vertrauensstufe. Die Firma, ihre Papiere und ihre Daten sind erfunden. Keine Rechtsberatung.",
+      note: "Nordmazedonien, Stand 7. November 2026: Gesetze und Jahresberichte der Behörden, dazu Pressemeldungen, Anbieterseiten und Bedingungen, jeweils mit Quelle und Vertrauensstufe. Die Seiten der Beobachtungsliste wurden am 8. November 2026 geprüft. Die Firma, ihre Papiere und ihre Daten sind erfunden. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -142,7 +142,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Check laufen lassen",
         description:
-          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, mindestens 8 geprüft ohne Befund (ein sorgfältiger Lauf darf mehr ausschließen). Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
+          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, die 8 eingebauten Grenzfälle ohne Befund geprüft. Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
         tool: "Claude-Projekt",
       },
       {
@@ -202,7 +202,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "Everything runs on invented files, so no real data is needed. For Step 2 you need a Claude plan that can run code.",
+      "Everything runs on invented files, so no real data is needed. Step 2 runs code: that works on every Claude plan once code execution is on, or run check.py on your own computer.",
     outcome: "A table of 13 questions, a status for each and a briefing for the visit",
     stageExplainer: {
       heading: "What is the kit?",
@@ -242,7 +242,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 90,
     needs: [
-      "A browser and a Claude plan that can run code",
+      "A browser and Claude, on any plan (code execution on)",
       "Step 2 writes and runs a small script",
     ],
     notNeeded: [
@@ -259,7 +259,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-11-07",
       data: "synthetic",
-      note: "North Macedonia, as of 7 November 2026: laws and annual reports of the authorities, plus press reports, vendor pages and terms, each labelled with its source and confidence. The firm, its papers and its dates are invented. Not legal advice.",
+      note: "North Macedonia, as of 7 November 2026: laws and annual reports of the authorities, plus press reports, vendor pages and terms, each labelled with its source and confidence. The sites of the watch list were checked on 8 November 2026. The firm, its papers and its dates are invented. Not legal advice.",
     },
     steps: [
       {
@@ -280,7 +280,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Run the check",
         description:
-          "A script counts every row and names the rule: 10 findings, at least 8 checked with no problem (a careful run may clear more). With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
+          "A script counts every row and names the rule: 10 findings, the 8 planted near misses checked with no problem. With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
         tool: "Claude Project",
       },
       {

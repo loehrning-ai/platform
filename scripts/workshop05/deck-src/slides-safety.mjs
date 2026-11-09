@@ -1,7 +1,8 @@
 /**
  * S15 safety: what goes in, what never, who signs (REDESIGN-3 D4). One scene: the data ladder as a stair of four steps.
- * The left column builds: the two rules stay at its top from the entry on; the training facts (press 1) give their place to
- * the never card (press 4); the poll (press 2) gives its place to the law (press 5). The stair is seen in depth (a real 3D
+ * The left column is calm: the two rules stay at its top from the entry on, and below them one slot (plus the poll's) holds
+ * one card at a time, so at most three blocks show: the training facts (press 1) give their place to the never card (press 4),
+ * which gives its place to the law (press 5); the poll (press 2) leaves with the answer (press 3). The stair is seen in depth (a real 3D
  * stair: each step one level higher in z, the lit step comes forward), each step with an offset outline as its edge.
  * Press 0: the two rules (AI sorts and drafts; a named person signs). Press 1: steps 1 and 2 stand up, the training fact per plan
  * (CLAUDE-57, CLAUDE-59). Press 2: steps 3 and 4 stand up, the poll. Press 3: the answer, step 3 lit, the poll gone. Press 4: what never goes
@@ -46,11 +47,11 @@ export function safety(it, ctx, d, c) {
     html: `${t.f1.map((x) => `<p>${icon("shield")}<span>${esc(x)}</span></p>`).join("")}<small>${esc(t.f1Src)}</small>`,
   });
   const nv = it({
-    id: "nv", tag: "div", cls: "sfn fig", zone: "a", k: 4, win: ".3,1",
+    id: "nv", tag: "div", cls: "sfn fig", zone: "a", k: 4, out: 5, win: ".3,1",
     html: `<b>${esc(t.nv)}</b><ul>${t.nvi.map((x, i) => `<li>${icon("lock", { it, k: 4, win: spread(i, 3, 0.35, 0.5) })}<span>${esc(x)}</span></li>`).join("")}</ul><small>${esc(t.nvSrc)}</small>`,
   });
   const law = it({
-    id: "law", tag: "div", cls: "sfl fig", zone: "l", k: 5,
+    id: "law", tag: "div", cls: "sfl fig", zone: "a", k: 5, win: ".3,1",
     html: `<div class="sfl__g"><b>${esc(g[1])}</b><ul>${gates.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>${t.law.map((x, i) => `<p>${icon(i ? "sheet-check" : "letter")}<span>${esc(x)}</span></p>`).join("")}<small>${esc(t.lawSrc)}</small>`,
   });
   const stage = [

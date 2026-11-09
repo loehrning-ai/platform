@@ -113,7 +113,8 @@ for (const lang of LANGS) {
       assert.equal(answer.attrs["data-take"], takes[key].id);
       const shown = [];
       const flow = (answer.children ?? []).find((n) => hasClass(n, "tk-flow")) ?? answer;
-      for (const child of flow.children ?? []) {
+      // step 1 wraps its table in the zoom scene (tk-zoom): read through it
+      for (const child of (flow.children ?? []).flatMap((n) => (hasClass(n, "tk-zoom") ? n.children ?? [] : [n]))) {
         if (child.tag === "table") {
           for (const tr of find(child, (n) => n.tag === "tr")) shown.push(`| ${tr.children.map(textOf).join(" | ")} |`);
         } else if (hasClass(child, "rec")) {

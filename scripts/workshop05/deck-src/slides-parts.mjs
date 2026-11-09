@@ -5,7 +5,9 @@
  */
 import { esc, fill, rowWindow, spread } from "./motion.mjs";
 import { durationText, icon } from "./scene.mjs";
-import { chipText, compareWithKey, findingLine, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { PIPE_ROW, TAKES_DIR, chipText, compareWithKey, findingLine, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
 
 /** An icon of the engine sprite (lib/icons.svg). */
 export const ico = (name, cls = "") => `<svg class="ico${cls ? ` ${cls}` : ""}" aria-hidden="true"><use href="./lib/icons.svg#i-${name}"/></svg>`;
@@ -110,7 +112,7 @@ export function scanScene(it, { c, d, k, zone, id, timeText }) {
   const t = c.take.scan;
   const grid = scanGrid(d.rowsRead);
   const spots = markSpots(d.findings.length, grid);
-  const PITCH = 6;
+  const PITCH = 7;
   const from = 0.4;
   const marks = spots
     .map((m, i) => {
@@ -144,7 +146,8 @@ export function statusBoard(it, { c, k, zone, id, out, turn, ms }) {
  * One recorded turn in the window and its chip and key line. `o`: { c, d, takes, key ("chain" or "register"), slot, k, ms,
  * ids: {take, chip, key}, zones: {take, chip, key}, out: {take, chip, key}, count (placeholders of the key line that run),
  * scan ({zone, id}: the scan scene of step 2), board ({zone, id, out}: the status board of step 3), head (show the first rows, not the last),
- * hit (highlight the first line that names a finding), tools (show tool chips) }.
+ * hit (highlight the first line that names a finding), hitRows (first cells of table rows to light), zoom (window in which the
+ * table leans in on the lit rows), tools (show tool chips) }.
  * Returns { take, chip, key } as markup; the take goes into the window's thread, chip and key into the left column.
  * Without an accepted take the take is the labelled empty frame and the chip is left out.
  */
@@ -161,7 +164,7 @@ export function takeView(it, o) {
   }
   const turn = turnOf(rec, key, slot);
   const diffs = compareWithKey(rec, slot);
-  const entries = takeRows(turn.final_text);
+  const entries = takeRows(turn.final_text, o.wrap);
   const hitAt = o.hit ? findingLine(entries) : -1;
   let row = 0;
   let fence = false;
@@ -170,16 +173,25 @@ export function takeView(it, o) {
   const rows = entries
     .map((e, index) => {
       if (e.kind === "table") {
-        const trs = [e.header, ...e.body].map((r, i) => (row++, it({ tag: "tr", k, win: rowWindow(item++, ms), html: r.map((cell) => `<${i === 0 ? "th" : "td"}>${esc(cell)}</${i === 0 ? "th" : "td"}>`).join(""), attrs: `data-take="${rec.id}"` }))).join("");
-        return `<table class="fig rec" data-take="${rec.id}"><tbody>${trs}</tbody></table>`;
+        // hitRows: the rows the key line names (their first cell), lit so the room finds them at once (nothing edited)
+        const trs = [e.header, ...e.body].map((r, i) => (row++, it({ tag: "tr", cls: i > 0 && o.hitRows?.includes(String(r[0]).trim()) ? "is-hit" : undefined, k, win: rowWindow(item++, ms), html: r.map((cell) => `<${i === 0 ? "th" : "td"}>${esc(cell)}</${i === 0 ? "th" : "td"}>`).join(""), attrs: `data-take="${rec.id}"` }))).join("");
+        const table = `<table class="fig rec" data-take="${rec.id}"><tbody>${trs}</tbody></table>`;
+        // zoom: once every row is in, the camera leans in on the lit rows and the others step back (a scene at the end of the press)
+        return o.zoom && o.hitRows?.length ? `<div class="tk-zoom" data-step="${k}" data-win="${o.zoom}" data-fx="none">${table}</div>` : table;
       }
       const win = rowWindow(item++, ms);
       const kind = lineKind(e.line, fence);
       fence = kind.fence;
-      // a pipe between words (check.py prints "L05 | rule | count | detail") is drawn as a column divider; the text stays verbatim
-      const marked = markdownRows(e.rows).map((h) => (kind.fence || kind.cls === " is-fence" ? h : h.replace(/(^|\s)\|(?=\s|$)/g, '$1<span class="pp">|</span>')));
-      return e.rows
-        .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${index === hitAt ? " is-hit" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
+      // a script row of check.py ("L05 | rule | count | detail") is a four-column grid row: each cell a span, the pipes kept in
+      // the page but not drawn (class pp), the spaces inside the cells, so the row's text is the recorded line
+      const pipe = !kind.fence && PIPE_ROW.test(e.line);
+      const marked = pipe
+        ? markdownRows(e.rows).map((h) => `<span class="pc">${h.split(/(?<=\s)\|(?=\s)/).join('</span><span class="pp">|</span><span class="pc">')}</span>`)
+        : markdownRows(e.rows).map((h) => (kind.fence || kind.cls === " is-fence" ? h : h.replace(/(^|\s)\|(?=\s|$)/g, '$1<span class="pp">|</span>')));
+        // a script row whose count cell is 0 ("L13 | ... | 0 | No finding") is not a finding: it steps back (class is-nil)
+        const nil = pipe && /^\s*0\s*$/.test(String(e.line.split(/(?<=\s)\|(?=\s)/)[2] ?? ""));
+        return e.rows
+        .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${pipe ? " is-pipe" : ""}${nil ? " is-nil" : ""}${index === hitAt ? " is-hit" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
         .join("");
     })
     .join("");
@@ -237,17 +249,40 @@ export function fileChips(rec, fallback, { skip } = {}) {
   return `<p class="tk-files fig">${names.map((n) => `<span class="cw-file"><i>${esc((n.split(".").pop() ?? "").slice(0, 4))}</i><b>${esc(n)}</b></span>`).join("")}</p>`;
 }
 
-/** The produced files of a take as small page previews (a sheet with three lines and the file name), or the listed names. */
-export function filePreviews(rec, fallback, { skip } = {}) {
+/** The first lines of a produced file, verbatim, from the stored copy beside the recording (empty when there is none). */
+function firstLines(rec, file, n = 8) {
+  if (!rec?.id || !file?.stored_as) return [];
+  const where = path.join(TAKES_DIR, file.stored_as);
+  if (!existsSync(where)) return [];
+  return readFileSync(where, "utf8").split(/\r?\n/).filter((l) => l.trim() && !/^#?\s*(Fictional|Erfundenes)\b/i.test(l.trim())).slice(0, n);
+}
+
+/**
+ * The produced files of a take as page previews (round 4): each page shows its name and its first recorded lines (verbatim, a
+ * recorded line, outside our own copy scans) and opens in depth during press k, one after another (a 3D scene); the listed
+ * names while there is no recording.
+ */
+export function filePreviews(rec, fallback, { skip, it, k = 0 } = {}) {
   // a long name may break only after _ - or . (never inside a word or a date part)
-  const fromRecording = rec?.produced_files?.length ? rec.produced_files.map((f) => String(f.name).split("/").pop()).filter((n) => !(skip && skip.test(n))) : [];
-  const names = fromRecording.length ? fromRecording : fallback ? split(fallback) : [];
-  if (!names.length) return "";
-  return `<div class="tk-prevs fig">${names.map((n) => `<span class="tk-prev"><i></i><i></i><i></i><b>${fileName(n)}</b></span>`).join("")}</div>`;
+  const fromRecording = rec?.produced_files?.length ? rec.produced_files.filter((f) => !(skip && skip.test(String(f.name).split("/").pop()))) : [];
+  // each page shows one key line big enough for the room (a table its first row); the full text stays in the take
+  const key = (name, lines) => (/\.csv$/i.test(name) ? lines.slice(1, 2) : [lines.find((l) => /^(#+\s|Title:|Titel:)/.test(l.trim())) ?? lines[0]].filter(Boolean));
+  const files = fromRecording.length ? fromRecording.map((f) => { const name = String(f.name).split("/").pop(); return { name, lines: key(name, firstLines(rec, f)) }; }) : fallback ? split(fallback).map((name) => ({ name, lines: [] })) : [];
+  if (!files.length) return "";
+  const page = (f, i) => {
+    const body = f.lines.length ? f.lines.map((l) => `<p class="tk-prev__l" data-take="${esc(rec.id)}">${esc(l)}</p>`).join("") : "<i></i><i></i><i></i>";
+    const html = `<b>${fileName(f.name)}</b><span class="tk-prev__b">${body}</span>`;
+    return it ? it({ tag: "span", cls: "tk-prev", k, fx: "none", win: spread(i, files.length, 0.1, 0.5), attrs: "data-scene", html }) : `<span class="tk-prev">${html}</span>`;
+  };
+  return `<div class="tk-prevs fig">${files.map(page).join("")}</div>`;
 }
 
 /** A file name that may break only after _ - or / (never inside a word or a date part). */
-export const fileName = (name) => esc(name).replace(/([_/-])/g, "$1<wbr>");
+// a file name breaks after "_", "/" or "-", but never inside a date ("2026-11-23" stays whole, its hyphens are no break)
+export const fileName = (name) =>
+  esc(name)
+    .replace(/([_/]|(?<!\d)-|-(?!\d))/g, "$1<wbr>")
+    .replace(/\d+(?:-\d+)+/g, (x) => `<span class="nobr">${x}</span>`);
 
 /**
  * The kit files a prompt reads, as chips under the small prompt window (a figure cell): the prompt visibly works on files.
@@ -257,11 +292,20 @@ export const fileName = (name) => esc(name).replace(/([_/-])/g, "$1<wbr>");
 export function promptInputs(it, d, { id = "in", zone = "in", k = 0, out, pick }) {
   const names = pick(d.kitPaths);
   if (!names.length) return "";
+  // each file is a sheet of paper on the desk (an edge outline offset behind its face, no shadow) that stands up out of the
+  // desk during the press (a 3D scene); when the press that reads them comes, they lie down again as they leave
   const items = names
-    .map((p, i) => it({ tag: "li", k, win: spread(i, names.length, 0.25, 0.45), html: `${icon(/\.csv$/.test(p) ? "spreadsheet" : "sheet")}<span>${fileName(p)}</span>` }))
+    .map((p, i) => it({ tag: "li", k, fx: "none", win: spread(i, names.length, 0.15, 0.5), attrs: "data-scene", html: `<i class="pp__e" aria-hidden="true"></i><i class="pp__f" aria-hidden="true"></i>${icon(/\.csv$/.test(p) ? "spreadsheet" : "sheet")}<span>${fileName(p)}</span>` }))
     .join("");
   return it({ id, tag: "ul", cls: `tk-in tk-in--${Math.min(names.length, 14) > 6 ? "many" : "few"} fig`, zone, k, out, fx: "none", html: items });
 }
+
+/**
+ * The camera on a Claude window (T6): a stepped wrapper that holds the window. Before its press it shows the window a little
+ * back and tilted on its own plane (data-keep: visible at --p 0); during press k the camera moves in and the window comes flat
+ * and forward, as the recorded answer streams into it. It takes the window's zone (and leaves with it: out); the window inside has none.
+ */
+export const dolly = (it, { id = "dolly", zone = "w", k, out, html }) => it({ id, tag: "div", cls: "tk-dolly", zone, k, out, fx: "none", attrs: "data-scene data-keep", html });
 /** Path pickers for promptInputs: by top folder, by file name, by a name the prompt text carries. */
 export const inFolder = (paths, folders, test = () => true) => paths.filter((p) => folders.includes(p.split("/")[0]) && test(p)).map((p) => p.split("/").slice(1).join("/"));
 export const named = (paths, text) => {

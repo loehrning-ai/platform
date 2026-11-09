@@ -33,19 +33,21 @@ import {
 const ids = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
 
 /** The counted words per press state of each main slide (SPEC-2 2.3; the rule is in the header). A null is a press that shows a
- *  recorded take: its count depends on the chip variant and is asserted by the fixture tests below. */
+ *  recorded take: its count depends on the chip variant and is asserted by the fixture tests below. Round 4: Today counts the two
+ *  station notes at its last press (the counter reads own steps, and the camera wrappers that hold the stations step at 3).
+ *  Round 4: the close has four presses (last time, the fold into the register row and the weekly check, the doors, the QR cards). */
 const COUNTS = {
   en: {
-    cover: [12], today: [1, 1, 1, 22], why: [17, 23, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
+    cover: [12], today: [1, 1, 1, 14], why: [17, 23, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
     letter: [16, 18, 22, 22, 18, 20, 14, 21], time: [19, 17, 20, 23], kit: [11, 15, 17, 24], step1: [17, 25, null], step2: [17, 19, null],
     tests: [7, 7, 11, 23, 20], step3: [17, null, 14, 22], register: [23, 17, null, 10, 18, 12, null, 14],
-    watch: [16, 21, 22, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [21, 24, 8],
+    watch: [16, 21, 22, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [13, 13, 24, 8],
   },
   de: {
-    cover: [10], today: [1, 1, 1, 22], why: [14, 22, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
+    cover: [10], today: [1, 1, 1, 13], why: [14, 22, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
     letter: [13, 19, 22, 20, 18, 21, 14, 20], time: [17, 17, 20, 23], kit: [10, 16, 15, 22], step1: [16, 25, null], step2: [18, 20, null],
     tests: [7, 7, 11, 22, 18], step3: [16, null, 14, 20], register: [22, 16, null, 9, 18, 13, null, 16],
-    watch: [15, 18, 19, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [20, 24, 9],
+    watch: [15, 18, 19, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [13, 12, 24, 9],
   },
 };
 /** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
@@ -145,7 +147,12 @@ for (const lang of LANGS) {
           assert.ok(figs.length <= 15, `${lang} ${id} press ${k}: ${figs.length} figure cells`);
           const outs = visibleMatches(section, k, (n) => hasClass(n, "out"));
           // a recorded answer is at most 16 recorded lines; a line longer than 16 words is shown as several rows of at most 16 words
-          for (const o of outs) assert.ok(tokensIn(o).length <= 16, `${lang} ${id} press ${k}: output line of ${tokensIn(o).length} words`);
+          // (fix round of round 4, on purpose: a script row of check.py, "L05 | rule | count | detail", is drawn as a four-column
+          // grid row, class is-pipe; there each cell is held to 24 words: the detail column is the widest and wraps in two lines)
+          for (const o of outs) {
+            if (!hasClass(o, "is-pipe")) assert.ok(tokensIn(o).length <= 16, `${lang} ${id} press ${k}: output line of ${tokensIn(o).length} words`);
+            else for (const cell of (o.children ?? []).filter((n) => hasClass(n, "pc"))) assert.ok(tokensIn(cell).length <= 24, `${lang} ${id} press ${k}: a script cell of ${tokensIn(cell).length} words`);
+          }
           const lines = new Set(outs.map((o) => o.attrs["data-line"]).filter(Boolean));
           assert.ok(lines.size <= 16, `${lang} ${id} press ${k}: ${lines.size} recorded lines`);
           for (const f of visibleMatches(section, k, (n) => hasClass(n, "focus"))) {
@@ -210,7 +217,7 @@ for (const lang of LANGS) {
     must("watch", 1, en ? /Anthropic help centre, 5 Nov 2026/ : /Anthropic-Hilfe, 5\. Nov\. 2026/, "the plan facts carry their source");
     must("watch", 3, en ? /checked 8 Nov 2026/ : /geprüft am 8\. Nov\. 2026/, "the watch list carries its check date");
     must("safety", 4, en ? /never creates, changes or backdates/ : /nie einen Nachweis an, ändert oder rückdatiert/, "the record rule is on the never press");
-    must("safety", 5, en ? /effective 12 Nov 2026/ : /gültig ab 12\. Nov\. 2026/, "the Usage Policy carries its date");
+    must("safety", 5, en ? /taking effect 12 Nov 2026/ : /gültig ab 12\. Nov\. 2026/, "the Usage Policy carries its date (a version that takes effect after today)");
     const html = withoutTakes(pages[lang]);
     assert.match(html, en ? /Gradba audit \(invented\)/ : /Gradba-Audit \(erfunden\)/, "the Claude window is labelled as an invented case");
   });

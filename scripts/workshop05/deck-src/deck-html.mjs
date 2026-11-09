@@ -42,10 +42,13 @@ export function slidesOf(html) {
 
 export const mainSlides = (html) => slidesOf(html).filter((s) => s.attrs["data-kind"] === "main");
 
-/** True when the element itself is visible at press k (its own data-step and data-out only). */
+/**
+ * True when the element itself is visible at press k (its own data-step and data-out only). Round 4: a data-keep element (a
+ * camera wrapper, a card that steps back later) stays visible before its press, as engine.css keeps it ([data-off]:not([data-keep])).
+ */
 export function showsAt(node, k) {
   const a = node.attrs ?? {};
-  if (a["data-step"] !== undefined && Number(a["data-step"]) > k) return false;
+  if (a["data-step"] !== undefined && a["data-keep"] === undefined && Number(a["data-step"]) > k) return false;
   if (a["data-out"] !== undefined && Number(a["data-out"]) <= k) return false;
   return true;
 }

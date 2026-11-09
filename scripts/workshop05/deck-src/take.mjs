@@ -115,6 +115,9 @@ export function chipText(recording, lang, differs, copy) {
 
 /* ── rows ─────────────────────────────────────────────────────────────── */
 
+/** A row check.py prints: an id, then three cells divided by " | " (no leading pipe, so not a markdown table). */
+export const PIPE_ROW = /^\s*L\d{2} \| [^|]+ \| [^|]+ \| /;
+
 /** A markdown pipe row: its cells, trimmed. */
 const cellsOf = (line) => {
   const trimmed = line.trim().replace(/^\|/, "").replace(/\|$/, "");
@@ -157,7 +160,7 @@ export function wrapLine(line, limit = WORDS_PER_ROW) {
  * parts) and { kind: "table", header, body, lines } for a run of pipe lines. Empty lines are not rows. The text of every
  * entry is the recorded text, nothing added or changed.
  */
-export function takeRows(text) {
+export function takeRows(text, limit = WORDS_PER_ROW) {
   const lines = String(text).replace(/\r/g, "").split("\n").filter((l) => l.trim() !== "");
   if (lines.length > MAX_LINES) throw new Error(`a take answer has ${lines.length} lines, the deck shows at most ${MAX_LINES}`);
   const entries = [];
@@ -168,7 +171,8 @@ export function takeRows(text) {
       const rows = run.map(cellsOf).filter((cells) => !isSeparator(cells));
       entries.push({ kind: "table", header: rows[0] ?? [], body: rows.slice(1), lines: run });
     } else {
-      entries.push({ kind: "line", line: lines[i], rows: wrapLine(lines[i]) });
+      // a script row ("L05 | rule | count | detail") stays one row: it is drawn as a four-column grid row, never cut
+      entries.push({ kind: "line", line: lines[i], rows: PIPE_ROW.test(lines[i]) ? [lines[i].trim()] : wrapLine(lines[i], limit) });
       i += 1;
     }
   }

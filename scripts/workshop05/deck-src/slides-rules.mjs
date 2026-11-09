@@ -5,7 +5,7 @@
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { durationText, scrubber, target } from "./scene.mjs";
-import { claudeWindow, inFolder, named, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
+import { claudeWindow, dolly, inFolder, named, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
 import { turnOf } from "./take.mjs";
 
 const img = (label) => ` role="img" aria-label="${esc(label)}"`;
@@ -44,7 +44,8 @@ export function register(it, ctx, d, c, T) {
     it({ id: "pr", tag: "div", cls: "tk-slot", zone: "t", k: 1, out: 2, html: promptBubble(c, 4, d.prompts.step4) }),
     take.take,
   ].join("");
-  const win = claudeWindow(it, { id: "win", crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true });
+  // the camera moves in on the window as the register streams (press 2)
+  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true, zone: null }) });
   // press 0: the kit files the step reads stand on the empty sheet (the folder index, the folder's CSV files, the template);
   // press 1 the prompt window comes over them in its small size
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => [...inFolder(paths, ["folder", "ordner"], (p) => /-index\.md$|\.csv$/.test(p)), ...named(paths, d.prompts.step4).filter((p) => p.includes("/register.csv"))] });
@@ -52,7 +53,7 @@ export function register(it, ctx, d, c, T) {
     it({ id: "pr2", tag: "div", cls: "tk-slot", zone: "t", k: 6, out: 7, html: promptBubble(c, 5, d.prompts.step4b, { full: true }) }),
     take2.take,
   ].join("");
-  const win2 = claudeWindow(it, { id: "win2", crumbs: t.win, thread: thread2, k: 6, out: 7, zone: "w2", cls: "tk-cw--register", plane: true });
+  const win2 = dolly(it, { id: "dolly2", zone: "w2", k: 6, html: claudeWindow(it, { id: "win2", crumbs: t.win, thread: thread2, k: 6, out: 7, zone: null, cls: "tk-cw--register", plane: true }) });
 
   const none = c.take.noOwner;
   const colNames = [t.cols[0], t.cols[1], t.cols[2], t.cols[3], t.own, t.appr];
@@ -70,23 +71,27 @@ export function register(it, ctx, d, c, T) {
     })
     .join("");
   const dates = Object.entries(d.register.byDate);
-  const rowsOfDates = dates
-    .map(([iso, n], i) => {
-      const k = i === 0 ? 4 : 5;
-      const win = i === 0 ? ".2,.9" : spread(i - 1, 2, 0, 0.5);
-      const p = i === 0 ? null : dates[i - 1][1];
-      const now = [n.rows, n.expired, n.expiring, n.missing];
-      const before = i === 0 ? [0, 0, 0, 0] : [p.rows, p.expired, p.expiring, p.missing];
-      const cells = now
-        .map((v, j) => `<span class="scr__c"><b>${it({ tag: "span", k, win: i === 0 ? ".3,.9" : win, fx: "none", count: `0,${v},0`, text: String(v) })}</b><small>${esc(t.dc[j])}</small></span>`)
-        .join("");
-      return it({ tag: "p", cls: `scr__r scr__r--${i}`, k, win, html: `<i class="scr__node"></i><span class="scr__d">${esc(dateText(iso, d.lang))}</span>${cells}` });
-    })
-    .join("");
+  // the time machine (round 4): one check day and its four counts, big. The window shows one line per date (the oracle's
+  // counts on the three dates, in date order); the date chips set --at on the panel and the lines roll to that date (CSS, at
+  // most .45 s). On press 4 the panel stands up and every count runs up from 0.
+  const keys = ["rows", "expired", "expiring", "missing"];
+  const line = ([iso, n]) => `<span class="tm__r"><span class="scr__d">${esc(dateText(iso, d.lang))}</span>${keys.map((key) => `<span class="scr__c">${it({ tag: "span", k: 4, win: ".3,.9", fx: "none", count: `0,${n[key]},0`, text: String(n[key]) })}</span>`).join("")}</span>`;
+  const labels = `<span class="scr__lb"><span></span>${t.dc.map((x) => `<small>${esc(x)}</small>`).join("")}</span>`;
+  const rowsOfDates = `<p class="scr__r"><b class="tm"><span class="tm__s">${dates.map(line).join("")}</span></b>${labels}</p>`;
+  // the big count is the count of one check day (the date chips below roll the counts of the later dates)
   const total = d.register.rows;
+  // every row of the register as one cell (file order), so the count is a picture: the cells fade in with the count on press 3,
+  // and on press 4 the expired, expiring and missing ones take their tone as the check day's counts run up
+  const cells = d.register.cells.map((s, i) => `<i style="--i:${i}"${s ? ` data-s="${s}"` : ""}></i>`).join("");
+  if (d.register.cells.length !== total) throw new Error("register: one cell per row");
+  // press 3 shows the grid large in the empty half of the sheet; press 4 shrinks it into its corner as the check day stands up
+  const grid = it({ tag: "span", cls: "reg__gz", k: 4, fx: "none", win: "0,.5", attrs: "data-scene data-keep", html: it({ tag: "span", cls: "reg__g", k: 3, win: ".3,1", attrs: `style="--n:${total}" aria-hidden="true"`, html: cells }) });
+  // the key of the coloured cells from press 4 (the words of the check's three lists), so the grid reads as papers, not texture
+  const lgKeys = ["x", "s", "m"].map((k, i) => `<span><i data-s="${k}"></i>${esc(c.s.watch.resL[i])}</span>`).join("");
+  const legend = it({ tag: "span", cls: "reg__lg fig", k: 4, win: ".4,1", html: lgKeys });
   const reg = it({
     id: "reg", tag: "div", cls: "reg fig", zone: "reg", fx: "none", attrs: img(t.tbl),
-    html: `<p class="reg__f">${esc(t.tbl)}</p><p class="reg__h">${head6}</p><div class="reg__rows">${rowsHtml}</div>${it({ tag: "p", cls: "reg__n", k: 3, win: ".3,1", html: `<b>${it({ tag: "span", k: 3, win: ".3,1", count: `0,${total},0`, text: String(total) })}</b><small>${esc(t.dc[0])}</small>` })}${it({ tag: "div", cls: "scr", k: 4, fx: "none", attrs: `data-scene ${target("dates", { at: 0 })}`, html: rowsOfDates })}`,
+    html: `<p class="reg__f">${esc(t.tbl)}</p><p class="reg__h">${head6}</p><div class="reg__rows">${rowsHtml}</div>${it({ tag: "p", cls: "reg__n", k: 3, win: ".3,1", html: `<b>${it({ tag: "span", k: 3, win: ".3,1", count: `0,${total},0`, text: String(total) })}</b><small>${esc(fill(t.onDate, { date: dateText(d.register.today, d.lang) }))}</small>${legend}${grid}` })}${it({ tag: "div", cls: "scr", k: 4, fx: "none", attrs: `data-scene ${target("dates", { at: 0 })}`, html: rowsOfDates })}`,
   });
   const z = sentences(t.z);
   // the recorded time of the step 4 turn (stats.duration_ms), only when the recording carries it, never typed

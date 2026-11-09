@@ -109,24 +109,30 @@ export const fieldGroups = (counts, { n, w, h, pad = 24 }) => fieldLib().groupsG
  * [{ k, from, to, win }] (from and to are layout names: scatter, country, regions, floor, groups:<key>). The host enters at
  * press `k` (default 0). overlay: markup on top of the canvas (labels: figure cells, placed with fieldPoint). groups:
  * { key: counts }, markGroup: { key: index }, regions: [{ at, inspections }], mark: [lon, lat]. style: more of the host's
- * inline style (its place); hostAttrs: more attributes (data-keep shows the host already at --p 0). still: the host stands
+ * inline style (its place); hostAttrs: more attributes (data-keep shows the host already at --p 0). year: [a, b], the share
+ * of the entry press that is dust (0 to a), the year of rings (a to b, one ring per `pulse` inspections out of `regions`, the
+ * last ring from region index `pulseLast`) and the close on the mark (b to 1); give that plan entry ease "linear". still: the host stands
  * without motion on its entry (no scene there, so another idea may move on that press); only the presses that change the
- * layout get a driver.
+ * layout get a driver. plane: { under, over }, flat markup in the canvas's own plane (a grid under the dots, a route over
+ * them), painted with the canvas as one layer, so a 3D camera composites one floor instead of three.
  */
-export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 24, plan, mark, near, outline = false, regions, groups = {}, markGroup = {}, cls = "", overlay = "", label, hostAttrs = "", style = "", still = false }) {
+export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 24, plan, mark, near, outline = false, regions, year, pulse, pulseLast, groups = {}, markGroup = {}, cls = "", overlay = "", plane, label, hostAttrs = "", style = "", still = false }) {
   const planText = plan.map((e) => `${e.k}:${e.from}${e.to && e.to !== e.from ? `>${e.to}` : ""}`).join(";");
   const extra = [
     mark ? `data-mark="${mark.join(",")}"` : "",
     near ? `data-near="${near}"` : "",
     outline ? "data-outline" : "",
     regions ? `data-regions="${regions.map((r) => `${r.at.join(",")},${r.inspections}`).join(";")}"` : "",
+    year ? `data-year="${year.join(",")}"` : "",
+    pulse ? `data-pulse="${pulse}"` : "",
+    pulseLast !== undefined ? `data-pulse-last="${pulseLast}"` : "",
     ...Object.entries(groups).map(([key, counts]) => `data-groups-${key}="${counts.join(",")}"`),
     ...Object.entries(markGroup).map(([key, g]) => `data-mark-group-${key}="${g}"`),
   ].filter(Boolean).join(" ");
   const canvas = `<canvas class="w05-field__c" data-w05-field width="${w * 2}" height="${h * 2}" style="width:${w}px;height:${h}px" data-n="${n}" data-seed="${seed}" data-pad="${pad}" data-plan="${planText}" ${extra} aria-hidden="true"></canvas>`;
-  const drivers = plan.filter((e) => !still || (e.to && e.to !== e.from)).map((e) => it({ tag: "i", cls: "w05-drive", k: e.k, fx: "none", win: e.win, attrs: 'data-scene aria-hidden="true"' })).join("");
+  const drivers = plan.filter((e) => !still || (e.to && e.to !== e.from)).map((e) => it({ tag: "i", cls: "w05-drive", k: e.k, fx: "none", win: e.win, attrs: `data-scene aria-hidden="true"${e.ease ? ` data-ease="${e.ease}"` : ""}` })).join("");
   const aria = label ? ` role="img" aria-label="${esc(label)}"` : "";
-  return it({ id, tag: "div", cls: `w05-field${cls ? ` ${cls}` : ""}`, zone, k, out, outWin, fx: "none", attrs: `${still ? "" : "data-scene "}style="width:${w}px;height:${h}px${style ? `;${style}` : ""}"${aria}${hostAttrs ? ` ${hostAttrs}` : ""}`, html: `${canvas}${drivers}${overlay}` });
+  return it({ id, tag: "div", cls: `w05-field${cls ? ` ${cls}` : ""}`, zone, k, out, outWin, fx: "none", attrs: `${still ? "" : "data-scene "}style="width:${w}px;height:${h}px${style ? `;${style}` : ""}"${aria}${hostAttrs ? ` ${hostAttrs}` : ""}`, html: `${plane ? `<div class="w05-field__plane">${plane.under || ""}${canvas}${plane.over || ""}</div>` : canvas}${drivers}${overlay}` });
 }
 
 /* ── 3D primitives (CSS in lib/w05-fx.css, all a function of --p) ──── */

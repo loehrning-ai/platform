@@ -19,6 +19,9 @@
   --tint:#EFEBE0;
 }
 
+/* boot cost: an inactive slide is not laid out or painted (the stage hides it anyway), so a cold load lays out the cover alone */
+@media screen{deck-stage > section.slide:not([data-deck-active]){content-visibility:hidden}}
+
 /* 2 ── engine overrides: no ink fill ─────────────────────────────────── */
 .strip > li[data-on]{background:var(--w05-sage-200);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
 .cw-file > i{background:var(--w05-sage-400);color:var(--ink)}
@@ -67,9 +70,10 @@ svg.ico--w05.dr{stroke-width:1.1}
 svg.ico--w05[data-step][data-fx="draw"]{opacity:min(1,calc(var(--p,1) * 8))}
 
 /* 9 ── the dot field (lib/w05-field.js reads these colours from the canvas) ── */
-[data-w05-field]{--w05-field-dot:var(--w05-sage-600);--w05-field-line:var(--w05-sage-400);--w05-field-ring:var(--w05-green);--w05-field-mark:var(--accent);--w05-field-ink:var(--ink);--w05-field-near:var(--w05-green)}
+[data-w05-field]{--w05-field-dot:var(--w05-sage-600);--w05-field-line:var(--w05-sage-400);--w05-field-ring:var(--w05-green);--w05-field-mark:var(--accent);--w05-field-ink:var(--ink);--w05-field-near:var(--w05-green);--w05-field-pulse:var(--w05-sage-600)}
 .w05-field{position:relative}
 .w05-field__c{display:block}
+.w05-field__plane{position:absolute;inset:0;isolation:isolate}
 .w05-drive{position:absolute;width:0;height:0;overflow:hidden}
 
 /* 10 ── 3D primitives (T1). Depth from outlines and sage steps only: no shadow, no blur, no gradient.

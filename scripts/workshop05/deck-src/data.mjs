@@ -129,8 +129,13 @@ export function deckData(lang = "en") {
   const expiredIds = new Set(register.expired.map((x) => x.id));
   const firstExpired = register.rows.find((r) => r.paper === "medical-exam" && expiredIds.has(r.person_id));
   const rowsShown = [...sample.slice(0, 5), firstExpired].filter(Boolean).map((r) => ({ id: r.person_id, paper: r.paper, date: r.date, validUntil: r.valid_until, where: r.where, owner: r.owner, approved: r.approved_by }));
+  // the state of every register row on the check day, in file order (the micro grid of slide 13): x expired, s expiring, m missing
+  const stateKey = (id, paper) => `${id}|${paper}`;
+  const states = [["x", register.expired], ["s", register.expiring], ["m", register.missing]].map(([code, list]) => [code, new Set(list.map((x) => stateKey(x.id, x.paper)))]);
+  const cells = register.rows.map((r) => states.find(([, set]) => set.has(stateKey(r.person_id, r.paper)))?.[0] ?? "");
   const reg = {
     byDate: registerExpected(oracleResult().files).byDate,
+    cells,
     sample: rowsShown,
     today: register.today,
     rows: register.rows.length,

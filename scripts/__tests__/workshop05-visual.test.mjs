@@ -5,7 +5,9 @@
  *    w05-fx.css overrides (V3);
  *  - V3: the overrides are there, with sage fills and ink outlines of 2 px at most; no ink border or shadow wider than 2 px;
  *  - V4: the surface tokens are defined once, on :root of w05-fx.css, and no new rule holds a hex literal;
- *  - V11: every var() the W05 style sheets use is defined (or written by scenes.js, with a fallback).
+ *  - V11: every var() the W05 style sheets use is defined (or written by scenes.js, with a fallback). Round 4, on purpose: a
+ *    scene's own place (the cover's year window, the Today camera stops and step-back offsets) is written inline by the build;
+ *    such a var needs a fallback and must appear in a style attribute of the built page.
  * The luminance rule V1 (every element, every press) is checked in the browser by the deck e2e spec.
  */
 import assert from "node:assert/strict";
@@ -126,10 +128,16 @@ test("V11: every var() of deck.css and w05-fx.css is defined in engine.css, deck
   const all = Object.values(SHEETS).join("\n");
   const defined = new Set([...all.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
   const RUNTIME = new Set(["--p", "--share", "--cx"]);
+  // written inline by the build (a scene's own place), never by a sheet
+  // round 4, builder B on purpose: the why wall's camera offset (--wx; --ry is shared) and the tower heights (--h)
+  const INLINE = new Set(["--y0", "--y1", "--cy", "--cz", "--ry", "--bx", "--by", "--bz", "--fwd", "--wx", "--h"]);
+  const page = readFileSync(path.join(LIB, "..", "slides.html"), "utf8");
+  const styles = [...page.matchAll(/style="([^"]*)"/g)].map((m) => m[1]).join(";");
   for (const name of ["deck.css", "w05-fx.css"]) {
     for (const m of SHEETS[name].matchAll(/var\((--[\w-]+)(,)?/g)) {
       if (defined.has(m[1])) continue;
-      assert.ok(RUNTIME.has(m[1]) && m[2] === ",", `${name}: ${m[1]} is not defined`);
+      if (INLINE.has(m[1])) assert.ok(m[2] === "," && new RegExp(`${m[1]}:`).test(styles), `${name}: ${m[1]} needs a fallback and an inline value`);
+      else assert.ok(RUNTIME.has(m[1]) && m[2] === ",", `${name}: ${m[1]} is not defined`);
     }
   }
 });

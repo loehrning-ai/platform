@@ -29,6 +29,8 @@ export { esc };
 export const MAIN_TOTAL = 16;
 
 const DEFAULT_MS = 1200;
+/** The longest cover entry the motion law admits (round 4: the inspection year replays in it). */
+export const COVER_MAX_MS = 12000;
 /** Press lengths in ms per slide: presses after the first, and the overrides of the motion law (never above 1600). */
 const press = (steps, over = {}) => Array.from({ length: steps + 1 }, (_, i) => over[i] ?? DEFAULT_MS);
 
@@ -37,8 +39,8 @@ const press = (steps, over = {}) => Array.from({ length: steps + 1 }, (_, i) => 
  * the class of another slide whose CSS a slide shares (none does now).
  */
 export const SLIDES = [
-  { id: "cover", steps: 0, ms: press(0, { 0: 1600 }), minutes: 1, body: intro.cover },
-  { id: "today", steps: 3, ms: press(3, { 0: 1400, 1: 1400, 2: 1400, 3: 1400 }), minutes: 3, body: intro.today },
+  { id: "cover", steps: 0, ms: press(0, { 0: intro.COVER.ms }), minutes: 1, body: intro.cover },
+  { id: "today", steps: 3, ms: press(3, { 0: 1600, 1: 1600, 2: 1600, 3: 1600 }), minutes: 3, body: intro.today },
   { id: "why", steps: 7, ms: press(7, { 0: 1400, 5: 1600, 6: 1600 }), minutes: 5, body: why },
   { id: "sectors", steps: 4, ms: press(4, { 0: 1600, 1: 1600, 2: 1400 }), minutes: 4, body: sectors },
   { id: "we", steps: 3, ms: press(3, { 0: 1400 }), minutes: 4, body: we },
@@ -52,7 +54,7 @@ export const SLIDES = [
   { id: "register", steps: 7, ms: press(7, { 3: 1600 }), minutes: 11, body: rules.register, layout: "take" },
   { id: "watch", steps: 4, ms: press(4), minutes: 8, body: watch },
   { id: "safety", steps: 5, ms: press(5), minutes: 6, body: safety },
-  { id: "close", steps: 2, ms: press(2), minutes: 4, body: close },
+  { id: "close", steps: 3, ms: press(3), minutes: 4, body: close },
   ...["a1", "a2", "a3", "a4"].map((id) => ({ id, steps: 0, ms: [600], minutes: 0, kind: "appendix", appendix: APPENDIX[id] })),
 ];
 
@@ -63,7 +65,8 @@ if (MAIN_MINUTES.join() !== AGENDA_MINUTES.join()) throw new Error(`slides.mjs m
 export function renderSlides(c, d, takes) {
   return SLIDES.map((slide, index) => {
     if (slide.ms.length !== slide.steps + 1) throw new Error(`${slide.id}: ${slide.ms.length} durations for ${slide.steps + 1} presses`);
-    if (Math.max(...slide.ms) > 1600) throw new Error(`${slide.id}: a press longer than 1600 ms`);
+    // the motion law: a press is at most 1600 ms; the cover's one entry (the inspection year, law L1) at most COVER_MAX_MS
+    if (Math.max(...slide.ms) > (slide.id === "cover" ? COVER_MAX_MS : 1600)) throw new Error(`${slide.id}: a press longer than the law allows`);
     const kind = slide.kind ?? "main";
     const label = c.notes[index].split("\n")[0].replace(/^[^·]*·\s*/, "");
     let inner;

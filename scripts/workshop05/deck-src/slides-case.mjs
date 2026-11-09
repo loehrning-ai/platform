@@ -3,9 +3,12 @@
  * adds a part and swaps the one caption. Labels on a drawing are figure cells (class fig); captions and sources are counted.
  *
  * S05: 24 people draw themselves in four groups; a time line from 2024 to the letter, scrubbable (lib/w05-scrub.js); the
- * inspectorate's risk ladder stands up with trade on its rung; the visits without a plan run along the line as a band.
- * S06: the letter comes out of its envelope over the floor of the week; the week stands up; the poll and a scrubber that
- * moves the visit along the days; the braces of the clocks; the time limits after the visit; the hardest case.
+ * inspectorate's rhythm as a clock (round 4): one ring per rung, trade on the two-year ring, the hand at the letter; the
+ * visits without a plan run along the line as a band.
+ * S06 (round 4): the envelope rises from lying flat, opens, and the letter comes forward; below it the week lies as a tilted
+ * floor of working days; the week stands up; the poll and a scrubber that moves the visit along the days; the braces of the
+ * clocks; on press 6 the camera walks along the floor to the time limits after the visit, four steps of a stair; the
+ * hardest case.
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { icon, scrubber, standUp, target } from "./scene.mjs";
@@ -22,6 +25,41 @@ const MONTHS = 35;
 const STOPS = [3, 15, 27, 34];
 const pos = (m) => `${((m / MONTHS) * 100).toFixed(2)}%`;
 
+/**
+ * The rhythm as a clock: one turn is three years from our last inspection (spring 2024, at the top). Three arcs are the
+ * inspectorate's plan targets (high: one year, medium, where trade sits: two years, low: three years, DATA-14/15); the hand
+ * stands at November 2026, 31 months on, past the two-year arc. Arcs and hand draw inside one scene (law L5).
+ */
+const CLOCK = { r: [170, 136, 102], turn: 36, months: [12, 24, 36], now: 31, size: 400 };
+function arcPath(r, months) {
+  const c = CLOCK.size / 2;
+  const at = (m) => {
+    const a = (2 * Math.PI * m) / CLOCK.turn;
+    return [(c + r * Math.sin(a)).toFixed(1), (c - r * Math.cos(a)).toFixed(1)];
+  };
+  if (months >= CLOCK.turn) return `M${c} ${c - r}A${r} ${r} 0 1 1 ${c} ${c + r}A${r} ${r} 0 1 1 ${c} ${c - r}`;
+  const [x, y] = at(months);
+  return `M${c} ${c - r}A${r} ${r} 0 ${months > CLOCK.turn / 2 ? 1 : 0} 1 ${x} ${y}`;
+}
+function clock(it, t) {
+  const c = CLOCK.size / 2;
+  const ticks = Array.from({ length: CLOCK.turn }, (_, m) => {
+    const a = (2 * Math.PI * m) / CLOCK.turn;
+    const r0 = m % 12 === 0 ? 178 : 186;
+    return `M${(c + r0 * Math.sin(a)).toFixed(1)} ${(c - r0 * Math.cos(a)).toFixed(1)}L${(c + 194 * Math.sin(a)).toFixed(1)} ${(c - 194 * Math.cos(a)).toFixed(1)}`;
+  }).join("");
+  const arcs = CLOCK.r.map((r, i) => it({ tag: "path", cls: `wclk__arc wclk__arc--${i}`, k: 2, fx: "draw", win: `${(0.2 + i * 0.12).toFixed(2)},${(0.6 + i * 0.12).toFixed(2)}`, attrs: `d="${arcPath(r, CLOCK.months[i])}" pathLength="1"` })).join("");
+  const a = (2 * Math.PI * CLOCK.now) / CLOCK.turn;
+  const hand = it({ tag: "path", cls: "wclk__hand", k: 2, fx: "draw", win: ".6,.95", attrs: `d="M${c} ${c}L${(c + 176 * Math.sin(a)).toFixed(1)} ${(c - 176 * Math.cos(a)).toFixed(1)}" pathLength="1"` });
+  const svg = `<svg class="wclk__svg" viewBox="0 0 ${CLOCK.size} ${CLOCK.size}" aria-hidden="true" focusable="false" fill="none"><circle class="wclk__face" cx="${c}" cy="${c}" r="194"/><path class="wclk__ticks" d="${ticks}"/>${arcs}${hand}<circle class="wclk__hub" cx="${c}" cy="${c}" r="7"/></svg>`;
+  const start = `<span class="wclk__start">${esc(t.ta)}</span>`;
+  // on press 3 the needle's meaning is said at its tip: past the two-year arc, the visit is overdue (in ink: the needle is the one accent)
+  const late = it({ tag: "b", cls: "wclk__od", k: 3, win: ".2,.6", text: t.od });
+  const now = `<span class="wclk__now" style="left:${((100 * (c + 214 * Math.sin(a))) / CLOCK.size).toFixed(1)}%;top:${((100 * (c - 214 * Math.cos(a))) / CLOCK.size).toFixed(1)}%">${esc(t.tb)}${late}</span>`;
+  const legend = t.rungs.map((r, i) => `<p class="wclk__lg wclk__lg--${i}"><i></i><b>${esc(r.f)}</b><span>${esc(r.g)}: ${esc(r.w)}</span></p>`).join("");
+  return it({ id: "clk", tag: "div", cls: "wclk fig", zone: "clk", k: 2, fx: "none", attrs: `data-scene role="img" aria-label="${esc(t.clk)}"`, html: `<div class="wclk__dial">${svg}${start}${now}</div><div class="wclk__legend">${legend}<small>${esc(t.t2)}</small></div>` });
+}
+
 export function we(it, ctx, d, c) {
   const t = c.s.we;
   let person = 0;
@@ -37,7 +75,8 @@ export function we(it, ctx, d, c) {
       return `<div class="crew__g"><p class="crew__l">${esc(role)} <b>${SIZES[g]}</b></p><div class="crew__p">${row}</div>${who}</div>`;
     })
     .join("");
-  const crew = it({ id: "crew", tag: "div", cls: "crew2 fig", zone: "crew", fx: "none", attrs: img(t.av), html: groups });
+  // the crew stands on a floor: on the entry the floor lands from 60 to 14 degrees while the people draw themselves (one scene)
+  const crew = it({ id: "crew", tag: "div", cls: "crew2 fig", zone: "crew", fx: "none", attrs: `data-scene${img(t.av)}`, html: groups });
   const years = [["2024", 0], ["2025", 12], ["2026", 24]];
   const tl = it({
     id: "tl", tag: "div", cls: "tl2 fig", zone: "tl", k: 0, fx: "none", attrs: `${img(t.tl)} ${target("tl", { at: 0 })}`,
@@ -56,9 +95,6 @@ export function we(it, ctx, d, c) {
       `<p class="tl2__ro">${t.ro.map((x, i) => `<span class="tl2__r tl2__r--${i}">${esc(x)}</span>`).join("")}</p>`,
     ].join(""),
   });
-  const rungs = t.rungs
-    .map((r, i) => standUp(it, { cls: `rung rung--${3 - i}`, k: 2, win: spread(i, 3, 0, 0.6), html: `<b>${esc(r.g)}</b><span>${esc(r.w)}</span><small>${esc(r.f)}</small>` }))
-    .join("") + it({ tag: "small", cls: "rungs__src", k: 3, win: ".3,1", text: t.t2 });
   const stage = [
     pill(it, t),
     head(it, t),
@@ -69,7 +105,7 @@ export function we(it, ctx, d, c) {
     scrubber(it, { id: "sc", zone: "sc", k: 1, win: ".6,1", target: "tl", values: ["0", "1", "2", "3"], labels: t.sc, aria: t.scAria }),
     cap(it, "c2", t.c2, 2, 3),
     src(it, "t2", t.t2, 2, 3),
-    it({ id: "rungs", tag: "div", cls: "rungs w05-s3d fig", zone: "rungs", k: 2, fx: "none", html: rungs }),
+    clock(it, t),
     cap(it, "c3", t.c3, 3, null),
     src(it, "t3", t.t3, 3, null),
   ].join("\n");
@@ -93,8 +129,14 @@ export function letter(it, ctx, d, c) {
       return `<div class="ltd ltd--${i}"><b class="ltd__h">${esc(day)}</b>${body}</div>`;
     })
     .join("");
-  const chips = t.chips.map((x, i) => standUp(it, { cls: "ltc", k: 6, win: spread(i, 4, 0, 0.55), text: x })).join("");
-  const after = `<div class="ltd ltd--after"><b class="ltd__h">${esc(t.after)}</b><div class="ltd__chips w05-s3d">${chips}</div></div>`;
+  // after the visit: four steps of a stair (record, answer, act, appeal), each standing up out of the floor as the camera arrives
+  const chips = t.chips
+    .map((x, i) => {
+      const [name, due] = x.split(": ");
+      return standUp(it, { cls: `ltc ltc--${i}`, k: 6, win: spread(i, 4, 0.3, 0.65), html: `<b class="ltc__t">${esc(name)}</b><span class="ltc__d">${esc(due)}</span>` });
+    })
+    .join("");
+  const after = `<div class="ltd--after"><b class="ltd__h">${esc(t.after)}</b><div class="ltd__chips w05-s3d">${chips}</div></div>`;
   const marker = it({ tag: "span", cls: "lt-mk", k: 2, out: 3, html: `<span class="lt-mk__h"><b>${esc(t.mk2)}</b><i></i></span>` });
   const ro = `<p class="lt-ro">${t.ro.map((x, i) => `<span class="lt-ro__r lt-ro__r--${i}">${esc(x)}</span>`).join("")}</p>`;
   const braces = [
@@ -105,11 +147,12 @@ export function letter(it, ctx, d, c) {
   ].join("");
   const floor = it({
     id: "floor", tag: "div", cls: "ltf fig", zone: "floor", fx: "none", attrs: `${img(t.ln)} ${target("visit", { at: 0 })}`,
-    html: `${tiles}${after}<div class="ltw-host w05-s3d">${week}</div>${marker}${braces}`,
+    // the camera walks along the floor on press 6, from the week to the steps after the visit
+    html: it({ tag: "div", cls: "ltf__cam", k: 6, fx: "none", win: "0,.6", attrs: "data-scene data-keep", html: `${tiles}${after}<div class="ltw-host w05-s3d">${week}</div>${marker}${braces}` }),
   });
   const stage = [
     pill(it, t),
-    `<a class="bk" href="#a1" aria-label="${esc(t.sources)}">${ico("book")}</a>`,
+    `<a class="bk fig" href="#a1">${ico("book")}<span class="bk__l">${esc(t.sources)}</span></a>`,
     head(it, t),
     env,
     floor,

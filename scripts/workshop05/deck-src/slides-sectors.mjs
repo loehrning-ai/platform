@@ -14,12 +14,15 @@ import { BITOLA } from "./seats.mjs";
 /** Firms per dot on this slide: 20 (3,666 dots), half the cover's density, so the regroup stays light on a slow laptop. */
 const PER = 20;
 
-const BOX = { w: 1040, h: 760, pad: 24, seed: 73310 };
+/** The field box (stage px). Kept at 1040 x 720: the canvas is drawn at DPR 2 every frame of the regroup, and a larger box pushes the press past 50 ms under a 4x CPU throttle. */
+const BOX = { w: 1040, h: 720, pad: 24, seed: 73310 };
+/** The drawing over each sector column (none over "all other"). */
+const GROUP_ICONS = ["shop", "notebook", "factory", "site", "truck", "cafe", null];
 /** Active enterprises 2024 by NACE section (SSO, DATA-33 and INDUSTRIES-58); "all other" is the rest of 73,310. */
 const SECTIONS = [21373, 8321, 7956, 6146, 5649, 5066];
 /** The nine tiles: icon, informal share Q2 2026 in percent (INDUSTRIES-55, own calculation; null where none), Reform Agenda only, hotspot value. */
 const TILES = [
-  { ic: "textile", inf: 3.9, hot: "make" },
+  { ic: "factory", inf: 3.9, hot: "make" },
   { ic: "site", inf: 36.6, hot: "build" },
   { ic: "beam", inf: null },
   { ic: "shop", inf: 5.5, hot: "trade" },
@@ -37,7 +40,7 @@ export function sectors(it, ctx, d, c) {
   const counts = [...SECTIONS, d.field.firms - SECTIONS.reduce((s, x) => s + x, 0)];
   const rects = fieldGroups(counts, { n, w: BOX.w, h: BOX.h, pad: BOX.pad });
   const labels = rects
-    .map((r, i) => it({ tag: "span", cls: `sf__lb${i === 0 ? " sf__lb--on" : ""}`, k: 1, win: spread(i, 7, 0.45, 0.4), attrs: `style="left:${(r.x + r.w / 2).toFixed(0)}px;top:${(r.y - 70).toFixed(0)}px"`, html: `${esc(t.groups[i])}<b>${numFmt(counts[i], d.lang)}</b>` }))
+    .map((r, i) => it({ tag: "span", cls: `sf__lb${i === 0 ? " sf__lb--on" : ""}`, k: 1, win: spread(i, 7, 0.45, 0.4), attrs: `style="left:${(r.x + r.w / 2).toFixed(0)}px;top:${(r.y - 12).toFixed(0)}px"`, html: `${GROUP_ICONS[i] ? icon(GROUP_ICONS[i], { cls: "sf__i" }) : ""}${esc(t.groups[i])}<b>${numFmt(counts[i], d.lang)}</b>` }))
     .join("");
   const legend = it({ tag: "p", cls: "flegend sf__legend", k: 0, win: ".6,1", html: `<i class="flegend__dot"></i>${esc(t.legend)}` });
   const map = field(it, {
@@ -52,20 +55,23 @@ export function sectors(it, ctx, d, c) {
     const hi = HOTS.indexOf(tile.hot);
     const button = tile.hot ? `<button type="button" class="st__b" data-w05-hot="wall" data-value="${tile.hot}" aria-pressed="false" aria-label="${esc(t.hotAria[hi])}"></button>` : "";
     return standUp(it, {
-      // the tiles rise from the first frame of the press while the field fades out (no empty frame between them)
-      cls: `st${tile.ra ? " st--ra" : ""}${tile.hot === "trade" ? " st--on" : ""}`, k: 2, win: spread(i, 9, 0, 0.45),
+      // the tiles rise from the first frame of the press while the field fades out: they start at a third of their tone and
+      // 900 px back (deck.css), so the wall is there on the first frame and no frame is empty between dots and wall
+      // data-keep: every tile is on screen from the first frame of the press, far back and faint, and flies forward in turn
+      cls: `st${tile.ra ? " st--ra" : ""}${tile.hot === "trade" ? " st--on" : ""}`, k: 2, win: spread(i, 9, 0, 0.45), attrs: "data-keep",
       html: `${button}${tile.hot ? '<i class="st__dot" aria-hidden="true"></i>' : ""}${icon(tile.ic, { cls: "st__i" })}<b class="st__n">${esc(t.tiles[i])}</b>${bar}`,
     });
   }).join("");
   const panel = HOTS.map((h) => `<div class="sp__b sp__b--${h}">${t.hot[h].map((x) => `<p>${esc(x)}</p>`).join("")}</div>`).join("");
   const stage = [
-    `<a class="bk" href="#a4" aria-label="${esc(t.sources)}">${ico("book")}</a>`,
+    `<a class="bk fig" href="#a4">${ico("book")}<span class="bk__l">${esc(t.sources)}</span></a>`,
     head(it, t),
     cap(it, "c0", fill(t.c0, { firms: numFmt(d.field.firms, d.lang) }), 0, 1),
     src(it, "t0", t.t0, 0, 2),
     map,
     cap(it, "c1", t.c1, 1, 2),
-    it({ id: "wall", tag: "div", cls: "stw w05-s3d fig", zone: "wall", k: 2, fx: "none", attrs: `role="group" aria-label="${esc(t.wall)}"`, html: `${tiles}<p class="stw__l">${esc(t.wl)}</p>` }),
+    // the wall host is there from the first frame of press 2 (win 0,.01): its own entry must not wait for the field to leave
+    it({ id: "wall", tag: "div", cls: "stw w05-s3d fig", zone: "wall", k: 2, fx: "none", win: "0,.01", attrs: `role="group" aria-label="${esc(t.wall)}"`, html: `${tiles}${it({ tag: "p", cls: "stw__l", k: 2, win: ".5,.9", text: t.wl })}` }),
     cap(it, "c2", t.c2, 2, 3),
     src(it, "t2", t.t2, 2, 3),
     cap(it, "c3", t.c3, 3, 4),

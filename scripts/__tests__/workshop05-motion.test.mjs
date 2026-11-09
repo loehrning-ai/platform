@@ -3,11 +3,15 @@
  * recordings too). One moving idea per press, out first and then in, only the engine's own effects, no typing, no loops, no
  * timers, press lengths of at most 1600 ms, takes that come in line by line, and a cover that has no press at all.
  * Round 3 law changes (MOTION-SCOUT section 7), made on purpose:
- *  L1 (M8): the cover keeps zero presses but may have ONE entry host (data-step 0, fx none, at most 1600 ms) that drives the
+ *  L1 (M8): the cover keeps zero presses but may have ONE entry host (data-step 0, fx none; 1600 ms then, 12000 ms since round 4) that drives the
  *     dot field canvas; the globe is gone; the title keeps its CSS rise.
  *  L3: data-ease may only be "out" or "linear"; spring is forbidden, and the engine's spring effects (fly, flip) stay banned.
  *  L5: a 3D scene (data-scene, fx none) is its own motion family; an icon that draws inside a scene of the same press belongs
  *     to the scene, so a press is still one idea.
+ * Round 4 law change, made on purpose:
+ *  L1 widened (M5, M8): the cover's one entry may run up to 12000 ms ("one year in twelve seconds": the dust, the year of
+ *     inspection rings with its counter, the close on Bitola). Every other press stays at most 1600 ms. The cover still has no
+ *     press, so a press during the entry goes straight to the next slide.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -18,6 +22,8 @@ import { buildEdition } from "../workshop05/deck-src/build.mjs";
 import { deckData } from "../workshop05/deck-src/data.mjs";
 import { fixtureTakes } from "../workshop05/deck-src/fixture-takes.mjs";
 import { LANGS, readPage, slidesOf } from "../workshop05/deck-src/deck-html.mjs";
+
+const COVER_MS = 12000;
 
 const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib");
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
@@ -105,11 +111,12 @@ for (const [key, html] of Object.entries(pages)) {
     assert.doesNotMatch(html, /data-fx="type"|clip-path/);
   });
 
-  test(`${key} M5: press lengths of at most 1600 ms, one per press, and no inline duration`, () => {
+  test(`${key} M5: press lengths of at most 1600 ms (the cover entry at most 12000 ms, L1), one per press, and no inline duration`, () => {
     for (const slide of slidesOf(html)) {
       const durations = slide.attrs["data-durations"].split(",").map(Number);
+      const cap = slide.attrs.id === "cover" ? COVER_MS : 1600;
       assert.equal(durations.length, num(slide.attrs["data-step-total"]) + 1, `${key} ${slide.attrs.id}: one duration per press plus the entry`);
-      for (const ms of durations) assert.ok(ms > 0 && ms <= 1600, `${key} ${slide.attrs.id}: ${ms} ms`);
+      for (const ms of durations) assert.ok(ms > 0 && ms <= cap, `${key} ${slide.attrs.id}: ${ms} ms`);
     }
     assert.doesNotMatch(html, /style="[^"]*(?:transition|animation)[^"]*"/);
     assert.doesNotMatch(html, /\sdata-(?:duration|delay)=/);
@@ -157,7 +164,7 @@ for (const [key, html] of Object.entries(pages)) {
     const cover = slidesOf(html)[0];
     assert.equal(cover.attrs.id, "cover");
     assert.equal(cover.attrs["data-step-total"], "0");
-    assert.ok(Number(cover.attrs["data-durations"]) <= 1600, "the entry is at most 1600 ms");
+    assert.ok(Number(cover.attrs["data-durations"]) <= COVER_MS, "the entry is at most 12000 ms");
     const els = stepped(cover);
     const hosts = els.filter((e) => e.top);
     assert.equal(hosts.length, 1, "one entry host");

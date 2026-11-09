@@ -4,7 +4,10 @@
  * backdrop-filter; they write no data-fx value outside the engine's list; and each one loads in a bare context (no document)
  * and exports its pure functions. L2 (MOTION-SCOUT section 7), on purpose: the field and the scrub scripts are admitted, the
  * field may observe its slide with a MutationObserver (scenes.js writes data-view every frame), each new script stays at most
- * 12 KB, and their pure functions are tested here. The icon set (lib/w05-icons.svg) is checked here too.
+ * 12 KB, and their pure functions are tested here. The icon set (lib/w05-icons.svg) is checked here too. Round 4, on purpose:
+ * the field's budget is 18 KB (it draws the cover's year of inspection rings, pulses(), and since the fix round of round 4
+ * prepares itself on its slide's first frame, flies dots as squares on a 1x backing store and bakes the settled country a slice
+ * per dust frame, so the cover stays under 50 ms a frame at 4x CPU throttle); the scrub stays at 12 KB.
  * The glass test does not scan public/**\/*.js, so this test does.
  */
 import assert from "node:assert/strict";
@@ -18,6 +21,8 @@ const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../pa
 const SCRIPTS = ["w05-tally.js", "w05-field.js", "w05-scrub.js"];
 /** L2: the size budget of each new script (MOTION-SCOUT 6.2). */
 const BUDGET = 12 * 1024;
+/** Round 4: the field draws the year of rings too. */
+const FIELD_BUDGET = 18 * 1024;
 const BANNED = ["backdrop-filter", "setInterval", "setTimeout", "keydown", "keyup", "keypress", "localStorage", "sessionStorage", "Date.now", "Math.random", "requestAnimationFrame", "fetch(", "XMLHttpRequest", "eval(", "new Function", "innerHTML"];
 const ENGINE_FX = ["fade", "none", "line", "move", "draw", "pop", "fly", "flip", "strike", "type", "glow", "blur", "arc", "travel", "dim", "zoom", "grow"];
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
@@ -103,8 +108,8 @@ const ring = () => {
   return sandbox.window.ESG_GEO.macedonia[0];
 };
 
-test("L2: the field and scrub scripts stay within 12 KB each; only the field observes, and only its slide", () => {
-  for (const name of ["w05-field.js", "w05-scrub.js"]) assert.ok(Buffer.byteLength(read(name)) <= BUDGET, `${name}: ${Buffer.byteLength(read(name))} bytes`);
+test("L2: the field stays within 18 KB and the scrub within 12 KB; only the field observes, and only its slide", () => {
+  for (const [name, max] of [["w05-field.js", FIELD_BUDGET], ["w05-scrub.js", BUDGET]]) assert.ok(Buffer.byteLength(read(name)) <= max, `${name}: ${Buffer.byteLength(read(name))} bytes`);
   assert.match(read("w05-field.js"), /new MutationObserver\(draw\)\.observe\(slide, \{ attributes: true, attributeFilter: \['data-view', 'data-deck-active'\] \}\)/);
   assert.doesNotMatch(read("w05-scrub.js"), /Observer/);
   assert.doesNotMatch(read("w05-field.js"), /addEventListener/, "the field listens to nothing: it follows data-view");
@@ -124,6 +129,23 @@ test("w05-field: the seeded generator, the stipple and the scatter are determini
   for (let i = 0; i < one.pts.length; i += 2) assert.ok(one.pts[i] >= 0 && one.pts[i] <= 1000 && one.pts[i + 1] >= 0 && one.pts[i + 1] <= 790);
   assert.ok(one.spacing > 6 && one.spacing < 12, `spacing ${one.spacing}`);
   assert.deepEqual(f.scatter(50, 100, 80, 3), f.scatter(50, 100, 80, 3));
+});
+
+test("w05-field: pulses gives one ring per unit, shared over the regions by largest remainder, seeded, the last ring at t 1 in the named region", () => {
+  const f = load("w05-field.js");
+  const vals = [2506, 4616, 2653, 2280, 3497, 2690, 2258, 5984];
+  assert.equal(vals.reduce((x, y) => x + y, 0), 26484);
+  const rings = f.pulses(vals, 300, 11, 4);
+  assert.equal(rings.length, 88);
+  const per = vals.map((_, g) => rings.filter((q) => q.g === g).length);
+  assert.deepEqual(per, Array.from(f.shares(vals, 88)));
+  for (let i = 1; i < rings.length; i += 1) assert.ok(rings[i].t >= rings[i - 1].t, "sorted by time");
+  rings.forEach((q) => assert.ok(q.t >= 0 && q.t <= 1));
+  const last = rings[rings.length - 1];
+  assert.equal(last.t, 1);
+  assert.equal(last.g, 4, "the year ends on Pelagonia (Bitola)");
+  assert.deepEqual(JSON.parse(JSON.stringify(f.pulses(vals, 300, 11, 4))), JSON.parse(JSON.stringify(rings)));
+  assert.notDeepEqual(JSON.parse(JSON.stringify(f.pulses(vals, 300, 12, 4))), JSON.parse(JSON.stringify(rings)));
 });
 
 test("w05-field: the projector keeps the country inside the pad and centres it", () => {
