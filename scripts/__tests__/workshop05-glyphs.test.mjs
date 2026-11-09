@@ -5,7 +5,7 @@
  * the speaker notes are not rendered and are skipped; the .qd quotes are the usual home of Cyrillic).
  */
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -54,7 +54,6 @@ test("the code point list covers the Macedonian letters including the five that 
 test("both subset files exist, are real woff2 files, and fonts.css maps them to the Cyrillic range only", () => {
   for (const name of ["Typing-Cyr-2026-Regular.woff2", "Typing-Cyr-2026-Bold.woff2"]) {
     const file = path.join(FONTS, name);
-    assert.ok(existsSync(file), name);
     const bytes = readFileSync(file);
     assert.ok(bytes.length > 10_000, `${name} is not empty`);
     assert.equal(bytes.subarray(0, 4).toString("latin1"), "wOF2", `${name} is woff2`);

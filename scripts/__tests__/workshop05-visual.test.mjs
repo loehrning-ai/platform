@@ -8,6 +8,8 @@
  *  - V12 (round 5, D4, on purpose): Claude's UI has its own colours, Anthropic's (--claude-*, on :root with the others). They
  *    are used only in rules for that UI (every selector names a .cl-* or .cw* class), so the orange never leaves Claude's
  *    window; the deck e2e spec checks the same in the browser (V9);
+ *  - V13 (round 6, on purpose): a soft drop shadow is allowed inside the drawn Claude desktop app only (--cl-drop on .cl-ui);
+ *    the three macOS window-button colours (--claude-tl-*) join the Claude tokens of V4/V12;
  *  - V11: every var() the W05 style sheets use is defined (or written by scenes.js, with a fallback). Round 4, on purpose: a
  *    scene's own place (the cover's year window, the Today camera stops and step-back offsets) is written inline by the build;
  *    such a var needs a fallback and must appear in a style attribute of the built page.
@@ -101,6 +103,11 @@ test("V4: the surface tokens are defined once, on :root of w05-fx.css, with thei
     "--claude-ivory": "#FAF9F5",
     "--claude-cloud": "#E8E6DC",
     "--claude-slate": "#141413",
+    // round 6 (Tim, "make the Claude desktop app look more realistic"), on purpose: the macOS window buttons of the drawn
+    // Claude window (close, minimise, zoom: the system colours of the traffic lights), for the Claude UI only (V12)
+    "--claude-tl-red": "#FF5F57",
+    "--claude-tl-amber": "#FEBC2E",
+    "--claude-tl-green": "#28C840",
   };
   const root = /:root\s*\{([^{}]*)\}/.exec(SHEETS["w05-fx.css"])[1];
   const defined = Object.fromEntries(declarations(root));
@@ -117,7 +124,7 @@ test("V4: no hex literal in a rule of deck.css or w05-fx.css (the :root tokens a
 });
 
 test("V4: every colour in a background or fill of w05-fx.css and deck.css is a token of the list or transparent", () => {
-  const OK = /^(?:var\(--(?:w05-sage-(?:50|100|200|400|600)|w05-accent-soft|paper|surface|tint|accent|cw-[\w-]+|claude-(?:clay|ivory|cloud|slate)|faint|e-[\w-]+|line)\)|transparent|none|currentColor|inherit)$/;
+  const OK = /^(?:var\(--(?:w05-sage-(?:50|100|200|400|600)|w05-accent-soft|paper|surface|tint|accent|cw-[\w-]+|claude-(?:clay|ivory|cloud|slate|tl-red|tl-amber|tl-green)|faint|e-[\w-]+|line)\)|transparent|none|currentColor|inherit)$/;
   for (const name of ["w05-fx.css", "deck.css"]) {
     for (const { selector, body } of rulesOf(SHEETS[name])) {
       for (const [prop, value] of declarations(body)) {
@@ -145,6 +152,33 @@ test("V12: the Claude colours (--claude-*) are used only in rules for the drawn 
   assert.ok(uses >= 5, "the Claude UI rules are found");
   // the orange is a fill and an edge, never a text colour (clay on ivory is below 4.5:1)
   assert.doesNotMatch((SHEETS["deck.css"] + SHEETS["w05-fx.css"]).replace(/:root\s*\{[^{}]*\}/, ""), /(?:^|[;{])\s*color:\s*var\(--claude-clay\)/m);
+});
+
+/**
+ * V13 (round 6, on purpose): a soft drop shadow (a blurred, not inset, box-shadow) is allowed inside the drawn Claude desktop
+ * app only, so its window reads as a real window on the desk. Every selector of such a rule names a .cl-* or .cw* class; the
+ * window shadow itself is one variable (--cl-drop), defined once, on .cl-ui. Outside Claude's UI the deck stays flat.
+ */
+test("V13: a blurred drop shadow is used only in rules for the drawn Claude UI (a .cl-* or .cw* class in every selector)", () => {
+  const blurred = (value) =>
+    /var\(--cl-drop\)/.test(value) ||
+    value.split(/,(?![^()]*\))/).some((layer) => !/inset/.test(layer) && /(?:-?[\d.]+(?:px|em)?\s+){2}[1-9][\d.]*(?:px|em)/.test(layer));
+  let uses = 0;
+  for (const name of ["deck.css", "w05-fx.css"]) {
+    for (const { selector, body } of rulesOf(SHEETS[name])) {
+      for (const [prop, value] of declarations(body)) {
+        if (prop === "filter") assert.doesNotMatch(value, /drop-shadow|blur/, `${name} ${selector}: ${prop}`);
+        if (!["box-shadow", "text-shadow"].includes(prop) || !blurred(value)) continue;
+        uses += 1;
+        for (const one of selector.split(",").map((x) => x.trim())) assert.match(one, /\.c[lw](?:-[\w-]+)?\b/, `${name} ${one}: a drop shadow outside the Claude UI`);
+      }
+    }
+  }
+  assert.ok(uses >= 1, "the Claude window shadow is found");
+  const drops = rulesOf(SHEETS["w05-fx.css"]).filter(({ body }) => /--cl-drop\s*:/.test(body));
+  assert.equal(drops.length, 1, "--cl-drop is defined once");
+  assert.equal(drops[0].selector, ".slide .cl-ui");
+  assert.ok(!/--cl-drop\s*:/.test(SHEETS["deck.css"] + SHEETS["engine.css"]), "--cl-drop only in w05-fx.css");
 });
 
 test("V11: every var() of deck.css and w05-fx.css is defined in engine.css, deck.css or w05-fx.css (or written by scenes.js, with a fallback)", () => {

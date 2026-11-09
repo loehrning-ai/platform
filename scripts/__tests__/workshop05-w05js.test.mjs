@@ -7,7 +7,8 @@
  * 12 KB, and their pure functions are tested here. The icon set (lib/w05-icons.svg) is checked here too. Round 4, on purpose:
  * the field's budget is 18 KB (it draws the cover's year of inspection rings, pulses(), and since the fix round of round 4
  * prepares itself on its slide's first frame, flies dots as squares on a 1x backing store and bakes the settled country a slice
- * per dust frame, so the cover stays under 50 ms a frame at 4x CPU throttle); the scrub stays at 12 KB.
+ * per dust frame, so the cover stays under 50 ms a frame at 4x CPU throttle); the scrub stays at 12 KB. Round 6: the rings
+ * are gone (they read as blasts); the year is waves(), straight fronts that deepen each region's dots, in the same 18 KB.
  * The glass test does not scan public/**\/*.js, so this test does.
  */
 import assert from "node:assert/strict";
@@ -131,21 +132,56 @@ test("w05-field: the seeded generator, the stipple and the scatter are determini
   assert.deepEqual(f.scatter(50, 100, 80, 3), f.scatter(50, 100, 80, 3));
 });
 
-test("w05-field: pulses gives one ring per unit, shared over the regions by largest remainder, seeded, the last ring at t 1 in the named region", () => {
+test("w05-field: waves shares the passes over the regions by largest remainder, seeded, every wave done inside the year, and a region's end tone in proportion to its inspections", () => {
   const f = load("w05-field.js");
   const vals = [2506, 4616, 2653, 2280, 3497, 2690, 2258, 5984];
   assert.equal(vals.reduce((x, y) => x + y, 0), 26484);
-  const rings = f.pulses(vals, 300, 11, 4);
-  assert.equal(rings.length, 88);
-  const per = vals.map((_, g) => rings.filter((q) => q.g === g).length);
-  assert.deepEqual(per, Array.from(f.shares(vals, 88)));
-  for (let i = 1; i < rings.length; i += 1) assert.ok(rings[i].t >= rings[i - 1].t, "sorted by time");
-  rings.forEach((q) => assert.ok(q.t >= 0 && q.t <= 1));
-  const last = rings[rings.length - 1];
-  assert.equal(last.t, 1);
-  assert.equal(last.g, 4, "the year ends on Pelagonia (Bitola)");
-  assert.deepEqual(JSON.parse(JSON.stringify(f.pulses(vals, 300, 11, 4))), JSON.parse(JSON.stringify(rings)));
-  assert.notDeepEqual(JSON.parse(JSON.stringify(f.pulses(vals, 300, 12, 4))), JSON.parse(JSON.stringify(rings)));
+  const regions = f.waves(vals, 24, 73310);
+  assert.equal(regions.length, 8);
+  assert.deepEqual(regions.map((g) => g.list.length), Array.from(f.shares(vals, 24)));
+  assert.equal(regions.reduce((s, g) => s + g.list.length, 0), 24);
+  for (const g of regions) {
+    for (const q of g.list) {
+      assert.ok(q.a >= 0 && q.th >= 0 && q.th <= 6.2832, "a start in the year and a direction");
+      // the last dot a front reaches (0.34 after its start) finishes its steps before the year ends
+      assert.ok(q.a + 0.34 + 0.1 <= 1, `wave starting at ${q.a} ends after the year`);
+    }
+  }
+  // the end tone is linear in the inspections: darker means more, Skopje the darkest, the Northeast the lightest
+  const max = Math.max(...vals);
+  regions.forEach((g, i) => assert.ok(Math.abs(g.o / regions[7].o - vals[i] / max) < 1e-9, `region ${i}`));
+  assert.ok(regions[7].o < 1 && regions[7].o > 0.5);
+  assert.equal(regions.reduce((m, g, i) => (g.o < regions[m].o ? i : m), 0), 6);
+  // seeded: the same seed gives the same waves, another seed other directions
+  assert.deepEqual(JSON.parse(JSON.stringify(f.waves(vals, 24, 73310))), JSON.parse(JSON.stringify(regions)));
+  assert.notDeepEqual(JSON.parse(JSON.stringify(f.waves(vals, 24, 73311))), JSON.parse(JSON.stringify(regions)));
+});
+
+test("w05-field: a wave deepens a dot in WS soft steps after it arrives, and the steps compose to the region's tone, never past it", () => {
+  const f = load("w05-field.js");
+  assert.equal(f.visits(0.2, 0.3), 0, "nothing before the front arrives");
+  assert.equal(f.visits(0.3, 0.3), 0);
+  assert.equal(f.visits(0.3001, 0.3), 1, "the first step as the front passes");
+  assert.equal(f.visits(0.3 + 0.1, 0.3), f.WS, "all steps one ramp later");
+  assert.equal(f.visits(1, 0), f.WS, "never more than WS");
+  for (let y = 0.3; y <= 0.4; y += 0.01) assert.ok(f.visits(y + 0.01, 0.3) >= f.visits(y, 0.3), "monotone");
+  // painting k1 then k2 steps (alpha over alpha) equals painting k1 + k2 at once; K steps give exactly the tone
+  const K = 3 * f.WS;
+  const o = 0.6;
+  const over = (a, b) => 1 - (1 - a) * (1 - b);
+  assert.ok(Math.abs(over(f.shade(4, K, o), f.shade(6, K, o)) - f.shade(10, K, o)) < 1e-12);
+  assert.ok(Math.abs(f.shade(K, K, o) - o) < 1e-12);
+  assert.equal(f.shade(0, K, o), 0);
+  for (let k = 1; k <= K; k += 1) assert.ok(f.shade(k, K, o) > f.shade(k - 1, K, o) && f.shade(k, K, o) <= o + 1e-12);
+});
+
+test("w05-field: the cover draws no circle that grows and no shockwave (round 6: rings read as blasts)", () => {
+  const src = read("w05-field.js");
+  assert.doesNotMatch(src, /pulses|ripple|col\.pulse|--w05-field-pulse/);
+  // the only arcs: the dots (radius r or q) and the Bitola mark with its ink ring (they grow in the close only)
+  const radii = [...src.matchAll(/\.arc\(([^;]*?), 0, TAU/g)].map((m) => m[1].split(", ")[2]);
+  assert.ok(radii.length >= 4);
+  for (const radius of radii) assert.ok(["r", "q", "r + (8 - r) * grow", "8 + 6 * ringP"].includes(radius), radius);
 });
 
 test("w05-field: the projector keeps the country inside the pad and centres it", () => {

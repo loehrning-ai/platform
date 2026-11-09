@@ -4,7 +4,7 @@ Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.
 
 ## 2026-11-09
 
-An das Deck angeglichen: Die Startdatei nennt jeden Schritt wie das Deck, die Minuten im Raum für Schritt 3 und 4 sind die 8 und 11 des Decks, die Codeausführung gibt es in jedem Tarif (die Startdatei fragt nur, ob sie ausgeschaltet ist), und im Free-Tarif müssen die Projektdateien ins Kontextfenster passen. Die Anweisungen des Registerprojekts schreiben NICHT IN DATEIEN wie die übrigen Dateien, und die Beobachtungsliste nennt das Amtsblatt auch mit seinem kyrillischen Namen. 41 Dateien.
+An das Deck angeglichen: Die Startdatei nennt jeden Schritt wie das Deck, die Minuten im Raum für Schritt 3 und 4 sind die 8 und 11 des Decks, die Codeausführung gibt es in jedem Tarif (die Startdatei fragt nur, ob sie ausgeschaltet ist), und im Free-Tarif müssen die Projektdateien ins Kontextfenster passen. Die Anweisungen des Registerprojekts schreiben NICHT IN DATEIEN wie die übrigen Dateien, und die Beobachtungsliste nennt das Amtsblatt auch mit seinem kyrillischen Namen. Schritt 3 nennt die vier Dateien, die vorher ins Projekt kommen: die Mitteilung und drei Vorlagen. 41 Dateien.
 
 ## 2026-11-08
 

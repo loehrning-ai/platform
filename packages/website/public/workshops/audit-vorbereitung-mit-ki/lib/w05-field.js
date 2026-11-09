@@ -1,5 +1,5 @@
-/* w05-field.js: the W05 dot field (canvas 2D), a pure function of press and --p (scenes.js). Seeded, no clock, no listener;
- * idle when inactive or still; reduced motion is p = 1. Canvas data and layouts: see field() in deck-src/scene.mjs. */
+/* w05-field.js: the W05 dot field (canvas 2D), a pure function of press and --p. Seeded, no clock, no listener; idle when
+ * inactive or still; reduced motion is p = 1. Data and layouts: field() in deck-src/scene.mjs. */
 (function() {
 'use strict';
 var DPR = 2, TAU = 6.2832;
@@ -146,21 +146,23 @@ function lerpDots(a, b, d, curl, p, out, k) {
 		out[i + 1] = ay + (by - ay) * e + (bx - ax) * bow;
 	}
 }
-/* the year (cover): one ring per `unit` inspections, shared out over the regions by largest remainder, spread evenly
- * over the year with a seeded jitter; the last ring of region `last` closes the year (t = 1). Sorted by t. */
-function pulses(vals, unit, seed, last) {
-	var total = vals.reduce(function(s, v) { return s + v; }, 0), rnd = mulberry32(seed ^ 0x9e37), out = [], end = null;
-	shares(vals, Math.max(1, Math.round(total / unit))).forEach(function(c, g) {
-		for (var i = 0; i < c; i++) out.push({ g: g, t: clamp((i + 0.5 + (rnd() - 0.5) * 0.8) / c) * 0.96 });
+/* the year (cover): waves shared by inspections, straight fronts crossing a region in WD; a dot deepens in WS steps
+ * over WR; a region ends at WO * v / max. Nothing expands. */
+var WD = 0.34, WR = 0.1, WS = 3, WO = 0.88;
+function waves(vals, passes, seed) {
+	var rnd = mulberry32(seed ^ 0x9e37), vmax = Math.max.apply(0, vals);
+	return shares(vals, passes).map(function(P, g) {
+		for (var w = 0, list = [], m = Math.max(1, P); w < m; w++) list.push({ a: ((w + 0.5 * rnd()) / m) * (0.94 - WD - WR), th: rnd() * TAU });
+		return { o: WO * vals[g] / vmax, list: list };
 	});
-	out.forEach(function(q) { if (q.g === last && (!end || q.t > end.t)) end = q; });
-	if (end) end.t = 1;
-	return out.sort(function(a, b) { return a.t - b.t || a.g - b.g; });
 }
+/* steps by y of a wave that reached a dot at t; alpha of k of K steps toward o */
+function visits(y, t) { return y <= t ? 0 : Math.min(WS, Math.ceil(((y - t) / WR) * WS)); }
+function shade(k, K, o) { return 1 - Math.pow(1 - o, k / K); }
 var api = {
 	mulberry32: mulberry32, projector: projector, stipple: stipple,
 	scatter: scatter, shares: shares, groupsGeometry: groupsGeometry, groups: groups, nearest: nearest,
-	parsePlan: parsePlan, stateAt: stateAt, lerpDots: lerpDots, seg: seg, pulses: pulses,
+	parsePlan: parsePlan, stateAt: stateAt, lerpDots: lerpDots, seg: seg, waves: waves, visits: visits, shade: shade, WS: WS,
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 if (typeof document === 'undefined') return;
@@ -173,15 +175,15 @@ function mount(canvas) {
 	var ds = canvas.dataset, w = canvas.width / DPR, h = canvas.height / DPR, pad = Number(ds.pad || 24);
 	var n = Number(ds.n), seed = Number(ds.seed || 1), plan = parsePlan(ds.plan);
 	var pr = projector(ring, w, h, pad), poly = ring.map(function(q) { return [pr.x(q[0]), pr.y(q[1])]; });
-	// dot radius from the polygon's area (no sampling)
+	// dot radius from the polygon's area
 	for (var A = 0, i = 0, j = poly.length - 1; i < poly.length; j = i++) A += (poly[j][0] + poly[i][0]) * (poly[j][1] - poly[i][1]);
 	var r = Math.max(1.3, Math.min(3, Math.sqrt(Math.abs(A / 2) / (n * 0.866)) * 0.27)), ready = false;
-	var country, mark = -1, regions, vmax, cache = {}, ord, flat, delay, curl, dd, mx, my, near = [], rings;
-	var yw = nums(ds.year), unit = Number(ds.pulse || 0), markLL = nums(ds.mark);
-	// sampling, layouts, town and year: on the slide's first moving frame
+	var country, mark = -1, regions, cache = {}, ord, flat, delay, curl, dd, mx, my, near = [], wv, reg, off, tau, kk, ov, lastY = 0;
+	var yw = nums(ds.year), markLL = nums(ds.mark);
+	// sampling and layouts: on the first moving frame
 	function prep() {
 	ready = true;
-	// one stipple per size and seed: the cover and today share theirs
+	// one stipple per size and seed (shared)
 	var sk = [w, h, n, seed, pad].join(), st = stipples[sk] || (stipples[sk] = stipple(poly, n, w, h, seed));
 	country = st.pts.slice();
 	if (markLL.length === 2) {
@@ -193,7 +195,6 @@ function mount(canvas) {
 		var v = nums(r);
 		return { x: pr.x(v[0]), y: pr.y(v[1]), v: v[2] };
 	});
-	vmax = Math.max.apply(0, regions.map(function(g) { return g.v; }).concat(1));
 	var cx = 0, cy = 0, maxd = 0, rnd = mulberry32(seed ^ 0xbeef);
 	ord = new Float32Array(n); flat = new Float32Array(n); delay = new Float32Array(n); curl = new Float32Array(n); dd = new Float32Array(n);
 	for (i = 0; i < n; i++) { cx += country[i * 2] / n; cy += country[i * 2 + 1] / n; }
@@ -202,16 +203,31 @@ function mount(canvas) {
 		delay[i] = 0.4 * (0.65 * (1 - Math.hypot(country[i * 2] - cx, country[i * 2 + 1] - cy) / maxd) + 0.35 * rnd());
 		curl[i] = (rnd() - 0.5) * 0.5;
 	}
-	// data-near: the town around the mark (distances once, then one sort)
+	// data-near: the town around the mark
 	mx = country[mark * 2]; my = country[mark * 2 + 1];
 	if (mark >= 0 && ds.near) {
 		var by = [];
 		for (i = 0; i < n; i++) { dd[i] = (country[i * 2] - mx) * (country[i * 2] - mx) + (country[i * 2 + 1] - my) * (country[i * 2 + 1] - my); by.push(i); }
 		near = by.sort(function(a, b) { return dd[a] - dd[b] || a - b; }).slice(1, 1 + Number(ds.near));
 	}
-	// data-year "a,b": dust to a, the year of rings to b, then the close
-	rings = yw.length === 2 && unit && regions.length ? pulses(regions.map(function(g) { return g.v; }), unit, seed, Number(ds.pulseLast || -1)) : null;
+	// data-year "a,b": dust, year, close
+	wv = yw.length === 2 && regions.length ? waves(regions.map(function(g) { return g.v; }), Number(ds.waves || 24), seed) : null;
 	plan.forEach(function(e) { layout(e.from); layout(e.to); });
+	}
+	// the year's arrivals, a frame after prep (a dot: its nearest town)
+	function yp() {
+		var tw = [], wr = mulberry32(seed ^ 7), v = new Float32Array(n);
+		regions.forEach(function(g) { tw.push(g.x, g.y); });
+		reg = new Uint8Array(n); off = new Uint32Array(n + 1); kk = new Uint8Array(n);
+		for (i = 0; i < n; i++) { reg[i] = nearest(tw, country[i * 2], country[i * 2 + 1]); off[i + 1] = off[i] + wv[reg[i]].list.length; }
+		tau = new Float32Array(off[n]);
+		wv.forEach(function(G, g) {
+			G.list.forEach(function(q, k) {
+				var lo = Infinity, hi = -Infinity, c = Math.cos(q.th), sn = Math.sin(q.th);
+				for (j = 0; j < n; j++) if (reg[j] === g) { v[j] = country[j * 2] * c + country[j * 2 + 1] * sn; if (v[j] < lo) lo = v[j]; if (v[j] > hi) hi = v[j]; }
+				for (j = 0; j < n; j++) if (reg[j] === g) tau[off[j] + k] = q.a + WD * (0.9 * (v[j] - lo) / (hi - lo || 1) + 0.1 * wr());
+			});
+		});
 	}
 	function layout(name) {
 		if (cache[name]) return cache[name];
@@ -223,16 +239,16 @@ function mount(canvas) {
 		return pts;
 	}
 	var ctx = canvas.getContext('2d'), pos = new Float32Array(n * 2), last = '', base = null;
-	var col = null, colors = function() { if (col) return; var css = getComputedStyle(canvas); col = {}; ['dot', 'line', 'ring', 'mark', 'ink', 'near', 'pulse'].forEach(function(k) { col[k] = css.getPropertyValue('--w05-field-' + k).trim(); }); };
+	var col = null, colors = function() { if (col) return; var css = getComputedStyle(canvas); col = {}; ['dot', 'line', 'mark', 'ink', 'near'].forEach(function(k) { col[k] = css.getPropertyValue('--w05-field-' + k).trim(); }); };
 	var pen = function(g, c, lw) { g.strokeStyle = c; g.lineWidth = lw; g.beginPath(); };
 	// flying dots: squares in one path; at rest: circles
 	var sq = false;
-	function dots(g, list, c, a, rr) {
+	function dots(g, list, c, a) {
 		if (a <= 0) return;
 		g.globalAlpha = a;
 		g.fillStyle = c;
 		g.beginPath();
-		var q = rr || r, s2 = q * 1.8;
+		var q = r, s2 = q * 1.8;
 		list(sq ? function(j) { g.rect(pos[j * 2] - q * .9, pos[j * 2 + 1] - q * .9, s2, s2); } : function(j) { var x = pos[j * 2], y = pos[j * 2 + 1]; g.moveTo(x + q, y); g.arc(x, y, q, 0, TAU); });
 		g.fill();
 		g.globalAlpha = 1;
@@ -247,55 +263,63 @@ function mount(canvas) {
 		g.stroke();
 		g.globalAlpha = 1;
 	}
-	// flying dots draw at 1x, dots at rest (every end state) at 2x
+	// flying dots at 1x, dots at rest at 2x
 	var dpx = DPR;
 	function res(d) {
 		if (d !== dpx) { dpx = d; canvas.width = w * d; canvas.height = h * d; }
 		ctx.setTransform(d, 0, 0, d, 0, 0);
 	}
-	// the baked country (outline, dots at rest, 2x) up to dot `baked`
-	var baked = 0;
+	// the baked country (2x) up to `baked`
+	var baked = 0, layer = function() { var c = document.createElement('canvas'); c.width = w * DPR; c.height = h * DPR; c.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0); return c; };
 	function bake(upto) {
-		if (!base) {
-			base = document.createElement('canvas');
-			base.width = w * DPR; base.height = h * DPR;
-			base.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0);
-			outline(base.getContext('2d'), 1);
-		}
+		if (!base) outline((base = layer()).getContext('2d'), 1);
 		var bg = base.getContext('2d'), to = layout('country');
 		bg.fillStyle = col.dot;
 		bg.beginPath();
 		for (; baked < upto; baked++) if (baked !== mark) { bg.moveTo(to[baked * 2] + r, to[baked * 2 + 1]); bg.arc(to[baked * 2], to[baked * 2 + 1], r, 0, TAU); }
 		bg.fill();
 	}
+	// the year (2x): paint the steps gained (alpha composes); back: repaint
+	function visit(y) {
+		var og = (ov = ov || layer()).getContext('2d'), by = {}, j, k, q, d;
+		tau || yp();
+		if (y < lastY) { og.clearRect(0, 0, w, h); kk.fill(0); }
+		lastY = y;
+		for (j = 0; j < n; j++) {
+			for (k = 0, q = off[j]; q < off[j + 1]; q++) k += visits(y, tau[q]);
+			if ((d = k - kk[j]) > 0 && j !== mark) { kk[j] = k; (by[q = reg[j] * 64 + d] = by[q] || []).push(j); }
+		}
+		for (q in by) dots(og, by[q].forEach.bind(by[q]), col.near, shade(q & 63, wv[q >> 6].list.length * WS, wv[q >> 6].o));
+	}
 	var drivers = {}, forced = false, settle = function() {};
 	host.querySelectorAll('.w05-drive').forEach(function(el) { drivers[el.dataset.step] = el; });
 	function draw() {
-		// an inactive slide draws nothing, unless the field before it warms it (below)
+		// an inactive slide draws nothing, unless warmed (below)
 		if (!slide.hasAttribute('data-deck-active') && !forced) return;
 		colors();
 		var view = Number(slide.dataset.view || 0), drv = drivers[String(view)];
 		var dp = drv ? Number(drv.style.getPropertyValue('--p') || 1) : 1, s = stateAt(plan, view, dp);
-		var e0 = s.entry.k === 0 && s.p < 1 && (s.entry.from !== s.entry.to || !!rings), yr = rings && e0;
+		var e0 = s.entry.k === 0 && s.p < 1 && (s.entry.from !== s.entry.to || !!wv), yr = wv && e0;
 		var pd = yr ? clamp(s.p / yw[0]) : s.p, pe = yr ? clamp((s.p - yw[1]) / (1 - yw[1])) : s.p;
 		var moving = s.entry.from !== s.entry.to && pd < 1;
-		// a country rising on press 0: 1x squares, the 2x one baked a slice a frame
-		var rise = !!drv && !rings && s.entry.k === 0 && s.entry.from === s.entry.to && /country/.test(s.entry.to) && s.p < 1;
+		// a country rising on press 0: 1x squares, the 2x one baked
+		var rise = !!drv && !wv && s.entry.k === 0 && s.entry.from === s.entry.to && /country/.test(s.entry.to) && s.p < 1;
 		var key = s.entry.k + ':' + (e0 || moving || rise ? s.p.toFixed(4) : 'still');
 		if (key === last) return;
 		last = key;
 		settle(drv, dp);
 		var dust = s.entry.from === 'scatter';
-		// the settled country is baked a slice per frame, no frame pays for all
-		if (ready && (rings && moving || rise)) bake(Math.min(n, baked + Math.ceil(n / 16)));
-		// a rising country starts as its outline (sampling waits a frame)
+		// the settled country is baked a slice per frame
+		if (ready && wv && !tau) yp();
+		else if (ready && (wv && moving || rise)) bake(Math.min(n, baked + Math.ceil(n / 16)));
+		// a rising country starts as its outline
 		if (!ready && rise && s.p < .15) {
 			res(1);
 			ctx.clearRect(0, 0, w, h);
 			outline(ctx, 1);
 			return;
 		}
-		// dust at p 0 is the scatter alone: the first frame paints before any sampling
+		// dust at p 0: the scatter alone, before any sampling
 		if (!ready && dust && s.p === 0) {
 			pos.set(scatter(n, w, h, seed));
 			res(1);
@@ -312,54 +336,28 @@ function mount(canvas) {
 		if (moving) lerpDots(from, to, dust ? delay : ord, dust ? curl : flat, pd, pos, dust ? 1 : 0.875); else pos.set(to);
 		res(moving || rise ? 1 : DPR);
 		ctx.clearRect(0, 0, w, h);
-		var C = /country|regions|floor/, shown = C.test(s.entry.to) ? (moving ? seg(pd, 0.55, 1) : 1) : C.test(s.entry.from) && moving ? 1 - seg(pd, 0, 0.3) : 0;
-		if (yr && !moving) {
-			// the settled country is copied; rings and ripple on top
-			bake(n);
-			// in the year the country steps back to half tone, back as the close lands
-			var y = (s.p - yw[0]) / (yw[1] - yw[0]), life = 0.1;
+		var C = /country|floor/, shown = C.test(s.entry.to) ? (moving ? seg(pd, 0.55, 1) : 1) : C.test(s.entry.from) && moving ? 1 - seg(pd, 0, 0.3) : 0;
+		if (yr && !moving || baked >= n && shown === 1 && !moving && !rise) {
+			// the baked country; faint under the year's visits
+			if (yr) bake(n);
+			var y = (s.p - yw[0]) / (yw[1] - yw[0]);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.globalAlpha = 1 - 0.5 * seg(y, 0, 0.06) * (1 - seg(pe, 0, 0.4));
+			ctx.globalAlpha = yr ? 1 - 0.7 * seg(y, 0, 0.15) * (1 - seg(pe, 0, 0.4)) : 1;
 			ctx.drawImage(base, 0, 0);
+			if (yr) {
+				visit(Math.min(1, y));
+				ctx.globalAlpha = 1 - seg(pe, 0, 0.5);
+				ctx.drawImage(ov, 0, 0);
+			}
 			ctx.globalAlpha = 1;
-			ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-			if (y < 1) rings.forEach(function(q) {
-				var u = (y - q.t * (1 - life)) / life;
-				if (u <= 0 || u >= 1) return;
-				var G = regions[q.g], R = (46 + 70 * Math.sqrt(G.v / vmax)) * ease(u), a = Math.pow(1 - u, 1.5), lo = Math.max(0, R - 9), hi = R + 5;
-				// the ripple: dots the ring passes darken, then settle
-				dots(ctx, function(f) {
-					for (var j = 0; j < n; j++) {
-						var d2 = (pos[j * 2] - G.x) * (pos[j * 2] - G.x) + (pos[j * 2 + 1] - G.y) * (pos[j * 2 + 1] - G.y);
-						if (d2 > lo * lo && d2 < hi * hi && j !== mark) f(j);
-					}
-				}, col.near, 0.9 * a, r * 1.5);
-				ctx.globalAlpha = a;
-				pen(ctx, col.pulse || col.line, 2.5);
-				ctx.arc(G.x, G.y, R, 0, TAU);
-				ctx.stroke();
-				ctx.globalAlpha = 1;
-			});
-		} else if (baked >= n && shown === 1 && !moving && !rise) {
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.drawImage(base, 0, 0);
 			ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 		} else {
 			outline(ctx, shown);
 			dots(ctx, all, col.dot, 1);
 		}
-		var pm = rings ? pe : s.p, nx = fields[fields.indexOf(self) + 1];
+		var pm = wv ? pe : s.p, nx = fields[fields.indexOf(self) + 1];
 		if (nx && !forced && (moving || e0) && s.p > 0.25) nx.pre();
 		dots(ctx, function(f) { near.forEach(f); }, col.near, C.test(s.entry.to) ? (e0 ? seg(pm, 0.7, 0.9) : 1) : 0);
-		if (regions.length && /regions/.test(s.entry.to)) {
-			regions.forEach(function(g, j) {
-				var q = /regions/.test(s.entry.from) ? 1 : seg(s.p, j * 0.06, 0.55 + j * 0.06);
-				if (q <= 0) return;
-				pen(ctx, col.ring, 2);
-				ctx.arc(g.x, g.y, q * 64 * Math.sqrt(g.v / vmax), 0, TAU);
-				ctx.stroke();
-			});
-		}
 		if (mark >= 0) {
 			mx = pos[mark * 2]; my = pos[mark * 2 + 1];
 			var grow = e0 ? seg(pm, 0.72, 0.95) : 1;
@@ -375,8 +373,8 @@ function mount(canvas) {
 			}
 		}
 	}
-	// warm: the next field paints once when this one rests, never at load
-	// pre: while the field before moves, sample, then bake a slice a frame
+	// warm: the next field paints once when this one rests
+	// pre: while the field before moves, sample, then bake
 	var self = { warm: function() { if (last) return false; forced = true; draw(); forced = false; return true; },
 		pre: function() { colors(); if (!ready) prep(); else if (baked < n) bake(Math.min(n, baked + Math.ceil(n / 16))); else return false; return true; } };
 	fields.push(self);

@@ -45,7 +45,7 @@ export function register(it, ctx, d, c, T) {
     take.take,
   ].join("");
   // the camera moves in on the window as the register streams (press 2)
-  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true, zone: null }) });
+  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true, zone: null }) });
   // press 0: the kit files the step reads stand on the empty sheet (the folder index, the folder's CSV files, the template);
   // press 1 the prompt window comes over them in its small size
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => [...inFolder(paths, ["folder", "ordner"], (p) => /-index\.md$|\.csv$/.test(p)), ...named(paths, d.prompts.step4).filter((p) => p.includes("/register.csv"))] });
@@ -53,7 +53,7 @@ export function register(it, ctx, d, c, T) {
     it({ id: "pr2", tag: "div", cls: "tk-slot", zone: "t", k: 6, out: 7, html: promptBubble(c, 5, d.prompts.step4b, { full: true }) }),
     take2.take,
   ].join("");
-  const win2 = dolly(it, { id: "dolly2", zone: "w2", k: 6, html: claudeWindow(it, { id: "win2", brand: c.claudeUi.brand, model: takeModel(take2), crumbs: t.win, thread: thread2, k: 6, out: 7, zone: null, cls: "tk-cw--register", plane: true }) });
+  const win2 = dolly(it, { id: "dolly2", zone: "w2", k: 6, html: claudeWindow(it, { id: "win2", ui: c.claudeUi, model: takeModel(take2), crumbs: t.win, thread: thread2, k: 6, out: 7, zone: null, cls: "tk-cw--register", plane: true }) });
 
   const none = c.take.noOwner;
   const colNames = [t.cols[0], t.cols[1], t.cols[2], t.cols[3], t.own, t.appr];

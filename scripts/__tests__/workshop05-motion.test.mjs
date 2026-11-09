@@ -14,6 +14,11 @@
  *     press, so a press during the entry goes straight to the next slide.
  * Round 5 law change, made on purpose (Tim: the first slide at most 10 seconds in all):
  *  L1 tightened (M5, M8): the cover's one entry runs at most 10000 ms (the same dust, year and close, now in about 9 s).
+ * Round 6 law change, made on purpose (Tim: the first slide even faster, and the year must not look like a country being
+ * bombed):
+ *  L1 tightened again (M5, M8): the cover's one entry runs at most 6000 ms (dust about 0.8 s, the year about 3 s as soft
+ *     straight waves that deepen each DIT region's dots instead of expanding rings, the close on Bitola about 0.8 s; about
+ *     5 s in all). A press during the entry still goes straight to Today; reduced motion and preview show the end state.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -25,7 +30,7 @@ import { deckData } from "../workshop05/deck-src/data.mjs";
 import { fixtureTakes } from "../workshop05/deck-src/fixture-takes.mjs";
 import { LANGS, readPage, slidesOf } from "../workshop05/deck-src/deck-html.mjs";
 
-const COVER_MS = 10000;
+const COVER_MS = 6000;
 
 const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib");
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
@@ -113,7 +118,7 @@ for (const [key, html] of Object.entries(pages)) {
     assert.doesNotMatch(html, /data-fx="type"|clip-path/);
   });
 
-  test(`${key} M5: press lengths of at most 1600 ms (the cover entry at most 10000 ms, L1), one per press, and no inline duration`, () => {
+  test(`${key} M5: press lengths of at most 1600 ms (the cover entry at most 6000 ms, L1), one per press, and no inline duration`, () => {
     for (const slide of slidesOf(html)) {
       const durations = slide.attrs["data-durations"].split(",").map(Number);
       const cap = slide.attrs.id === "cover" ? COVER_MS : 1600;
@@ -166,7 +171,7 @@ for (const [key, html] of Object.entries(pages)) {
     const cover = slidesOf(html)[0];
     assert.equal(cover.attrs.id, "cover");
     assert.equal(cover.attrs["data-step-total"], "0");
-    assert.ok(Number(cover.attrs["data-durations"]) <= COVER_MS, "the entry is at most 10000 ms");
+    assert.ok(Number(cover.attrs["data-durations"]) <= COVER_MS, "the entry is at most 6000 ms");
     const els = stepped(cover);
     const hosts = els.filter((e) => e.top);
     assert.equal(hosts.length, 1, "one entry host");

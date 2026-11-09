@@ -54,7 +54,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Schritt 3",
         title: "Status, Plan, Briefing",
-        input: "Tabelle und Funde",
+        input: "Tabelle, Funde, die Mitteilung und drei Vorlagen",
         action: "Status je Frage, Plan, Briefing",
         output: "2 BELEGT, 1 SCHWACH, 10 LÜCKE und ein Briefing",
         note: "Claude unterschreibt nichts. Eine benannte Person liest und unterschreibt. Echte Dateien: Stufe 3, das Skript läuft bei dir.",
@@ -129,7 +129,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Step 3",
         title: "Status, plan, briefing",
-        input: "The table and the findings",
+        input: "The table, the findings, the notice and three templates",
         action: "A status per question, a plan, a briefing",
         output: "2 COVERED, 1 WEAK, 10 GAP and a briefing",
         note: "Claude signs nothing. A named person reads and signs. Real files: Level 3, the script runs on your side.",

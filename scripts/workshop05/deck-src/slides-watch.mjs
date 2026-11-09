@@ -14,7 +14,7 @@
 import { esc, fill, spread } from "./motion.mjs";
 import { icon, rise, toggle } from "./scene.mjs";
 import { cap } from "./slides-intro.mjs";
-import { claudePanel, spark } from "./slides-parts.mjs";
+import { claudePanel, clIcon, spark } from "./slides-parts.mjs";
 
 const SIZE = 760;
 const R = 300;
@@ -30,6 +30,7 @@ const tickD = (() => { const p = at(0); return `M${p.x - 11} ${p.y + 1} L${p.x -
 
 export function watch(it, ctx, d, c) {
   const t = c.s.watch;
+  const ui = c.claudeUi;
   const [iso, day] = Object.entries(d.register.byDate)[0];
   const nodes = WEEKS.map((deg, i) => { const p = at(deg); return `<circle class="wr__n wr__n--${i}" cx="${p.x}" cy="${p.y}" r="24" pathLength="1"/>`; }).join("");
   // week 1's tick draws with the ring; weeks 2 to 4 get theirs when the ring has turned them under the check
@@ -58,7 +59,9 @@ export function watch(it, ctx, d, c) {
   const plans = it({
     id: "plans", tag: "div", cls: "wp wup3 fig", zone: "plans", k: 1, fx: "none", attrs: "data-scene",
     // the two plans sit in Claude's own window (D4): the scheduled task (paid) or the check by hand (Free) is a thing you do in Claude
-    html: `${claudePanel({ brand: c.claudeUi.brand, body: t.plans.map(([h, s], i) => `<p class="wp__c wp__c--${i ? "free" : "paid"}">${icon(i ? "calendar" : "clock")}<b>${esc(h)}</b><span>${esc(s)}</span></p>`).join("") })}<small>${esc(t.plansSrc)}</small>`,
+    // round 6: the paid plan is the app's task: its card names it and says what it does; the window's bar carries its schedule,
+    // its next run (the first check date of the register) and its state (hidden on Free: that plan has no task in Claude)
+    html: `${claudePanel({ ui, crumbs: ui.scheduled, tail: `<span class="wp__m"><em>${clIcon("repeat")}${esc(ui.weekly)}</em><em>${esc(fill(ui.next, { date: dateText(iso, d.lang) }))}</em><em class="wp__on">${esc(ui.active)}</em></span>`, body: t.plans.map(([h, s], i) => `<p class="wp__c wp__c--${i ? "free" : "paid"}">${icon(i ? "calendar" : "clock")}<b>${esc(h)}</b><span>${esc(s)}</span></p>`).join("") })}<small>${esc(t.plansSrc)}</small>`,
   });
   const res = it({
     id: "res", tag: "div", cls: "wres cl-ui wup3 fig", zone: "res", k: 2, win: ".2,.9", fx: "none", attrs: "data-scene",

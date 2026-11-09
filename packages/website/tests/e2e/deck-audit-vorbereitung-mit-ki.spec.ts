@@ -10,7 +10,8 @@ import { expect, type Page, test } from "@playwright/test";
  * the six polls by name and button count, the recorded-take chip on the four step slides, and the
  * visual law is scanned on every press of every slide in both editions: V1 no ink fill, V7 text
  * contrast 4.5:1, V8 at most one accent element per press state, V9 (round 5) Claude's orange only
- * inside the drawn Claude UI (.cl-ui).
+ * inside the drawn Claude UI (.cl-ui), V14 no bar or meter in the colour of its ground (every press,
+ * every selected sectors tile, polls with votes and under hover, the ghost bars of the close).
  */
 
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -182,6 +183,108 @@ function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
   return hits;
 }
 
+/**
+ * Runs in the page: V14, a bar or meter never takes the colour of what it sits on (Tim's review: the sage bar on the
+ * selected sage tile of S04 vanished). On the active slide:
+ *  - every leaf fill (a class ending in __fill, __f or __bar with no filled child) has 3:1 against the colour behind it,
+ *    or its own ink edge of 1.5 px or more;
+ *  - such a fill never paints over the inset ink ring of its track: where it touches the track's edge, it needs 3:1
+ *    against the colour outside the track (the tile), or its own ink edge;
+ *  - a poll chip with votes keeps its share bar inside its 2 px ring, and its label keeps 3:1 on that bar (hover too).
+ */
+function scanBars(): string[] {
+  type Rgba = { r: number; g: number; b: number; a: number };
+  const parse = (value: string): Rgba | null => {
+    const match = value.match(/rgba?\(([^)]+)\)/);
+    if (!match) return null;
+    const parts = match[1]!.split(/[ ,/]+/).filter(Boolean).map(Number);
+    return { r: parts[0]!, g: parts[1]!, b: parts[2]!, a: parts[3] ?? 1 };
+  };
+  const lin = (channel: number) => {
+    const c = channel / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  const luminance = (c: Rgba) => 0.2126 * lin(c.r) + 0.7152 * lin(c.g) + 0.0722 * lin(c.b);
+  const ratio = (x: Rgba, y: Rgba) => {
+    const [hi, lo] = [luminance(x), luminance(y)].sort((a, b) => b - a) as [number, number];
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  const over = (top: Rgba, below: Rgba): Rgba => {
+    const a = top.a + below.a * (1 - top.a);
+    const mix = (t: number, b: number) => (a === 0 ? 0 : (t * top.a + b * below.a * (1 - top.a)) / a);
+    return { r: mix(top.r, below.r), g: mix(top.g, below.g), b: mix(top.b, below.b), a };
+  };
+  const backdrop = (el: Element | null): Rgba => {
+    const stack: Rgba[] = [];
+    for (let node = el; node; node = node.parentElement) {
+      const bg = parse(getComputedStyle(node).backgroundColor);
+      if (bg && bg.a > 0) {
+        stack.push(bg);
+        if (bg.a >= 0.99) break;
+      }
+    }
+    return stack.reduceRight((below, top) => over(top, below), { r: 255, g: 255, b: 255, a: 1 });
+  };
+  const describe = (el: Element) => `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}.${Array.from(el.classList).slice(0, 2).join(".")}`;
+  const visible = (el: Element) => {
+    const style = getComputedStyle(el);
+    if (style.display === "none" || style.visibility === "hidden") return false;
+    const rect = el.getBoundingClientRect();
+    let opacity = 1;
+    for (let node: Element | null = el; node; node = node.parentElement) opacity *= Number(getComputedStyle(node).opacity);
+    return rect.width >= 2 && rect.height >= 2 && opacity > 0.25;
+  };
+  /** An own edge: a border or a zero-blur box-shadow of 1.5 px or more, 3:1 against the ground. */
+  const inkEdge = (style: CSSStyleDeclaration, ground: Rgba) => {
+    for (const side of ["Top", "Right", "Bottom", "Left"] as const) {
+      const color = parse(style[`border${side}Color`]);
+      if (parseFloat(style[`border${side}Width`]) >= 1.5 && style[`border${side}Style`] !== "none" && color && ratio(over(color, ground), ground) >= 3) return true;
+    }
+    for (const layer of style.boxShadow === "none" ? [] : style.boxShadow.split(/,(?![^()]*\))/)) {
+      const color = parse(layer);
+      const lengths = (layer.replace(/rgba?\([^)]*\)/, "").match(/-?[\d.]+px/g) ?? []).map(parseFloat);
+      if (color && (lengths[3] ?? 0) >= 1.5 && ratio(over(color, ground), ground) >= 3) return true;
+    }
+    return false;
+  };
+  const slide = document.querySelector<HTMLElement>("deck-stage > section[data-deck-active]");
+  if (!slide) return ["no active slide"];
+  const hits: string[] = [];
+  const FILL = /(?:^|\s)[\w-]+__(?:fill|f|bar)(?:\s|$)/;
+  for (const el of slide.querySelectorAll<HTMLElement>("*")) {
+    if (typeof el.className !== "string" || !FILL.test(el.className) || el.closest(".cl-ui") || !visible(el)) continue;
+    const style = getComputedStyle(el);
+    const bg = parse(style.backgroundColor);
+    if (!bg || bg.a < 0.3) continue;
+    // a track (it holds a filled child) is judged through its fill
+    if (Array.from(el.children).some((child) => (parse(getComputedStyle(child).backgroundColor)?.a ?? 0) > 0)) continue;
+    const parent = el.parentElement!;
+    const ground = backdrop(parent);
+    const fill = over(bg, ground);
+    const edged = inkEdge(style, ground);
+    if (ratio(fill, ground) < 3 && !edged) hits.push(`V14 ${describe(el)} ${ratio(fill, ground).toFixed(2)}:1 on ${describe(parent)}`);
+    const track = getComputedStyle(parent);
+    const ring = /inset/.test(track.boxShadow) && parseFloat(track.borderLeftWidth) === 0;
+    if (!ring || edged || !parent.parentElement) continue;
+    const [r, p] = [el.getBoundingClientRect(), parent.getBoundingClientRect()];
+    const touches = Math.abs(r.left - p.left) < 1.5 || Math.abs(r.right - p.right) < 1.5 || Math.abs(r.top - p.top) < 1.5 || Math.abs(r.bottom - p.bottom) < 1.5;
+    const outside = backdrop(parent.parentElement);
+    if (touches && ratio(fill, outside) < 3) hits.push(`V14 ${describe(el)} paints over the ink ring of ${describe(parent)} (${ratio(fill, outside).toFixed(2)}:1 on the tile)`);
+  }
+  for (const chip of slide.querySelectorAll<HTMLElement>(".poll__opt")) {
+    if (!visible(chip) || !(parseFloat(chip.style.getPropertyValue("--share")) > 0)) continue;
+    const bar = getComputedStyle(chip, "::before");
+    const ringWidth = 2;
+    if (parseFloat(bar.top) < ringWidth || parseFloat(bar.left) < ringWidth || parseFloat(bar.bottom) < ringWidth) hits.push(`V14 ${describe(chip)}: the share bar covers the chip's ring`);
+    const ground = over(parse(bar.backgroundColor) ?? { r: 0, g: 0, b: 0, a: 0 }, backdrop(chip));
+    for (const label of [chip, ...chip.querySelectorAll<HTMLElement>("[data-poll-n]")]) {
+      const color = parse(getComputedStyle(label).color);
+      if (color && ratio(over(color, ground), ground) < 3) hits.push(`V14 ${describe(chip)}: label ${ratio(over(color, ground), ground).toFixed(2)}:1 on its share bar`);
+    }
+  }
+  return hits;
+}
+
 for (const edition of EDITIONS) {
   test.describe(`${SLUG} deck (${edition.lang})`, () => {
     test("arrow keys walk every step of the main slides and never reach the appendix", async ({ page }) => {
@@ -329,7 +432,7 @@ for (const edition of EDITIONS) {
       }
     });
 
-    test("visual law V1, V7, V8 and V9 hold on every press of every main slide", async ({ page }) => {
+    test("visual law V1, V7, V8, V9 and V14 hold on every press of every main slide", async ({ page }) => {
       test.setTimeout(300_000);
       await open(page, edition.deck);
       const positions = await mainPositions(page);
@@ -339,9 +442,41 @@ for (const edition of EDITIONS) {
           await page.keyboard.press("ArrowRight");
           await expectShown(page, position, `forward to ${position}`);
         }
-        const hits = await page.evaluate(scanVisualLaw, { exempt: [...V1_EXEMPT] });
+        const hits = [...(await page.evaluate(scanVisualLaw, { exempt: [...V1_EXEMPT] })), ...(await page.evaluate(scanBars))];
         for (const hit of hits) problems.push(`${position} ${hit}`);
       }
+      expect(problems, problems.slice(0, 20).join("\n")).toEqual([]);
+    });
+
+    test("V14: bars and meters keep their ground when a sectors tile is selected and when polls hold votes or are hovered", async ({ page }) => {
+      const problems: string[] = [];
+      const scan = async (state: string) => {
+        for (const hit of await page.evaluate(scanBars)) problems.push(`${state} ${hit}`);
+      };
+      await open(page, `${edition.deck}#sectors/4`);
+      await scan("sectors/4 trade open");
+      for (const value of ["make", "build", "food", "trade"]) {
+        await page.locator(`#sectors .st__b[data-value="${value}"]`).click();
+        await expect(page.locator(`#sectors .st__b[data-value="${value}"]`)).toHaveAttribute("aria-pressed", "true");
+        await scan(`sectors/4 ${value} selected`);
+      }
+      const door = (value: number) => page.locator(`#sectors [data-poll="door"][data-value="${value}"]`);
+      await door(1).click();
+      await door(1).click();
+      await door(3).click();
+      await page.mouse.move(1, 1);
+      await scan("sectors/4 door voted");
+      await door(1).hover();
+      await scan("sectors/4 door leader hovered");
+      await page.evaluate(() => {
+        location.hash = "#close/2";
+      });
+      await expect(page.locator("#close")).toHaveAttribute("data-deck-active", "");
+      await page.locator('#close [data-poll="door-end"][data-value="2"]').click();
+      await page.mouse.move(1, 1);
+      await scan("close/2 ghost bars and door-end voted");
+      await page.locator('#close [data-poll="door-end"][data-value="2"]').hover();
+      await scan("close/2 door-end leader hovered");
       expect(problems, problems.slice(0, 20).join("\n")).toEqual([]);
     });
     test("P opens this edition's presenter view, which follows the deck", async ({ page }) => {

@@ -20,8 +20,8 @@ export const QR = {
   "qr-kit-g26-en.svg": `${SITE}/en/workshops/${SLUG}/kit`,
   "qr-demo-g26.svg": `${SITE}/demos/${SLUG}`,
   "qr-demo-g26-en.svg": `${SITE}/en/demos/${SLUG}`,
-  "qr-skill-g26.svg": `${SITE}/skills/audit-nachweise`,
-  "qr-skill-g26-en.svg": `${SITE}/skills/audit-nachweise`,
+  "qr-skill-g26.svg": `${SITE}/skills/audit-nachweise.zip`,
+  "qr-skill-g26-en.svg": `${SITE}/skills/audit-nachweise.zip`,
 };
 
 for (const [file, url] of Object.entries(QR)) {

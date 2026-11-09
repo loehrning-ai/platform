@@ -43,8 +43,12 @@ function find(node, test, out = []) {
   for (const child of node.children ?? []) find(child, test, out);
   return out;
 }
-/** The text of a recorded row: inline markup (bold, the hidden asterisks) is joined without a space, so the row reads as recorded. */
-const rowText = (node) => (node.text !== undefined ? textOf(node) : (node.children ?? []).map(rowText).join(""));
+/**
+ * The text of a recorded row: inline markup (bold, the hidden asterisks, the no-break span around a hyphenated word) is joined
+ * as written, keeping the spaces between the spans, so the row reads exactly as recorded.
+ */
+const rawOf = (node) => (node.text !== undefined ? node.text : (node.children ?? []).map(rawOf).join(""));
+const rowText = (node) => textOf({ text: rawOf(node) });
 const slideOf = (html, id) => slidesOf(html).find((s) => s.attrs.id === id);
 const byDataId = (slide, id) => find(slide, (n) => n.attrs?.["data-id"] === id)[0];
 

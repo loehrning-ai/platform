@@ -39,7 +39,7 @@ export function close(it, ctx, d, c) {
   const ed = d.lang === "en" ? "-en" : "";
   const bars = [0, 1, 2, 3].map((i) => it({ tag: "i", cls: "gb__bar", k: 2, out: 3, fx: "line", win: ".3,1", attrs: `data-value="${i}"` })).join("");
   const ghost = it({ id: "gb", tag: "div", cls: "gb fig", zone: "gb", k: 2, out: 3, fx: "none", win: ".3,1", attrs: `data-poll-show="door"${img(t.gb)}`, html: bars });
-  const urls = { kit: "/workshops/audit-vorbereitung-mit-ki/kit", demo: "/demos/audit-vorbereitung-mit-ki", skill: "/skills/audit-nachweise" };
+  const urls = { kit: "/workshops/audit-vorbereitung-mit-ki/kit", demo: "/demos/audit-vorbereitung-mit-ki", skill: "/skills/audit-nachweise.zip" };
   // the code carries the full address; the card names only the site, so the caption stays one line (the alt text keeps the path)
   const address = (code) => `loehrning.ai${d.lang === "en" && code !== "skill" ? "/en" : ""}${urls[code]}`;
   // press 3: once the poll has gone (it leaves by .25) the three cards rise in turn (one scene); never over the poll icons

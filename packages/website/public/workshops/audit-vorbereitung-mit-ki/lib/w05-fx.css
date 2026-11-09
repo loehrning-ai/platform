@@ -21,6 +21,9 @@
   --claude-ivory:#FAF9F5;
   --claude-cloud:#E8E6DC;
   --claude-slate:#141413;
+  --claude-tl-red:#FF5F57;
+  --claude-tl-amber:#FEBC2E;
+  --claude-tl-green:#28C840;
 }
 
 /* boot cost: an inactive slide is not laid out or painted (the stage hides it anyway), so a cold load lays out the cover alone */
@@ -40,33 +43,98 @@
    cloud #E8E6DC and slate #141413 the light grey and dark of Anthropic's brand guidelines (anthropics/skills, brand-guidelines).
    No Claude logo: Anthropic's trademark guidelines allow their marks only in materials they approve beforehand, so the chrome
    carries the word "Claude" and a plain spark of our own (slides-parts.mjs spark). */
-.slide .cl-ui{--cw-bg:var(--claude-ivory);--cw-side:var(--claude-ivory);--cw-bubble:var(--claude-cloud);--cw-t1:var(--claude-slate);--cw-accent:var(--claude-clay)}
-/* the clay edge is an inset outline: drawn over the chrome, it takes no room, so the recorded rows keep their round 4 wrap */
-.slide .cw.cl-ui{box-shadow:none;outline:2px solid var(--claude-clay);outline-offset:-2px}
-/* the small Claude panels that are no window (today's project card, watch's weekly answer): ivory with the clay edge */
-.slide .cl-ui.tproj,.slide .cl-ui.wres{background:var(--claude-ivory);box-shadow:inset 0 0 0 2px var(--claude-clay)}
-.slide .cl-ui .cw-dots b,.slide .cl-ui .cw-dots b:nth-child(n){background:var(--claude-cloud);box-shadow:none}
-.cl-ui .cw-bar{gap:.55em}
-.cl-ui .cw-dots{margin-right:.5em}
-.cw-brand-l{display:inline-flex;align-items:center;gap:.35em;margin-right:.6em;font:600 1.2em/1 var(--cw-sans);letter-spacing:-.01em;color:var(--cw-t1)}
+/* round 6: the drawn app, as close to the real Claude desktop app as our own drawing gets (studied on Anthropic's product
+   pages and help centre): the macOS window with its three lights and a soft frame, the sidebar on a slightly darker warm
+   surface (collapsed to its rail on the take slides, open on the kit), the crumbs with the project, the user's prompt in a
+   warm bubble, Claude's reply as plain text in a serif with no bubble, tool use as a compact chip, files as cards with a
+   type badge, and the prompt box with attach, tools, the model of the recording and the clay send button. The window's
+   own soft shadow is the one drop shadow of the deck, on purpose and inside the Claude UI only (V13 in the visual test). */
+.slide .cl-ui{--cl-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--cw-bg:var(--claude-ivory);--cw-bubble:var(--claude-cloud);--cw-t1:var(--claude-slate);--cw-accent:var(--claude-clay);--cl-serif:ui-serif,Charter,'Iowan Old Style',Georgia,serif;--cl-edge:rgba(20,20,19,.13);--cl-drop:0 0 0 1px rgba(20,20,19,.13),0 2px 4px rgba(20,20,19,.05),0 26px 54px -22px rgba(20,20,19,.30)}
+.slide .cw.cl-ui{border:0;border-radius:.8em;outline:0;box-shadow:var(--cl-drop)}
+/* the small Claude panels that are no full window (today's project card, watch's weekly answer): the same frame */
+.slide .cl-ui.tproj,.slide .cl-ui.wres{background:var(--claude-ivory);box-shadow:var(--cl-drop)}
+.cl-ui :is(.cw-bar,.cw-rail,.cw-sbar,.cw-comp,.tk-tool,.cw-file,.kw__t,.wp__m,.tproj__bar) svg:not(.cl-spark){fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .cl-spark{flex:none;width:1.15em;height:1.15em;fill:var(--claude-clay)}
-/* the sidebar, collapsed: new chat (the clay disc), chats, Projects (on) */
-.cl-ui .cw-body--rail{grid-template-columns:auto minmax(0,1fr)}
-.cw-rail{display:flex;flex-direction:column;align-items:center;gap:.45em;width:2.1em;padding:.55em 0;border-right:1px solid var(--cw-line2)}
-.cw-rail i{display:grid;place-items:center;width:1.45em;height:1.45em;border-radius:.4em;color:var(--cw-t2)}
-.cw-rail i.cw-rail__new{border-radius:50%;background:var(--claude-clay);color:var(--claude-ivory)}
+/* the title bar: the window lights, the sidebar button, the spark and "Claude" in the app's serif, the crumbs, Share */
+.cl-ui .cw-bar,.cl-ui .cw-bar.fig{gap:.5em;height:2.35em;padding:0 .7em 0 .85em;background:var(--cw-bg);border-bottom:1px solid var(--cw-line2);font:500 .74em/1 var(--cw-sans);color:var(--cw-t2)}
+.slide .cl-ui .cw-dots{gap:.42em;margin-right:.3em}
+.slide .cl-ui .cw-dots b{width:.7em;height:.7em;background:var(--claude-tl-red);box-shadow:inset 0 0 0 .5px rgba(20,20,19,.16)}
+.slide .cl-ui .cw-dots b:nth-child(2){background:var(--claude-tl-amber)}
+.slide .cl-ui .cw-dots b:nth-child(3){background:var(--claude-tl-green)}
+.cw-tg{display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:.4em;color:var(--cw-t3)}
+.cw-tg svg{width:1.1em;height:1.1em}
+.cw-brand-l{display:inline-flex;align-items:center;gap:.28em;margin:0 .45em 0 .15em;font:400 1.24em/1 var(--cl-serif);letter-spacing:-.02em;color:var(--cw-t1)}
+.cw-brand-l b{font-weight:400}
+.cw-brand-l .cl-spark{width:.95em;height:.95em}
+/* the state of a scheduled task: a green dot of the window lights before "Active" */
+.cl-ui .wp__on::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--claude-tl-green)}
+.cl-ui .cw-crumb{display:inline-flex;align-items:center;gap:.38em;white-space:nowrap;color:var(--cw-t2)}
+.cl-ui .cw-crumb + .cw-crumb::before{margin:0 .1em 0 0;color:var(--cw-t3)}
+.cl-ui .cw-crumb--now{font-weight:600;color:var(--cw-t1)}
+.cw-crumb__i{width:1.1em;height:1.1em;color:var(--cw-t3)}
+.cw-crumb__c{width:.9em;height:.9em;margin-left:-.05em;color:var(--cw-t3)}
+.cw-share{margin-left:auto;padding:.42em .9em;border-radius:.55em;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font-weight:500;color:var(--cw-t1)}
+/* the sidebar, collapsed to its rail: new chat (the clay disc), chats, Projects (on), artifacts, the account at the foot */
+.cl-ui :is(.cw-body--rail,.cw-body--full){grid-template-columns:auto minmax(0,1fr)}
+.cw-rail{display:flex;flex-direction:column;align-items:center;gap:.3em;width:2.3em;padding:.6em 0 .55em;background:var(--cw-side);border-right:1px solid var(--cw-line2)}
+.cw-rail.fig{font-family:var(--cw-sans)}
+.cw-rail i{display:grid;place-items:center;width:1.45em;height:1.45em;border-radius:.42em;font-style:normal;color:var(--cw-t2)}
+.cw-rail svg{width:.85em;height:.85em}
+.cl-ui i.cw-rail__new{width:1.22em;height:1.22em;margin-bottom:.12em;border-radius:50%;background:var(--claude-clay);color:var(--claude-ivory)}
+.cl-ui i.cw-rail__new svg{width:.72em;height:.72em;stroke-width:2.6}
 .cw-rail i.is-on{background:var(--claude-cloud);color:var(--cw-t1)}
-.cw-rail svg,.cw-comp svg{width:.9em;height:.9em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-/* the prompt box at the foot of a window: attach, the model of the recording, the clay send button */
+.cl-ui i.cw-me{display:grid;place-items:center;flex:none;width:2.05em;height:2.05em;border-radius:50%;background:var(--claude-cloud);box-shadow:inset 0 0 0 1px var(--cl-edge);font:600 .6em/1 var(--cw-sans);font-style:normal;color:var(--cw-t1)}
+.cw-rail i.cw-me{margin-top:auto}
+/* the sidebar, open (the kit): the same items with their names, the project's recent chats, the account */
+.cw-sbar{display:flex;flex-direction:column;gap:.12em;min-width:0;width:10.6em;padding:.6em .5em .55em;background:var(--cw-side);border-right:1px solid var(--cw-line2);font:500 .74em/1.2 var(--cw-sans);color:var(--cw-t2)}
+.cw-sbar .cw-nav{gap:.55em;height:2em;padding:0 .5em}
+.cw-sbar .cw-nav svg{flex:none;width:1.15em;height:1.15em}
+.cw-sbar .cw-nav.is-on{background:var(--claude-cloud);color:var(--cw-t1)}
+.cw-sbar .cw-nav--new{margin-bottom:.25em;padding-left:.3em;font-weight:600;color:var(--cw-accent-ink)}
+.cw-sbar .cw-nav--new i.cw-rail__new{width:1.45em;height:1.45em;display:grid;place-items:center}
+.cw-sbar .cw-nav--new i.cw-rail__new svg{width:.9em;height:.9em}
+.cw-sbar .cw-sec{margin:.75em 0 .2em .5em;font-size:.86em;font-weight:500;color:var(--cw-t3)}
+.cw-rec{display:block;padding:.38em .5em;border-radius:.45em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400;color:var(--cw-t2)}
+.cw-acct{display:flex;align-items:center;gap:.5em;margin-top:auto;padding:.55em .3em 0;border-top:1px solid var(--cw-line2);color:var(--cw-t1);white-space:nowrap}
+.cw-acct i.cw-me{font-size:.8em}
+/* the prompt box: the empty field, then attach, tools, the model of the recording, the clay send button */
 .cl-ui .cw-main.cw-main--comp{grid-template-rows:minmax(0,1fr) auto}
-.cl-ui .cw-main--comp > .tk-thread{padding-top:.5em;padding-bottom:.25em}
-/* the room the prompt box takes comes out of the gaps, never out of the answer: the head cut sits close above the box */
-.cl-ui .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{margin-bottom:10px}
-.cw-comp{display:flex;align-items:center;gap:.55em;margin:0 .9em .35em;padding:.18em .18em .18em .7em;border-radius:.75em;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--claude-cloud);font:500 .66em/1 var(--cw-sans);color:var(--cw-t3)}
-.cw-comp > svg{color:var(--cw-t2)}
-.cw-comp__f{flex:1}
-.cw-comp .cw-send{display:grid;place-items:center;width:1.6em;height:1.6em;border-radius:.5em;background:var(--claude-clay);color:var(--claude-ivory)}
-.cw-comp .cw-send svg{width:1.05em;height:1.05em;stroke-width:2.6}
+.cl-ui .cw-main--comp > .tk-thread{padding-top:.55em;padding-bottom:.3em}
+.cl-ui .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{margin-bottom:12px}
+.cw-comp,.cw-comp.fig{display:grid;gap:.22em;margin:0 .75em .55em;padding:.48em .45em .42em .78em;border-radius:.85em;background:var(--cw-white);box-shadow:0 0 0 1px var(--cl-edge),0 4px 16px -6px rgba(20,20,19,.14);font:400 .72em/1.25 var(--cw-sans);color:var(--cw-t3)}
+.cw-comp__f{margin:0;padding-left:.1em}
+.cw-comp__t{display:flex;align-items:center;gap:.4em}
+.cw-comp__t > i{display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:.45em;box-shadow:inset 0 0 0 1px var(--cl-edge);color:var(--cw-t2)}
+.cw-comp__t svg{width:1em;height:1em}
+.cw-comp__m{display:inline-flex;align-items:center;gap:.25em;margin-left:auto;font-weight:500;color:var(--cw-t2)}
+.cw-comp__m svg{width:.9em;height:.9em}
+.cw-comp .cw-send{display:grid;place-items:center;width:1.5em;height:1.5em;margin-left:.35em;border-radius:.45em;background:var(--claude-clay);color:var(--claude-ivory)}
+.cw-comp .cw-send svg{width:1em;height:1em;stroke-width:2.4}
+/* the thread: the user's prompt in its warm bubble; tool use as the app's compact chip (what ran, the chevron that opens it) */
+.cl-ui .cw-user{border-radius:.75em;background:var(--cw-bubble)}
+.cl-ui .tk-tools{gap:10px;margin:0 0 8px}
+.cl-ui .tk-tool{display:inline-flex;align-items:center;gap:10px;padding:5px 12px 5px 11px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font:500 21px/1.25 var(--cw-sans);color:var(--cw-t2)}
+.cl-ui .tk-tool > span{display:inline-block}
+.cl-ui .tk-tool > span::first-letter{text-transform:uppercase}
+.cl-ui .tk-tool svg{width:23px;height:23px}
+.cl-ui .tk-tool svg:last-child{width:18px;height:18px;color:var(--cw-t3)}
+/* a produced file: a card with a document mark, its name and its type badge */
+.cl-ui .cw-file{gap:12px;padding:9px 12px 9px 12px;border:0;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font:500 21px/1.2 var(--cw-sans)}
+.cl-ui .cw-file__d{flex:none;width:26px;height:26px;color:var(--cw-t2)}
+.cl-ui .cw-file > i{width:auto;height:auto;padding:4px 7px;border-radius:6px;background:var(--claude-cloud);color:var(--cw-t2);font:700 15px/1 var(--cw-sans);letter-spacing:.04em}
+/* Claude's reply: plain text, no bubble, in the app's serif. A recorded line that the build cut into rows for the stagger
+   flows again as one paragraph (the rows are inline, a new line starts a new block): nothing is cut and nothing edited */
+.cl-ui .tk-flow{font-family:var(--cl-serif);font-size:27px;line-height:1.36;font-variant-numeric:lining-nums}
+.slide:is(.step2,.step3) .cl-ui .tk-flow{font-size:23px;line-height:1.3}
+.slide .cl-ui .tk-flow > .out.rec:not(.is-pipe,.is-code,.is-fence){display:inline;padding:0;font-family:var(--cl-serif);font-size:inherit;line-height:inherit}
+.cl-ui .tk-flow > .out.rec:not(.is-pipe,.is-code,.is-fence,[data-cont])::before{content:"";display:block;height:.28em}
+.cl-ui .tk-flow > .out.rec[data-cont]:not(.is-pipe,.is-code,.is-fence)::before{content:" "}
+/* a code block of the reply (the lines between two ``` lines): one rounded box on the sidebar tone, the lines in mono */
+.cl-ui .tk-flow > .out.rec.is-code{padding:2px 18px;border-left:0;background:var(--cw-side);box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge)}
+.cl-ui .tk-flow > .out.rec.is-fence + .out.rec.is-code{padding-top:12px;border-radius:12px 12px 0 0;box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge),inset 0 1px 0 var(--cl-edge)}
+.cl-ui .tk-flow > .out.rec.is-code:has(+ .out.rec.is-fence){padding-bottom:12px;border-radius:0 0 12px 12px;box-shadow:inset 1px 0 0 var(--cl-edge),inset -1px 0 0 var(--cl-edge),inset 0 -1px 0 var(--cl-edge)}
+/* the step tables of the reply in the app's sans, on hair lines */
+.cl-ui .rec th{border-bottom:1px solid var(--cl-edge);color:var(--cw-t1)}
 
 /* the strip of S11: four rungs, outlined, the filled ones sage */
 .rg .strip{gap:14px}
@@ -76,11 +144,14 @@
 
 /* poll chips: a 2 px ink outline on paper (round 5, D3: colour only where it means something); the vote share is a sage bar behind the label */
 .poll__opt{border:0;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
-.poll__opt::before{background:var(--w05-sage-200)}
+/* the bar sits inside the 2 px outline (inset 2px), so a chip with votes keeps its edge on the paper and its hover ring */
+.poll__opt::before{inset:2px;border-radius:18px;background:var(--w05-sage-200)}
 .poll__opt[data-lead]::before{background:var(--w05-sage-400)}
 .poll__opt[data-lead] [data-poll-n]{color:var(--ink)}
 .poll__opt:hover,.poll__opt:focus-visible{box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}
 .poll__opt:hover [data-poll-n],.poll__opt:focus-visible [data-poll-n]{color:var(--accent)}
+/* on the leading (sage-400) bar the orange label is 2.3:1: the label stays ink, the orange ring alone says hover */
+.poll__opt[data-lead]:hover,.poll__opt[data-lead]:focus-visible,.poll__opt[data-lead]:hover [data-poll-n],.poll__opt[data-lead]:focus-visible [data-poll-n]{color:var(--ink)}
 
 /* 3 ── type ─────────────────────────────────────────────────────────── */
 /* quoted Macedonian: the Cyrillic subset first (lib/fonts.css), the Latin Typing files for digits and punctuation */
@@ -108,7 +179,7 @@ svg.ico--w05.dr{stroke-width:1.1}
 svg.ico--w05[data-step][data-fx="draw"]{opacity:min(1,calc(var(--p,1) * 8))}
 
 /* 9 ── the dot field (lib/w05-field.js reads these colours from the canvas) ── */
-[data-w05-field]{--w05-field-dot:var(--w05-sage-600);--w05-field-line:var(--w05-sage-400);--w05-field-ring:var(--w05-green);--w05-field-mark:var(--accent);--w05-field-ink:var(--ink);--w05-field-near:var(--w05-green);--w05-field-pulse:var(--w05-sage-600)}
+[data-w05-field]{--w05-field-dot:var(--w05-sage-600);--w05-field-line:var(--w05-sage-400);--w05-field-mark:var(--accent);--w05-field-ink:var(--ink);--w05-field-near:var(--w05-green)}
 .w05-field{position:relative}
 .w05-field__c{display:block}
 .w05-field__plane{position:absolute;inset:0;isolation:isolate}

@@ -38,6 +38,7 @@ Codeausführung ausgeschaltet? Bitte Claude um check.py und führe es auf deinem
 
 Sag es voraus, dann prüf es in LOESUNGEN.md.
 Im Raum 8 Minuten. Am Schreibtisch etwa 30, unsere Schätzung, nicht gemessen. Mach es in zwei Anläufen: erst die Status und die neuen Papiere, dann das Briefing, die Notizen und die Dateien.
+Füge vor diesem Schritt mitteilung_DIT_2026-11-23.md, vorlagen/evidence-index.csv, vorlagen/clock.csv und vorlagen/neues-papier.md zum Projekt hinzu. Der Prompt liest sie.
 
     Gib jeder Frage BELEGT, SCHWACH oder LÜCKE mit den vier Prüfungen und einem Zitat. LÜCKE: für jemanden fehlt das Papier, oder der Nachweis zeigt die Regel verletzt. SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmt nicht. Nenne für jede SCHWACH und LÜCKE das neue Papier, das sie schließt (nie eine Änderung an einem alten), die zuständige Rolle und den Tag; heute ist der 26. Nov. 2026. Fülle vorlagen/evidence-index.csv. Schreibe vorlagen/clock.csv aus der Mitteilung und lass das Datum der Papiere offen (der Inspektor setzt es am Besuchstag). Schreibe eine Seite für die anwesende Person am 27. Nov.: was passiert, was sie antwortet, was sie nicht unterschreibt. Entwirf Notizen zu neuen Papieren für E-11 und E-19 (Urlaub) und die Überstundenmeldung aus vorlagen/neues-papier.md. Lass jede Unterschriftszeile leer. Antworte mit einer Zeile pro Frage: Zeilen-Id, Status, höchstens 8 Wörter Grund. Alles andere kommt in die Dateien. Höchstens 16 Zeilen.
 

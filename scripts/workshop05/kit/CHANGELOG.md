@@ -4,7 +4,7 @@ Fictional training material, invented for the exercise. Not legal advice.
 
 ## 2026-11-09
 
-Aligned with the deck: the start file names each step as the deck does, the room minutes of Steps 3 and 4 are the deck's 8 and 11, code execution is on every plan (the start file only asks whether it is switched off), and on the Free plan the Project files must fit the context window. The safety card names a business subscription as the first gate, and the watch list gives the gazette's own Cyrillic name. 41 files.
+Aligned with the deck: the start file names each step as the deck does, the room minutes of Steps 3 and 4 are the deck's 8 and 11, code execution is on every plan (the start file only asks whether it is switched off), and on the Free plan the Project files must fit the context window. The safety card names a business subscription as the first gate, and the watch list gives the gazette's own Cyrillic name. Step 3 names the four files to add to the Project before it: the notice and three templates. 41 files.
 
 ## 2026-11-08
 

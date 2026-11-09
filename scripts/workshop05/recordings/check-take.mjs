@@ -29,7 +29,7 @@ const EXPECTED = JSON.parse(readFileSync(path.join(HERE, "../oracle/expected.jso
 /** Words and characters a take must not print (the acceptance rule rule 10); the deck's own BANNED list is added when it can be loaded. */
 export const BANNED = [
   /[‒-―]/,
-  /[←-⇿⟵-⟷⬅-⬇➔➜]|-->|->/,
+  /[←-⇿⟵-⟷⬅-⬇➔➜]|->/,
   /\b(by friday|bis freitag|freitag|friday|your boss|dein chef|chef|boss|urgent|dringend|countdown|deadline|game[- ]changer|seamless|nahtlos|magisch|revolution\w*|revolutionär\w*|leverage|unlock|empower|robust|delve|logo|score|punkte|figures?)\b/i,
   /\b(stamp|stempel)/i,
   /(\bnon-compliant|\bcompliant\b|konform\w*|Richtig!|Super\.|überrasch|surprise|\bfuer\b)/i,
@@ -82,7 +82,7 @@ export function parseCsv(text) {
       else if (char === ",") {
         cells.push(cell);
         cell = "";
-      } else cell += char.replace("\r", "");
+      } else if (char !== "\r") cell += char;
     }
     cells.push(cell);
     records.push(cells);
@@ -518,7 +518,12 @@ export function setAside(id, reason, dir = RUNS_DIR) {
   for (const file of recording.produced_files) if (existsSync(path.join(dir, file.stored_as))) renameSync(path.join(dir, file.stored_as), path.join(target, file.stored_as));
   renameSync(found.file, path.join(target, `${id}.json`));
   const reasonsFile = path.join(target, "reasons.json");
-  const reasons = existsSync(reasonsFile) ? JSON.parse(readFileSync(reasonsFile, "utf8")) : {};
+  let reasons = {};
+  try {
+    reasons = JSON.parse(readFileSync(reasonsFile, "utf8"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
   writeFileSync(reasonsFile, `${JSON.stringify({ ...reasons, [id]: reason }, null, 2)}\n`);
 }
 

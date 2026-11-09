@@ -110,13 +110,14 @@ export const fieldGroups = (counts, { n, w, h, pad = 24 }) => fieldLib().groupsG
  * press `k` (default 0). overlay: markup on top of the canvas (labels: figure cells, placed with fieldPoint). groups:
  * { key: counts }, markGroup: { key: index }, regions: [{ at, inspections }], mark: [lon, lat]. style: more of the host's
  * inline style (its place); hostAttrs: more attributes (data-keep shows the host already at --p 0). year: [a, b], the share
- * of the entry press that is dust (0 to a), the year of rings (a to b, one ring per `pulse` inspections out of `regions`, the
- * last ring from region index `pulseLast`) and the close on the mark (b to 1); give that plan entry ease "linear". still: the host stands
+ * of the entry press that is dust (0 to a), the year (a to b: `waves` straight fronts shared out over `regions` by their
+ * inspections cross each region and deepen its dots, darker for more) and the close on the mark (b to 1); give that plan
+ * entry ease "linear". still: the host stands
  * without motion on its entry (no scene there, so another idea may move on that press); only the presses that change the
  * layout get a driver. plane: { under, over }, flat markup in the canvas's own plane (a grid under the dots, a route over
  * them), painted with the canvas as one layer, so a 3D camera composites one floor instead of three.
  */
-export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 24, plan, mark, near, outline = false, regions, year, pulse, pulseLast, groups = {}, markGroup = {}, cls = "", overlay = "", plane, label, hostAttrs = "", style = "", still = false }) {
+export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 24, plan, mark, near, outline = false, regions, year, waves, groups = {}, markGroup = {}, cls = "", overlay = "", plane, label, hostAttrs = "", style = "", still = false }) {
   const planText = plan.map((e) => `${e.k}:${e.from}${e.to && e.to !== e.from ? `>${e.to}` : ""}`).join(";");
   const extra = [
     mark ? `data-mark="${mark.join(",")}"` : "",
@@ -124,8 +125,7 @@ export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 2
     outline ? "data-outline" : "",
     regions ? `data-regions="${regions.map((r) => `${r.at.join(",")},${r.inspections}`).join(";")}"` : "",
     year ? `data-year="${year.join(",")}"` : "",
-    pulse ? `data-pulse="${pulse}"` : "",
-    pulseLast !== undefined ? `data-pulse-last="${pulseLast}"` : "",
+    waves ? `data-waves="${waves}"` : "",
     ...Object.entries(groups).map(([key, counts]) => `data-groups-${key}="${counts.join(",")}"`),
     ...Object.entries(markGroup).map(([key, g]) => `data-mark-group-${key}="${g}"`),
   ].filter(Boolean).join(" ");

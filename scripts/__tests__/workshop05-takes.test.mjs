@@ -71,7 +71,15 @@ test("the deck shows the same prompt text as the START files once it carries the
   for (const locale of LOCALES) {
     const file = path.join(REPO, "packages/website/public/workshops", SLUG, locale === "en" ? "en/slides.html" : "slides.html");
     if (!existsSync(file)) continue;
-    const decode = (text) => text.replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").trim();
+    const stripTags = (text) => {
+      let out = text;
+      for (let prev = ""; prev !== out; ) {
+        prev = out;
+        out = out.replace(/<[^>]*>/g, "");
+      }
+      return out;
+    };
+    const decode = (text) => stripTags(text).replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").trim();
     const bodies = [...readFileSync(file, "utf8").matchAll(/class="prompt-body[^"]*"[^>]*>([\s\S]*?)<\/(?:div|p|pre|code)>/g)].map((match) => decode(match[1]));
     if (!bodies.some((body) => /register\.csv/.test(body))) {
       t.diagnostic(`${locale}: the deck does not carry the step 4 prompt yet (lane D); the comparison is skipped`);

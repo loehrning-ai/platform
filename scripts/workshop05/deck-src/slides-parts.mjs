@@ -50,37 +50,82 @@ export function promptBubble(c, n, text, { full = false } = {}) {
 
 /** Our neutral spark (not Anthropic's mark): a plain four-point star, filled clay inside the Claude UI. */
 export const spark = (cls = "cl-spark") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5 13.9 10.1 21.5 12 13.9 13.9 12 21.5 10.1 13.9 2.5 12 10.1 10.1Z"/></svg>`;
-const line = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
-const PLUS = "M12 6v12M6 12h12";
-/** The collapsed sidebar: new chat (the clay disc), chats, and Projects (the one that is on). Drawing only, no words. */
-const RAIL = `<div class="cw-rail" aria-hidden="true"><i class="cw-rail__new">${line(PLUS)}</i><i>${line("M5 6.5h14v9H10l-4 3v-3H5z")}</i><i class="is-on">${line("M3.5 7.5V18h17V9h-8.5L10 6.5H3.5z")}</i></div>`;
-/** The prompt box at the foot of the window: attach, the model of the recording (a figure cell), the clay send button. */
-const composer = (model) => `<div class="cw-comp">${line(PLUS)}<span class="cw-comp__f"></span>${model ? `<span class="cw-comp__m fig">${esc(model.replace(/^Claude /, ""))}</span>` : ""}<b class="cw-send" aria-hidden="true">${line("M12 18V6M7 11l5-5 5 5")}</b></div>`;
-/** The window chrome: the dots, the spark and the word "Claude", then the crumbs (a figure cell). */
-const chrome = (brand, crumbs) =>
-  `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="cw-brand-l">${spark()}<b>${esc(brand)}</b></span>${split(crumbs ?? "").filter(Boolean).map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${esc(x)}</span>`).join("")}</div>`;
+const line = (d, cls = "") => `<svg${cls ? ` class="${cls}"` : ""} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+/** The line icons of the drawn app (round 6), on the 24 grid, drawn by us: plain shapes, nobody's icon set. */
+export const CL_ICON = {
+  plus: "M12 5.5v13M5.5 12h13",
+  chat: "M5 6.5h14v9H10l-4 3v-3H5z",
+  folder: "M3.5 7.5V18h17V9h-8.5L10 6.5H3.5z",
+  shapes: "M4.5 4.5h6v6h-6zM17 4.2a3.3 3.3 0 1 1 0 6.6 3.3 3.3 0 0 1 0-6.6zM4.5 19.5l3-5.5 3 5.5zM13.8 13.8h6v6h-6z",
+  side: "M4 5h16v14H4zM9.5 5v14",
+  chevD: "M7.5 10l4.5 4.5 4.5-4.5",
+  chevR: "M10 7.5l4.5 4.5-4.5 4.5",
+  tools: "M4 8h9M17 8h3M4 16h3M11 16h9M15 6v4M9 14v4",
+  clock: "M12 7.5V12l3 2M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17z",
+  send: "M12 18.5v-13M6.5 11l5.5-5.5 5.5 5.5",
+  term: "M4.5 5h15v14h-15zM8 10l2.5 2-2.5 2M12.5 15h3.5",
+  file: "M6.5 3.5h7l4 4v13h-11zM13.5 3.5v4h4",
+  pen: "M14.5 5.5l4 4L9 19H5v-4z",
+  back: "M14.5 6.5L9 12l5.5 5.5",
+  repeat: "M5 11V9.5A2.5 2.5 0 0 1 7.5 7H18M15.5 4.5 18 7l-2.5 2.5M19 13v1.5a2.5 2.5 0 0 1-2.5 2.5H6M8.5 19.5 6 17l2.5-2.5",
+};
+/** One icon of the drawn app (CL_ICON), for the slides that draw parts of it themselves. */
+export const clIcon = (name, cls = "") => line(CL_ICON[name], cls);
+const ui0 = (ui, key) => {
+  if (!ui?.[key]) throw new Error(`the drawn Claude app needs claudeUi.${key} in deck-copy.json`);
+  return ui[key];
+};
+/** The account avatar: the initial of the invented firm on a cloud disc (Claude's real avatar is dark: no ink fills here, V1). */
+const avatar = (ui) => `<i class="cw-me">${esc(ui0(ui, "me").charAt(0))}</i>`;
+/** The collapsed sidebar of the take windows: new chat (the clay disc), chats, Projects (on), artifacts, the account at the foot. */
+const rail = (ui) =>
+  `<div class="cw-rail fig" aria-hidden="true"><i class="cw-rail__new">${line(CL_ICON.plus)}</i><i>${line(CL_ICON.chat)}</i><i class="is-on">${line(CL_ICON.folder)}</i><i>${line(CL_ICON.shapes)}</i>${avatar(ui)}</div>`;
+/** The full sidebar (the kit's project window): the same items with their names, the recent chats of the project, the account. */
+const sidebar = (ui, recents = []) => {
+  const nav = [["chat", "chats"], ["folder", "projects", true], ["shapes", "artifacts"]]
+    .map(([icon, key, on]) => `<span class="cw-nav${on ? " is-on" : ""}">${line(CL_ICON[icon])}<span>${esc(ui0(ui, key))}</span></span>`)
+    .join("");
+  const recent = recents.length ? `<p class="cw-sec">${esc(ui0(ui, "recents"))}</p>${recents.map((x) => `<span class="cw-rec">${esc(x)}</span>`).join("")}` : "";
+  return `<div class="cw-sbar fig" aria-hidden="true"><span class="cw-nav cw-nav--new"><i class="cw-rail__new">${line(CL_ICON.plus)}</i><span>${esc(ui0(ui, "newChat"))}</span></span>${nav}${recent}<span class="cw-acct">${avatar(ui)}<span>${esc(ui0(ui, "me"))}</span></span></div>`;
+};
+/**
+ * The prompt box at the foot of the window, as in the app: the empty field ("Reply to Claude..."), and under it attach, tools,
+ * the model of the recording with its menu chevron, and the clay send button. One figure cell.
+ */
+const composer = (ui, model) =>
+  `<div class="cw-comp fig"><p class="cw-comp__f">${esc(ui0(ui, "reply"))}</p><div class="cw-comp__t"><i>${line(CL_ICON.plus)}</i><i>${line(CL_ICON.tools)}</i><i>${line(CL_ICON.clock)}</i>${model ? `<span class="cw-comp__m">${esc(model.replace(/^Claude /, ""))}${line(CL_ICON.chevD)}</span>` : ""}<b class="cw-send" aria-hidden="true">${line(CL_ICON.send)}</b></div></div>`;
+/**
+ * The window chrome, one figure cell: the three window lights, the sidebar button, the spark and the word "Claude", the crumbs
+ * (the last one with its menu chevron), and on the right the Share button (or `tail`: a panel's own items, markup).
+ */
+const chrome = (ui, crumbs, { share = true, tail = "" } = {}) => {
+  const parts = split(crumbs ?? "").filter(Boolean);
+  const path = parts.map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${i === 0 && all.length > 1 ? line(CL_ICON.folder, "cw-crumb__i") : ""}${esc(x)}${i === all.length - 1 ? line(CL_ICON.chevD, "cw-crumb__c") : ""}</span>`).join("");
+  return `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span><i class="cw-tg">${line(CL_ICON.side)}</i><span class="cw-brand-l">${spark()}<b>${esc(ui0(ui, "brand"))}</b></span>${path}${tail ? `<span class="cw-tail">${tail}</span>` : share && ui.share ? `<span class="cw-share">${esc(ui.share)}</span>` : ""}</div>`;
+};
 
 /** The model of a recorded take for the prompt box (null while no take is accepted: the box shows no model). */
 export const takeModel = (take) => (take.rec ? modelName(take.rec.model) : null);
 
 /** A small Claude panel (today's project card, watch's scheduled task): the chrome of the app around a body. */
-export function claudePanel({ brand, crumbs, body, cls = "" }) {
-  return `<div class="cw cl-ui cl-panel${cls ? ` ${cls}` : ""}">${chrome(brand, crumbs)}<div class="cl-panel__b">${body}</div></div>`;
+export function claudePanel({ ui, crumbs, body, cls = "", share = false, tail = "" }) {
+  return `<div class="cw cl-ui cl-panel${cls ? ` ${cls}` : ""}">${chrome(ui, crumbs, { share, tail })}<div class="cl-panel__b">${body}</div></div>`;
 }
 
 /**
- * The Claude window replica: the engine's .cw in Claude's own look (above): the chrome with the crumbs (class fig), one thread
- * and, when `model` is given (a recorded take), the prompt box with that model. `rail` adds the collapsed sidebar with Projects
- * on: the kit slide's project window has it; the take windows do not, so the recorded answers keep the width they were cut for
- * (their crumbs start with Projects instead). `thread` is the
- * markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
+ * The Claude window replica: the engine's .cw in Claude's own look (above): the chrome with the crumbs (class fig), the sidebar,
+ * one thread and, when `model` is given (a recorded take), the prompt box with that model. `side` is "rail" (the collapsed
+ * sidebar, Projects on: the take windows, so the recorded answers keep most of the width), "full" (the open sidebar with the
+ * names and the project's `recents`: the kit's project window) or "none". `thread` is the markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
  * `plane` makes it slide up into its place during its press (a scene, REDESIGN-3 T6; flat since round 5).
  */
-export function claudeWindow(it, { id, brand, crumbs, thread, model, rail = false, k = 0, out, zone = "w", win, cls = "", plane = false }) {
-  if (!brand) throw new Error(`claudeWindow ${id}: the brand word comes from deck-copy.json (claudeUi.brand)`);
-  const foot = model === undefined ? "" : composer(model);
-  const body = `<div class="cw-body${rail ? " cw-body--rail" : " cw-body--nosidebar"}">${rail ? RAIL : ""}<div class="cw-main${foot ? " cw-main--comp" : ""}"><div class="cw-thread tk-thread">${thread}</div>${foot}</div></div>`;
-  const html = chrome(brand, crumbs) + body;
+export function claudeWindow(it, { id, ui, crumbs, thread, model, side = "rail", recents, k = 0, out, zone = "w", win, cls = "", plane = false }) {
+  if (!ui?.brand) throw new Error(`claudeWindow ${id}: the brand word comes from deck-copy.json (claudeUi.brand)`);
+  // round 6: every window has the app's sidebar, collapsed to its rail on the take slides, open (with names) on the kit
+  const foot = model === undefined ? "" : composer(ui, model);
+  const bar = side === "full" ? sidebar(ui, recents) : side === "rail" ? rail(ui) : "";
+  const body = `<div class="cw-body${bar ? ` cw-body--${side}` : " cw-body--nosidebar"}">${bar}<div class="cw-main${foot ? " cw-main--comp" : ""}"><div class="cw-thread tk-thread">${thread}</div>${foot}</div></div>`;
+  const html = chrome(ui, crumbs) + body;
   // plane: the window slides up into its place (T6, lib/w05-fx.css .w05-plane; flat since round 5), a scene of its press
   if (plane) return it({ id, tag: "div", cls: `cw cl-ui tk-cw w05-plane${cls ? ` ${cls}` : ""}`, zone, k, out, win, fx: "none", attrs: "data-scene", html });
   return it({ id, tag: "div", cls: `cw cl-ui tk-cw${cls ? ` ${cls}` : ""}`, zone, k, out, win, html });
@@ -229,7 +274,8 @@ export function takeView(it, o) {
     })
     .join("");
   const used = o.tools === false ? [] : toolsOf(turn);
-  const tools = used.length ? `<p class="tk-tools fig">${used.map((t) => `<span class="tk-tool">${esc(copy.tool[t])}</span>`).join("")}</p>` : "";
+  // a tool use is the app's compact chip: what ran, the words of the copy, the chevron that would open its details
+  const tools = used.length ? `<p class="tk-tools fig">${used.map((t) => `<span class="tk-tool">${line(t === "file" ? CL_ICON.file : CL_ICON.term)}<span>${esc(copy.tool[t])}</span>${line(CL_ICON.chevR)}</span>`).join("")}</p>` : "";
   const made = o.files ? fileChips(o.recFiles ?? rec, "", { skip: o.skipFiles }) : "";
   // The answer is printed whole at 27 px. When it is taller than the window, the flow scrolls up with the rows as they come in
   // (the way a Claude window does, see .tk-flow in deck.css); nothing is cut, nothing is edited, and a hair line at the top of the window shows it.
@@ -246,6 +292,9 @@ export function takeView(it, o) {
 }
 
 
+/** A word joined by hyphens (a date, an id like E-07) never breaks at its hyphen: a span holds it whole (the text is unchanged). */
+const whole = (html) => html.replace(/(?<![\w&#;-])[\w/]+(?:-[\w/]+)+/g, (m) => `<span class="nobr">${m}</span>`);
+
 /**
  * Display markup of the rows of one recorded line. **bold** is shown bold; the asterisks stay in the page (so the text is
  * the recorded text, character for character) but are not drawn (class md). A bold run that wraps onto the next row is closed
@@ -259,7 +308,7 @@ export function markdownRows(rows) {
       if (part === "**") {
         out += bold ? '</b><span class="md">**</span>' : '<span class="md">**</span><b>';
         bold = !bold;
-      } else out += esc(part);
+      } else out += whole(esc(part));
     }
     return bold ? `${out}</b>` : out;
   });
@@ -279,7 +328,7 @@ export function fileChips(rec, fallback, { skip } = {}) {
   const fromRecording = rec?.produced_files?.length ? rec.produced_files.map((f) => String(f.name).split("/").pop()).filter((n) => !(skip && skip.test(n))) : [];
   const names = fromRecording.length ? fromRecording : fallback ? split(fallback) : [];
   if (!names.length) return "";
-  return `<p class="tk-files fig">${names.map((n) => `<span class="cw-file"><i>${esc((n.split(".").pop() ?? "").slice(0, 4))}</i><b>${esc(n)}</b></span>`).join("")}</p>`;
+  return `<p class="tk-files fig">${names.map((n) => `<span class="cw-file">${line(CL_ICON.file, "cw-file__d")}<b>${esc(n)}</b><i>${esc((n.split(".").pop() ?? "").slice(0, 4))}</i></span>`).join("")}</p>`;
 }
 
 /** The first lines of a produced file, verbatim, from the stored copy beside the recording (empty when there is none). */

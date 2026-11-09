@@ -22,7 +22,7 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zi
  * palette.
  */
 
-/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 117623 and 108202 bytes. */
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 117940 and 108496 bytes. */
 const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "115 KB", en: "106 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;

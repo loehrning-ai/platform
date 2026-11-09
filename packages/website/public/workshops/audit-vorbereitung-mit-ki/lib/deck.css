@@ -49,7 +49,7 @@ a{color:inherit}
 
 /* S01 cover */
 .slide.cover{grid-template-rows:minmax(0,1fr) auto;background:var(--w05-sage-50)}
-/* the one entry host (the inspection year, 9 s): the whole slide box under the title column; the map and the counter sit in it */
+/* the one entry host (the inspection year, about 5 s): the whole slide box under the title column; the map and the counter sit in it */
 .slide.cover .cover__year{position:absolute;inset:0;z-index:0;pointer-events:none}
 /* the dot field (lib/w05-field.js): placed by its inline left and top, the same place as the floor of S02 (one shot) */
 .slide.cover .cover__map{position:absolute;z-index:0;pointer-events:none}
@@ -72,14 +72,17 @@ a{color:inherit}
 .flegend__dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--w05-sage-600);transform:translateY(-2px)}
 /* cover and today: the legend sits inside the field box (the push-in grows the box by 6 %, the footer stays clear) */
 .cover__map .flegend,.today__floor .flegend{top:calc(100% - 64px)}
-/* the year: the counter runs with the rings (engine count, linear), the bar under it fills from January to December */
+/* the year: the counter runs with the waves (engine count, linear), the bar under it fills from January to December */
 .ccount{position:absolute;left:112px;top:742px;display:grid;justify-items:start;width:620px}
 .ccount__k,.ccount__u,.ccount__r{font:600 24px/1.3 var(--mono);color:var(--muted)}
-/* the counter arrives with the year (not as a bare 0 over the dust); the ring legend lives only while rings are drawn */
+/* the counter arrives with the year (not as a bare 0 over the dust); the shade legend lives only while the year is shaded */
 .slide.cover .ccount{opacity:clamp(0,calc((var(--p,1) - var(--y0,.12)) * 20 + 1),1)}
-.ccount__r{display:flex;align-items:center;gap:10px;opacity:clamp(0,calc(1 - (var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86)) * 3),1)}
-.ccount__ring{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 2.5px var(--w05-green)}
-.slide.cover [data-w05-field]{--w05-field-pulse:var(--w05-green)}
+.ccount__r{display:flex;align-items:center;gap:10px;font-size:20px;white-space:nowrap;opacity:clamp(0,calc(1 - (var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86)) * 3),1)}
+/* the shade key: three dots from light to deep in the field's green, the tones a region ends in (lib/w05-field.js waves) */
+.ccount__shade{display:flex;gap:6px}
+.ccount__shade > i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 6px var(--w05-green);opacity:.3}
+.ccount__shade > i + i{opacity:.6}
+.ccount__shade > i + i + i{opacity:.9}
 .ccount__n{margin:4px 0 2px;font:600 96px/1 var(--mono);letter-spacing:-.045em;color:var(--w05-green)}
 .cyear{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:16px;width:100%;margin-top:16px;font:600 24px/1 var(--mono);color:var(--muted)}
 .cyear__bar{position:relative;display:block;height:2px;background:var(--w05-sage-200)}
@@ -153,8 +156,8 @@ a{color:inherit}
    cut is set per edition on a whole line, as on step 2 (the two recordings wrap differently) */
 .slide.register [data-id="win"] .cw-main--comp > .tk-thread{padding-top:6px}
 .slide.register [data-id="win"] .tk-tools{margin-bottom:9px}
-.slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:796px;margin-bottom:4px}
-html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{height:804px}
+.slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:731px;margin-bottom:4px}
+html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{height:751px}
 
 /* the recorded answer: verbatim lines at 27 px (20 px on screen at 1440 wide). The viewport fills what is left of the window; the
    flow inside it scrolls up while its rows come in (--p runs .3 to 1 with the rows), so a long answer shows its newest rows and
@@ -176,8 +179,8 @@ html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .c
 .out.rec.is-nil{opacity:.4}
 /* the window ends on a whole line (a hair line under it), never through the middle of one: the cut is set per edition, since
    the two recordings wrap differently (measured at the stage size, which every viewport scales) */
-.slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:776px}
-html[lang="de"] .slide.step2 .tk-thread > .cw-answer.tk.tk--head{height:766px}
+.slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:734px}
+html[lang="de"] .slide.step2 .tk-thread > .cw-answer.tk.tk--head{height:711px}
 .out.rec{margin:0;padding:2px 6px;font:400 27px/1.32 var(--cw-sans)}
 .out.rec b{font-weight:700}
 .out.rec.is-pipe{display:grid;grid-template-columns:3.2em minmax(0,1.05fr) 1.4em minmax(0,1.6fr);column-gap:.7em;align-items:baseline;padding-top:3px;padding-bottom:3px;border-bottom:1px solid var(--w05-hair)}
@@ -193,10 +196,10 @@ html[lang="de"] .slide.step2 .tk-thread > .cw-answer.tk.tk--head{height:766px}
 .tk-flow .out.rec .pp{display:inline-block;width:0;height:26px;margin:0 .45em;vertical-align:-4px;border-left:2px solid var(--w05-sage-400);font-size:0;overflow:hidden}
 .out.rec.is-code{font:500 21px/1.3 var(--mono);overflow-wrap:anywhere;padding-left:18px;border-left:3px solid var(--w05-sage-200)}
 /* step 1: the recorded table leans in on the two rows without an owner (L10, L11) once it is complete; the other rows step back */
-/* the engine's [data-step][data-fx="none"] sets transform none, so the lean-in is a type zoom: the lit rows grow to 1.6x in the
+/* the engine's [data-step][data-fx="none"] sets transform none, so the lean-in is a type zoom: the lit rows grow to 1.25x in the
    window's own width (they rewrap, nothing is cut), the others step back to 40 % and a smaller size so the table still fits */
 .tk-zoom{--z:var(--p,1)}
-.slide.step1 .tk-zoom tr.is-hit > *{font-size:calc(20px + 8px * var(--z));line-height:1.12;padding-top:calc(1px + 6px * var(--z));padding-bottom:calc(1px + 6px * var(--z))}
+.slide.step1 .tk-zoom tr.is-hit > *{font-size:calc(20px + 5px * var(--z));line-height:1.12;padding-top:calc(1px + 5px * var(--z));padding-bottom:calc(1px + 5px * var(--z))}
 .slide.step1 .tk-zoom tr:not(.is-hit) > td{font-size:calc(20px - 5px * var(--z));opacity:calc(1 - .6 * var(--z))}
 .slide.step1 .tk-zoom tr.is-hit > td:first-child{font-weight:700}
 table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixed;font:500 23px/1.25 var(--cw-sans)}
@@ -323,11 +326,14 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .slide.today .tcard__note{font:500 34px/1.2 var(--sans);letter-spacing:-.012em}
 /* the kit station: three real files of the kit fly into a Claude project */
 /* the Claude project on the kit station: Claude's own look (D4, lib/w05-fx.css 2b): ivory, the clay edge, the spark */
-.tproj{display:grid;gap:10px;padding:14px 16px 16px;border-radius:18px}
-.tproj__h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px;font:600 32px/1.15 var(--mono)}
-.tproj__h .cl-spark{grid-row:span 2;width:40px;height:40px;margin:0 4px}
-.tproj__h span{font-size:30px;color:var(--muted)}
+/* the project on the kit station: a small window of the app (round 6): its lights, the spark and the project, its four files */
+.tproj{display:grid;gap:10px;padding:0 14px 14px;border-radius:16px;overflow:hidden}
+.cl-ui .tproj__bar{display:flex;align-items:center;height:36px;margin:0 -14px;padding:0 14px;font-size:22px;background:var(--claude-ivory);border-bottom:1px solid var(--w05-hair)}
+.tproj__h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px;font:600 30px/1.15 var(--cl-sans)}
+.tproj__h .cl-spark{grid-row:span 2;width:38px;height:38px;margin:0 4px}
+.tproj__h span{font-size:26px;font-weight:500;color:var(--muted)}
 .tproj__files{display:grid;gap:6px}
+.tproj .tfile{border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 23px/1.12 var(--cl-sans)}
 .tfile{display:flex;align-items:center;gap:10px;padding:4px 12px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);font:600 24px/1.12 var(--mono);white-space:nowrap}
 .tfile .ico{width:34px;height:34px;flex:none}
 .tfile b{font-weight:600;min-width:0;overflow-wrap:normal}
@@ -408,6 +414,11 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 /* each page shows its key line in up to four lines, so nothing runs out of the card */
 .tk-prev__l{display:-webkit-box;margin:0;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:4;font:500 24px/1.3 var(--sans);color:var(--ink);overflow-wrap:anywhere}
 .tk-prev__b > i{display:block;height:8px;border-radius:4px;background:var(--w05-sage-200)}
+/* round 6: in the Claude window (rail and composer) the pages are Claude's file cards: both rows fit above the composer, a hairline
+   edge, and the name and lines stay inside the card (the column never grows to a long name) */
+.cl-ui .tk-prevs{gap:18px 20px;margin-top:4px}
+.cl-ui .tk-prev{grid-template-columns:minmax(0,1fr);height:296px;padding:18px 20px;border-radius:.6em;box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.cl-ui .tk-prev > b{padding-bottom:10px;border-bottom:1px solid var(--cl-edge);font-size:22px;overflow-wrap:anywhere}
 .fixsc{display:grid;grid-template-columns:1fr 96px 1fr;grid-template-rows:minmax(0,560px);gap:0;align-content:center;height:100%}
 .fixsc__c{position:relative;display:grid;justify-items:center;align-content:center;gap:24px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .fixsc__c svg.dr{width:260px;height:260px}
@@ -519,7 +530,8 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .doors li{display:grid;justify-items:center;align-content:center;gap:28px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 44px/1.1 var(--sans)}
 .doors svg.dr{width:210px;height:210px}
 .gb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:100%;max-width:none;height:22px}
-.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);background:var(--w05-sage-400)}
+/* a ghost bar stands on the paper alone and carries the first vote with no number: an ink ring keeps its length readable */
+.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);border-radius:6px;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
 .qrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .qr{margin:0;display:grid;grid-template-rows:auto 1fr;gap:12px;padding:18px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .qr img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:10px}
@@ -654,13 +666,17 @@ svg.st__i{width:76px;height:76px}
 /* while another tile is open, trade gives up its tint (one tinted tile at a time) */
 .stw:has(.st__b[aria-pressed="true"]) .st--on:not(:has(.st__b[aria-pressed="true"])){background:var(--surface)}
 .st__n{align-self:center;font:700 32px/1.06 var(--sans);letter-spacing:-.015em}
-.st__bar{position:relative;grid-column:1/-1;align-self:end;display:block;height:22px;border-radius:11px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);overflow:hidden}
-.st__fill{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 1%);background:var(--w05-sage-400)}
+/* the bar's edge is a border, not an inset shadow, so the fill sits inside the ink ring and never touches the tile; the
+   fill is sage-600 (4.5:1 on the paper track), so a bar reads on a white, a trade or a selected sage tile alike */
+.st__bar{position:relative;grid-column:1/-1;align-self:end;display:block;height:22px;border-radius:11px;background:var(--surface);border:2px solid var(--ink);overflow:hidden}
+i.st__fill{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 1%);background:var(--w05-sage-600)}
 .st__v{grid-column:1/-1;margin-top:8px;font:700 26px/1.2 var(--sans)}
 .st__b{position:absolute;inset:0;z-index:1;margin:0;padding:0;border:0;border-radius:22px;background:transparent;cursor:pointer}
 .st__b:hover,.st__b:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .stw__l{grid-column:1/-1;font:600 24px/1.3 var(--mono)}
 .st__dot{position:absolute;right:18px;top:18px;width:16px;height:16px;border-radius:50%;background:var(--w05-sage-600)}
+/* on the selected (sage-400) tile the sage-600 dot alone is 1.8:1: a thin ink ring keeps it */
+.st:has(.st__b[aria-pressed="true"]) .st__dot{box-shadow:inset 0 0 0 2px var(--ink)}
 /* who else checks: one face, large enough to read from the back of the room */
 .sp,.sp *{font-family:var(--sans)}
 .sp{display:grid;align-content:start;gap:12px;min-height:440px;padding:22px 26px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 27px/1.3 var(--sans)}
@@ -702,7 +718,7 @@ svg.pp__i{width:66px;height:66px}
 .wclk__arc{stroke-linecap:round}
 .wclk__arc--0{stroke:var(--w05-sage-400);stroke-width:10}
 .wclk__arc--1{stroke:var(--w05-green);stroke-width:16}
-.wclk__arc--2{stroke:var(--w05-sage-200);stroke-width:10}
+.wclk__arc--2{stroke:var(--w05-green);stroke-width:4}
 .wclk__hand{stroke:var(--accent);stroke-width:5;stroke-linecap:round}
 .wclk__hub{fill:var(--paper);stroke:var(--ink);stroke-width:2}
 .wclk__start{position:absolute;left:50%;top:-6px;translate:-50% -100%;font:700 24px/1 var(--mono);white-space:nowrap}
@@ -715,7 +731,7 @@ svg.pp__i{width:66px;height:66px}
 .wclk__lg span{font:500 22px/1.18 var(--sans)}
 .wclk__lg--1{background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
 .wclk__lg--1 i{border-top:16px solid var(--w05-green);border-radius:8px}
-.wclk__lg--2 i{border-top-color:var(--w05-sage-200)}
+.wclk__lg--2 i{border-top:4px solid var(--w05-green);border-radius:2px}
 .wclk__legend small{font:500 22px/1.3 var(--mono);color:var(--muted)}
 .tl2__axis{position:absolute;left:0;right:0;top:100px;height:0;border-top:2px solid var(--ink)}
 .tl2__yr{position:absolute;top:100px;padding:12px 0 0 8px;white-space:nowrap;border-left:2px solid var(--ink);font:600 26px/1 var(--mono)}
@@ -724,7 +740,7 @@ svg.pp__i{width:66px;height:66px}
 .tl2__a b{font:700 28px/1.1 var(--sans)}
 .tl2__a small{font:600 24px/1.1 var(--mono)}
 .tl2__a i{position:absolute;left:-9px;top:86px;width:16px;height:16px;border-radius:50%;background:var(--w05-sage-600)}
-.tl2__gap{position:absolute;top:93px;height:16px;border-radius:8px;background:var(--w05-sage-200)}
+.tl2__gap{position:absolute;top:91px;height:16px;border-radius:10px;border:2px solid var(--w05-green);background:var(--w05-sage-200)}
 .tl2__g{position:absolute;top:50px;font:600 26px/1.1 var(--sans)}
 .tl2__pt{position:absolute;top:6px;height:94px;padding-left:10px;border-left:2px dashed var(--ink);font:600 24px/1.1 var(--mono)}
 .tl2__pt i{display:none}
@@ -871,8 +887,9 @@ svg.lt-ins{width:150px;height:150px}
 .wb{display:grid;gap:12px;padding:12px 16px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
 .wb__sc{font:600 22px/1.3 var(--mono);color:var(--muted);white-space:nowrap}
 .wb__r{display:grid;gap:8px}
-.wb__t{position:relative;display:block;height:26px;border-radius:13px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);overflow:hidden}
-.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%);background:var(--w05-sage-400)}
+/* as the sectors bars: a border keeps the fill inside the ink ring, and the sage-600 fill reads 4.5:1 on the paper track */
+.wb__t{position:relative;display:block;height:26px;border-radius:13px;background:var(--surface);border:2px solid var(--ink);overflow:hidden}
+i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%);background:var(--w05-sage-600)}
 .wb__l{font:600 24px/1.2 var(--sans)}
 @media (prefers-reduced-motion:reduce){.tl2__head,.lt-mk__h,.tln{transition:none}}
 
@@ -897,7 +914,8 @@ svg.lt-ins{width:150px;height:150px}
 .slide.kit .stage > [data-zone="cam"]{left:0;top:190px;width:1696px;height:730px}
 /* the desk: the binder lies flat at the start of the entry and stands up on its bottom edge */
 .kb-host{position:absolute;left:0;top:122px;width:880px;height:584px;transform-style:preserve-3d}
-.slide.kit .kb-host[data-step][data-fx]{transform-origin:100% 100%;transform:perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg)) scale(.9);opacity:min(1,calc(var(--p,1) * 4))}
+/* round 6: the desk steps 120 px left and a little smaller, so the project window gets the width of the app's open sidebar */
+.slide.kit .kb-host[data-step][data-fx]{transform-origin:100% 100%;transform:translateX(-120px) perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg)) scale(.84);opacity:min(1,calc(var(--p,1) * 4))}
 .kb{position:absolute;left:430px;top:0;width:470px;height:584px}
 /* the open cover stays inside the 112 px margin (w05-fx.css sets 158 deg for every binder) */
 .slide.kit .kb{--open:130deg}
@@ -918,31 +936,37 @@ svg.lt-ins{width:150px;height:150px}
 .kb__tree li span{flex:1 1 auto;min-width:0;overflow-wrap:normal}
 .kb__tree svg.ico{flex:none;width:28px;height:28px}
 .kb__tree em{margin-left:auto;padding:1px 12px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink);font:600 20px/1.2 var(--mono);font-style:normal}
-.slide.kit .kw-host{position:absolute;left:910px;top:22px;width:785px;height:452px}
+.slide.kit .kw-host{position:absolute;left:800px;top:22px;width:896px;height:452px}
 .slide.kit .kw{position:absolute;inset:0;font-size:26px}
-.kw__p{display:grid;gap:10px}
-.kw__h{margin:0;font:600 20px/1.2 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.kw__ins{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;align-items:center;margin:0;padding:12px 16px;border-radius:14px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
-.kw__ins svg{grid-row:1/3;width:34px;height:34px}
-.kw__ins b{font:600 23px/1.2 var(--mono)}
-.kw__ins small{font:500 21px/1.25 var(--cw-sans);color:var(--cw-t2)}
-.kw__files{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:96px;margin:0;padding:0;list-style:none}
-.kw__slot{min-height:76px;border-radius:14px;box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
-.kw__files > .kw__ghost{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:43px 43px;gap:10px;padding:0;background:none;box-shadow:none;pointer-events:none}
-.kw__files > .kw__ghost > i{position:static;display:block;height:43px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
+.kw__p{display:grid;gap:8px}
+.slide.kit .kw .tk-thread{padding:.55em .85em .5em}
+/* the project page: its name in the app's serif, then its instructions and its files (sentence case, as the app writes them) */
+.kw__t{display:flex;align-items:center;gap:12px;margin:0;font:400 29px/1.15 var(--cl-serif);letter-spacing:-.015em;color:var(--cw-t1)}
+.kw__t b{font-weight:400}
+.kw__t svg{flex:none;width:28px;height:28px;color:var(--cw-t3)}
+.kw__h{margin:2px 0 0;font:600 20px/1.2 var(--cw-sans);color:var(--cw-t2)}
+.kw__ins{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;align-items:center;margin:0;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__ins svg{grid-row:1/3;width:30px;height:30px;color:var(--cw-t2)}
+.kw__ins b{font:600 22px/1.2 var(--cw-sans)}
+.kw__ins small{font:400 20px/1.25 var(--cw-sans);color:var(--cw-t2)}
+.kw__files{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:88px;margin:0;padding:0;list-style:none}
+.kw__slot{min-height:72px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__files > .kw__ghost{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:40px 40px;gap:8px;padding:0;background:none;box-shadow:none;pointer-events:none}
+.kw__files > .kw__ghost > i{position:static;display:block;height:40px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
 /* the flying files: above the window (later in the scene, so painted on top), each placed on its slot and flown from its tree row */
-.kfly-l{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
-.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:332px;height:43px;padding:8px 10px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 2px var(--ink);font:600 22px/1.2 var(--mono);white-space:nowrap;overflow:hidden}
+.kfly-l{--cw-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+/* a file of the project: a white card with a hair edge (round 6), the name in the app's sans */
+.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:320px;height:40px;padding:6px 12px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 20px/1.2 var(--cw-sans);white-space:nowrap;overflow:hidden}
 .slide.kit .kfly[data-step][data-fx]{transform:translate(calc((1 - var(--p,1)) * var(--dx)),calc((1 - var(--p,1)) * var(--dy) - var(--p,1) * (1 - var(--p,1)) * 240px))}
-.kfly svg{flex:none;width:26px;height:26px}
-.kfly span{min-width:0;overflow-wrap:normal;white-space:nowrap;font-size:21px}
+.kfly svg{flex:none;width:24px;height:24px}
+.kfly span{min-width:0;overflow-wrap:normal;white-space:nowrap;font-size:20px}
 .nobr{white-space:nowrap}
-.kw__made{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 16px;border-radius:14px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
-.kw__made svg{flex:none;width:44px;height:44px}
+.kw__made{display:flex;align-items:center;gap:10px;margin-top:2px;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
+.kw__made svg{flex:none;width:34px;height:34px}
 .kw__made span{display:grid;gap:2px;margin-left:6px}
-.kw__made b{font:600 23px/1.2 var(--sans)}
+.kw__made b{font:600 22px/1.2 var(--cw-sans)}
 .kw__made small{font:500 19px/1.2 var(--mono);color:var(--muted)}
-.slide.kit .stage > [data-zone="steps"]{left:910px;top:688px;width:786px}
+.slide.kit .stage > [data-zone="steps"]{left:800px;top:688px;width:896px}
 .ksteps ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
 .ksteps li{display:grid;align-content:start;gap:8px;min-height:160px;padding:14px 16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 26px/1.2 var(--sans)}
 .ksteps li b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 22px/1 var(--mono)}
@@ -1038,17 +1062,26 @@ svg.lt-ins{width:150px;height:150px}
 /* the plans in Claude's own window (D4): the chrome, then the plan of the toggle without a frame of its own */
 .wp > .cl-panel{font-size:28px;border-radius:18px}
 .wp .cl-panel__b{display:grid}
-.wp .cl-panel .wp__c{padding:8px 26px 12px;border-radius:0;background:transparent;box-shadow:none}
-.wp > .cl-panel > .cw-bar{height:1.75em}
+.wp .cl-panel .wp__c{padding:10px 26px 12px;border-radius:0;background:transparent;box-shadow:none}
+.wp > .cl-panel > .cw-bar{height:1.65em}
+/* the paid plan as the app's task: the card says what it does, the bar its schedule, its next run and its state (paid only) */
+.wp .cl-panel .wp__c b{font-size:32px}
+.wp .cl-panel .wp__c > span{font-size:27px}
+.cw-tail{margin-left:auto}
+.wp .wp__m{display:flex;align-items:center;gap:8px}
+.wp .wp__m em{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:7px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font-style:normal;font-weight:500;color:var(--cw-t2)}
+.wp .wp__m svg{width:18px;height:18px}
+.wp .wp__m em.wp__on{color:var(--cw-t1)}
+.wv[data-w05-state="free"] .wp .cw-tail{visibility:hidden}
 .wp__c{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 22px;align-items:center;margin:0;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);transition:opacity .3s ease-out}
 .wp__c svg{grid-row:1/3;width:60px;height:60px}
 .wp__c b{font:700 34px/1.2 var(--sans)}
 .wp__c span{font:500 29px/1.25 var(--sans)}
 .wp small,.wl__src,.wres__note{font:500 23px/1.25 var(--mono);color:var(--muted)}
 /* the weekly task's answer, as Claude's reply (D4): ivory, the clay edge, the spark on its first line */
-.wres{left:820px;top:444px;width:876px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 32px;align-items:center;padding:10px 26px;border-radius:20px}
+.wres{left:820px;top:449px;width:876px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 32px;align-items:center;padding:8px 26px;border-radius:20px}
 .wres p{margin:0}
-.wres__h{grid-column:1/-1;display:flex;align-items:center;gap:12px;font:600 26px/1.2 var(--mono)}
+.wres__h{grid-column:1/-1;display:flex;align-items:center;gap:12px;font:600 25px/1.2 var(--cl-sans)}
 .wres__h .cl-spark{width:28px;height:28px}
 .wres__note{align-self:center}
 .wres__n{display:flex;gap:40px}

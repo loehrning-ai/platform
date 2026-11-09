@@ -33,12 +33,13 @@ function pushVars(oy) {
 }
 
 /**
- * The cover entry (law L1, widened in round 4, cut to 9 s in round 5: Tim asked for at most 10 s): one entry host. The share
- * 0 to .14 is the dust settling into the country (1.3 s), .14 to .82 is the inspection year 2025 (6.1 s; one ring per 300
- * inspections out of the eight DIT regions, the counter running to their sum), .82 to 1 closes on Bitola (1.6 s). A press at
- * any moment goes on to Today; reduced motion and preview show the end at once.
+ * The cover entry (law L1; round 6: about 5 s, and no rings, they read as blasts): one entry host. The share 0 to .17 is
+ * the dust settling into the country (0.8 s), .17 to .83 is the inspection year 2025 (3 s: 24 soft straight waves, shared
+ * out over the eight DIT regions by their inspections, cross each region and deepen its dots, so a region ends darker the
+ * more inspections it had; the counter runs to their sum), .83 to 1 closes on Bitola (0.8 s). A press at any moment goes
+ * on to Today; reduced motion and preview show the end at once.
  */
-export const COVER = { ms: 9000, year: [0.14, 0.82], pulse: 300 };
+export const COVER = { ms: 4700, year: [0.17, 0.83], waves: 24 };
 
 /** S01: the title page. No press: one entry host replays the inspection year 2025 over the country, then Bitola lights up. */
 export function cover(it, ctx, d, c) {
@@ -49,16 +50,15 @@ export function cover(it, ctx, d, c) {
   const near = fill(t.near, { firms: numFmt(d.field.bitola, d.lang) });
   const total = REGIONS.reduce((sum, r) => sum + r.inspections, 0);
   if (total !== d.dit.total) throw new Error(`cover: the regions add up to ${total}, the report to ${d.dit.total}`);
-  const last = REGIONS.findIndex((r) => r.at === BITOLA);
   const [y0, y1] = COVER.year;
   const map = field(it, {
     id: "map", zone: "fmap", w: FIELD.w, h: FIELD.h, n: d.field.dots, seed: FIELD.seed, outline: true, mark: BITOLA, near: d.field.near,
-    regions: REGIONS, year: COVER.year, pulse: COVER.pulse, pulseLast: last,
-    plan: [{ k: 0, from: "scatter", to: "country", win: "0,1", ease: "linear" }], cls: "cover__map", label: `${fill(t.map, vars)}. ${fill(t.year, { n: numFmt(total, d.lang), unit: COVER.pulse })} ${near}`, style: `left:${FIELD.left}px;top:${FIELD.top}px;${pushVars(0.6)}`,
+    regions: REGIONS, year: COVER.year, waves: COVER.waves,
+    plan: [{ k: 0, from: "scatter", to: "country", win: "0,1", ease: "linear" }], cls: "cover__map", label: `${fill(t.map, vars)}. ${fill(t.year, { n: numFmt(total, d.lang) })} ${near}`, style: `left:${FIELD.left}px;top:${FIELD.top}px;${pushVars(0.6)}`,
     hostAttrs: 'data-keep data-ease="linear"', overlay: `${mapTag(t.tag, "", near)}${legend}`,
   });
   const n = it({ tag: "p", cls: "ccount__n fig", k: 0, fx: "none", win: `${y0},${y1}`, count: `0,${total},0`, attrs: 'data-ease="linear" data-keep', text: numFmt(total, d.lang) });
-  const count = `<div class="ccount" aria-hidden="true"><p class="ccount__k fig">${esc(t.count)}</p>${n}<p class="ccount__u fig">${esc(t.unit)}</p><p class="ccount__r fig"><i class="ccount__ring"></i>${esc(fill(t.ring, { unit: COVER.pulse }))}</p><p class="cyear fig"><span>${esc(t.months[0])}</span><i class="cyear__bar"><i></i></i><span>${esc(t.months[1])}</span></p></div>`;
+  const count = `<div class="ccount" aria-hidden="true"><p class="ccount__k fig">${esc(t.count)}</p>${n}<p class="ccount__u fig">${esc(t.unit)}</p><p class="ccount__r fig"><i class="ccount__shade"><i></i><i></i><i></i></i>${esc(t.shade)}</p><p class="cyear fig"><span>${esc(t.months[0])}</span><i class="cyear__bar"><i></i></i><span>${esc(t.months[1])}</span></p></div>`;
   const host = it({ id: "year", tag: "div", cls: "cover__year", zone: "map", fx: "none", attrs: `data-scene data-keep data-ease="linear" style="--y0:${y0};--y1:${y1}"`, html: `${map}${count}` });
   return {
     raw: (foot) => `${host}
@@ -137,8 +137,9 @@ export function today(it, ctx, d, c) {
     const chips = files
       .map(([name, ico], i) => it({ tag: "span", cls: "tfile", k, fx: "move", win: spread(i, files.length, 0.4, 0.45), attrs: `style="--dx:${-150 - 40 * i}px;--dy:${-210 + 30 * i}px"`, html: `${icon(ico)}<b>${esc(name).replace(/\//g, "/<wbr>")}</b>` }))
       .join("");
-    // a Claude project in Claude's own look (D4): ivory, the clay edge, the spark (lib/w05-fx.css .cl-ui)
-    return `<div class="tproj cl-ui fig"><p class="tproj__h">${spark()}<b>${esc(t.project)}</b><span>${esc(fill(t.files, d.vars))}</span></p><div class="tproj__files">${chips}</div></div>`;
+    // a Claude project as a small window of the app (round 6, lib/w05-fx.css .cl-ui): the window lights, the spark and the
+    // project with its file count, the four files in the project's knowledge
+    return `<div class="tproj cl-ui fig"><p class="tproj__bar" aria-hidden="true"><span class="cw-dots"><b></b><b></b><b></b></span></p><p class="tproj__h">${spark()}<b>${esc(t.project)}</b><span>${esc(fill(t.files, d.vars))}</span></p><div class="tproj__files">${chips}</div></div>`;
   };
   const stations = TODAY.stations.map(([x, y], i) => {
     const k = i + 1;

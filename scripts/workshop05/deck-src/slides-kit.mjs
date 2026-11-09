@@ -7,7 +7,7 @@ import { esc, fill, spread } from "./motion.mjs";
 import { binder, icon } from "./scene.mjs";
 import { kit as kitFile, kitDe } from "./data.mjs";
 import { head } from "./slides-intro.mjs";
-import { claudeWindow, dolly, takeModel, fileName, filePreviews, ico, inFolder, named, pollButtons, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
+import { claudeWindow, clIcon, dolly, takeModel, fileName, filePreviews, ico, inFolder, named, pollButtons, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
 
 /** The checklist and folder directories of each edition (the zip's own top folders). */
 const CHECK = ["checklists", "listen"];
@@ -48,11 +48,11 @@ const TEST_ICONS = ["sheet", "calendar", "person", "contract"];
  * (Anthropic help centre, files) draw in, and the data rule. The caption swaps in one place. The flying chips live in the scene host, outside
  * the window (whose thread clips), placed exactly over the window's slots.
  */
-/** Stage pixels inside the camera (measured on the rendered slide, the same in both editions; the desk is scaled to .9 from its
- *  bottom right corner so the open cover stays inside the margin): the tree rows of the four
+/** Stage pixels inside the camera (measured on the rendered slide, the same in both editions; the desk is scaled to .84 from its
+ *  bottom right corner and moved 120 px left, so the open cover stays inside the margin and the window gets the app's sidebar): the tree rows of the four
  *  files that fly (checklists, folder, cases, templates: rows 2, 3, 5, 6) and the four slots of the project's file grid. */
-const KIT_ROW = { x: 504, y0: 279, pitch: 38.7, rows: [2, 3, 5, 6] };
-const KIT_SLOT = { x: [993, 1335], y: [239, 292] };
+const KIT_ROW = { x: 409, y0: 308, pitch: 36.2, rows: [2, 3, 5, 6] };
+const KIT_SLOT = { x: [1026, 1354], y: [271, 319] };
 export function kit(it, ctx, d, c) {
   const t = c.s.kit;
   const v = (x) => fill(x, d.vars);
@@ -80,8 +80,9 @@ export function kit(it, ctx, d, c) {
   const made = it({ tag: "div", cls: "kw__made", k: 3, fx: "none", html: `${["spreadsheet", "sheet", "sheet-check"].map((n, i) => icon(n, { it, k: 3, win: spread(i, 3, 0.1, 0.6) })).join("")}<span><b>${esc(t.made)}</b><small>${esc(t.madeSrc)}</small></span>` });
   // the project stands empty from the entry (its slots outlined); press 2 fills it
   const ins = it({ tag: "p", cls: "kw__ins", k: 2, win: ".1,.5", html: `${icon("sheet")}<b>${esc(t.insFile)}</b><small>${esc(t.insNote)}</small>` });
-  const thread = `<div class="kw__p fig"><p class="kw__h">${esc(t.ins)}</p><div class="kw__slot kw__slot--ins">${ins}</div><p class="kw__h">${esc(t.files)}</p><ul class="kw__files"><li class="kw__ghost" aria-hidden="true">${"<i></i>".repeat(fly.length)}</li></ul>${made}</div>`;
-  const win = claudeWindow(it, { id: "win", brand: c.claudeUi.brand, rail: true, crumbs: t.win, thread, k: 0, plane: true, cls: "tk-cw--small kw" });
+  // the project page of the app: the project's name (the last crumb) as its title, then its instructions and its files
+  const thread = `<div class="kw__p fig"><p class="kw__t">${clIcon("folder")}<b>${esc(split(t.win).at(-1))}</b></p><p class="kw__h">${esc(t.ins)}</p><div class="kw__slot kw__slot--ins">${ins}</div><p class="kw__h">${esc(t.files)}</p><ul class="kw__files"><li class="kw__ghost" aria-hidden="true">${"<i></i>".repeat(fly.length)}</li></ul>${made}</div>`;
+  const win = claudeWindow(it, { id: "win", ui: c.claudeUi, side: "full", recents: [c.s.step1.h, c.s.step2.h, c.s.step3.h], crumbs: t.win, thread, k: 0, plane: true, cls: "tk-cw--small kw" });
   // the binder lies on the desk at --p 0 of the entry and stands up on its bottom edge
   const desk = it({ tag: "div", cls: "kb-host", k: 0, fx: "none", attrs: "data-scene", html: book });
   // the scene of press 2: the files arc from the binder into the project (flat since round 5: no camera turn)
@@ -120,7 +121,7 @@ export function step1(it, ctx, d, c, T) {
   const qs = it({ id: "qs", tag: "div", cls: "tk-doc fig", zone: "t", k: 1, out: 2, html: `<ul>${questions}</ul>` });
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step1", k: 2, ms: 1500, head: true, hitRows: d.key.noOwner, zoom: ".78,1", ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the window as the recorded table streams (press 2)
-  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${qs}${take.take}`, plane: true, zone: null }) });
+  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${qs}${take.take}`, plane: true, zone: null }) });
   // the files this prompt reads: the three checklist excerpts and the folder index
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => [...inFolder(paths, CHECK), ...inFolder(paths, FOLDER, isIndex)] });
   const stage = [
@@ -140,7 +141,7 @@ export function step2(it, ctx, d, c, T) {
   // the answer uses the window's full width (15 words a row) and draws the script's rows as a grid, so all ten findings fit
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step2", k: 2, ms: 1500, hit: true, head: true, wrap: 15, scan: { id: "scan", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the window with the poll (press 1); press 2 belongs to the scan and its counters
-  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${poll}${take.take}`, plane: true, zone: null }) });
+  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${poll}${take.take}`, plane: true, zone: null }) });
   // the check reads every file of the folder
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => inFolder(paths, FOLDER) });
   const stage = [
@@ -215,7 +216,7 @@ export function step3(it, ctx, d, c, T) {
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step3", k: 1, ms: 1500, head: true, out: { take: 2, chip: 2, key: 2 }, board: { id: "board", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   const files = it({ id: "files", tag: "div", cls: "tk-filesbox", zone: "t", k: 2, out: 3, html: filePreviews(T.chain, t.files, { skip: /^check\.py$/, it, k: 2 }) });
   // the camera moves in on the window as the status answer streams (press 1); the window leaves for the fix pair (press 3)
-  const win = dolly(it, { k: 1, out: 3, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}${files}`, out: 3, plane: true, zone: null }) });
+  const win = dolly(it, { k: 1, out: 3, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}${files}`, out: 3, plane: true, zone: null }) });
   // the templates this prompt fills, and the notice it reads the clock from
   const inputs = promptInputs(it, d, { out: 1, pick: (paths) => [...paths.filter((p) => /^(notice|mitteilung)_/.test(p)), ...named(paths, d.prompts.step3)] });
   const fixsc = it({

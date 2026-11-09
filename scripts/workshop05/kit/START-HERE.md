@@ -38,6 +38,7 @@ Code execution switched off? Ask Claude for check.py and run it on your own comp
 
 Predict first, then check ANSWERS.md.
 In the room 8 minutes. At your desk about 30, our estimate, not measured. Do it in two goes: the statuses and the new papers first, then the briefing, the notes and the files.
+Before this step, add notice_DIT_2026-11-23.md, templates/evidence-index.csv, templates/clock.csv and templates/new-paper-note.md to the Project. The prompt reads them.
 
     Give every question COVERED, WEAK or GAP with the four tests and a quote. GAP: someone has no paper, or the record shows the rule broken. WEAK: the paper is there, only date or approval fails. For each WEAK and GAP name the new paper that closes it (never a change to an old one), its owner by role and day; today is 26 Nov 2026. Fill templates/evidence-index.csv. Write templates/clock.csv from the notice, the papers' date left open (the inspector sets it on the visit day). Write one page for the person present on 27 Nov: what happens, what they answer, what they do not sign. Draft new paper notes for E-11 and E-19 (leave) and the overtime notice from templates/new-paper-note.md. Leave every sign-off line empty. Answer with one line per question: line id, status, at most 8 words why. The rest goes in the files. At most 16 lines.
 

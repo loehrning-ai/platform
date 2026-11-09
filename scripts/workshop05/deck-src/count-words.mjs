@@ -15,7 +15,7 @@ const EXEMPT = ["qd", "qd-gloss", "prompt-body", "fig", "out", "focus", "foot"];
 export function parseHtml(html) {
   const root = { tag: "#root", attrs: {}, children: [] };
   const stack = [root];
-  const re = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][\w:-]*)((?:\s+[^\s=>\/"']+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>"'=]+))?)*)\s*(\/?)>|([^<]+)/g;
+  const re = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][\w:-]*)((?:"[^"]*"|'[^']*'|[^"'>\/]|\/(?!>))*)(\/?)>|([^<]+)/g;
   let m;
   while ((m = re.exec(html))) {
     if (m[0].startsWith("<!--")) continue;
