@@ -17,6 +17,10 @@
   --w05-accent-soft:rgba(183,58,21,.10);
   --surface:#FFFEFB;
   --tint:#EFEBE0;
+  --claude-clay:#D97757;
+  --claude-ivory:#FAF9F5;
+  --claude-cloud:#E8E6DC;
+  --claude-slate:#141413;
 }
 
 /* boot cost: an inactive slide is not laid out or painted (the stage hides it anyway), so a cold load lays out the cover alone */
@@ -30,14 +34,48 @@
 .slide .cw{border:0;box-shadow:inset 0 0 0 2px var(--ink)}
 .slide .cw-dots b,.slide .cw-dots b:nth-child(n){background:var(--w05-sage-200);box-shadow:inset 0 0 0 1.5px var(--ink)}
 
+/* 2b ── Claude's UI (round 5, D4). Every place where the room uses Claude looks like the Claude desktop app, and the orange says
+   "this is Claude": it is drawn only inside .cl-ui (V12 below in the visual test, V9 in the deck e2e spec). The --claude-* colours
+   are Anthropic's own: clay #D97757 and ivory #FAF9F5 are the fills of the Claude spark and icon files of Anthropic's press kit,
+   cloud #E8E6DC and slate #141413 the light grey and dark of Anthropic's brand guidelines (anthropics/skills, brand-guidelines).
+   No Claude logo: Anthropic's trademark guidelines allow their marks only in materials they approve beforehand, so the chrome
+   carries the word "Claude" and a plain spark of our own (slides-parts.mjs spark). */
+.slide .cl-ui{--cw-bg:var(--claude-ivory);--cw-side:var(--claude-ivory);--cw-bubble:var(--claude-cloud);--cw-t1:var(--claude-slate);--cw-accent:var(--claude-clay)}
+/* the clay edge is an inset outline: drawn over the chrome, it takes no room, so the recorded rows keep their round 4 wrap */
+.slide .cw.cl-ui{box-shadow:none;outline:2px solid var(--claude-clay);outline-offset:-2px}
+/* the small Claude panels that are no window (today's project card, watch's weekly answer): ivory with the clay edge */
+.slide .cl-ui.tproj,.slide .cl-ui.wres{background:var(--claude-ivory);box-shadow:inset 0 0 0 2px var(--claude-clay)}
+.slide .cl-ui .cw-dots b,.slide .cl-ui .cw-dots b:nth-child(n){background:var(--claude-cloud);box-shadow:none}
+.cl-ui .cw-bar{gap:.55em}
+.cl-ui .cw-dots{margin-right:.5em}
+.cw-brand-l{display:inline-flex;align-items:center;gap:.35em;margin-right:.6em;font:600 1.2em/1 var(--cw-sans);letter-spacing:-.01em;color:var(--cw-t1)}
+.cl-spark{flex:none;width:1.15em;height:1.15em;fill:var(--claude-clay)}
+/* the sidebar, collapsed: new chat (the clay disc), chats, Projects (on) */
+.cl-ui .cw-body--rail{grid-template-columns:auto minmax(0,1fr)}
+.cw-rail{display:flex;flex-direction:column;align-items:center;gap:.45em;width:2.1em;padding:.55em 0;border-right:1px solid var(--cw-line2)}
+.cw-rail i{display:grid;place-items:center;width:1.45em;height:1.45em;border-radius:.4em;color:var(--cw-t2)}
+.cw-rail i.cw-rail__new{border-radius:50%;background:var(--claude-clay);color:var(--claude-ivory)}
+.cw-rail i.is-on{background:var(--claude-cloud);color:var(--cw-t1)}
+.cw-rail svg,.cw-comp svg{width:.9em;height:.9em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* the prompt box at the foot of a window: attach, the model of the recording, the clay send button */
+.cl-ui .cw-main.cw-main--comp{grid-template-rows:minmax(0,1fr) auto}
+.cl-ui .cw-main--comp > .tk-thread{padding-top:.5em;padding-bottom:.25em}
+/* the room the prompt box takes comes out of the gaps, never out of the answer: the head cut sits close above the box */
+.cl-ui .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{margin-bottom:10px}
+.cw-comp{display:flex;align-items:center;gap:.55em;margin:0 .9em .35em;padding:.18em .18em .18em .7em;border-radius:.75em;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--claude-cloud);font:500 .66em/1 var(--cw-sans);color:var(--cw-t3)}
+.cw-comp > svg{color:var(--cw-t2)}
+.cw-comp__f{flex:1}
+.cw-comp .cw-send{display:grid;place-items:center;width:1.6em;height:1.6em;border-radius:.5em;background:var(--claude-clay);color:var(--claude-ivory)}
+.cw-comp .cw-send svg{width:1.05em;height:1.05em;stroke-width:2.6}
+
 /* the strip of S11: four rungs, outlined, the filled ones sage */
 .rg .strip{gap:14px}
 .rg .strip > li{height:110px;padding-bottom:0;place-items:center;border-radius:16px;background:var(--w05-sage-50);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 28px/1.15 var(--sans);letter-spacing:-.01em;color:var(--ink);text-align:center;padding-inline:12px}
 .rg .strip > li[data-on]{transform:none;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
 .rg a{display:block;color:inherit;text-decoration:none}
 
-/* poll chips: a 2 px ink outline on a sage-100 surface; the vote share is a sage bar behind the label */
-.poll__opt{border:0;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+/* poll chips: a 2 px ink outline on paper (round 5, D3: colour only where it means something); the vote share is a sage bar behind the label */
+.poll__opt{border:0;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
 .poll__opt::before{background:var(--w05-sage-200)}
 .poll__opt[data-lead]::before{background:var(--w05-sage-400)}
 .poll__opt[data-lead] [data-poll-n]{color:var(--ink)}
@@ -76,12 +114,14 @@ svg.ico--w05[data-step][data-fx="draw"]{opacity:min(1,calc(var(--p,1) * 8))}
 .w05-field__plane{position:absolute;inset:0;isolation:isolate}
 .w05-drive{position:absolute;width:0;height:0;overflow:hidden}
 
-/* 10 ── 3D primitives (T1). Depth from outlines and sage steps only: no shadow, no blur, no gradient.
-   .w05-s3d holds the perspective; .w05-card stands up out of the floor around its bottom edge during its press;
-   .w05-plane slides in on its own depth; .w05-floor tilts back as its host's --p runs (--tilt, --lift, --sink, --grow set per use). */
+/* 10 ── card motions (T1). Flat by default (round 5, D2): .w05-rise rises 28 px into its place and fades in; .w05-plane (the
+   Claude window) slides up 40 px. Depth only where it is the idea: .w05-s3d holds a perspective and .w05-card stands up around
+   its bottom edge (the safety stair); .w05-floor tilts back as its host's --p runs (Today's map; --tilt, --lift, --sink, --grow
+   set per use). No shadow, no blur, no gradient. */
+.w05-rise[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 28px));opacity:min(1,calc(var(--p,1) * 2.5))}
 .w05-s3d{perspective:1800px;perspective-origin:50% 30%;transform-style:preserve-3d}
 .w05-card[data-step][data-fx]{transform-origin:50% 100%;transform:rotateX(calc((1 - var(--p,1)) * 88deg));opacity:min(1,calc(var(--p,1) * 5));backface-visibility:hidden}
-.w05-plane[data-step][data-fx]{transform:translateZ(calc((1 - var(--p,1)) * -240px)) rotateY(calc((1 - var(--p,1)) * -14deg));opacity:min(1,calc(var(--p,1) * 3))}
+.w05-plane[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 40px));opacity:min(1,calc(var(--p,1) * 3))}
 .w05-floor{--tilt:58deg;--lift:0px;--sink:0px;--grow:1;transform-origin:50% 100%}
 .w05-floor[data-step][data-fx]{transform:translate3d(calc(var(--p,1) * var(--lift)),calc(var(--p,1) * var(--sink)),0) scale(calc(1 + (var(--grow) - 1) * var(--p,1))) rotateX(calc(var(--p,1) * var(--tilt)))}
 /* the binder (scene.mjs binder): a back board, a stack of sheets and a front cover that swings open on its spine as --p runs */
@@ -91,15 +131,15 @@ svg.ico--w05[data-step][data-fx="draw"]{opacity:min(1,calc(var(--p,1) * 8))}
 .w05-binder > i.w05-binder__sheet{inset:10px 12px 10px 18px;background:var(--surface)}
 .w05-binder__front{background:var(--w05-sage-100);transform-origin:0 50%;backface-visibility:hidden}
 .w05-binder[data-step][data-fx] .w05-binder__front{transform:rotateY(calc(var(--p,1) * var(--open) * -1))}
-/* the engine envelope (engine.css), drawn in W05 surfaces: paper and sage, 2 px ink lines, no shadow */
-.w05-env .envelope__back{background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
-.w05-env .envelope__front{background:var(--w05-sage-50);box-shadow:none}
-.w05-env .envelope__flap{background:var(--w05-sage-200)}
+/* the engine envelope (engine.css), drawn in W05 surfaces: paper tones only (round 5, D3), a 2 px ink edge, no shadow */
+.w05-env .envelope__back{background:var(--paper);box-shadow:inset 0 0 0 2px var(--ink)}
+.w05-env .envelope__front{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.w05-env .envelope__flap{background:var(--tint)}
 .w05-env .envelope__letter{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 
-/* 11 ── presenter controls (lib/w05-scrub.js): buttons in a row, the pressed one sage-400; never moves the deck ── */
+/* 11 ── presenter controls (lib/w05-scrub.js): paper buttons in a row, the pressed one sage-400; never moves the deck ── */
 .w05-ctl{display:flex;flex-wrap:wrap;gap:12px}
-.w05-btn{appearance:none;border:0;margin:0;padding:12px 22px;border-radius:14px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:600 24px/1.2 var(--mono);cursor:pointer;transition:background-color .2s ease-out}
+.w05-btn{appearance:none;border:0;margin:0;padding:12px 22px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:600 24px/1.2 var(--mono);cursor:pointer;transition:background-color .2s ease-out}
 .w05-btn[aria-pressed="true"]{background:var(--w05-sage-400)}
 .w05-btn:hover,.w05-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 [data-w05-name]{--at:0}

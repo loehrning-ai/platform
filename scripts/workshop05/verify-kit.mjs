@@ -110,7 +110,7 @@ expect(
 
 // 2. Labels, comment lines, style, words, URLs.
 // The one privacy link of the start file, plus the sources of keep-watch/ (DE bereit-bleiben/): two Anthropic help pages and the
-// verified watch list (research ids CLAUDE-01, 22, 82 to 85). Nothing else may link out.
+// verified watch list (Anthropic help centre, projects and scheduled tasks; AZLP, Služben vesnik, DIT). Nothing else may link out.
 const ALLOWED_URLS = new Set([
   "https://privacy.claude.com/en/articles/7996890",
   "https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork",
@@ -200,6 +200,11 @@ const SETUP_FIRST = {
 };
 const INTRO = { en: ["## The rules in one minute", "## What you do", "## Set up once"], de: ["## Die Regeln in einer Minute", "## Was du tust", "## Einmal einrichten"] };
 const SKILL_HEADING = { en: "## Optional: install the skill", de: "## Freiwillig: den Skill einrichten" };
+// The four step headings carry the step names of the deck (slides 9, 10, 12 and 13).
+const STEP_HEADINGS = {
+  en: ["## Step 1: make the table", "## Step 2: run the check", "## Step 3: status, plan, briefing", "## Step 4: build the register"],
+  de: ["## Schritt 1: die Tabelle bauen", "## Schritt 2: den Check laufen lassen", "## Schritt 3: Status, Plan, Briefing", "## Schritt 4: das Register bauen"],
+};
 // The verbatim texts of Step 4 and the answer-length sentences (design: SPEC-2 section 4.4).
 const STEP4 = {
   en: {
@@ -208,7 +213,7 @@ const STEP4 = {
     second: "Look at register.csv. Which papers are on file for E-07, which one is missing, and who owns each? Answer from register.csv only, in 8 lines at most. If a row is not there, say NOT IN FILES.",
     then: "Then ask the register:",
     month: "Every month: see templates/monthly-check.md.",
-    noCode: "No code tool in your plan, or it is switched off? Ask Claude for check.py and run it on your own computer.",
+    noCode: "Code execution switched off? Ask Claude for check.py and run it on your own computer.",
     ends: [
       ["Answer with the table only.", 0],
       ["Answer in 16 lines at most.", 1],
@@ -225,7 +230,7 @@ const STEP4 = {
     second: "Sieh dir register.csv an. Welche Papiere liegen für E-07 vor, welches fehlt, und wer ist jeweils zuständig? Antworte nur aus register.csv, in höchstens 8 Zeilen. Fehlt eine Zeile, sag NICHT IN DATEIEN.",
     then: "Dann frag das Register:",
     month: "Jeden Monat: siehe vorlagen/monatscheck.md.",
-    noCode: "Kein Code-Werkzeug im Tarif oder ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus.",
+    noCode: "Codeausführung ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus.",
     ends: [
       ["Antworte nur mit der Tabelle.", 0],
       ["Antworte in höchstens 16 Zeilen.", 1],
@@ -242,16 +247,16 @@ const STAY = {
   en: ["## Stay ready", "keep-watch/", ["weekly-check_scheduled-task.md", "monthly-check_by-hand.md", "register-project-instructions.md", "safety-card.md", "watch-list.md"]],
   de: ["## Bereit bleiben", "bereit-bleiben/", ["wochencheck_geplante-aufgabe.md", "monatscheck_von-hand.md", "register-projektanweisungen.md", "sicherheitskarte.md", "beobachtungsliste.md"]],
 };
-for (const [locale, text, start, step, after, marker] of [
-  ["en", read("START-HERE.md"), "START-HERE.md", "Step", "## After the visit (optional)", "<!-- claude-ui:en -->"],
-  ["de", readDe("START-HIER.md"), "START-HIER.md", "Schritt", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
+for (const [locale, text, start, after, marker] of [
+  ["en", read("START-HERE.md"), "START-HERE.md", "## After the visit (optional)", "<!-- claude-ui:en -->"],
+  ["de", readDe("START-HIER.md"), "START-HIER.md", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
 ]) {
   const [stayHeading, stayDir, stayFiles] = STAY[locale];
   const stayText = text.slice(text.indexOf(stayHeading), text.indexOf(after));
   for (const file of stayFiles) if (!stayText.includes(`${stayDir}${file}`)) fail(`${start}: "${stayHeading}" must name ${stayDir}${file}`);
   expect(`${start} block`, text.slice(0, text.indexOf(INTRO[locale][1])).split("\n").filter((line) => line !== ""), BLOCK[locale]);
   expect(`${start} set-up opens the Project`, text.split(`${INTRO[locale][2]}\n\n`)[1]?.split("\n")[0], SETUP_FIRST[locale]);
-  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, `## ${step} 4`, stayHeading, after, SKILL_HEADING[locale]]);
+  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], ...STEP_HEADINGS[locale], stayHeading, after, SKILL_HEADING[locale]]);
   // The install text of the skill is the last section (optional); the file ends with its one marker line.
   expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(SKILL_HEADING[locale]), text.trimEnd().endsWith(marker)], [1, true, true]);
   const prompts = [...text.matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]);
@@ -267,7 +272,7 @@ for (const [locale, text, start, step, after, marker] of [
 }
 // The room minutes are the deck's slots; the desk minutes are an estimate and the file says so.
 const timeLines = (text) => [...text.matchAll(/^(?:In the room|Im Raum) (\d+)(?: minutes| Minuten)\. (?:At your desk about|Am Schreibtisch etwa) (\d+), (?:our estimate, not measured|unsere Schätzung, nicht gemessen)\./gm)].map((match) => [Number(match[1]), Number(match[2])]);
-expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[6, 20], [9, 20], [9, 30], [12, 20]], [[6, 20], [9, 20], [9, 30], [12, 20]]]);
+expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[6, 20], [9, 20], [8, 30], [11, 20]], [[6, 20], [9, 20], [8, 30], [11, 20]]]);
 for (const [text, word] of [
   [read("START-HERE.md"), "Predict first, then check ANSWERS.md."],
   [readDe("START-HIER.md"), "Sag es voraus, dann prüf es in LOESUNGEN.md."],
@@ -431,7 +436,7 @@ const mustHave = [
   ["CHANGELOG.md", ["## 2026-11-08", "## 2026-11-07", "Rebuilt for workshop 5", "Added Step 4"]],
   ["cases/case-A-labour.md", ["## Bottlenecks", "## How often it comes and how it starts", "5,664 regular inspections in 2025 divided by 73,310 active enterprises in 2024 is, on paper, about one regular inspection a year for every 13 active enterprises. It is not the chance for one firm.", "Gradba-Pro was last inspected in spring 2024. Normally nobody opens the binders.", "Sourced:", "This kit's story (invented)", "read on 2026-11-07", "Not legal advice"]],
   ["folder/folder-index.md", ["Last labour inspection: spring 2024 (invented). Nobody has opened the binders since."]],
-  ["templates/monthly-check.md", ["Once a month, on a fixed day, one named person does this.", "Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only.", "Never change an old row to hide a gap.", "a small database such as SQLite", "Dates only, no health content."]],
+  ["templates/monthly-check.md", ["Once a month, on a fixed day, one named person does this.", "Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only: send nothing and change no row.", "Never change an old row to hide a gap.", "a small database such as SQLite", "Dates only, no health content."]],
   ["cases/case-B-tax.md", ["Sourced:", "This kit's story (invented)", "ZDP Art. 47(2)", "Size thresholds unverified", "single vendors only, not a market average"]],
   ["cases/case-C-iso.md", ["Sourced:", "This kit's story (invented)", "IAF MD 5:2023", "not a certifier's tariff and not a market average"]],
 ];
@@ -443,7 +448,7 @@ for (const [file, needles] of [
   ["AENDERUNGEN.md", ["## 2026-11-08", "## 2026-11-07"]],
   ["faelle/fall-A-arbeit.md", ["## Wie oft sie kommt und wie sie beginnt", "5.664 reguläre Inspektionen 2025, geteilt durch 73.310 aktive Unternehmen 2024, ergibt auf dem Papier etwa eine reguläre Inspektion im Jahr auf 13 aktive Unternehmen. Das ist nicht die Chance für eine einzelne Firma.", "Gradba-Pro wurde zuletzt im Frühjahr 2024 kontrolliert.", "Belegt:", "Die Geschichte dieses Kits (erfunden)"]],
   ["ordner/ordner-index.md", ["Letzte Arbeitsinspektion: Frühjahr 2024 (erfunden). Seitdem hat niemand die Ordner geöffnet."]],
-  ["vorlagen/monatscheck.md", ["Einmal im Monat, an einem festen Tag, macht das eine benannte Person.", "Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro zuständiger Rolle. Nur ein Entwurf.", "Ändere nie eine alte Zeile, um eine Lücke zu verstecken.", "einer kleinen Datenbank wie SQLite", "Nur Daten, keine Gesundheitsinhalte."]],
+  ["vorlagen/monatscheck.md", ["Einmal im Monat, an einem festen Tag, macht das eine benannte Person.", "Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro Rolle der Verantwortlichen. Nur Entwürfe: nichts senden und keine Zeile ändern.", "Ändere nie eine alte Zeile, um eine Lücke zu verstecken.", "einer kleinen Datenbank wie SQLite", "Nur Daten, keine Gesundheitsinhalte."]],
   ["faelle/fall-B-steuer.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "Größenschwellen ungeprüft"]],
   ["faelle/fall-C-iso.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "IAF MD 5:2023"]],
 ]) for (const needle of needles) if (!readDe(file).includes(needle)) fail(`kit-de/${file} lacks "${needle}"`);

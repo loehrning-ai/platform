@@ -22,8 +22,8 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zi
  * palette.
  */
 
-/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 115944 and 106762 bytes. */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "114 KB", en: "105 KB" };
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 117623 and 108202 bytes. */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "115 KB", en: "106 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -147,9 +147,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "04",
-        title: "Status vergeben",
+        title: "Status, Plan, Briefing",
         description:
-          "BELEGT, SCHWACH oder LÜCKE mit Zitat und vier Prüfungen, dazu neue Papiere mit echtem Datum, nie eine Änderung am alten.",
+          "BELEGT, SCHWACH oder LÜCKE mit Zitat und vier Prüfungen, dazu neue Papiere mit echtem Datum, nie eine Änderung am alten, und ein Briefing für den Besuch.",
         tool: "Claude-Projekt",
       },
       {
@@ -285,9 +285,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "04",
-        title: "Give a status",
+        title: "Status, plan, briefing",
         description:
-          "COVERED, WEAK or GAP with a quote and the four tests, plus new papers with real dates, never a change to an old one.",
+          "COVERED, WEAK or GAP with a quote and the four tests, plus new papers with real dates, never a change to an old one, and a briefing for the visit.",
         tool: "Claude Project",
       },
       {

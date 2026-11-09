@@ -1,20 +1,20 @@
 /**
  * S07 time (REDESIGN-3 D4, round 4): by hand against the kit with Claude, on one calendar of four working days. Two hero
  * numbers carry the slide: "4 days" (the invented week, labelled) and the recorded total (read from stats.duration_ms, never
- * typed). Press 0: the four days, the letter on Monday, the yardstick of the notice. Press 1: the week by hand stands up as
- * four thick slabs, day by day. Press 2: with Claude, a hairline at Monday morning is the true scale of the four recorded
+ * typed). Press 0: the four days, the letter on Monday, the yardstick of the notice. Press 1: the week by hand rises into
+ * the four day slots as flat cards, day by day (round 5, D2). Press 2: with Claude, a hairline at Monday morning is the true scale of the four recorded
  * steps; a loupe opens out of it and lays the same steps out large, each as long as its recording took (a missing
  * recording says so). Press 3: the one survey number there is on time spent on rules. A toggle folds one lane away
  * (lib/w05-scrub.js); it never moves the deck. No hour count is invented: the scale is the calendar of the case.
  */
 import { esc, fill, spread } from "./motion.mjs";
-import { durationText, icon, standUp, target, toggle } from "./scene.mjs";
+import { durationText, icon, rise, target, toggle } from "./scene.mjs";
 import { modelName, recordedOn, turnOf } from "./take.mjs";
 import { cap, head, src } from "./slides-intro.mjs";
 
 /** The four turns the kit takes, in order: chain steps 1 to 3 and the register step 4. */
 const TURNS = [["chain", "step1"], ["chain", "step2"], ["chain", "step3"], ["register", "step4"]];
-/** World Bank Enterprise Surveys: percent of senior managers' time on regulation (TIME-44 2019, TIME-43 2023). */
+/** World Bank Enterprise Surveys: percent of senior managers' time on regulation (2019 and 2023 waves). */
 const WB = [2.5, 5.8];
 /** The large drawing of each day by hand. */
 const HAND_ICONS = ["letter", "binder-gap", "clock", "sheet-miss"];
@@ -70,11 +70,11 @@ export function time(it, ctx, d, c, takes) {
     id: "ax", tag: "div", cls: "tf fig", zone: "ax", fx: "none",
     html: `${days}${it({ tag: "span", cls: "tf__ev tf__ev--letter", k: 0, win: ".1,.5", html: `${icon("letter")}${esc(t.letterAt)}` })}${it({ tag: "i", cls: "tf__yard", k: 0, fx: "line", win: ".2,.8" })}${it({ tag: "span", cls: "tf__yl", k: 0, win: ".6,1", text: t.yard })}${it({ tag: "span", cls: "tf__ev tf__ev--visit", k: 0, win: ".6,1", html: `${icon("inspector")}${esc(t.visitAt)}` })}`,
   });
-  // the four days by hand: thick slabs that stand up into the outlined slots of the entry, each with its large drawing
+  // the four days by hand: flat cards that rise into the outlined slots of the entry, each with its large drawing
   const ghosts = t.hand.map((_, i) => `<i class="tl-g tl-g--${i}" aria-hidden="true"></i>`).join("");
-  // the Monday letter, large in its slot on the entry (it fades: the yardstick is the press's one line); the slab covers it on 1
+  // the Monday letter, large in its slot on the entry (it fades: the yardstick is the press's one line); the card covers it on 1
   const monday = it({ tag: "span", cls: "tl-mon", k: 0, out: 1, win: ".1,.6", html: icon("letter", { cls: "dr" }) });
-  const hand = ghosts + monday + t.hand.map((x, i) => standUp(it, { cls: `tl-c tl-c--${i}`, k: 1, win: spread(i, 4, 0, 0.55), html: `${icon(HAND_ICONS[i], { cls: "dr" })}<span>${esc(x)}</span>` })).join("");
+  const hand = ghosts + monday + t.hand.map((x, i) => rise(it, { cls: `tl-c tl-c--${i}`, k: 1, win: spread(i, 4, 0, 0.55), html: `${icon(HAND_ICONS[i], { cls: "dr" })}<span>${esc(x)}</span>` })).join("");
   const steps = recordedSteps(takes);
   const claude = claudeLane(it, t, d, takes, steps);
   // the two hero numbers, one per lane: the invented four days and the recorded total
@@ -86,7 +86,7 @@ export function time(it, ctx, d, c, takes) {
   const heroClaude = `<div class="tln__hero">${ask(2)}${it({ tag: "p", cls: "tln__rl", k: 2, win: ".4,.8", text: t.runLabel })}${it({ tag: "p", cls: "tln__n", k: 2, win: ".45,.9", html: `<b>${esc(claude.hero).replace(/ min /, " min<br>")}</b>` })}${steps ? it({ tag: "p", cls: "tln__hon", k: 2, win: ".6,1", text: t.honest }) : ""}</div>`;
   const lanes = it({
     id: "lanes", tag: "div", cls: "tl2s fig", zone: "lanes", fx: "none", attrs: `role="img" aria-label="${esc(t.lanesAria)}" ${target("lanes", { state: "both" })}`,
-    html: `<span class="tl2s__grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div class="tln tln--hand"><div class="tln__l"><b>${esc(t.lanes[0])}</b>${heroHand}</div><div class="tln__days w05-s3d">${hand}</div></div><div class="tln tln--claude"><div class="tln__l"><b>${esc(t.lanes[1])}</b>${heroClaude}</div><div class="tln__days tc">${claude.html}</div></div>`,
+    html: `<span class="tl2s__grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div class="tln tln--hand"><div class="tln__l"><b>${esc(t.lanes[0])}</b>${heroHand}</div><div class="tln__days">${hand}</div></div><div class="tln tln--claude"><div class="tln__l"><b>${esc(t.lanes[1])}</b>${heroClaude}</div><div class="tln__days tc">${claude.html}</div></div>`,
   });
   const wb = it({
     id: "wb", tag: "div", cls: "wb fig", zone: "wb", k: 3, fx: "none",

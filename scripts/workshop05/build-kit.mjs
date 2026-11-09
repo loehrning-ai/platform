@@ -74,7 +74,7 @@ export const FOLDER_FILES = [
 export const KEEP_WATCH_FILES = ["weekly-check_scheduled-task.md", "monthly-check_by-hand.md", "register-project-instructions.md", "watch-list.md", "safety-card.md"];
 export const KEEP_WATCH_FILES_DE = ["wochencheck_geplante-aufgabe.md", "monatscheck_von-hand.md", "register-projektanweisungen.md", "beobachtungsliste.md", "sicherheitskarte.md"];
 
-/** Every source file of the English kit (40), and nothing else. The skill (36th) is added from the repository. */
+/** Every source file of the English kit (40), and nothing else. The skill (41st) is added from the repository. */
 export const KIT_FILES = [
   "START-HERE.md",
   "ANSWERS.md",

@@ -6,11 +6,11 @@ Einmal im Monat, an einem festen Tag, macht das eine benannte Person. Das Regist
 
 Nimm das Skript check.py aus Schritt 4 und diesen Prompt:
 
-    Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro zuständiger Rolle. Nur ein Entwurf.
+    Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro Rolle der Verantwortlichen. Nur Entwürfe: nichts senden und keine Zeile ändern.
 
 Eine benannte Person liest die Listen, verschickt die Nachrichten und schreibt für jede Lücke ein neues datiertes Papier. Ändere nie eine alte Zeile, um eine Lücke zu verstecken.
 
-Damit das nach dem Workshop weiterläuft, siehe bereit-bleiben/: eine wöchentliche geplante Aufgabe in bezahlten Plänen, derselbe Check von Hand im Gratis-Plan.
+Damit das nach dem Workshop weiterläuft, siehe bereit-bleiben/: eine wöchentliche geplante Aufgabe in bezahlten Tarifen, derselbe Check von Hand im Free-Tarif.
 
 ## Weitere Orte für dasselbe Register
 

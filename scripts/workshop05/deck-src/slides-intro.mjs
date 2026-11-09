@@ -8,6 +8,7 @@ import { esc, fill, spread } from "./motion.mjs";
 import { field, fieldPoint, icon, numFmt } from "./scene.mjs";
 import { BITOLA, REGIONS } from "./seats.mjs";
 import { AGENDA_PARTS } from "./data.mjs";
+import { spark } from "./slides-parts.mjs";
 
 export const head = (it, t, zone = "h") => it({ id: "h", tag: "h2", cls: "headline hl", zone, text: t.h });
 /** The caption slot: texts swap in one place, each leaves as the next arrives. */
@@ -32,12 +33,12 @@ function pushVars(oy) {
 }
 
 /**
- * The cover entry (law L1, widened on purpose in round 4): one entry host of 12 s. The share 0 to .12 is the dust settling
- * into the country, .12 to .86 is the inspection year 2025 (one sage ring per 300 inspections out of the eight DIT regions,
- * the counter running to their sum), .86 to 1 closes on Bitola. A press at any moment goes on to Today; reduced motion and
- * preview show the end at once.
+ * The cover entry (law L1, widened in round 4, cut to 9 s in round 5: Tim asked for at most 10 s): one entry host. The share
+ * 0 to .14 is the dust settling into the country (1.3 s), .14 to .82 is the inspection year 2025 (6.1 s; one ring per 300
+ * inspections out of the eight DIT regions, the counter running to their sum), .82 to 1 closes on Bitola (1.6 s). A press at
+ * any moment goes on to Today; reduced motion and preview show the end at once.
  */
-export const COVER = { ms: 12000, year: [0.12, 0.86], pulse: 300 };
+export const COVER = { ms: 9000, year: [0.14, 0.82], pulse: 300 };
 
 /** S01: the title page. No press: one entry host replays the inspection year 2025 over the country, then Bitola lights up. */
 export function cover(it, ctx, d, c) {
@@ -136,7 +137,8 @@ export function today(it, ctx, d, c) {
     const chips = files
       .map(([name, ico], i) => it({ tag: "span", cls: "tfile", k, fx: "move", win: spread(i, files.length, 0.4, 0.45), attrs: `style="--dx:${-150 - 40 * i}px;--dy:${-210 + 30 * i}px"`, html: `${icon(ico)}<b>${esc(name).replace(/\//g, "/<wbr>")}</b>` }))
       .join("");
-    return `<div class="tproj fig"><p class="tproj__h">${icon("assistant")}<b>${esc(t.project)}</b><span>${esc(fill(t.files, d.vars))}</span></p><div class="tproj__files">${chips}</div></div>`;
+    // a Claude project in Claude's own look (D4): ivory, the clay edge, the spark (lib/w05-fx.css .cl-ui)
+    return `<div class="tproj cl-ui fig"><p class="tproj__h">${spark()}<b>${esc(t.project)}</b><span>${esc(fill(t.files, d.vars))}</span></p><div class="tproj__files">${chips}</div></div>`;
   };
   const stations = TODAY.stations.map(([x, y], i) => {
     const k = i + 1;

@@ -29,8 +29,8 @@ export { esc };
 export const MAIN_TOTAL = 16;
 
 const DEFAULT_MS = 1200;
-/** The longest cover entry the motion law admits (round 4: the inspection year replays in it). */
-export const COVER_MAX_MS = 12000;
+/** The longest cover entry the motion law admits (round 4: the inspection year replays in it; round 5: at most 10 s in all). */
+export const COVER_MAX_MS = 10000;
 /** Press lengths in ms per slide: presses after the first, and the overrides of the motion law (never above 1600). */
 const press = (steps, over = {}) => Array.from({ length: steps + 1 }, (_, i) => over[i] ?? DEFAULT_MS);
 

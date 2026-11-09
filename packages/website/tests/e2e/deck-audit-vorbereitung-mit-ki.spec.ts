@@ -9,7 +9,8 @@ import { expect, type Page, test } from "@playwright/test";
  * scrolls sideways. The 16 main slides and appendix a1 to a4 of the condensed deck are pinned by id,
  * the six polls by name and button count, the recorded-take chip on the four step slides, and the
  * visual law is scanned on every press of every slide in both editions: V1 no ink fill, V7 text
- * contrast 4.5:1, V8 at most one accent element per press state.
+ * contrast 4.5:1, V8 at most one accent element per press state, V9 (round 5) Claude's orange only
+ * inside the drawn Claude UI (.cl-ui).
  */
 
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -68,7 +69,8 @@ const mainPositions = (page: Page) =>
  * Runs in the page: scans the elements of the active slide in their current press state.
  * V1: no opaque (alpha 0.3 or more) background darker than relative luminance 0.15 on a box of at
  * least 10 x 4 px. V7: every element with its own text has contrast 4.5:1 against the nearest
- * opaque background. V8: at most one element drawn in the accent colour.
+ * opaque background. V8: at most one element drawn in the accent colour. V9 (round 5, D4): Claude's
+ * orange (--claude-clay) is drawn only inside the Claude UI (an element in .cl-ui), never on the slide.
  */
 function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
   type Rgba = { r: number; g: number; b: number; a: number };
@@ -99,7 +101,13 @@ function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
   probe.style.color = "var(--accent)";
   slide.append(probe);
   const accent = parse(getComputedStyle(probe).color);
+  probe.style.color = "var(--claude-clay)";
+  const clay = parse(getComputedStyle(probe).color);
   probe.remove();
+  const clays: string[] = [];
+  const claySeen = (el: Element, ...values: string[]) => {
+    if (clay && !el.closest(".cl-ui") && values.some((value) => same(parse(value), clay))) clays.push(describe(el));
+  };
 
   const opacityOf = (el: Element) => {
     let opacity = 1;
@@ -138,6 +146,7 @@ function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
       const rect = el.getBoundingClientRect();
       if (fill && fill.a >= 0.3 && luminance(fill) < 0.15 && rect.width >= 10 && rect.height >= 4 && !exempted(el)) hits.push(`V1 ink fill ${describe(el)} ${style.fill}`);
       if (same(fill, accent) || (style.strokeWidth !== "0px" && same(parse(style.stroke), accent))) accents.push(describe(el));
+      claySeen(el, style.fill, style.strokeWidth !== "0px" ? style.stroke : "");
       continue;
     }
     if (!visible(el) || exempted(el)) continue;
@@ -165,7 +174,10 @@ function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
       if (width > 0 && style[`border${side}Style`] !== "none" && same(parse(style[`border${side}Color`]), accent)) drawsAccent = true;
     }
     if (drawsAccent) accents.push(describe(el));
+    const edges = (["Top", "Right", "Bottom", "Left"] as const).filter((side) => parseFloat(style[`border${side}Width`]) > 0 && style[`border${side}Style`] !== "none").map((side) => style[`border${side}Color`]);
+    claySeen(el, style.backgroundColor, style.color, ...edges, style.outlineStyle !== "none" ? style.outlineColor : "");
   }
+  if (clays.length) hits.push(`V9 Claude orange outside the Claude UI: ${clays.slice(0, 6).join(", ")}`);
   if (accents.length > 1) hits.push(`V8 ${accents.length} accent elements: ${accents.slice(0, 6).join(", ")}`);
   return hits;
 }
@@ -317,7 +329,7 @@ for (const edition of EDITIONS) {
       }
     });
 
-    test("visual law V1, V7 and V8 hold on every press of every main slide", async ({ page }) => {
+    test("visual law V1, V7, V8 and V9 hold on every press of every main slide", async ({ page }) => {
       test.setTimeout(300_000);
       await open(page, edition.deck);
       const positions = await mainPositions(page);

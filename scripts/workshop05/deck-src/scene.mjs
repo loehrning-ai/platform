@@ -1,6 +1,6 @@
 /**
  * The scene kit the Workshop 05 slides share (REDESIGN-3, MOTION-SCOUT 4.2): the W05 icon set (icon, draw), the dot field
- * (field, fieldPoint, fieldGroups; lib/w05-field.js), the 3D primitives (standUp, plane; CSS in lib/w05-fx.css), the
+ * (field, fieldPoint, fieldGroups; lib/w05-field.js), the card motions (rise, flat; standUp and binder, 3D, only where depth is the idea; CSS in lib/w05-fx.css), the
  * presenter controls (toggle, scrubber, hotspots, target; lib/w05-scrub.js), the outline of North Macedonia from the deck's
  * own geo file, number and duration formats. Everything here is markup or a pure function. No text lives inside an SVG (the
  * words test skips svg and a label there would be invisible to it); labels are HTML on top of the drawing.
@@ -135,13 +135,18 @@ export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 2
   return it({ id, tag: "div", cls: `w05-field${cls ? ` ${cls}` : ""}`, zone, k, out, outWin, fx: "none", attrs: `${still ? "" : "data-scene "}style="width:${w}px;height:${h}px${style ? `;${style}` : ""}"${aria}${hostAttrs ? ` ${hostAttrs}` : ""}`, html: `${plane ? `<div class="w05-field__plane">${plane.under || ""}${canvas}${plane.over || ""}</div>` : canvas}${drivers}${overlay}` });
 }
 
-/* ── 3D primitives (CSS in lib/w05-fx.css, all a function of --p) ──── */
+/* ── card motions (CSS in lib/w05-fx.css, all a function of --p) ───── */
 /**
- * A card that stands up out of the floor during its press (rotateX 90 to 0 around its bottom edge). Put it inside an element
- * of class w05-s3d (the perspective). The card is a stepped element with data-scene; icons inside may draw in the same press.
+ * A flat card that rises into its place during its press (round 5, D2: 28 px up and a fade, no depth). The card is a stepped
+ * element with data-scene, so icons that draw inside it in the same press belong to its one idea (law L5).
+ */
+export const rise = (it, o) => it({ tag: "div", fx: "none", ...o, cls: `w05-rise${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs ? ` ${o.attrs}` : ""}` });
+/**
+ * A card that stands up out of the floor during its press (rotateX 90 to 0 around its bottom edge). 3D, so only where depth is
+ * the idea (the safety stair, a ladder); inside an element of class w05-s3d (the perspective).
  */
 export const standUp = (it, o) => it({ tag: "div", fx: "none", ...o, cls: `w05-card${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs ? ` ${o.attrs}` : ""}` });
-/** A plane that slides in on its own depth (the Claude window, T6): from 240 px back and 14 degrees turned, to flat. */
+/** A window that slides up into its place during its press (the Claude window, T6; flat since round 5). */
 export const plane = (it, o) => it({ tag: "div", fx: "none", ...o, cls: `w05-plane${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs ? ` ${o.attrs}` : ""}` });
 
 /**

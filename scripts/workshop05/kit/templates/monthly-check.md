@@ -6,7 +6,7 @@ Once a month, on a fixed day, one named person does this. The register is a work
 
 Use the script check.py from Step 4 and this prompt:
 
-    Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only.
+    Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only: send nothing and change no row.
 
 A named person reads the lists, sends the messages and writes a new dated paper for every gap. Never change an old row to hide a gap.
 

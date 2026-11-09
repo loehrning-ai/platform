@@ -7,7 +7,7 @@ import { esc, fill, spread } from "./motion.mjs";
 import { binder, icon } from "./scene.mjs";
 import { kit as kitFile, kitDe } from "./data.mjs";
 import { head } from "./slides-intro.mjs";
-import { claudeWindow, dolly, fileName, filePreviews, ico, inFolder, named, pollButtons, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
+import { claudeWindow, dolly, takeModel, fileName, filePreviews, ico, inFolder, named, pollButtons, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
 
 /** The checklist and folder directories of each edition (the zip's own top folders). */
 const CHECK = ["checklists", "listen"];
@@ -41,18 +41,18 @@ export function keyRow(lang, id) {
 const TEST_ICONS = ["sheet", "calendar", "person", "contract"];
 
 /**
- * S08 kit (round 4): one 3D scene under a camera. Press 0: the closed binder (the zip) stands up from the desk; the empty
- * project window floats on its own plane. Press 1: the cover swings open on its spine and the
- * twelve top-level entries of the zip appear on the sheet. Press 2: the camera turns toward the project while four files lift
- * off the binder and arc through depth into the project's slots (CLAUDE-01, CLAUDE-02); the four first-time steps run along
- * the bottom. Press 3: the files Claude can make (CLAUDE-07) draw in, and the data rule. The caption swaps in one place.
- * The flying chips live in the camera, outside the window (whose thread clips), placed exactly over the window's slots.
+ * S08 kit: the binder is an object, so its 3D stays (round 5); the rest is flat. Press 0: the closed binder (the zip) stands
+ * up from the desk; the empty project window slides up into place. Press 1: the cover swings open on its spine and the
+ * twelve top-level entries of the zip appear on the sheet. Press 2: four files lift off the binder and arc flat into the
+ * project's slots (Anthropic help centre, projects); the four first-time steps run along the bottom. Press 3: the files Claude can make
+ * (Anthropic help centre, files) draw in, and the data rule. The caption swaps in one place. The flying chips live in the scene host, outside
+ * the window (whose thread clips), placed exactly over the window's slots.
  */
 /** Stage pixels inside the camera (measured on the rendered slide, the same in both editions; the desk is scaled to .9 from its
  *  bottom right corner so the open cover stays inside the margin): the tree rows of the four
  *  files that fly (checklists, folder, cases, templates: rows 2, 3, 5, 6) and the four slots of the project's file grid. */
 const KIT_ROW = { x: 504, y0: 279, pitch: 38.7, rows: [2, 3, 5, 6] };
-const KIT_SLOT = { x: [936, 1283], y: [237, 290] };
+const KIT_SLOT = { x: [993, 1335], y: [239, 292] };
 export function kit(it, ctx, d, c) {
   const t = c.s.kit;
   const v = (x) => fill(x, d.vars);
@@ -70,8 +70,8 @@ export function kit(it, ctx, d, c) {
   const front = `<span class="kb__cover">${icon("zip", { cls: "dr" })}<b>${esc(zipName)}</b><small>${esc(zipRest.join(", "))}</small></span><span class="kb__inside" aria-hidden="true"><b>${fileName(zipName)}</b><small>${esc(zipRest[0] ?? "")}</small></span>`;
   const book = binder(it, { id: "kb", zone: "kb", k: 1, sheets: 2, cls: "kb fig", attrs: `data-keep role="img" aria-label="${esc(v(t.binderAria))}"`, front, html: `<ul class="kb__tree">${rows}</ul>` });
   const fly = split(t.fly);
-  // each chip starts on its tree row of the binder sheet and lands on its slot in the project: a 3D arc (lift in z and y,
-  // a pure function of --p), drawn in the camera's space so the window's thread never clips it
+  // each chip starts on its tree row of the binder sheet and lands on its slot in the project: a flat arc (a lift in y, a pure
+  // function of --p; round 5, no depth), drawn above the window so the window's thread never clips it
   const chips = fly.map((x, i) => {
     const to = { x: KIT_SLOT.x[i % 2], y: KIT_SLOT.y[Math.floor(i / 2)] };
     const from = { x: KIT_ROW.x, y: KIT_ROW.y0 + (KIT_ROW.rows[i] - 2) * KIT_ROW.pitch };
@@ -81,10 +81,10 @@ export function kit(it, ctx, d, c) {
   // the project stands empty from the entry (its slots outlined); press 2 fills it
   const ins = it({ tag: "p", cls: "kw__ins", k: 2, win: ".1,.5", html: `${icon("sheet")}<b>${esc(t.insFile)}</b><small>${esc(t.insNote)}</small>` });
   const thread = `<div class="kw__p fig"><p class="kw__h">${esc(t.ins)}</p><div class="kw__slot kw__slot--ins">${ins}</div><p class="kw__h">${esc(t.files)}</p><ul class="kw__files"><li class="kw__ghost" aria-hidden="true">${"<i></i>".repeat(fly.length)}</li></ul>${made}</div>`;
-  const win = claudeWindow(it, { id: "win", crumbs: t.win, thread, k: 0, plane: true, cls: "tk-cw--small kw" });
+  const win = claudeWindow(it, { id: "win", brand: c.claudeUi.brand, rail: true, crumbs: t.win, thread, k: 0, plane: true, cls: "tk-cw--small kw" });
   // the binder lies on the desk at --p 0 of the entry and stands up on its bottom edge
   const desk = it({ tag: "div", cls: "kb-host", k: 0, fx: "none", attrs: "data-scene", html: book });
-  // the camera: from press 2 it turns a little toward the project (the binder steps back, the window comes round)
+  // the scene of press 2: the files arc from the binder into the project (flat since round 5: no camera turn)
   const cam = it({ id: "cam", tag: "div", cls: "kcam fig", zone: "cam", k: 2, fx: "none", attrs: "data-scene data-keep", html: `${desk}<div class="kw-host">${win}</div><ul class="kfly-l" aria-hidden="true">${chips}</ul>` });
   const steps = t.steps.map((x, i) => it({ tag: "li", k: 2, win: spread(i, 4, 0.3, 0.45), html: `<b>${i + 1}</b><span>${esc(x)}</span>` })).join("");
   const stage = [
@@ -120,7 +120,7 @@ export function step1(it, ctx, d, c, T) {
   const qs = it({ id: "qs", tag: "div", cls: "tk-doc fig", zone: "t", k: 1, out: 2, html: `<ul>${questions}</ul>` });
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step1", k: 2, ms: 1500, head: true, hitRows: d.key.noOwner, zoom: ".78,1", ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the window as the recorded table streams (press 2)
-  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", crumbs: t.win, thread: `${p.pr}${qs}${take.take}`, plane: true, zone: null }) });
+  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${qs}${take.take}`, plane: true, zone: null }) });
   // the files this prompt reads: the three checklist excerpts and the folder index
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => [...inFolder(paths, CHECK), ...inFolder(paths, FOLDER, isIndex)] });
   const stage = [
@@ -140,7 +140,7 @@ export function step2(it, ctx, d, c, T) {
   // the answer uses the window's full width (15 words a row) and draws the script's rows as a grid, so all ten findings fit
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step2", k: 2, ms: 1500, hit: true, head: true, wrap: 15, scan: { id: "scan", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the window with the poll (press 1); press 2 belongs to the scan and its counters
-  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", crumbs: t.win, thread: `${p.pr}${poll}${take.take}`, plane: true, zone: null }) });
+  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${poll}${take.take}`, plane: true, zone: null }) });
   // the check reads every file of the folder
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => inFolder(paths, FOLDER) });
   const stage = [
@@ -183,8 +183,8 @@ export function tests(it, ctx, d, c) {
     return it({ tag: "span", cls: `tt__r tt__r--${tone}`, k: fails ? 4 : 3, win: fails ? ".3,1" : spread(i, 4, 0.5, 0.4), html: `${quote}<b>${esc(word2)}</b>` });
   };
   // press 0: four outlined slots, each with its drawing; press 1 lays the four tests onto them, one after another: each comes
-  // down out of the room and settles in its slot (a 3D scene)
-  // press 0: the four slots stand up out of the card one after another (a scene), so the entry is not four still outlines
+  // down onto its slot and covers its drawing (a scene; flat since round 5)
+  // press 0: the four slots rise into the card one after another (a scene), so the entry is not four still outlines
   const tiles = ["t1", "t2", "t3", "t4"].map((id, i) => it({ tag: "li", cls: `tt__s tt__s--${i + 1}`, k: 0, fx: "none", win: spread(i, 4, 0.1, 0.5), attrs: "data-scene", html: `<i class="tt__g" aria-hidden="true">${icon(TEST_ICONS[i])}</i>${it({ tag: "span", cls: `tt__i tt__i--${i + 1}`, k: 1, fx: "none", win: spread(i, 4, 0, 0.55), attrs: "data-scene", html: `${icon(TEST_ICONS[i], { cls: "tt__ic" })}<span class="tt__f">${labelled(t[id])}</span>${id === "t3" ? scope : ""}${result(id, i)}` })}` })).join("");
   const row = it({
     id: "row", tag: "div", cls: "rwcard fig", zone: "row", fx: "none", attrs: img(v(t.row)),
@@ -215,7 +215,7 @@ export function step3(it, ctx, d, c, T) {
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step3", k: 1, ms: 1500, head: true, out: { take: 2, chip: 2, key: 2 }, board: { id: "board", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   const files = it({ id: "files", tag: "div", cls: "tk-filesbox", zone: "t", k: 2, out: 3, html: filePreviews(T.chain, t.files, { skip: /^check\.py$/, it, k: 2 }) });
   // the camera moves in on the window as the status answer streams (press 1); the window leaves for the fix pair (press 3)
-  const win = dolly(it, { k: 1, out: 3, html: claudeWindow(it, { id: "win", crumbs: t.win, thread: `${p.pr}${take.take}${files}`, out: 3, plane: true, zone: null }) });
+  const win = dolly(it, { k: 1, out: 3, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}${files}`, out: 3, plane: true, zone: null }) });
   // the templates this prompt fills, and the notice it reads the clock from
   const inputs = promptInputs(it, d, { out: 1, pick: (paths) => [...paths.filter((p) => /^(notice|mitteilung)_/.test(p)), ...named(paths, d.prompts.step3)] });
   const fixsc = it({

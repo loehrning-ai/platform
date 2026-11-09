@@ -5,9 +5,9 @@
  * which gives its place to the law (press 5); the poll (press 2) leaves with the answer (press 3). The stair is seen in depth (a real 3D
  * stair: each step one level higher in z, the lit step comes forward), each step with an offset outline as its edge.
  * Press 0: the two rules (AI sorts and drafts; a named person signs). Press 1: steps 1 and 2 stand up, the training fact per plan
- * (CLAUDE-57, CLAUDE-59). Press 2: steps 3 and 4 stand up, the poll. Press 3: the answer, step 3 lit, the poll gone. Press 4: what never goes
- * into a chat on any plan (EMBG, health content, the feedback buttons: CLAUDE-63, CLAUDE-64) and the record rule. Press 5: the
- * four gates and the two law cards, step 4 lit (AZLP Form No. 1, the Usage Policy: CLAUDE-67, CLAUDE-68, CLAUDE-70, CLAUDE-81).
+ * (Anthropic Usage Policy). Press 2: steps 3 and 4 stand up, the poll. Press 3: the answer, step 3 lit, the poll gone. Press 4: what never goes
+ * into a chat on any plan (EMBG, health content, the feedback buttons: Law on Personal Data Protection) and the record rule. Press 5: the
+ * four gates and the two law cards, step 4 lit (AZLP Form No. 1, the Usage Policy, Law on Personal Data Protection Chapter V).
  * The stair links to appendix A2.
  */
 import { esc, spread } from "./motion.mjs";

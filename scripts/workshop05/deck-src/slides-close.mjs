@@ -5,7 +5,7 @@
  * Press 3: the take-away, three QR cards in a clean row and the question round. Each press replaces the one before.
  */
 import { esc, spread } from "./motion.mjs";
-import { draw, icon, standUp } from "./scene.mjs";
+import { draw, icon, rise } from "./scene.mjs";
 import { cap } from "./slides-intro.mjs";
 import { pollButtons } from "./slides-parts.mjs";
 import { rowCells } from "./slides-rules.mjs";
@@ -42,9 +42,9 @@ export function close(it, ctx, d, c) {
   const urls = { kit: "/workshops/audit-vorbereitung-mit-ki/kit", demo: "/demos/audit-vorbereitung-mit-ki", skill: "/skills/audit-nachweise" };
   // the code carries the full address; the card names only the site, so the caption stays one line (the alt text keeps the path)
   const address = (code) => `loehrning.ai${d.lang === "en" && code !== "skill" ? "/en" : ""}${urls[code]}`;
-  // press 3: once the poll has gone (it leaves by .25) the three cards stand up in turn (one scene); never over the poll icons
+  // press 3: once the poll has gone (it leaves by .25) the three cards rise in turn (one scene); never over the poll icons
   const qr = ["kit", "demo", "skill"]
-    .map((code, i) => standUp(it, { tag: "figure", cls: "qr", k: 3, win: spread(i, 3, 0.25, 0.5), html: `<img src="./assets/qr-${code}-g26${ed}.svg" width="300" height="300" alt="${esc(`${t.qrLabels[i]}: ${address(code)}`)}"><figcaption><b>${esc(t.qrLabels[i])}</b><span class="fig qr__url">loehrning.ai</span></figcaption>` }))
+    .map((code, i) => rise(it, { tag: "figure", cls: "qr", k: 3, win: spread(i, 3, 0.25, 0.5), html: `<img src="./assets/qr-${code}-g26${ed}.svg" width="300" height="300" alt="${esc(`${t.qrLabels[i]}: ${address(code)}`)}"><figcaption><b>${esc(t.qrLabels[i])}</b><span class="fig qr__url">loehrning.ai</span></figcaption>` }))
     .join("");
   // Labour is the inspector, "not sure" a question mark
   const icons = ["inspector", "paper", "check", "question"];
@@ -63,7 +63,7 @@ export function close(it, ctx, d, c) {
     it({ id: "pc", cls: "t cap", zone: "cap", k: 2, out: 3, win: ".3,1", text: t.pc }),
     pollButtons(it, { id: "pb", name: "door-end", labels: t.pb, k: 2, out: 3, zone: "pb", win: "0,.45" }),
     ghost,
-    it({ id: "qr", tag: "div", cls: "qrs w05-s3d fig", zone: "qr", k: 3, fx: "none", attrs: img(t.qrLabels.join(", ")), html: qr }),
+    it({ id: "qr", tag: "div", cls: "qrs fig", zone: "qr", k: 3, fx: "none", attrs: img(t.qrLabels.join(", ")), html: qr }),
     it({ id: "qs", cls: "t t--lead", zone: "qs", k: 3, win: ".15,.6", text: t.qs }),
   ].join("\n");
   return { head: "", stage };

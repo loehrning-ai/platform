@@ -49,7 +49,7 @@ a{color:inherit}
 
 /* S01 cover */
 .slide.cover{grid-template-rows:minmax(0,1fr) auto;background:var(--w05-sage-50)}
-/* the one entry host (the inspection year, 12 s): the whole slide box under the title column; the map and the counter sit in it */
+/* the one entry host (the inspection year, 9 s): the whole slide box under the title column; the map and the counter sit in it */
 .slide.cover .cover__year{position:absolute;inset:0;z-index:0;pointer-events:none}
 /* the dot field (lib/w05-field.js): placed by its inline left and top, the same place as the floor of S02 (one shot) */
 .slide.cover .cover__map{position:absolute;z-index:0;pointer-events:none}
@@ -61,9 +61,9 @@ a{color:inherit}
 .fmark__near{opacity:clamp(0,calc((var(--p,1) - .8) * 6),1)}
 /* the phases of the cover, from the host's linear --p: --d the dust (0 to --y0), --e the close on Bitola (--y1 to 1) */
 .cover__map,.today__floor{--tx:0px;--ty:0px}
-/* the dust falls into the plane while it condenses (tilted to flat), then holds still through the year; the last part is a
-   calm 6 % push-in centred on Bitola (--tx/--ty from the origin, written at build time) */
-.slide.cover .cover__map[data-step][data-fx]{--d:clamp(0,calc(var(--p,1) / var(--y0,.12)),1);--e:clamp(0,calc((var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86))),1);--push:calc(1 + .06 * var(--e) * (2 - var(--e)));transform:translate(var(--tx),var(--ty)) scale(var(--push)) translate(calc(-1 * var(--tx)),calc(-1 * var(--ty))) perspective(1800px) rotateX(calc((1 - var(--d)) * (1 - var(--d)) * 28deg)) rotateY(calc((1 - var(--d)) * (1 - var(--d)) * -16deg));transform-origin:50% 60%}
+/* the dust condenses into the country on the flat page, then holds still through the year; the last part is a calm 6 %
+   push-in centred on Bitola (--tx/--ty from the origin, written at build time) */
+.slide.cover .cover__map[data-step][data-fx]{--d:clamp(0,calc(var(--p,1) / var(--y0,.12)),1);--e:clamp(0,calc((var(--p,1) - var(--y1,.86)) / (1 - var(--y1,.86))),1);--push:calc(1 + .06 * var(--e) * (2 - var(--e)));transform:translate(var(--tx),var(--ty)) scale(var(--push)) translate(calc(-1 * var(--tx)),calc(-1 * var(--ty)));transform-origin:50% 60%}
 .slide.cover .cover__map .fmark__ln{transform:scaleY(clamp(0,calc((var(--e) - .7) * 5),1))}
 .slide.cover .cover__map .fmark b{opacity:clamp(0,calc((var(--e) - .86) * 8),1)}
 .slide.cover .cover__map .fmark__near{opacity:clamp(0,calc((var(--e) - .8) * 6),1)}
@@ -112,24 +112,25 @@ a{color:inherit}
 .slide.step1 .tk-cw,.slide.step2 .tk-cw,.slide.step3 .tk-cw,.slide.register .tk-cw{transition:height .6s cubic-bezier(.22,1,.36,1) .4s}
 .slide.step1[data-view="0"] .tk-cw,.slide.step1[data-view="1"] .tk-cw,.slide.step2[data-view="0"] .tk-cw,.slide.step2[data-view="1"] .tk-cw,.slide.step3[data-view="0"] .tk-cw,.slide.register[data-view="1"] .tk-cw{height:340px}
 @media (prefers-reduced-motion:reduce){.slide.step1 .tk-cw,.slide.step2 .tk-cw,.slide.step3 .tk-cw,.slide.register .tk-cw{transition:none}}
-/* the files a prompt reads: sheets of paper on a desk in the band under the small window (and on the empty register sheet).
-   Each sheet stands up out of the desk during its press (rotateX on --p, the desk holds the perspective) and lies down as it
-   leaves; its edge is a second outline offset behind its face (no shadow) */
+/* the files a prompt reads: sheets of paper in the band under the small window (and on the empty register sheet). Each sheet
+   rises 24 px into its place during its press and fades as it leaves (flat, round 5); its edge is a second outline offset
+   behind its face (no shadow) */
 .slide--take .stage > [data-zone="in"]{grid-area:1/2/6/3;align-self:end;z-index:1;margin:0 0 40px}
-.tk-in{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:34px;margin:0;padding:0 28px;list-style:none;perspective:1500px;perspective-origin:50% -40%}
+.tk-in{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:34px;margin:0;padding:0 28px;list-style:none}
 .tk-in li{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr);justify-items:center;align-content:start;gap:16px;width:236px;height:300px;padding:40px 18px 18px;text-align:center;font:600 24px/1.18 var(--mono);overflow-wrap:normal}
 .tk-in li > :not(i){position:relative}
 .pp__e,.pp__f{position:absolute;inset:0;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .pp__e{translate:8px 8px}
-.slide--take .tk-in li[data-step][data-fx]{transform-origin:50% 100%;transform:rotateX(calc((1 - var(--p,1)) * 84deg));opacity:min(1,calc(var(--p,1) * 4))}
+.slide--take .tk-in li[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
 .tk-in li svg.ico{width:96px;height:96px;stroke-width:1.2}
 .tk-in--many{gap:20px 10px}
-.tk-in--many li{width:146px;height:178px;gap:6px;padding:16px 4px 8px;font-size:18px;line-height:1.15;letter-spacing:-.03em}
+.tk-in--many li{width:154px;height:178px;gap:6px;padding:16px 4px 8px;font-size:18px;line-height:1.15;letter-spacing:-.03em}
 .tk-in--many li svg.ico{width:48px;height:48px;stroke-width:1.4}
+.tk-in--many li > span{overflow-wrap:anywhere}
 .tk-in--many .pp__e{translate:6px 6px}
-/* the camera on a Claude window: back and tilted on its own plane before its press, flat and forward after it */
+/* the focus on a Claude window: a touch smaller before its press, full size after it (flat, round 5) */
 .tk-dolly{display:grid;grid-template-rows:minmax(0,1fr);align-items:start;min-height:0;transform-origin:50% 0}
-.slide--take .tk-dolly[data-step][data-fx]{transform:perspective(2200px) translateZ(calc((1 - var(--p,1)) * -150px)) rotateX(calc((1 - var(--p,1)) * 10deg))}
+.slide--take .tk-dolly[data-step][data-fx]{transform:scale(calc(.97 + .03 * var(--p,1)))}
 .tk-dolly > .tk-cw{height:100%}
 .slide--take .tk-dolly > .tk-cw--small{height:auto}
 .tk-cw .cw-main{grid-template-rows:minmax(0,1fr)}
@@ -146,6 +147,14 @@ a{color:inherit}
 .slide .prompt:not([data-open]) .prompt-body{-webkit-mask-image:none;mask-image:none;border-bottom:2px dashed var(--w05-hair)}
 .tk-cw .cw-bar{font-size:.66em}
 .tk-cw--register .tk-thread{gap:.4em}
+/* the question to the register: its 17 recorded rows fit above the prompt box (round 5), so its first line is never cut */
+.slide.register [data-id="win2"] .out.rec{line-height:1.24}
+/* the register take: a tighter top (thread, tool chip, gap to the prompt box) gives back the room the prompt box took, and the
+   cut is set per edition on a whole line, as on step 2 (the two recordings wrap differently) */
+.slide.register [data-id="win"] .cw-main--comp > .tk-thread{padding-top:6px}
+.slide.register [data-id="win"] .tk-tools{margin-bottom:9px}
+.slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:796px;margin-bottom:4px}
+html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .cw-answer.tk.tk--head{height:804px}
 
 /* the recorded answer: verbatim lines at 27 px (20 px on screen at 1440 wide). The viewport fills what is left of the window; the
    flow inside it scrolls up while its rows come in (--p runs .3 to 1 with the rows), so a long answer shows its newest rows and
@@ -198,6 +207,7 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .rec th:nth-child(4){width:23%}
 .rec td{padding:2px 10px;border-bottom:1px solid var(--cw-line2);vertical-align:top;overflow-wrap:break-word;hyphens:auto}
 .rec tr.is-hit td{background:var(--w05-sage-200)}
+.cl-ui .rec tr.is-hit td{background:var(--claude-cloud)}
 /* step 1: the whole table of 13 rows fits the window, so the two rows the key names (L10, L11) are in view */
 .slide.step1 table.rec{font-size:20px;line-height:1.04}
 .slide.step1 .rec td,.slide.step1 .rec th{padding:1px 6px}
@@ -309,15 +319,16 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .tcard__part b{font:700 34px/1.1 var(--sans);letter-spacing:-.015em;color:var(--w05-green)}
 .tcard__part span{padding:4px 14px;border-radius:10px;box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 32px/1.15 var(--mono);white-space:nowrap}
 .tcard__o{font:700 46px/1.05 var(--sans);letter-spacing:-.024em;text-wrap:balance}
-.tcard__tag{justify-self:start;padding:6px 16px;border-radius:12px;background:var(--w05-sage-100);font:600 32px/1.2 var(--mono)}
+.tcard__tag{justify-self:start;padding:6px 16px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 32px/1.2 var(--mono)}
 .slide.today .tcard__note{font:500 34px/1.2 var(--sans);letter-spacing:-.012em}
 /* the kit station: three real files of the kit fly into a Claude project */
-.tproj{display:grid;gap:10px;padding:14px 16px 16px;border-radius:18px;background:var(--w05-sage-50);box-shadow:inset 0 0 0 2px var(--w05-sage-400)}
+/* the Claude project on the kit station: Claude's own look (D4, lib/w05-fx.css 2b): ivory, the clay edge, the spark */
+.tproj{display:grid;gap:10px;padding:14px 16px 16px;border-radius:18px}
 .tproj__h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px;font:600 32px/1.15 var(--mono)}
-.tproj__h .ico{grid-row:span 2;width:48px;height:48px}
-.tproj__h span{font-size:30px;color:var(--w05-green)}
+.tproj__h .cl-spark{grid-row:span 2;width:40px;height:40px;margin:0 4px}
+.tproj__h span{font-size:30px;color:var(--muted)}
 .tproj__files{display:grid;gap:6px}
-.tfile{display:flex;align-items:center;gap:10px;padding:4px 12px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 24px/1.12 var(--mono);white-space:nowrap}
+.tfile{display:flex;align-items:center;gap:10px;padding:4px 12px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);font:600 24px/1.12 var(--mono);white-space:nowrap}
 .tfile .ico{width:34px;height:34px;flex:none}
 .tfile b{font-weight:600;min-width:0;overflow-wrap:normal}
 
@@ -388,10 +399,10 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .board__k--weak i{position:relative;overflow:hidden}
 .board__k--weak i::before{content:"";position:absolute;inset:0 50% 0 0;background:var(--w05-sage-400)}
 .board__k b{font:700 30px/1 var(--mono)}
-/* step 3: the produced files open as pages in depth, one after another; each shows its name and its first recorded lines */
-.tk-prevs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 28px;margin-top:10px;perspective:1700px;perspective-origin:50% 20%}
-.tk-prev{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;height:372px;padding:20px 22px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);overflow:hidden;transform-origin:0 50%}
-.slide.step3 .tk-prev[data-step][data-fx]{transform:rotateY(calc((1 - var(--p,1)) * -78deg)) translateZ(calc((1 - var(--p,1)) * -160px));opacity:min(1,calc(var(--p,1) * 3))}
+/* step 3: the produced files rise as pages, one after another (flat, round 5); each shows its name and its first recorded lines */
+.tk-prevs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 28px;margin-top:10px}
+.tk-prev{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;height:372px;padding:20px 22px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-t3);overflow:hidden}
+.slide.step3 .tk-prev[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
 .tk-prev > b{padding-bottom:12px;border-bottom:2px solid var(--w05-hair);font:700 28px/1.18 var(--mono);overflow-wrap:normal}
 .tk-prev__b{display:grid;align-content:start;gap:6px;min-height:0;overflow:hidden}
 /* each page shows its key line in up to four lines, so nothing runs out of the card */
@@ -422,17 +433,15 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .rw__m{grid-area:m;display:flex;flex-wrap:wrap;gap:6px 44px}
 .rw__m .rw__c{font:600 28px/1.2 var(--mono)}
 /* the four slots on the row are drawn from the start (hairline outlines); each test settles into its own */
-.tt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;margin:0;padding:0;list-style:none;perspective:1600px;perspective-origin:50% -20%}
+.tt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;margin:0;padding:0;list-style:none}
 .tt__s{position:relative;display:grid;min-height:300px;border-radius:18px;box-shadow:inset 0 0 0 2px var(--w05-hair)}
 .tt__g{position:absolute;inset:0;display:grid;place-items:center;color:var(--w05-hair)}
 .tt__g svg{width:112px;height:112px;stroke-width:1.1}
 .slide.tests:not(:is([data-view="0"],[data-view="1"])) .tt__g{visibility:hidden}
-.tt__i{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:10px 16px;padding:18px 24px;border-radius:18px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:500 30px/1.22 var(--sans);transform-origin:50% 100%}
-/* press 1: each test flips over onto its slot like a card turned on the table (the slot's drawing is its back), lifting a
-   little at the turn */
-.tt__s{transform-style:preserve-3d}
-.slide.tests .tt__s[data-step][data-fx]{transform-origin:50% 100%;transform:rotateX(calc((1 - var(--p,1)) * 84deg));opacity:min(1,calc(var(--p,1) * 3))}
-.slide.tests .tt__i[data-step][data-fx]{transform-origin:50% 50%;backface-visibility:hidden;transform:translateZ(calc((1 - var(--p,1)) * var(--p,1) * 260px)) rotateY(calc((1 - var(--p,1)) * -180deg))}
+.tt__i{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:10px 16px;padding:18px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 30px/1.22 var(--sans)}
+/* flat (round 5): the empty slots rise on the entry; on press 1 each test settles down onto its slot and covers its drawing */
+.slide.tests .tt__s[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.slide.tests .tt__i[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * -24px));opacity:min(1,calc(var(--p,1) * 2.5))}
 .tt__f b{display:block;font:700 28px/1.25 var(--mono)}
 svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .tt__i > .ttj{grid-column:1/-1}
@@ -553,14 +562,10 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .bign{display:grid;gap:22px;justify-items:start}
 .bign__n{font:700 136px/.9 var(--sans);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
 .bign__l{max-width:540px;font:600 28px/1.25 var(--sans)}
-/* the wall: a camera turns a little on presses 2 to 4; each card flies in from the back plane; the card before steps back */
-.slide.why .wall{perspective:1500px;perspective-origin:40% 40%}
-.wcam{position:absolute;inset:0;transform-style:preserve-3d}
-.wcam[data-step][data-fx]{transform:translateX(calc(var(--p,1) * var(--wx,0px))) rotateY(calc(var(--p,1) * var(--ry,0deg)))}
-.wall__grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:20px;transform-style:preserve-3d}
-.eback{display:grid;transform-style:preserve-3d}
-.eback[data-step][data-fx]{transform:translateZ(calc(var(--p,1) * -90px));opacity:calc(1 - .22 * var(--p,1))}
-.slide.why .ecard.w05-card[data-step][data-fx]{transform-origin:50% 50%;transform:translateZ(calc((1 - var(--p,1)) * -2400px)) rotateY(calc((1 - var(--p,1)) * 28deg)) rotateX(calc((1 - var(--p,1)) * -10deg));opacity:min(1,calc(var(--p,1) * 4))}
+/* the wall (flat, round 5): each card rises into its cell (.w05-rise); the card before dims a little as the next arrives */
+.wall__grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:20px}
+.eback{display:grid}
+.eback[data-step][data-fx]{opacity:calc(1 - .22 * var(--p,1))}
 .ecard{display:grid;align-content:start;gap:10px;padding:18px 26px;border-radius:26px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);min-height:0;overflow:hidden}
 .ecard__meta{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;padding-bottom:8px;border-bottom:2px solid var(--w05-hair);font:600 24px/1.2 var(--mono)}
 .ecard__meta b{font-size:30px}
@@ -635,9 +640,9 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 svg.sf__i{width:52px;height:52px;margin-bottom:2px}
 .sf__lb--on{font-weight:800}
 .sf__lb--on b{font-size:34px}
-/* the wall: nine tiles fly in from the back plane, one after the other; the open tile stands forward */
-.stw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,212px) auto;gap:18px 22px;perspective:1600px;perspective-origin:50% 40%}
-.slide.sectors .stw .w05-card[data-step][data-fx]{transform-origin:50% 50%;transform:translateZ(calc((1 - var(--p,1)) * -900px)) rotateX(calc((1 - var(--p,1)) * 20deg));opacity:min(1,calc(.35 + var(--p,1) * 2))}
+/* the wall (flat, round 5): nine tiles, faint from the first frame, rise into place one after the other */
+.stw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,212px) auto;gap:18px 22px}
+.slide.sectors .stw .w05-rise[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(.35 + var(--p,1) * 2))}
 .st{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);grid-template-rows:76px minmax(0,1fr) auto;column-gap:18px;align-content:start;padding:18px 24px 20px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);translate:0 0 0;transition:translate .3s ease-out,background-color .3s ease-out}
 .st--ra{box-shadow:none;outline:2px dashed var(--ink);outline-offset:-2px}
 .st--on{background:var(--w05-sage-200)}
@@ -658,7 +663,7 @@ svg.st__i{width:76px;height:76px}
 .st__dot{position:absolute;right:18px;top:18px;width:16px;height:16px;border-radius:50%;background:var(--w05-sage-600)}
 /* who else checks: one face, large enough to read from the back of the room */
 .sp,.sp *{font-family:var(--sans)}
-.sp{display:grid;align-content:start;gap:12px;min-height:440px;padding:22px 26px;border-radius:22px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:500 27px/1.3 var(--sans)}
+.sp{display:grid;align-content:start;gap:12px;min-height:440px;padding:22px 26px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 27px/1.3 var(--sans)}
 .sp__h{font:700 27px/1.2 var(--sans)}
 .sp__b{display:none}
 .sp[data-w05-hot="trade"] .sp__b--trade,.sp[data-w05-hot="build"] .sp__b--build,.sp[data-w05-hot="make"] .sp__b--make,.sp[data-w05-hot="food"] .sp__b--food{display:grid;gap:10px}
@@ -674,23 +679,22 @@ svg.st__i{width:76px;height:76px}
 .slide.we .stage > [data-zone="tl"]{left:0;top:652px;width:1696px;height:200px}
 .slide.we .stage > [data-zone="sc"]{left:0;top:884px}
 .slide.we .w05-btn{padding:8px 18px;font-size:24px}
-.crew2{display:grid;gap:12px;padding:10px 18px 14px;border-radius:24px;background:var(--w05-sage-50);box-shadow:inset 0 0 0 2px var(--w05-hair);perspective:1400px;perspective-origin:30% 100%;transform-style:preserve-3d}
-/* the floor: tilted back 14 degrees at rest (the rows recede, the office row is in front); on the entry it lands from 60 degrees */
-.slide.we .crew2[data-step][data-fx]{transform-origin:50% 100%;transform:perspective(1500px) rotateX(calc(14deg + (1 - var(--p,1)) * 46deg))}
-.crew__p{border-bottom:2px solid var(--w05-sage-200)}
+/* the crew on paper (round 5, D2: flat, no floor): four rows of drawn people on hairlines; the people draw themselves on the entry */
+.crew2{display:grid;gap:12px;padding:10px 0 14px}
+.crew__p{border-bottom:2px solid var(--w05-hair)}
 .crew__g{display:grid;grid-template-columns:178px auto auto;justify-content:start;align-items:center;column-gap:14px}
 .crew__l{font:600 28px/1.1 var(--sans);white-space:nowrap}
 .crew__l b{font-family:var(--mono)}
 .crew__p{display:flex;gap:4px}
 .pp{display:grid;place-items:center;width:70px;height:84px}
 svg.pp__i{width:66px;height:66px}
-.crew__lift{display:flex;gap:4px;transform-style:preserve-3d}
-.crew__lift[data-step][data-fx]{transform:translate3d(0,calc(var(--p,1) * -16px),calc(var(--p,1) * 90px));transform-origin:0 100%}
-.pp--who{border-radius:14px;background:var(--w05-sage-200)}
+/* the two named people: a thin ink frame, no fill */
+.pp--who{border-radius:14px;box-shadow:inset 0 0 0 2px var(--ink)}
 .crew__who{display:grid;gap:2px;font:600 24px/1.15 var(--sans)}
-/* the clock: it turns in from the side as it arrives (an object that opens); arcs and hand draw inside it */
-.wclk{display:grid;grid-template-columns:440px minmax(0,1fr);column-gap:26px;align-items:center;transform-origin:0 50%}
-.wclk[data-step][data-fx]{transform:perspective(1600px) rotateY(calc((1 - var(--p,1)) * 70deg));opacity:min(1,calc(var(--p,1) * 3))}
+.crew__who span{white-space:nowrap}
+/* the clock: it fades in sliding 32 px from the right as it arrives; arcs and hand draw inside it */
+.wclk{display:grid;grid-template-columns:440px minmax(0,1fr);column-gap:26px;align-items:center}
+.wclk[data-step][data-fx]{transform:translateX(calc((1 - var(--p,1)) * 32px));opacity:min(1,calc(var(--p,1) * 3))}
 .wclk__dial{position:relative;width:440px;height:440px}
 .wclk__svg{display:block;width:100%;height:100%}
 .wclk__face{stroke:var(--w05-hair);stroke-width:2}
@@ -702,7 +706,7 @@ svg.pp__i{width:66px;height:66px}
 .wclk__hand{stroke:var(--accent);stroke-width:5;stroke-linecap:round}
 .wclk__hub{fill:var(--paper);stroke:var(--ink);stroke-width:2}
 .wclk__start{position:absolute;left:50%;top:-6px;translate:-50% -100%;font:700 24px/1 var(--mono);white-space:nowrap}
-.wclk__now{position:absolute;translate:-50% -50%;padding:2px 8px;border-radius:8px;background:var(--paper);font:700 24px/1 var(--mono);white-space:nowrap}
+.wclk__now{position:absolute;translate:calc(-50% - 14px) calc(-50% - 14px);padding:2px 8px;border-radius:8px;background:var(--paper);font:700 24px/1 var(--mono);white-space:nowrap}
 .wclk__od{position:absolute;left:50%;top:calc(100% + 6px);translate:-50% 0;padding:2px 8px;border-radius:8px;background:var(--paper);color:var(--ink);font:700 24px/1 var(--mono)}
 .wclk__legend{display:grid;gap:6px}
 .wclk__lg{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:12px;align-items:center;padding:8px 12px;border-radius:14px}
@@ -738,8 +742,9 @@ svg.pp__i{width:66px;height:66px}
 .tl2__r{display:none;font:600 28px/1.2 var(--sans)}
 .tl2[data-w05-at="0"] .tl2__r--0,.tl2[data-w05-at="1"] .tl2__r--1,.tl2[data-w05-at="2"] .tl2__r--2,.tl2[data-w05-at="3"] .tl2__r--3{display:inline}
 
-/* S06 letter (round 4): the envelope rises from lying flat and opens; the week is a tilted floor of working days (pitch 224 px)
-   that the camera walks along on press 6 to the four steps after the visit; caption, poll, scrubber and the law on the right */
+/* S06 letter: the envelope rises from lying flat and opens (an object, 3D); the week is a flat calendar strip of working days
+   (pitch 224 px, round 5) that slides left on press 6 to the four steps after the visit; caption, poll, scrubber and the law
+   on the right */
 .slide.letter .stage > [data-zone="env"]{left:40px;top:276px}
 .slide.letter .stage > [data-zone="cap"]{left:700px;top:112px;width:996px}
 .slide.letter .stage > [data-zone="pb"]{left:700px;top:250px;width:460px}
@@ -762,44 +767,41 @@ svg.pp__i{width:66px;height:66px}
 .lt-env__g{margin:4px 0 0;font-size:21px;line-height:1.2}
 .lt-env__d{margin-top:4px;font:600 23px/1.2 var(--sans)}
 .lt-law{padding:14px 20px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.3 var(--mono)}
-.lt-wc{padding:18px 24px;border-radius:18px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 27px/1.3 var(--sans)}
-/* the floor: tilted back a little (it lies in the room), clipped to the stage so the walk never shows past the frame */
-.slide.letter .ltf[data-step][data-fx]{overflow:hidden;transform-origin:50% 100%;transform:perspective(1900px) rotateX(14deg)}
-.slide.letter .ltf__cam[data-step][data-fx]{position:relative;display:grid;grid-template-columns:repeat(6,200px) 1248px;column-gap:24px;width:max-content;height:100%;padding-top:84px;transform:translateX(calc(var(--p,1) * -896px))}
-.ltd{position:relative;display:grid;align-content:start;gap:12px;height:250px;padding:16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.lt-wc{padding:18px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 27px/1.3 var(--sans)}
+/* the strip: flat on the page, clipped to the stage so the slide never shows past the frame */
+.slide.letter .ltf[data-step][data-fx]{overflow:hidden}
+.slide.letter .ltf__cam[data-step][data-fx]{position:relative;display:grid;grid-template-columns:repeat(6,200px) 1248px;column-gap:24px;width:max-content;height:100%;padding-top:110px;transform:translateX(calc(var(--p,1) * -896px))}
+.ltd{position:relative;display:grid;align-content:start;gap:12px;height:224px;padding:16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .ltd--4{background:var(--w05-sage-100)}
 .ltd__h{font:700 34px/1.1 var(--mono)}
 .ltd__ev{display:flex;align-items:center;gap:8px;font:600 25px/1.2 var(--sans)}
 .ltd__ev svg.ico{width:34px;height:34px}
 .ltd__ev--v{font-weight:700}
-.ltd--after{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr);margin-top:-84px;height:334px}
-.ltd--after .ltd__h{padding-top:6px;font-size:26px}
-/* "after the visit" names the four steps only once the camera stands over them */
-.slide.letter:not(:is([data-view="6"],[data-view="7"])) .ltd--after .ltd__h{visibility:hidden}
-.ltd__chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;gap:20px}
-.ltc{display:grid;align-content:start;gap:8px;padding:16px 18px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
-.ltc--0{height:160px}.ltc--1{height:190px}.ltc--2{height:220px}.ltc--3{height:250px;background:var(--w05-sage-100)}
+.ltd--after{position:relative}
+.ltd__chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:20px}
+.ltc{display:grid;align-content:start;gap:8px;height:224px;padding:16px 18px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .ltc__t{font:600 26px/1.15 var(--sans)}
 .ltc__d{font:700 30px/1.15 var(--mono)}
-.ltw-host{position:absolute;left:0;top:84px;width:1344px;height:250px;pointer-events:none}
-.ltw{position:absolute;top:74px;width:184px;padding:8px 10px;border-radius:12px;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:600 24px/1.15 var(--sans)}
+.ltw-host{position:absolute;left:0;top:110px;width:1344px;height:224px;pointer-events:none}
+.ltw{position:absolute;top:74px;width:184px;padding:8px 10px;border-radius:12px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.15 var(--sans)}
 .ltw--1{left:232px}.ltw--2{left:456px}.ltw--3{left:680px}
-.lt-mk{position:absolute;left:224px;top:4px;width:200px;height:80px}
+.lt-mk{position:absolute;left:224px;top:30px;width:200px;height:80px}
 .lt-mk__h{position:absolute;inset:0;display:grid;justify-items:center;align-content:start;gap:4px;transform:translateX(calc(var(--at) * 224px));transition:transform .3s ease-out}
 .lt-mk__h b{padding:4px 14px;border-radius:999px;background:var(--surface);outline:2px dashed var(--ink);outline-offset:-2px;font:600 24px/1.2 var(--sans)}
 .lt-mk__h i{display:block;width:0;height:30px;border-left:2px solid var(--ink)}
-.lt-br{position:absolute;top:64px;height:0;border-top:2px solid var(--ink)}
+.lt-br{position:absolute;top:90px;height:0;border-top:2px solid var(--ink)}
 .lt-br::before,.lt-br::after{content:"";position:absolute;top:-10px;height:20px;border-left:2px solid var(--ink)}
 .lt-br::before{left:0}.lt-br::after{right:0}
 .lt-br--3,.lt-brl--3{left:224px;width:648px}
 .lt-br--5,.lt-brl--5{left:896px;width:424px}
-.lt-brl{position:absolute;top:30px;text-align:center;font:600 24px/1.1 var(--mono);white-space:nowrap}
-.lt-brl.lt-brl--5{top:2px;white-space:normal}
+.lt-br--6,.lt-brl--6{left:1344px;width:1248px}
+.lt-brl{position:absolute;top:56px;text-align:center;font:600 24px/1.1 var(--mono);white-space:nowrap}
+.lt-brl.lt-brl--5{top:28px;white-space:normal}
 .lt-ro__r{display:none;font:600 26px/1.2 var(--sans)}
 .ltf[data-w05-at="0"] ~ .lt-rob .lt-ro__r--0,.ltf[data-w05-at="1"] ~ .lt-rob .lt-ro__r--1,.ltf[data-w05-at="2"] ~ .lt-rob .lt-ro__r--2,.ltf[data-w05-at="3"] ~ .lt-rob .lt-ro__r--3{display:inline}
 svg.lt-ins{width:150px;height:150px}
 
-/* S07 time (round 4): one calendar of four days, two lanes with one hero number each. By hand: four thick slabs stand up.
+/* S07 time: one calendar of four days, two lanes with one hero number each. By hand: four flat day cards rise (round 5).
    With Claude: a hairline at Monday is the true scale of the recorded run; a loupe lays the same steps out large. */
 .slide.time .stage > [data-zone="tg"]{right:250px;top:4px;flex-direction:row;gap:10px;z-index:3}
 .slide.time .stage > [data-zone="cap"]{left:0;top:96px;width:1696px}
@@ -835,20 +837,15 @@ svg.lt-ins{width:150px;height:150px}
 .tln__n b{display:block;font:800 92px/.92 var(--sans);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
 .tln--claude .tln__n b{color:var(--w05-green)}
 .tln__days{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px}
-.tl2s[data-w05-state="hand"] .tln--claude,.tl2s[data-w05-state="claude"] .tln--hand{transform:perspective(1200px) rotateX(-90deg);opacity:0;pointer-events:none}
+.tl2s[data-w05-state="hand"] .tln--claude,.tl2s[data-w05-state="claude"] .tln--hand{transform:translateY(-16px);opacity:0;pointer-events:none}
 /* the outlined slots of the four days, there from the entry: the week the room is about to fill */
 .tl-g{grid-row:1;align-self:stretch;border-radius:18px;border:2px dashed var(--w05-hair)}
 .tl-g--0{grid-column:1}.tl-g--1{grid-column:2}.tl-g--2{grid-column:3}.tl-g--3{grid-column:4}
-/* the slabs stand up seen from above, so their thickness (the top face) shows: real depth, no shadow */
+/* the day cards by hand: flat paper cards with an ink edge, one per day */
 .tln--hand .tln__days{grid-template-rows:minmax(0,1fr);column-gap:24px;padding:0 14px 14px 0}
 .tl-c{grid-row:1;align-self:stretch;display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:start;gap:8px;padding:16px 22px 20px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 30px/1.15 var(--sans)}
 .tl-c svg.dr{width:112px;height:112px}
-/* the slab's thickness: a right face and a bottom face drawn as slanted strips (outlined, sage), no shadow */
-.tl-c::before,.tl-c::after{content:"";position:absolute;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
-.tl-c::before{left:calc(100% - 2px);top:6px;width:14px;bottom:2px;border-radius:0 8px 8px 0;transform:skewY(40deg);transform-origin:0 0}
-.tl-c::after{left:6px;top:calc(100% - 2px);right:2px;height:14px;border-radius:0 0 8px 8px;transform:skewX(40deg);transform-origin:0 0}
 .tl-c--0{grid-column:1}.tl-c--1{grid-column:2}.tl-c--2{grid-column:3}.tl-c--3{grid-column:4}
-.tl-c--2,.tl-c--3{background:var(--w05-sage-200)}
 /* with Claude: the same four days as a track; a 2 px hairline at Monday morning is the run true to scale */
 .tln__days.tc{display:block}
 .tc__track{position:absolute;left:0;right:0;top:0;height:48px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--w05-hair)}
@@ -857,7 +854,7 @@ svg.lt-ins{width:150px;height:150px}
 .tc__true{position:absolute;z-index:1;left:16px;top:8px;font:700 26px/1.2 var(--mono);white-space:nowrap}
 .tc__wedge{position:absolute;left:0;top:48px;width:calc(75% - 12px);height:28px}
 .tc__wedge svg{display:block;width:100%;height:100%}
-.tc__wedge polygon{fill:var(--w05-sage-100);stroke:var(--w05-hair);stroke-width:2;vector-effect:non-scaling-stroke}
+.tc__wedge polygon{fill:none;stroke:var(--w05-hair);stroke-width:2;vector-effect:non-scaling-stroke}
 .tc__loupe{position:absolute;left:0;width:calc(75% - 12px);top:76px;bottom:0;padding:12px 22px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .tc__lt{margin:0;font:700 26px/1.2 var(--mono)}
 .tc__bar{position:relative;height:64px;margin:10px 0 0}
@@ -892,13 +889,12 @@ svg.lt-ins{width:150px;height:150px}
 .slide:is(.kit,.watch,.safety,.close) .cap{max-width:none;font:500 38px/1.2 var(--sans);letter-spacing:-.012em;text-wrap:pretty}
 .slide:is(.kit,.watch,.safety,.close) .stage > [data-zone="cap"]{left:0;top:104px;width:1696px}
 
-/* S08 kit (round 4): one 3D scene under a camera. The binder stands up from the desk (entry), opens on its spine (press 1); from press 2 the camera turns toward the project and four files arc through depth into its slots */
+/* S08 kit: the binder (an object, its 3D stays) stands up from the desk (entry) and opens on its spine (press 1); on press 2
+   four files arc flat from its sheet into the project's slots (round 5: no camera turn, no depth) */
 .slide.kit .stage > [data-zone="zip"]{left:0;top:212px}
 .slide.kit .zipbtn{grid-auto-flow:column;align-items:center;gap:14px;padding:10px 22px}
 .slide.kit .zipbtn svg.ico{width:30px;height:30px}
 .slide.kit .stage > [data-zone="cam"]{left:0;top:190px;width:1696px;height:730px}
-.kcam{transform-style:preserve-3d;transform-origin:30% 60%}
-.slide.kit .kcam[data-step][data-fx]{transform:perspective(2400px) rotateY(calc(var(--p,1) * -6deg)) translateZ(calc(var(--p,1) * -20px))}
 /* the desk: the binder lies flat at the start of the entry and stands up on its bottom edge */
 .kb-host{position:absolute;left:0;top:122px;width:880px;height:584px;transform-style:preserve-3d}
 .slide.kit .kb-host[data-step][data-fx]{transform-origin:100% 100%;transform:perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg)) scale(.9);opacity:min(1,calc(var(--p,1) * 4))}
@@ -922,7 +918,7 @@ svg.lt-ins{width:150px;height:150px}
 .kb__tree li span{flex:1 1 auto;min-width:0;overflow-wrap:normal}
 .kb__tree svg.ico{flex:none;width:28px;height:28px}
 .kb__tree em{margin-left:auto;padding:1px 12px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink);font:600 20px/1.2 var(--mono);font-style:normal}
-.slide.kit .kw-host{position:absolute;left:910px;top:22px;width:736px;height:452px;perspective:1800px}
+.slide.kit .kw-host{position:absolute;left:910px;top:22px;width:785px;height:452px}
 .slide.kit .kw{position:absolute;inset:0;font-size:26px}
 .kw__p{display:grid;gap:10px}
 .kw__h{margin:0;font:600 20px/1.2 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -934,14 +930,14 @@ svg.lt-ins{width:150px;height:150px}
 .kw__slot{min-height:76px;border-radius:14px;box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
 .kw__files > .kw__ghost{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:43px 43px;gap:10px;padding:0;background:none;box-shadow:none;pointer-events:none}
 .kw__files > .kw__ghost > i{position:static;display:block;height:43px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
-/* the flying files: in the camera's space, above the window (z 4 px), each placed on its slot and flown from its tree row */
-.kfly-l{position:absolute;inset:0;margin:0;padding:0;list-style:none;transform:translateZ(4px);transform-style:preserve-3d;pointer-events:none}
-.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:337px;height:43px;padding:8px 10px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 2px var(--ink);font:600 22px/1.2 var(--mono);white-space:nowrap;overflow:hidden}
-.slide.kit .kfly[data-step][data-fx]{transform:translate3d(calc((1 - var(--p,1)) * var(--dx)),calc((1 - var(--p,1)) * var(--dy) - var(--p,1) * (1 - var(--p,1)) * 360px),calc(var(--p,1) * (1 - var(--p,1)) * 560px))}
+/* the flying files: above the window (later in the scene, so painted on top), each placed on its slot and flown from its tree row */
+.kfly-l{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:332px;height:43px;padding:8px 10px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 2px var(--ink);font:600 22px/1.2 var(--mono);white-space:nowrap;overflow:hidden}
+.slide.kit .kfly[data-step][data-fx]{transform:translate(calc((1 - var(--p,1)) * var(--dx)),calc((1 - var(--p,1)) * var(--dy) - var(--p,1) * (1 - var(--p,1)) * 240px))}
 .kfly svg{flex:none;width:26px;height:26px}
 .kfly span{min-width:0;overflow-wrap:normal;white-space:nowrap;font-size:21px}
 .nobr{white-space:nowrap}
-.kw__made{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 16px;border-radius:14px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.kw__made{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 16px;border-radius:14px;background:var(--cw-white);box-shadow:inset 0 0 0 1.5px var(--cw-t3)}
 .kw__made svg{flex:none;width:44px;height:44px}
 .kw__made span{display:grid;gap:2px;margin-left:6px}
 .kw__made b{font:600 23px/1.2 var(--sans)}
@@ -952,11 +948,12 @@ svg.lt-ins{width:150px;height:150px}
 .ksteps li b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 22px/1 var(--mono)}
 .ksteps small{display:block;margin-top:8px;font:500 21px/1.2 var(--mono);color:var(--muted)}
 
-/* the flip tiles of S09, S10, S11 and S12: the back (sage, the number) turns to the face as --p runs */
-.flip3[data-step][data-fx]{position:relative;transform-style:preserve-3d;transform:rotateY(calc((1 - var(--p,1)) * -180deg))}
-.flip3__b{position:absolute;inset:0;display:grid;place-items:center;border-radius:inherit;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 30px/1 var(--mono);transform:rotateY(180deg) translateZ(1px);backface-visibility:hidden}
+/* the status tiles of step 3: a blank paper tile whose status shows through as --p runs (flat, round 5: the blank cover
+   fades, nothing turns) */
+.flip3[data-step][data-fx]{position:relative}
+.flip3__b{position:absolute;inset:0;z-index:1;border-radius:inherit;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.flip3[data-step][data-fx] > .flip3__b{opacity:calc(1 - var(--p,1))}
 .flip3__f{display:contents}
-.flip3 > .flip3__f{backface-visibility:hidden}
 
 /* S13 register: each row's cells slide from their place in the file to their place by due date; the due rows light up */
 .reg__r{position:relative;display:block;height:50px;box-sizing:border-box;padding:0;overflow:visible}
@@ -967,10 +964,10 @@ svg.lt-ins{width:150px;height:150px}
 .slide.register:is([data-view="4"],[data-view="5"],[data-view="6"]) .reg__r--due,.slide.register:is([data-view="4"],[data-view="5"],[data-view="6"]) .reg__r--due .reg__in{background:var(--w05-sage-100)}
 
 /* the time machine: one check day, four counts in large type; each is a strip of its three values and rolls to the date the
-   chips set (--at on the panel); the panel stands up on press 4 */
-.scr{position:relative;margin-top:22px;transform-origin:50% 100%}
-.slide.register .scr[data-step][data-fx]{transform:perspective(1600px) rotateX(calc((1 - var(--p,1)) * 70deg));opacity:min(1,calc(var(--p,1) * 4))}
-.scr__r{display:grid;gap:12px;margin:0;padding:18px 28px;border-radius:20px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
+   chips set (--at on the panel); the panel rises into place on press 4 (flat, round 5) */
+.scr{position:relative;margin-top:22px}
+.slide.register .scr[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
+.scr__r{display:grid;gap:12px;margin:0;padding:18px 28px;border-radius:20px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
 .tm{display:block;height:112px;overflow:hidden}
 .tm__s{display:grid;transform:translateY(calc(var(--at,0) * -112px));transition:transform .45s cubic-bezier(.22,1,.36,1)}
 .tm__r,.scr__lb{display:grid;grid-template-columns:330px repeat(4,minmax(0,1fr));gap:0 18px;align-items:center}
@@ -1010,8 +1007,8 @@ svg.lt-ins{width:150px;height:150px}
 .wr__orb{position:absolute;inset:0;transform-origin:50% 50%;pointer-events:none}
 .slide.watch .wr__orb[data-step][data-fx]{transform:rotate(calc(var(--p,1) * 360deg))}
 .wr__ph{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:var(--w05-sage-400);stroke:var(--ink);stroke-width:2.5}
-/* the plans and the result stand up around their bottom edge as they arrive */
-.slide.watch .wup3[data-step][data-fx]{transform-origin:50% 100%;transform:perspective(1400px) rotateX(calc((1 - var(--p,1)) * 80deg));opacity:min(1,calc(var(--p,1) * 4))}
+/* the plans and the result rise into place as they arrive (flat, round 5) */
+.slide.watch .wup3[data-step][data-fx]{transform:translateY(calc((1 - var(--p,1)) * 24px));opacity:min(1,calc(var(--p,1) * 2.5))}
 .slide.watch .wr__rot[data-step][data-fx]{transform:rotate(calc(var(--p,1) * -90deg))}
 .wr__ring,.wr__loop,.wr__ticks{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .wr__ring{stroke:var(--ink);stroke-width:3}
@@ -1037,15 +1034,22 @@ svg.lt-ins{width:150px;height:150px}
 .slide.watch .w05-ctl--toggle .w05-btn{min-width:220px;padding:14px 30px;font:700 28px/1.2 var(--sans)}
 .slide.watch .w05-ctl--toggle .w05-btn:first-child{border-radius:16px 0 0 16px}
 .slide.watch .w05-ctl--toggle .w05-btn:last-child{border-radius:0 16px 16px 0}
-.wp{left:820px;top:234px;width:876px;display:grid;gap:10px}
+.wp{left:820px;top:234px;width:876px;display:grid;gap:4px}
+/* the plans in Claude's own window (D4): the chrome, then the plan of the toggle without a frame of its own */
+.wp > .cl-panel{font-size:28px;border-radius:18px}
+.wp .cl-panel__b{display:grid}
+.wp .cl-panel .wp__c{padding:8px 26px 12px;border-radius:0;background:transparent;box-shadow:none}
+.wp > .cl-panel > .cw-bar{height:1.75em}
 .wp__c{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 22px;align-items:center;margin:0;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);transition:opacity .3s ease-out}
 .wp__c svg{grid-row:1/3;width:60px;height:60px}
 .wp__c b{font:700 34px/1.2 var(--sans)}
 .wp__c span{font:500 29px/1.25 var(--sans)}
 .wp small,.wl__src,.wres__note{font:500 23px/1.25 var(--mono);color:var(--muted)}
-.wres{left:820px;top:440px;width:876px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 32px;align-items:center;padding:14px 26px;border-radius:20px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
+/* the weekly task's answer, as Claude's reply (D4): ivory, the clay edge, the spark on its first line */
+.wres{left:820px;top:444px;width:876px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 32px;align-items:center;padding:10px 26px;border-radius:20px}
 .wres p{margin:0}
-.wres__h{grid-column:1/-1;font:600 26px/1.2 var(--mono)}
+.wres__h{grid-column:1/-1;display:flex;align-items:center;gap:12px;font:600 26px/1.2 var(--mono)}
+.wres__h .cl-spark{width:28px;height:28px}
 .wres__note{align-self:center}
 .wres__n{display:flex;gap:40px}
 .wres__n span{display:flex;align-items:baseline;gap:12px}
@@ -1089,7 +1093,7 @@ svg.lt-ins{width:150px;height:150px}
 .sfn li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;font:500 30px/1.2 var(--sans)}
 .sfn li svg{width:42px;height:42px}
 .sfl p{padding-top:12px;padding-bottom:12px;font-size:28px}
-.sfl__g{display:grid;gap:10px;padding:16px 26px;border-radius:18px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink)}
+.sfl__g{display:grid;gap:10px;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .sfl__g > b{font:700 32px/1.2 var(--sans)}
 .sfl__g ul{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin:0;padding:0;list-style:none;font:500 28px/1.25 var(--sans)}
 .sfl__g li{padding-left:16px;border-left:3px solid var(--w05-sage-400)}

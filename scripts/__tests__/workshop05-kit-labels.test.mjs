@@ -21,7 +21,7 @@ const SKILL = "claude/audit-nachweise/SKILL.md";
 // Written in pieces so that this test file itself holds none of the words it forbids.
 const INTERNAL = new RegExp(["\\/Users\\/", "\\/private\\/", "maven" + "gence", "facilitator\\/", "CLAUDE" + "\\.md", "vard" + "ar", "tann" + "wald"].join("|"), "i");
 const ALLOWED_URL = "https://privacy.claude.com/en/articles/7996890";
-/** The sources keep-watch/ may link: two Anthropic help pages and the verified watch list (research CLAUDE-01, 22, 82 to 85). */
+/** The sources keep-watch/ may link: two Anthropic help pages and the verified watch list (Anthropic help centre, projects and scheduled tasks; AZLP, Služben vesnik, DIT). */
 const WATCH_URLS = [
   "https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork",
   "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects",

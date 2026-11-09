@@ -46,14 +46,14 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Schritt 2",
         title: "Check laufen lassen",
-        input: "Die CSV-Dateien in ordner/",
+        input: "Die CSV-, txt- und md-Dateien in ordner/",
         action: "Claude schreibt und führt einen Check aus",
         output: "10 Funde und mindestens 8 geprüft ohne Befund",
         note: "Sag es zuerst voraus: Wie viele Funde? Dann prüf es in LOESUNGEN.md.",
       },
       {
         tag: "Schritt 3",
-        title: "Status und Briefing",
+        title: "Status, Plan, Briefing",
         input: "Tabelle und Funde",
         action: "Status je Frage, Plan, Briefing",
         output: "2 BELEGT, 1 SCHWACH, 10 LÜCKE und ein Briefing",
@@ -69,7 +69,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Entpacke das Kit, öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/ und ordner/ hinzu. Die Dateien sind erfunden. Deine echten Dateien gehen erst in ein Werkzeug, wenn du die Datenstufen kennst: Folie 11 im Deck und START-HIER.md.",
+      "Entpacke das Kit, öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/, ordner/, faelle/fall-A-arbeit.md und vorlagen/register.csv hinzu. Die Dateien sind erfunden. Deine echten Dateien gehen erst in ein Werkzeug, wenn du die Datenstufen kennst: Folie 15 im Deck und START-HIER.md.",
     fictionalNote: "Alle Dateien sind für die Übung erfunden. Keine Rechtsberatung.",
     contents: [
       { name: "START-HIER.md", description: "Einrichtung und die vier Prompts" },
@@ -82,7 +82,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "faelle/", description: "Feldkarten für drei Prüfungen" },
       { name: "inspektor/", description: "Verlangen und Protokoll, später öffnen" },
       { name: "vorlagen/", description: "Papier, Uhr, Nachweisindex, Register" },
-      { name: "bereit-bleiben/", description: "Wochencheck, Quellen, Sicherheitskarte" },
+      { name: "bereit-bleiben/", description: "Wochencheck, Beobachtungsliste, Sicherheitskarte" },
       { name: "claude/", description: "Skill, auch unter /skills/audit-nachweise.zip" },
     ],
   },
@@ -121,14 +121,14 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Step 2",
         title: "Run the check",
-        input: "The CSV files in folder/",
+        input: "The CSV, txt and md files in folder/",
         action: "Claude writes and runs a check",
         output: "10 findings and at least 8 checked with no problem",
         note: "Predict first: how many findings? Then check ANSWERS.md.",
       },
       {
         tag: "Step 3",
-        title: "Status and briefing",
+        title: "Status, plan, briefing",
         input: "The table and the findings",
         action: "A status per question, a plan, a briefing",
         output: "2 COVERED, 1 WEAK, 10 GAP and a briefing",
@@ -144,7 +144,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Unzip the kit, open Claude, make a Project, paste project-instructions.md, then add checklists/ and folder/. The files are invented. Your real files go into a tool only after you know the data levels: slide 11 in the deck and START-HERE.md.",
+      "Unzip the kit, open Claude, make a Project, paste project-instructions.md, then add checklists/, folder/, cases/case-A-labour.md and templates/register.csv. The files are invented. Your real files go into a tool only after you know the data levels: slide 15 in the deck and START-HERE.md.",
     fictionalNote: "All files are invented for the exercise. Not legal advice.",
     contents: [
       { name: "START-HERE.md", description: "Setup and the four prompts" },
@@ -157,7 +157,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "cases/", description: "Field cards for three audits" },
       { name: "inspector/", description: "Request and minutes, opened later" },
       { name: "templates/", description: "Paper, clock, evidence index, register" },
-      { name: "keep-watch/", description: "Weekly check, sources, safety card" },
+      { name: "keep-watch/", description: "Weekly check, watch list, safety card" },
       { name: "claude/", description: "Skill, also at /skills/audit-nachweise.zip" },
     ],
   },

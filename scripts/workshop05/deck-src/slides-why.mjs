@@ -1,15 +1,14 @@
 /**
  * S03 why (REDESIGN-3 D4, round 4): what happens and how often. Press 0 shows the inspections of 2025 while the country
- * settles on the right out of dust, one dot per ten inspections (the number stands: the cover counted it). Presses 1 to 4: a wall of four dated news cards in depth. Each card flies
- * in from the back plane to its place (title or quote as printed, in Macedonian, the hero of the card; our translation under
- * it); the card before steps back as the next arrives, and the camera drifts a little along the wall on every press. The map
- * stays in view at a quarter. Press 5: the cards leave while the dots pour into three columns by kind, a bracket over all three
+ * settles on the right out of dust, one dot per ten inspections (the number stands: the cover counted it). Presses 1 to 4: a wall of four dated news cards, flat
+ * (round 5, D2). Each card rises into its place (title or quote as printed, in Macedonian, the hero of the card; our
+ * translation under it); the card before dims a little as the next arrives. The map stays in view at a quarter. Press 5: the cards leave while the dots pour into three columns by kind, a bracket over all three
  * carries the decisions. Press 6 builds on the cover's year instead of replaying it: the dots return to the country, the map
  * tilts back into a floor and the eight DIT regions rise as towers, each as tall as its inspections. Press 7 outlines the
  * Pelagonia tower (Bitola), shows Bitola's plan against what was done as two true-scale bars, and asks the room.
  */
 import { esc, fill } from "./motion.mjs";
-import { field, fieldGroups, fieldPoint, numFmt, standUp } from "./scene.mjs";
+import { field, fieldGroups, fieldPoint, numFmt, rise as riseIn } from "./scene.mjs";
 import { REGIONS } from "./seats.mjs";
 import { ico } from "./slides-parts.mjs";
 import { cap, head, src } from "./slides-intro.mjs";
@@ -18,7 +17,7 @@ import { cap, head, src } from "./slides-intro.mjs";
 const BOX = { left: 676, top: 110, w: 1000, h: 760, pad: 24, seed: 26484 };
 /** The tallest tower (Skopje, 5,984 inspections) in screen px; the others in proportion on screen. */
 const TOWER = 330;
-/** Bitola 2025, DIT proposed annual report (DATA-20): planned and done. */
+/** Bitola 2025, DIT proposed annual report (DIT proposed annual report 2025): planned and done. */
 const BITOLA_PLAN = { planned: 815, done: 1215 };
 /** The floor of press 6 (deck.css .wfl): transform origin in field px, perspective, lift, tilt and scale. */
 const FLOOR = { ox: 500, oy: 532, persp: 1700, lift: 40, tilt: 54, scale: 1.16, yaw: -14 };
@@ -70,7 +69,6 @@ function towerHeights() {
 /** Regions whose label sits under the tower's foot instead of over its top (a tower right behind it would be covered). */
 const FOOT_LABEL = new Set([]);
 /** The camera along the wall: on presses 2, 3 and 4 it turns a little more (degrees about y, px of x). */
-const WALL_CAM = [{ ry: -3, x: -10 }, { ry: -3, x: -10 }, { ry: -2, x: -8 }];
 
 export function why(it, ctx, d, c) {
   const t = c.s.why;
@@ -117,15 +115,15 @@ export function why(it, ctx, d, c) {
   const rise = it({ id: "up", tag: "div", cls: "wup", zone: "map", k: 0, fx: "none", attrs: "data-scene data-keep", html: floor });
   const cards = t.cards
     .map((card, i) => {
-      const one = standUp(it, {
+      const one = riseIn(it, {
         cls: `ecard ecard--${i + 1}`, k: i + 1,
         html: `<p class="ecard__meta fig"><b>${esc(card.date)}</b><span>${esc(card.src)}</span></p><p class="qd ecard__mk" lang="${card.lang}">${esc(card.mk)}</p><p class="qd-gloss ecard__gl">${esc(card.gl)}</p>`,
       });
-      // the card steps back as the next one lands (depth: the newest is always in front)
+      // the card dims a little as the next one lands (the newest reads first)
       return i < t.cards.length - 1 ? it({ tag: "div", cls: "eback", k: i + 2, fx: "none", attrs: "data-scene data-keep", html: one }) : one;
     })
     .join("");
-  const wallCam = WALL_CAM.reduceRight((inner, m, i) => it({ tag: "div", cls: "wcam", k: i + 2, fx: "none", attrs: `data-scene data-keep style="--ry:${m.ry}deg;--wx:${m.x}px"`, html: inner }), `<div class="wall__grid">${cards}</div>`);
+  const wallCam = `<div class="wall__grid">${cards}</div>`;
   const number = it({
     id: "num", tag: "div", cls: "bign fig", zone: "n",
     // the cover already counted the year: here the number simply stands (the dots that become the country are the entry's motion)
@@ -144,7 +142,7 @@ export function why(it, ctx, d, c) {
     cap(it, "c0", t.c0, 0, 1),
     src(it, "t0", t.t0, 0, 1),
     ...t.cards.map((card, i) => cap(it, `c${i + 1}`, card.cap, i + 1, i + 2)),
-    it({ id: "wall", tag: "div", cls: "wall w05-s3d", zone: "wall", k: 1, out: 5, fx: "none", html: wallCam }),
+    it({ id: "wall", tag: "div", cls: "wall", zone: "wall", k: 1, out: 5, fx: "none", html: wallCam }),
     rise,
     towerLabels,
     cap(it, "c6", t.c6, 5, 6),

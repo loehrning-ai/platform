@@ -4,16 +4,17 @@
  * Press 0: the register (its row count from the oracle) in the middle; the ring with one node per week draws around it (M13),
  * the first week under the check carries its tick. Presses 1 to 3: the ring turns one week per press, so the next week arrives
  * under the check and its tick lands (a scene of nested rotors, each a pure function of its press and --p).
- * Press 1: the two ways to keep the rhythm stand beside it; the toggle shows the Free plan's monthly rhythm instead (CLAUDE-22,
- * CLAUDE-23: scheduled tasks are paid only, the built-in schedule has no monthly option); in Free, three of four weeks fade.
+ * Press 1: the two ways to keep the rhythm stand beside it; the toggle shows the Free plan's monthly rhythm instead (Anthropic
+ * help centre, scheduled tasks: scheduled tasks are paid only, the built-in schedule has no monthly option); in Free, three of four weeks fade.
  * Press 2: check day: the check's three lists for the exercise day (expected.json). Press 3: the watch list of official
- * sources stands up (CLAUDE-82, 84, 85; ENER rejected, not shown). Press 4: the sentence template for the learner's own firm.
+ * sources rises in (AZLP, Služben vesnik, DIT; ENER rejected, not shown). Press 4: the sentence template for the learner's own firm.
  * The slide builds: the two plans, the toggle and the check's result stay to the end; the watch list and then the sentence
  * template take the lower slot in turn.
  */
 import { esc, fill, spread } from "./motion.mjs";
-import { icon, standUp, toggle } from "./scene.mjs";
+import { icon, rise, toggle } from "./scene.mjs";
 import { cap } from "./slides-intro.mjs";
+import { claudePanel, spark } from "./slides-parts.mjs";
 
 const SIZE = 760;
 const R = 300;
@@ -53,18 +54,20 @@ export function watch(it, ctx, d, c) {
   const loop = `<svg class="wr__loop" ${SVG}><path d="M${a1.x} ${a1.y} A${R + 46} ${R + 46} 0 0 0 ${a0.x} ${a0.y}"/><path d="M${wing(0.49)} L${a0.x} ${a0.y} L${wing(-0.49)}"/></svg>`;
   const centre = `<div class="wr__c">${icon("register", { it, k: 0, win: ".1,.9", cls: "dr wr__reg" })}<b>${esc(t.reg)}</b><span><em>${d.register.rows}</em> ${esc(t.regN)}</span><small class="wr__l wr__l--paid">${esc(t.ring[0])}</small><small class="wr__l wr__l--free">${esc(t.ring[1])}</small></div>`;
   const ringHost = it({ id: "ring", tag: "div", cls: "wr fig", zone: "ring", fx: "none", attrs: `role="img" aria-label="${esc(`${t.reg}, ${d.register.rows} ${t.regN}. ${t.ring[0]} / ${t.ring[1]}`)}"`, html: `${loop}${turning}${playhead}${bell}${centre}` });
-  // the two plans and the check's result stand up out of the desk when they arrive (no dashed placeholders before)
+  // the two plans and the check's result rise into place when they arrive (flat since round 5) (no dashed placeholders before)
   const plans = it({
     id: "plans", tag: "div", cls: "wp wup3 fig", zone: "plans", k: 1, fx: "none", attrs: "data-scene",
-    html: `${t.plans.map(([h, s], i) => `<p class="wp__c wp__c--${i ? "free" : "paid"}">${icon(i ? "calendar" : "clock")}<b>${esc(h)}</b><span>${esc(s)}</span></p>`).join("")}<small>${esc(t.plansSrc)}</small>`,
+    // the two plans sit in Claude's own window (D4): the scheduled task (paid) or the check by hand (Free) is a thing you do in Claude
+    html: `${claudePanel({ brand: c.claudeUi.brand, body: t.plans.map(([h, s], i) => `<p class="wp__c wp__c--${i ? "free" : "paid"}">${icon(i ? "calendar" : "clock")}<b>${esc(h)}</b><span>${esc(s)}</span></p>`).join("") })}<small>${esc(t.plansSrc)}</small>`,
   });
   const res = it({
-    id: "res", tag: "div", cls: "wres wup3 fig", zone: "res", k: 2, win: ".2,.9", fx: "none", attrs: "data-scene",
-    html: `<p class="wres__h">${esc(fill(t.res, { date: dateText(iso, d.lang) }))}</p><p class="wres__n">${[day.expired, day.expiring, day.missing].map((n, i) => `<span><b>${n}</b><small>${esc(t.resL[i])}</small></span>`).join("")}</p><p class="wres__note">${esc(t.resNote)}</p>`,
+    id: "res", tag: "div", cls: "wres cl-ui wup3 fig", zone: "res", k: 2, win: ".2,.9", fx: "none", attrs: "data-scene",
+    // the weekly task's answer, as Claude's reply (D4)
+    html: `<p class="wres__h">${spark()}${esc(fill(t.res, { date: dateText(iso, d.lang) }))}</p><p class="wres__n">${[day.expired, day.expiring, day.missing].map((n, i) => `<span><b>${n}</b><small>${esc(t.resL[i])}</small></span>`).join("")}</p><p class="wres__note">${esc(t.resNote)}</p>`,
   });
   const listIcons = ["inspector", "notebook", "lock"];
-  const cards = t.list.map(([n, w, h], i) => standUp(it, { cls: "wl__c", k: 3, win: spread(i, 3, 0, 0.6), html: `${icon(listIcons[i], { it, k: 3, win: spread(i, 3, 0.2, 0.6) })}<b>${esc(n)}</b><span>${esc(w)}</span><small>${esc(h)}</small>` })).join("");
-  const list = it({ id: "list", tag: "div", cls: "wl w05-s3d fig", zone: "list", k: 3, out: 4, fx: "none", html: `${cards}<p class="wl__src">${esc(t.listSrc)}</p>` });
+  const cards = t.list.map(([n, w, h], i) => rise(it, { cls: "wl__c", k: 3, win: spread(i, 3, 0, 0.6), html: `${icon(listIcons[i], { it, k: 3, win: spread(i, 3, 0.2, 0.6) })}<b>${esc(n)}</b><span>${esc(w)}</span><small>${esc(h)}</small>` })).join("");
+  const list = it({ id: "list", tag: "div", cls: "wl fig", zone: "list", k: 3, out: 4, fx: "none", html: `${cards}<p class="wl__src">${esc(t.listSrc)}</p>` });
   const yours = it({
     id: "yours", tag: "div", cls: "wy", zone: "yours", k: 4, win: ".3,1",
     html: `${it({ tag: "p", cls: "t t--tpl wy__tp", k: 4, text: t.tp })}<p class="wy__ex fig">${esc(t.ex)}</p><p class="wy__line fig"><span>${esc(t.yours)}</span>${it({ tag: "i", cls: "yours__line", k: 4, fx: "line", win: ".35,1" })}</p>`,

@@ -7,7 +7,7 @@ import { esc, fill, rowWindow, spread } from "./motion.mjs";
 import { durationText, icon } from "./scene.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { PIPE_ROW, TAKES_DIR, chipText, compareWithKey, findingLine, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
+import { PIPE_ROW, TAKES_DIR, chipText, compareWithKey, findingLine, modelName, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
 
 /** An icon of the engine sprite (lib/icons.svg). */
 export const ico = (name, cls = "") => `<svg class="ico${cls ? ` ${cls}` : ""}" aria-hidden="true"><use href="./lib/icons.svg#i-${name}"/></svg>`;
@@ -40,17 +40,50 @@ export function promptBubble(c, n, text, { full = false } = {}) {
   return `<figure class="cw-user prompt tk-prompt${full ? " tk-prompt--full" : ""}"${full ? " data-open" : ""}${lines}><pre class="prompt__text prompt-body" id="prompt-${n}">${esc(text)}</pre><button class="prompt__copy fig" type="button" data-copy="prompt-${n}">${ico("copy")}<span class="copy__label">${esc(c.copy)}</span></button></figure>`;
 }
 
-/**
- * The Claude window replica: the engine's .cw, its bar with the crumbs (chrome, class fig) and one thread. `thread` is the
- * markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
- * `plane` makes it slide in on its own depth plane during its press (a scene, REDESIGN-3 T6).
+/* ── Claude's UI, drawn (round 5, D4) ────────────────────────────────────
+ * Every place where the room uses Claude looks like the Claude desktop app: its ivory UI, its orange (clay) accent, the word
+ * "Claude" in the window chrome, a Projects sidebar rail, the prompt box with the send button, and the recorded answer as
+ * Claude's reply. The colours are Anthropic's own (press kit and brand guidelines, lib/w05-fx.css :root --claude-*). The Claude
+ * logo is NOT used: Anthropic's trademark guidelines allow their marks only in materials they approve beforehand, so the
+ * chrome shows the word and a plain four-point spark of our own. The orange belongs to this UI only (class cl-ui marks it).
  */
-export function claudeWindow(it, { id, crumbs, thread, k = 0, out, zone = "w", win, cls = "", plane = false }) {
-  const bar = `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span>${split(crumbs).map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${esc(x)}</span>`).join("")}</div>`;
-  const body = `<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread tk-thread">${thread}</div></div></div>`;
-  // plane: the window slides in on its own depth (T6, lib/w05-fx.css .w05-plane), a 3D scene of its press
-  if (plane) return it({ id, tag: "div", cls: `cw tk-cw w05-plane${cls ? ` ${cls}` : ""}`, zone, k, out, win, fx: "none", attrs: "data-scene", html: bar + body });
-  return it({ id, tag: "div", cls: `cw tk-cw${cls ? ` ${cls}` : ""}`, zone, k, out, win, html: bar + body });
+
+/** Our neutral spark (not Anthropic's mark): a plain four-point star, filled clay inside the Claude UI. */
+export const spark = (cls = "cl-spark") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5 13.9 10.1 21.5 12 13.9 13.9 12 21.5 10.1 13.9 2.5 12 10.1 10.1Z"/></svg>`;
+const line = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+const PLUS = "M12 6v12M6 12h12";
+/** The collapsed sidebar: new chat (the clay disc), chats, and Projects (the one that is on). Drawing only, no words. */
+const RAIL = `<div class="cw-rail" aria-hidden="true"><i class="cw-rail__new">${line(PLUS)}</i><i>${line("M5 6.5h14v9H10l-4 3v-3H5z")}</i><i class="is-on">${line("M3.5 7.5V18h17V9h-8.5L10 6.5H3.5z")}</i></div>`;
+/** The prompt box at the foot of the window: attach, the model of the recording (a figure cell), the clay send button. */
+const composer = (model) => `<div class="cw-comp">${line(PLUS)}<span class="cw-comp__f"></span>${model ? `<span class="cw-comp__m fig">${esc(model.replace(/^Claude /, ""))}</span>` : ""}<b class="cw-send" aria-hidden="true">${line("M12 18V6M7 11l5-5 5 5")}</b></div>`;
+/** The window chrome: the dots, the spark and the word "Claude", then the crumbs (a figure cell). */
+const chrome = (brand, crumbs) =>
+  `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="cw-brand-l">${spark()}<b>${esc(brand)}</b></span>${split(crumbs ?? "").filter(Boolean).map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${esc(x)}</span>`).join("")}</div>`;
+
+/** The model of a recorded take for the prompt box (null while no take is accepted: the box shows no model). */
+export const takeModel = (take) => (take.rec ? modelName(take.rec.model) : null);
+
+/** A small Claude panel (today's project card, watch's scheduled task): the chrome of the app around a body. */
+export function claudePanel({ brand, crumbs, body, cls = "" }) {
+  return `<div class="cw cl-ui cl-panel${cls ? ` ${cls}` : ""}">${chrome(brand, crumbs)}<div class="cl-panel__b">${body}</div></div>`;
+}
+
+/**
+ * The Claude window replica: the engine's .cw in Claude's own look (above): the chrome with the crumbs (class fig), one thread
+ * and, when `model` is given (a recorded take), the prompt box with that model. `rail` adds the collapsed sidebar with Projects
+ * on: the kit slide's project window has it; the take windows do not, so the recorded answers keep the width they were cut for
+ * (their crumbs start with Projects instead). `thread` is the
+ * markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
+ * `plane` makes it slide up into its place during its press (a scene, REDESIGN-3 T6; flat since round 5).
+ */
+export function claudeWindow(it, { id, brand, crumbs, thread, model, rail = false, k = 0, out, zone = "w", win, cls = "", plane = false }) {
+  if (!brand) throw new Error(`claudeWindow ${id}: the brand word comes from deck-copy.json (claudeUi.brand)`);
+  const foot = model === undefined ? "" : composer(model);
+  const body = `<div class="cw-body${rail ? " cw-body--rail" : " cw-body--nosidebar"}">${rail ? RAIL : ""}<div class="cw-main${foot ? " cw-main--comp" : ""}"><div class="cw-thread tk-thread">${thread}</div>${foot}</div></div>`;
+  const html = chrome(brand, crumbs) + body;
+  // plane: the window slides up into its place (T6, lib/w05-fx.css .w05-plane; flat since round 5), a scene of its press
+  if (plane) return it({ id, tag: "div", cls: `cw cl-ui tk-cw w05-plane${cls ? ` ${cls}` : ""}`, zone, k, out, win, fx: "none", attrs: "data-scene", html });
+  return it({ id, tag: "div", cls: `cw cl-ui tk-cw${cls ? ` ${cls}` : ""}`, zone, k, out, win, html });
 }
 
 /* ── takes ───────────────────────────────────────────────────────────── */
@@ -136,10 +169,10 @@ export function statusBoard(it, { c, k, zone, id, out, turn, ms }) {
   const word = c.take.status;
   const tally = { covered: 0, weak: 0, gap: 0 };
   for (const l of lines) tally[l.status] += 1;
-  // each tile turns over from a blank card to its status (a 3D scene of the press, REDESIGN-3 step slides)
+  // each tile shows its status through a blank paper cover that fades (a scene of the press; flat since round 5)
   const tiles = lines.map((l, i) => it({ tag: "li", cls: `board__t board__t--${l.status} flip3`, k, fx: "none", win: rowWindow(i, ms, 0.35, 36, 0.3), attrs: "data-scene", html: `<span class="flip3__b" aria-hidden="true"></span><span class="flip3__f"><span>${esc(l.id)}</span></span>` })).join("");
   const legend = ["covered", "weak", "gap"].map((s) => `<span class="board__k board__k--${s}"><i></i><b>${tally[s]}</b> ${esc(word[s])}</span>`).join("");
-  return it({ id, tag: "div", cls: "board fig", zone, k, out, win: ".3,.42", html: `<ul class="board__g w05-s3d">${tiles}</ul><p class="board__lg">${legend}</p>` });
+  return it({ id, tag: "div", cls: "board fig", zone, k, out, win: ".3,.42", html: `<ul class="board__g">${tiles}</ul><p class="board__lg">${legend}</p>` });
 }
 
 /**

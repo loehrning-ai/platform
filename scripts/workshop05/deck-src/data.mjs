@@ -55,14 +55,14 @@ export function promptBlocks(startHere, heading) {
  */
 export const PUBLIC = {
   dit2025: { regular: 5664, followUp: 6515, extraordinary: 14305 },
-  /** DIT decisions in 2025 (DATA-23): about one inspection in four ended with a decision. */
+  /** DIT decisions in 2025 (own calculation from the DIT proposed annual report 2025): about one inspection in four ended with a decision. */
   ditDecisions2025: 6359,
   staff: 24,
-  /** Active enterprises in 2024, State Statistical Office, preliminary, published 15 Apr 2026 (verified row DATA-32). */
+  /** Active enterprises in 2024, State Statistical Office, preliminary, published 15 Apr 2026. */
   firms2024: 73310,
   /** Firms per dot of the W05 field (cover and today): 73,310 / 10 = 7,331 dots, our own arithmetic. */
   firmsPerDot: 10,
-  /** Active enterprises in Bitola municipality, 2024 (DATA-32): the town the cover darkens, 3,529 / 10 = 353 dots. */
+  /** Active enterprises in Bitola municipality, 2024 (State Statistical Office): the town the cover darkens, 3,529 / 10 = 353 dots. */
   firmsBitola2024: 3529,
 };
 

@@ -5,7 +5,7 @@
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { durationText, scrubber, target } from "./scene.mjs";
-import { claudeWindow, dolly, inFolder, named, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
+import { claudeWindow, dolly, takeModel, inFolder, named, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
 import { turnOf } from "./take.mjs";
 
 const img = (label) => ` role="img" aria-label="${esc(label)}"`;
@@ -45,7 +45,7 @@ export function register(it, ctx, d, c, T) {
     take.take,
   ].join("");
   // the camera moves in on the window as the register streams (press 2)
-  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true, zone: null }) });
+  const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", brand: c.claudeUi.brand, model: takeModel(take), crumbs: t.win, thread: thread1, k: 1, out: 3, cls: "tk-cw--register", plane: true, zone: null }) });
   // press 0: the kit files the step reads stand on the empty sheet (the folder index, the folder's CSV files, the template);
   // press 1 the prompt window comes over them in its small size
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => [...inFolder(paths, ["folder", "ordner"], (p) => /-index\.md$|\.csv$/.test(p)), ...named(paths, d.prompts.step4).filter((p) => p.includes("/register.csv"))] });
@@ -53,7 +53,7 @@ export function register(it, ctx, d, c, T) {
     it({ id: "pr2", tag: "div", cls: "tk-slot", zone: "t", k: 6, out: 7, html: promptBubble(c, 5, d.prompts.step4b, { full: true }) }),
     take2.take,
   ].join("");
-  const win2 = dolly(it, { id: "dolly2", zone: "w2", k: 6, html: claudeWindow(it, { id: "win2", crumbs: t.win, thread: thread2, k: 6, out: 7, zone: null, cls: "tk-cw--register", plane: true }) });
+  const win2 = dolly(it, { id: "dolly2", zone: "w2", k: 6, html: claudeWindow(it, { id: "win2", brand: c.claudeUi.brand, model: takeModel(take2), crumbs: t.win, thread: thread2, k: 6, out: 7, zone: null, cls: "tk-cw--register", plane: true }) });
 
   const none = c.take.noOwner;
   const colNames = [t.cols[0], t.cols[1], t.cols[2], t.cols[3], t.own, t.appr];
@@ -73,7 +73,7 @@ export function register(it, ctx, d, c, T) {
   const dates = Object.entries(d.register.byDate);
   // the time machine (round 4): one check day and its four counts, big. The window shows one line per date (the oracle's
   // counts on the three dates, in date order); the date chips set --at on the panel and the lines roll to that date (CSS, at
-  // most .45 s). On press 4 the panel stands up and every count runs up from 0.
+  // most .45 s). On press 4 the panel rises into place and every count runs up from 0.
   const keys = ["rows", "expired", "expiring", "missing"];
   const line = ([iso, n]) => `<span class="tm__r"><span class="scr__d">${esc(dateText(iso, d.lang))}</span>${keys.map((key) => `<span class="scr__c">${it({ tag: "span", k: 4, win: ".3,.9", fx: "none", count: `0,${n[key]},0`, text: String(n[key]) })}</span>`).join("")}</span>`;
   const labels = `<span class="scr__lb"><span></span>${t.dc.map((x) => `<small>${esc(x)}</small>`).join("")}</span>`;

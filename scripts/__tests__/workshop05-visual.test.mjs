@@ -5,6 +5,9 @@
  *    w05-fx.css overrides (V3);
  *  - V3: the overrides are there, with sage fills and ink outlines of 2 px at most; no ink border or shadow wider than 2 px;
  *  - V4: the surface tokens are defined once, on :root of w05-fx.css, and no new rule holds a hex literal;
+ *  - V12 (round 5, D4, on purpose): Claude's UI has its own colours, Anthropic's (--claude-*, on :root with the others). They
+ *    are used only in rules for that UI (every selector names a .cl-* or .cw* class), so the orange never leaves Claude's
+ *    window; the deck e2e spec checks the same in the browser (V9);
  *  - V11: every var() the W05 style sheets use is defined (or written by scenes.js, with a fallback). Round 4, on purpose: a
  *    scene's own place (the cover's year window, the Today camera stops and step-back offsets) is written inline by the build;
  *    such a var needs a fallback and must appear in a style attribute of the built page.
@@ -92,6 +95,12 @@ test("V4: the surface tokens are defined once, on :root of w05-fx.css, with thei
     "--w05-accent-soft": "rgba(183,58,21,.10)",
     "--surface": "#FFFEFB",
     "--tint": "#EFEBE0",
+    // round 5, D4: Claude's own colours (Anthropic's press kit: the clay and ivory fills of the Claude spark and icon files;
+    // Anthropic's brand guidelines, anthropics/skills brand-guidelines: light grey and dark), for the drawn Claude UI only (V12)
+    "--claude-clay": "#D97757",
+    "--claude-ivory": "#FAF9F5",
+    "--claude-cloud": "#E8E6DC",
+    "--claude-slate": "#141413",
   };
   const root = /:root\s*\{([^{}]*)\}/.exec(SHEETS["w05-fx.css"])[1];
   const defined = Object.fromEntries(declarations(root));
@@ -108,7 +117,7 @@ test("V4: no hex literal in a rule of deck.css or w05-fx.css (the :root tokens a
 });
 
 test("V4: every colour in a background or fill of w05-fx.css and deck.css is a token of the list or transparent", () => {
-  const OK = /^(?:var\(--(?:w05-sage-(?:50|100|200|400|600)|w05-accent-soft|paper|surface|tint|accent|cw-[\w-]+|faint|e-[\w-]+|line)\)|transparent|none|currentColor|inherit)$/;
+  const OK = /^(?:var\(--(?:w05-sage-(?:50|100|200|400|600)|w05-accent-soft|paper|surface|tint|accent|cw-[\w-]+|claude-(?:clay|ivory|cloud|slate)|faint|e-[\w-]+|line)\)|transparent|none|currentColor|inherit)$/;
   for (const name of ["w05-fx.css", "deck.css"]) {
     for (const { selector, body } of rulesOf(SHEETS[name])) {
       for (const [prop, value] of declarations(body)) {
@@ -122,6 +131,20 @@ test("V4: every colour in a background or fill of w05-fx.css and deck.css is a t
     if (/var\(--w05-sage-600\)/.test(body)) assert.match(selector, /dots|\bi\b|__d|data-on|is-on/, `sage-600 on ${selector}`);
   }
   assert.doesNotMatch(SHEETS["deck.css"] + SHEETS["w05-fx.css"], /background[^;}]*var\(--w05-green\)/, "--w05-green is a text and line colour, never a fill");
+});
+
+test("V12: the Claude colours (--claude-*) are used only in rules for the drawn Claude UI (a .cl-* or .cw* class in every selector)", () => {
+  let uses = 0;
+  for (const name of ["deck.css", "w05-fx.css"]) {
+    for (const { selector, body } of rulesOf(SHEETS[name])) {
+      if (selector.startsWith(":root") || !/var\(--claude-/.test(body)) continue;
+      uses += 1;
+      for (const one of selector.split(",").map((x) => x.trim())) assert.match(one, /\.c[lw](?:-[\w-]+)?\b/, `${name} ${one}: --claude-* outside the Claude UI`);
+    }
+  }
+  assert.ok(uses >= 5, "the Claude UI rules are found");
+  // the orange is a fill and an edge, never a text colour (clay on ivory is below 4.5:1)
+  assert.doesNotMatch((SHEETS["deck.css"] + SHEETS["w05-fx.css"]).replace(/:root\s*\{[^{}]*\}/, ""), /(?:^|[;{])\s*color:\s*var\(--claude-clay\)/m);
 });
 
 test("V11: every var() of deck.css and w05-fx.css is defined in engine.css, deck.css or w05-fx.css (or written by scenes.js, with a fallback)", () => {

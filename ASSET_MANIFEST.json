@@ -2283,8 +2283,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit.zip",
-      "sizeBytes": 107499,
-      "sha256": "02925b3560755dcc964e0f1811c67dca222f75ad8b21e61dc155f4a8d53553e2",
+      "sizeBytes": 108234,
+      "sha256": "3721d21896f04cf5c0b06f435cbff7f61b9e534dd1ea7035e8420b1bbadabe61",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -2292,8 +2292,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/gradba-audit-kit-de.zip",
-      "sizeBytes": 116784,
-      "sha256": "5f272f6da7ddc45aa9fe3a749066274cde5b1a08b536b8be519fa8ed3ad4e564",
+      "sizeBytes": 117668,
+      "sha256": "22e1bc5133309da7a8e1aefe956e767a2eaa9760de9cfa5a85e4301781dd4b32",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

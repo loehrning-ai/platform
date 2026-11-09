@@ -7,7 +7,7 @@ Fictional training material, invented for the exercise. Not legal advice.
 1. Public text, such as a law or a blank form.
 2. Invented rows, such as this kit.
 3. Real files stay on your machine: Claude writes the script, you run it, and only column names and 3 invented rows go to Claude.
-4. Real rows only after four gates: a business plan, a data processing contract, security measures and rules for sending data abroad. Ask your data protection adviser.
+4. Real rows only after four gates: a business subscription, a data processing contract, security measures and rules for sending data abroad. Ask your data protection adviser.
 
 ## What never goes in
 
