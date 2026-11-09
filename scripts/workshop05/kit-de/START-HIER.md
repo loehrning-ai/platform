@@ -60,6 +60,16 @@ Die englischen Wörter in der Spalte paper (contract, registration, medical-exam
 
 Jeden Monat: siehe vorlagen/monatscheck.md.
 
+## Bereit bleiben
+
+Nach der Prüfung bleibt das Register. Der Ordner bereit-bleiben/ hält es aktuell:
+
+- bereit-bleiben/wochencheck_geplante-aufgabe.md: der Check als wöchentliche geplante Aufgabe, nur in bezahlten Tarifen.
+- bereit-bleiben/monatscheck_von-hand.md: derselbe Check einmal im Monat von Hand, für den Free-Tarif.
+- bereit-bleiben/register-projektanweisungen.md: die Anweisungen für ein zweites Projekt mit dem Register.
+- bereit-bleiben/sicherheitskarte.md: was hinein darf, was nie, wer unterschreibt.
+- bereit-bleiben/beobachtungsliste.md: wo neue Regeln und Kontrollen erscheinen.
+
 ## Nach dem Besuch (optional)
 
 Die zwei Dateien in inspektor/ bleiben zu, bis ihr Tag da ist: das Verlangen am Tag des Besuchs, das Protokoll nach Schritt 3. Öffne inspektor/protokoll_beispiel_2026-11-27.md und nimm vorlagen/stellungnahme-protokoll.md. Schreibe zu jedem Punkt, der nicht zu dem passt, was geschah, höchstens vier Sätze. Das ist nur ein Entwurf: Eine benannte Person unterschreibt oder schreibt ihren Grund neben die Unterschrift.

@@ -1,5 +1,5 @@
 /**
- * The Workshop 05 deck as HTML on the shared deck engine (lib/scenes.js, lib/engine.css): 15 main slides and the appendix a1 to
+ * The Workshop 05 deck as HTML on the shared deck engine (lib/scenes.js, lib/engine.css): 16 main slides and the appendix a1 to
  * a4. Every visible word comes from deck-copy.json (c.s.<slide>.<element>), every computed number from data.mjs (d.vars), every
  * take line from a recording (take.mjs). The German and the English edition share one structure and one set of numbers.
  *
@@ -16,32 +16,43 @@ import { APPENDIX } from "./slides-appendix.mjs";
 import * as intro from "./slides-intro.mjs";
 import * as kitSlides from "./slides-kit.mjs";
 import * as rules from "./slides-rules.mjs";
+import { sectors } from "./slides-sectors.mjs";
+import { why } from "./slides-why.mjs";
+import { letter, we } from "./slides-case.mjs";
+import { time } from "./slides-time.mjs";
+import { watch } from "./slides-watch.mjs";
+import { safety } from "./slides-safety.mjs";
+import { close } from "./slides-close.mjs";
 import { AGENDA_MINUTES } from "./data.mjs";
 
 export { esc };
-export const MAIN_TOTAL = 15;
+export const MAIN_TOTAL = 16;
 
 const DEFAULT_MS = 1200;
 /** Press lengths in ms per slide: presses after the first, and the overrides of the motion law (never above 1600). */
 const press = (steps, over = {}) => Array.from({ length: steps + 1 }, (_, i) => over[i] ?? DEFAULT_MS);
 
-/** The slides in deck order: id, presses after the first, milliseconds per press, minutes, body. */
+/**
+ * The slides in deck order (REDESIGN-3 D4): id, presses after the first, milliseconds per press, minutes, body. `look` adds
+ * the class of another slide whose CSS a slide shares (none does now).
+ */
 export const SLIDES = [
-  { id: "cover", steps: 0, ms: press(0), minutes: 1, body: intro.cover },
-  { id: "today", steps: 3, ms: press(3), minutes: 3, body: intro.today },
-  { id: "why", steps: 7, ms: press(7, { 2: 1500 }), minutes: 4, body: intro.why },
-  { id: "we", steps: 4, ms: press(4), minutes: 5, body: intro.we },
-  { id: "letter", steps: 7, ms: press(7, { 1: 1000, 4: 1000 }), minutes: 9, body: intro.letter },
+  { id: "cover", steps: 0, ms: press(0, { 0: 1600 }), minutes: 1, body: intro.cover },
+  { id: "today", steps: 3, ms: press(3, { 0: 1400, 1: 1400, 2: 1400, 3: 1400 }), minutes: 3, body: intro.today },
+  { id: "why", steps: 7, ms: press(7, { 0: 1400, 5: 1600, 6: 1600 }), minutes: 5, body: why },
+  { id: "sectors", steps: 4, ms: press(4, { 0: 1600, 1: 1600, 2: 1400 }), minutes: 4, body: sectors },
+  { id: "we", steps: 3, ms: press(3, { 0: 1400 }), minutes: 4, body: we },
+  { id: "letter", steps: 7, ms: press(7, { 0: 1600, 1: 1400, 6: 1400 }), minutes: 7, body: letter },
+  { id: "time", steps: 3, ms: press(3, { 1: 1400, 2: 1400 }), minutes: 4, body: time },
   { id: "kit", steps: 3, ms: press(3), minutes: 5, body: kitSlides.kit },
   { id: "step1", steps: 2, ms: press(2, { 2: 1500 }), minutes: 6, body: kitSlides.step1, layout: "take" },
   { id: "step2", steps: 2, ms: press(2, { 2: 1500 }), minutes: 9, body: kitSlides.step2, layout: "take" },
   { id: "tests", steps: 4, ms: press(4), minutes: 5, body: kitSlides.tests },
-  { id: "step3", steps: 3, ms: press(3, { 1: 1500 }), minutes: 9, body: kitSlides.step3, layout: "take" },
-  { id: "ladder", steps: 5, ms: press(5), minutes: 6, body: rules.ladder },
-  { id: "register", steps: 7, ms: press(7, { 3: 1600 }), minutes: 12, body: rules.register, layout: "take" },
-  { id: "other", steps: 2, ms: press(2), minutes: 4, body: rules.other },
-  { id: "own", steps: 4, ms: press(4), minutes: 8, body: rules.own },
-  { id: "close", steps: 2, ms: press(2), minutes: 4, body: rules.close },
+  { id: "step3", steps: 3, ms: press(3, { 1: 1500 }), minutes: 8, body: kitSlides.step3, layout: "take" },
+  { id: "register", steps: 7, ms: press(7, { 3: 1600 }), minutes: 11, body: rules.register, layout: "take" },
+  { id: "watch", steps: 4, ms: press(4), minutes: 8, body: watch },
+  { id: "safety", steps: 5, ms: press(5), minutes: 6, body: safety },
+  { id: "close", steps: 2, ms: press(2), minutes: 4, body: close },
   ...["a1", "a2", "a3", "a4"].map((id) => ({ id, steps: 0, ms: [600], minutes: 0, kind: "appendix", appendix: APPENDIX[id] })),
 ];
 
@@ -62,7 +73,7 @@ export function renderSlides(c, d, takes) {
       const footer = foot(c, index + 1, MAIN_TOTAL);
       inner = r.raw ? r.raw(footer) : `<header class="hd${r.head ? "" : " hd--empty"}">${r.head}</header>\n<div class="stage">\n${r.stage}\n</div>\n${footer}`;
     }
-    const layout = slide.layout ? ` slide--${slide.layout}` : "";
+    const layout = `${slide.look ? ` ${slide.look}` : ""}${slide.layout ? ` slide--${slide.layout}` : ""}`;
     return `<section class="slide ${slide.id}${layout}" id="${slide.id}" data-kind="${kind}" data-label="${esc(label)}" data-seconds="${slide.minutes * 60}" data-step-total="${slide.steps}" data-step-current="0" data-durations="${slide.ms.join(",")}">
 ${inner}
 </section>`;

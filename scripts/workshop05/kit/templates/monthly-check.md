@@ -10,6 +10,8 @@ Use the script check.py from Step 4 and this prompt:
 
 A named person reads the lists, sends the messages and writes a new dated paper for every gap. Never change an old row to hide a gap.
 
+To keep this going after the workshop, see keep-watch/: a weekly scheduled task on paid plans, the same check by hand on a Free plan.
+
 ## Other homes for the same register
 
 The same register works in a spreadsheet (a formula such as a date before today marks expired rows), in a Microsoft list or in a small database such as SQLite. The columns and the three lists stay the same. Dates only, no health content.

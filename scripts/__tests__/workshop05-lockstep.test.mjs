@@ -52,8 +52,8 @@ test("the oracle answer on the kit equals expected.json and the numbers the deck
   assert.equal(d.decoys.length, 8);
   assert.deepEqual([d.tally.covered, d.tally.weak, d.tally.gap], [2, 1, 10]);
   assert.equal(d.vars.rows, 13);
-  assert.equal(d.files, 36);
-  assert.deepEqual(d.tree.length, 11, "eleven top-level entries in the kit");
+  assert.equal(d.files, 41, "41 files: keep-watch/ adds five (REDESIGN-3 D5)");
+  assert.deepEqual(d.tree.length, 12, "twelve top-level entries in the kit (keep-watch/ joined, REDESIGN-3 D5)");
   assert.deepEqual([data.de.rowsRead, data.de.findings.length, data.de.files, data.de.tree.length], [d.rowsRead, d.findings.length, d.files, d.tree.length]);
 });
 
@@ -117,7 +117,7 @@ test("the kit tree on slide 6 names the top-level entries of the zip (the notice
   for (const lang of LANGS) {
     const shown = copy[lang].s.kit.tree.split(" · ");
     const real = data[lang].tree;
-    assert.equal(shown.length, real.length, `${lang}: eleven entries`);
+    assert.equal(shown.length, real.length, `${lang}: twelve entries`);
     for (const name of shown) assert.ok(real.some((r) => r === name || (name === "notice" && r.startsWith("notice_")) || (name === "mitteilung" && r.startsWith("mitteilung_"))), `${lang}: ${name} is in the kit`);
   }
 });
@@ -155,22 +155,22 @@ test("each card sits on its slide: steps 1 to 3 on step1, step2, step3, the two 
 test("the notes take the kit and oracle numbers from placeholders, not from typing", () => {
   for (const lang of LANGS) {
     const notes = copy[lang].notes;
-    assert.ok(notes[1].includes("{files}") && notes[5].includes("{files}"), `${lang}: the file count of notes 2 and 6`);
-    assert.ok(notes[6].includes("{rows}"), `${lang}: the question count of note 7`);
-    assert.ok(["{rowsRead}", "{findings}", "{decoys}"].every((k) => notes[7].includes(k)), `${lang}: the three numbers of note 8`);
-    assert.ok(["{covered}", "{weak}", "{gap}"].every((k) => notes[9].includes(k)), `${lang}: the tally of note 10`);
+    assert.ok(notes[1].includes("{files}") && notes[7].includes("{files}"), `${lang}: the file count of notes 2 and 8`);
+    assert.ok(notes[8].includes("{rows}"), `${lang}: the question count of note 9`);
+    assert.ok(["{rowsRead}", "{findings}", "{decoys}"].every((k) => notes[9].includes(k)), `${lang}: the three numbers of note 10`);
+    assert.ok(["{covered}", "{weak}", "{gap}"].every((k) => notes[11].includes(k)), `${lang}: the tally of note 12`);
     const d = data[lang];
     const built = JSON.parse(/id="speaker-notes">([\s\S]*?)<\/script>/.exec(pages[lang])[1].replace(/\\u003c/g, "<"));
     assert.match(built[1], new RegExp(`\\b${d.files}\\b`), `${lang}: the built note 2 shows ${d.files}`);
-    assert.match(built[7], new RegExp(`${d.rowsRead}, ${d.findings.length}, ${d.decoys.length}`), `${lang}: the built note 8`);
-    assert.match(built[9], new RegExp(`${d.tally.covered} (COVERED|BELEGT), ${d.tally.weak} (WEAK|SCHWACH), ${d.tally.gap} (GAP|LÜCKE)`), `${lang}: the built note 10`);
+    assert.match(built[9], new RegExp(`${d.rowsRead}, ${d.findings.length}, ${d.decoys.length}`), `${lang}: the built note 10`);
+    assert.match(built[11], new RegExp(`${d.tally.covered} (COVERED|BELEGT), ${d.tally.weak} (WEAK|SCHWACH), ${d.tally.gap} (GAP|LÜCKE)`), `${lang}: the built note 12`);
   }
 });
 
 test("nothing of the old matrix, days, clock or gates scenes is left in the deck folder or the built pages", () => {
   const lib = path.join(DECK_DIR, "lib");
   for (const name of ["w05-clock.js", "w05-days.js", "w05-gates.js", "w05-matrix.js"]) assert.ok(!existsSync(path.join(lib, name)), `${name} is gone`);
-  assert.deepEqual(readdirSync(lib).filter((n) => /^w05-.*\.js$/.test(n)), ["w05-tally.js"]);
+  assert.deepEqual(readdirSync(lib).filter((n) => /^w05-.*\.js$/.test(n)).sort(), ["w05-field.js", "w05-scrub.js", "w05-tally.js"]);
   for (const lang of LANGS) assert.doesNotMatch(pages[lang], /w05-(clock|days|gates|matrix)|data-notice|data-band|data-day-tile/, lang);
   assert.ok(!existsSync(path.join(SRC, "matrix-data.mjs")));
 });

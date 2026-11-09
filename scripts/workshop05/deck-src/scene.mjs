@@ -1,13 +1,15 @@
 /**
- * Drawings and small helpers the redesigned Workshop 05 slides share. Everything here is markup or a pure function: line
- * drawings in currentColor (stroke 3 on a 120 box), the outline of North Macedonia from the deck's own geo file, number
- * and duration formats. No text lives inside an SVG (the words test skips svg and a label there would be invisible to it);
- * labels are HTML on top of the drawing.
+ * The scene kit the Workshop 05 slides share (REDESIGN-3, MOTION-SCOUT 4.2): the W05 icon set (icon, draw), the dot field
+ * (field, fieldPoint, fieldGroups; lib/w05-field.js), the 3D primitives (standUp, plane; CSS in lib/w05-fx.css), the
+ * presenter controls (toggle, scrubber, hotspots, target; lib/w05-scrub.js), the outline of North Macedonia from the deck's
+ * own geo file, number and duration formats. Everything here is markup or a pure function. No text lives inside an SVG (the
+ * words test skips svg and a label there would be invisible to it); labels are HTML on top of the drawing.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { esc } from "./motion.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const GEO_FILE = path.resolve(HERE, "../../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib/geo.js");
@@ -25,7 +27,7 @@ export function durationText(turn) {
 
 /* ── the map ─────────────────────────────────────────────────────────── */
 let geo;
-function macedonia() {
+export function macedonia() {
   if (!geo) {
     const sandbox = { window: {} };
     vm.runInNewContext(readFileSync(GEO_FILE, "utf8"), sandbox);
@@ -52,28 +54,112 @@ export function mapOf() {
   return { w, h, d, bitola: at(21.34, 41.03), skopje: at(21.43, 42.0) };
 }
 
-/* ── line drawings (120 box, stroke 3, currentColor) ─────────────────── */
-const SVG = (inner, box = "0 0 120 120") =>
-  `<svg class="dr" viewBox="${box}" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+/* ── icons: the one W05 set (lib/w05-icons.svg, 24 grid, stroke 1.5) ─── */
+const ICON_FILE = path.resolve(HERE, "../../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib/w05-icons.svg");
+let iconCache;
+/** Every symbol of w05-icons.svg: id without the "w05-" prefix to its inner markup. */
+export function iconSet() {
+  if (!iconCache) {
+    iconCache = new Map();
+    for (const m of readFileSync(ICON_FILE, "utf8").matchAll(/<symbol id="w05-([\w-]+)"[^>]*>([\s\S]*?)<\/symbol>/g)) iconCache.set(m[1], m[2]);
+  }
+  return iconCache;
+}
+const ICON_ATTRS = 'viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
 
-export const drawings = {
-  /** a sheet with lines and a magnifier: what an inspector can ask for */
-  ask: () => SVG(`<path d="M26 14h42l18 18v50H26z"/><path d="M68 14v18h18"/><path d="M38 46h34M38 58h24M38 70h14"/><circle cx="78" cy="82" r="14"/><path d="M88 92l16 16"/>`),
-  /** a sheet with a check and a spark: papers checked by AI */
-  check: () => SVG(`<path d="M24 14h44l18 18v74H24z"/><path d="M68 14v18h18"/><path d="M38 70l12 12 24-26"/><path d="M96 16v16M88 24h16"/>`),
-  /** a table with a loop: a register that stays current */
-  register: () => SVG(`<rect x="8" y="26" width="62" height="62" rx="6"/><path d="M8 47h62M8 67h62M34 26v62"/><path d="M108 66a15 15 0 1 1-4-10"/><path d="M106 46v11h-11"/>`),
-  /** the zip: a box with a zipper */
-  zip: () => SVG(`<path d="M22 14h76v92H22z"/><path d="M60 14v14M60 36v8M60 52v8"/><rect x="50" y="64" width="20" height="26" rx="4"/>`),
-  /** a folder */
-  folder: () => SVG(`<path d="M12 32a6 6 0 0 1 6-6h28l10 12h46a6 6 0 0 1 6 6v46a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6z"/>`),
-  /** a paper with a fold, for a record */
-  paper: () => SVG(`<path d="M28 12h44l20 20v76H28z"/><path d="M72 12v20h20"/><path d="M42 54h36M42 68h36M42 82h24"/>`),
-  /** a door ajar: a visit */
-  door: () => SVG(`<path d="M30 108V14h60v94"/><path d="M16 108h88"/><circle cx="76" cy="62" r="4"/>`),
-  /** a person: head and shoulders */
-  person: () => SVG(`<circle cx="60" cy="38" r="20"/><path d="M20 108c2-24 18-36 40-36s38 12 40 36"/>`),
-};
+/**
+ * One icon of the W05 set inlined (so its paths can draw). icon(name) is still markup; icon(name, { it, k, win }) makes it a
+ * stepped svg with data-fx="draw" that draws itself during press k (every shape has pathLength 1). cls adds classes.
+ */
+export function icon(name, { it, k = 0, win, cls = "", out } = {}) {
+  const inner = iconSet().get(name);
+  if (inner === undefined) throw new Error(`icon w05-${name} is not in w05-icons.svg`);
+  const klass = `ico ico--w05${cls ? ` ${cls}` : ""}`;
+  if (!it) return `<svg class="${klass}" ${ICON_ATTRS}>${inner}</svg>`;
+  return it({ tag: "svg", cls: klass, k, win, out, fx: "draw", attrs: ICON_ATTRS, html: inner });
+}
 
-/** An inline drawing wrapped for a label row. */
-export const draw = (name) => drawings[name]();
+/** The old drawing names, now drawn with the W05 set at large size (one visual language; class dr keeps their size rules). */
+const DRAWING = { ask: "inspector", check: "sheet-check", register: "register", zip: "zip", folder: "folder", paper: "sheet", door: "door", person: "person" };
+/** An inline drawing (markup only), for the slides that still call draw(name). */
+export const draw = (name) => icon(DRAWING[name] ?? name, { cls: "dr" });
+
+/* ── the dot field (lib/w05-field.js) ───────────────────────────────── */
+const FIELD_FILE = path.resolve(HERE, "../../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib/w05-field.js");
+let fieldApi;
+/** The pure half of lib/w05-field.js, the very code the page runs (so a label placed here sits on its dot there). */
+export function fieldLib() {
+  if (!fieldApi) {
+    const sandbox = { module: { exports: {} } };
+    vm.runInNewContext(readFileSync(FIELD_FILE, "utf8"), sandbox, { filename: "w05-field.js" });
+    fieldApi = sandbox.module.exports;
+  }
+  return fieldApi;
+}
+/** Box pixels of a lon/lat point on a field of w by h with pad (the same projection the canvas draws). */
+export function fieldPoint([lon, lat], { w, h, pad = 24 }) {
+  const pr = fieldLib().projector(macedonia(), w, h, pad);
+  return { x: +pr.x(lon).toFixed(1), y: +pr.y(lat).toFixed(1) };
+}
+/** The column rectangles of a groups layout (for labels under the columns), exactly as the canvas lays them out. */
+export const fieldGroups = (counts, { n, w, h, pad = 24 }) => fieldLib().groupsGeometry(counts, n, w, h, { pad }).rects;
+
+/**
+ * A field scene: a stepped host (fx none, data-scene) holding the canvas and one driver per planned press. plan:
+ * [{ k, from, to, win }] (from and to are layout names: scatter, country, regions, floor, groups:<key>). The host enters at
+ * press `k` (default 0). overlay: markup on top of the canvas (labels: figure cells, placed with fieldPoint). groups:
+ * { key: counts }, markGroup: { key: index }, regions: [{ at, inspections }], mark: [lon, lat]. style: more of the host's
+ * inline style (its place); hostAttrs: more attributes (data-keep shows the host already at --p 0). still: the host stands
+ * without motion on its entry (no scene there, so another idea may move on that press); only the presses that change the
+ * layout get a driver.
+ */
+export function field(it, { id, zone, k = 0, out, outWin, w, h, n, seed, pad = 24, plan, mark, near, outline = false, regions, groups = {}, markGroup = {}, cls = "", overlay = "", label, hostAttrs = "", style = "", still = false }) {
+  const planText = plan.map((e) => `${e.k}:${e.from}${e.to && e.to !== e.from ? `>${e.to}` : ""}`).join(";");
+  const extra = [
+    mark ? `data-mark="${mark.join(",")}"` : "",
+    near ? `data-near="${near}"` : "",
+    outline ? "data-outline" : "",
+    regions ? `data-regions="${regions.map((r) => `${r.at.join(",")},${r.inspections}`).join(";")}"` : "",
+    ...Object.entries(groups).map(([key, counts]) => `data-groups-${key}="${counts.join(",")}"`),
+    ...Object.entries(markGroup).map(([key, g]) => `data-mark-group-${key}="${g}"`),
+  ].filter(Boolean).join(" ");
+  const canvas = `<canvas class="w05-field__c" data-w05-field width="${w * 2}" height="${h * 2}" style="width:${w}px;height:${h}px" data-n="${n}" data-seed="${seed}" data-pad="${pad}" data-plan="${planText}" ${extra} aria-hidden="true"></canvas>`;
+  const drivers = plan.filter((e) => !still || (e.to && e.to !== e.from)).map((e) => it({ tag: "i", cls: "w05-drive", k: e.k, fx: "none", win: e.win, attrs: 'data-scene aria-hidden="true"' })).join("");
+  const aria = label ? ` role="img" aria-label="${esc(label)}"` : "";
+  return it({ id, tag: "div", cls: `w05-field${cls ? ` ${cls}` : ""}`, zone, k, out, outWin, fx: "none", attrs: `${still ? "" : "data-scene "}style="width:${w}px;height:${h}px${style ? `;${style}` : ""}"${aria}${hostAttrs ? ` ${hostAttrs}` : ""}`, html: `${canvas}${drivers}${overlay}` });
+}
+
+/* ── 3D primitives (CSS in lib/w05-fx.css, all a function of --p) ──── */
+/**
+ * A card that stands up out of the floor during its press (rotateX 90 to 0 around its bottom edge). Put it inside an element
+ * of class w05-s3d (the perspective). The card is a stepped element with data-scene; icons inside may draw in the same press.
+ */
+export const standUp = (it, o) => it({ tag: "div", fx: "none", ...o, cls: `w05-card${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs ? ` ${o.attrs}` : ""}` });
+/** A plane that slides in on its own depth (the Claude window, T6): from 240 px back and 14 degrees turned, to flat. */
+export const plane = (it, o) => it({ tag: "div", fx: "none", ...o, cls: `w05-plane${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs ? ` ${o.attrs}` : ""}` });
+
+/**
+ * A binder (the kit as a folder, T1): back board, `sheets` pages and a front cover that swings open on its spine during its
+ * press. Size and place come from the caller (style or slide CSS); put it inside a w05-s3d host for depth. `front` is markup on
+ * the cover (it turns with it), `html` lies on the top sheet under the cover; an `aria-label` in attrs replaces aria-hidden.
+ */
+export const binder = (it, { sheets = 3, front = "", ...o }) =>
+  it({ tag: "div", fx: "none", ...o, cls: `w05-binder${o.cls ? ` ${o.cls}` : ""}`, attrs: `data-scene${o.attrs?.includes("aria-label") ? "" : ' aria-hidden="true"'}${o.attrs ? ` ${o.attrs}` : ""}`, html: `<i class="w05-binder__back"></i>${'<i class="w05-binder__sheet"></i>'.repeat(sheets)}${o.html ?? ""}<i class="w05-binder__front">${front}</i>` });
+
+/* ── presenter controls (lib/w05-scrub.js) ─────────────────────────── */
+/** The attributes a scrub, toggle or hotspot target carries: its name and its start values (r and Shift+R return to them). */
+export const target = (name, { at, state, hot } = {}) =>
+  [`data-w05-name="${esc(name)}"`, at !== undefined ? `data-w05-start-scrub="${at}"` : "", state !== undefined ? `data-w05-start-toggle="${esc(state)}"` : "", hot !== undefined ? `data-w05-start-hot="${esc(hot)}"` : ""].filter(Boolean).join(" ");
+
+/** One row of presenter buttons (a figure cell): kind scrub, toggle or hot; values and labels in order. */
+export function controls(it, { id, zone, k = 0, out, win, kind, name, values, labels, aria, cls = "" }) {
+  if (!["scrub", "toggle", "hot"].includes(kind)) throw new Error(`controls: kind ${kind}`);
+  const buttons = values.map((v, i) => `<button type="button" class="w05-btn" data-w05-${kind}="${esc(name)}" data-value="${esc(v)}" aria-pressed="false">${esc(labels[i])}</button>`).join("");
+  return it({ id, tag: "div", cls: `w05-ctl w05-ctl--${kind} fig${cls ? ` ${cls}` : ""}`, zone, k, out, win, attrs: `role="group" aria-label="${esc(aria ?? labels.join(", "))}"`, html: buttons });
+}
+/** A segmented toggle (T8) for the target `name`. */
+export const toggle = (it, { target: name, ...o }) => controls(it, { ...o, kind: "toggle", name });
+/** Scrubber chips (T7) under an axis: each sets the target's --at. */
+export const scrubber = (it, { target: name, ...o }) => controls(it, { ...o, kind: "scrub", name });
+/** Hotspot buttons (T8): a second click clears. */
+export const hotspots = (it, { target: name, ...o }) => controls(it, { ...o, kind: "hot", name });

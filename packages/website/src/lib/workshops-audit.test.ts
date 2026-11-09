@@ -31,6 +31,7 @@ const KIT_TOP = [
   "cases/",
   "inspector/",
   "templates/",
+  "keep-watch/",
   "claude/",
 ];
 
@@ -45,12 +46,13 @@ const KIT_TOP_DE = [
   "faelle/",
   "inspektor/",
   "vorlagen/",
+  "bereit-bleiben/",
   "claude/",
 ];
 
 /** The deck's main slides in order: their kind (the registry activity) and their minutes. */
-const DECK_ACTIVITY = ["listen", "listen", "vote", "listen", "vote", "do", "do", "do", "vote", "do", "vote", "do", "vote", "write", "vote"];
-const DECK_MINUTES = [1, 3, 4, 5, 9, 5, 6, 9, 5, 9, 6, 12, 4, 8, 4];
+const DECK_ACTIVITY = ["listen", "listen", "vote", "vote", "listen", "vote", "listen", "do", "do", "do", "vote", "do", "do", "write", "vote", "vote"];
+const DECK_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
 const DECK_FILE = { de: "slides.html", en: "en/slides.html" } as const;
 
 /** The main slides of a built deck edition: label and minutes, read from its sections. */
@@ -122,8 +124,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       expect(workshop.needs.join(" ")).not.toContain("Codex");
       expect(workshop.stageExplainer.facts).toHaveLength(3);
     }
-    expect(de.stageExplainer.facts).toEqual(["36 Dateien", "4 Schritte", "13 Fragen"]);
-    expect(en.stageExplainer.facts).toEqual(["36 files", "4 steps", "13 questions"]);
+    expect(de.stageExplainer.facts).toEqual(["41 Dateien", "4 Schritte", "13 Fragen"]);
+    expect(en.stageExplainer.facts).toEqual(["41 files", "4 steps", "13 questions"]);
     // The question is the deck's two hands-up prompts and its close, word for word.
     expect(en.question).toBe("Which check could come to you, and would your papers hold up?");
     expect(de.question).toBe("Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?");
@@ -150,9 +152,9 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = AUDIT_WORKSHOP[locale];
       const slides = deckSlides(locale);
-      expect(slides).toHaveLength(15);
+      expect(slides).toHaveLength(16);
       expect(workshop.agendaSource).toBe("deck");
-      expect(workshop.agenda).toHaveLength(15);
+      expect(workshop.agenda).toHaveLength(16);
       expect(workshop.agenda.map((item) => item.label)).toEqual(slides.map((slide) => slide.label));
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(slides.map((slide) => slide.minutes));
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(DECK_MINUTES);
@@ -163,7 +165,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       expect(workshop.agenda.every((item) => item.mode === undefined && item.description === undefined)).toBe(true);
     }
     expect(de.agenda.map((item) => item.activity)).toEqual(en.agenda.map((item) => item.activity));
-    // The room never listens for more than 15 minutes in a row; the longest run is the story, 5 minutes.
+    // The room never listens for more than 15 minutes in a row; the longest run is 4 minutes (cover and today, the case, the lanes).
     let run = 0;
     let longest = 0;
     for (const item of en.agenda) {
@@ -208,11 +210,11 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(de.kit?.rulesHeading).toMatch(/Regeln 4 bis 7 von 13/);
   });
 
-  it.each(["de", "en"] as const)("matches the %s kit: 36 files, 11 entries, four steps, the statuses and the register of the key", (locale) => {
+  it.each(["de", "en"] as const)("matches the %s kit: 41 files, 12 entries, four steps, the statuses and the register of the key", (locale) => {
     const edition = EDITION[locale];
     const workshop = AUDIT_WORKSHOP[locale];
     const names = zipNames(edition.zip).filter((name) => !name.endsWith("/"));
-    expect(names).toHaveLength(36);
+    expect(names).toHaveLength(41);
     expect(names.every((name) => name.startsWith(edition.root))).toBe(true);
     const top = new Set(names.map((name) => {
       const rest = name.slice(edition.root.length);
@@ -224,7 +226,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect([...edition.start.matchAll(locale === "de" ? /^## Schritt \d/gm : /^## Step \d/gm)]).toHaveLength(4);
     const kit = workshop.kit!;
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
-    expect(kit.stats.map((stat) => stat.value)).toEqual(["36", "4", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
+    expect(kit.stats.map((stat) => stat.value)).toEqual(["41", "4", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
     // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
     expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined, undefined]);

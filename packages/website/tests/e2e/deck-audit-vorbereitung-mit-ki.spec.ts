@@ -6,7 +6,7 @@ import { expect, type Page, test } from "@playwright/test";
  * #cover/0 and clear the room's votes, unbound keys do nothing, modified r stays the browser's, P
  * opens the presenter, Escape leaves an appendix page for the slide it came from, a reload keeps the
  * position the hash names, the phone note links only to a page on this site, and a phone never
- * scrolls sideways. The 15 main slides and appendix a1 to a4 of the condensed deck are pinned by id,
+ * scrolls sideways. The 16 main slides and appendix a1 to a4 of the condensed deck are pinned by id,
  * the six polls by name and button count, the recorded-take chip on the four step slides, and the
  * visual law is scanned on every press of every slide in both editions: V1 no ink fill, V7 text
  * contrast 4.5:1, V8 at most one accent element per press state.
@@ -20,15 +20,15 @@ const EDITIONS = [
 
 test.use({ contextOptions: { reducedMotion: "reduce" } });
 
-const MAIN_IDS = ["cover", "today", "why", "we", "letter", "kit", "step1", "step2", "tests", "step3", "ladder", "register", "other", "own", "close"] as const;
+const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"] as const;
 const APPENDIX_IDS = ["a1", "a2", "a3", "a4"] as const;
-/** The six polls of the deck: slide, name, buttons. `door` (S13) feeds the ghost bars of `door-end` (S15). */
+/** The six polls of the deck: slide, name, buttons. `door` (S04) feeds the ghost bars of `door-end` (S16). */
 const POLLS = [
   { slide: "letter", name: "clock", buttons: 2 },
   { slide: "step2", name: "finds", buttons: 4 },
   { slide: "tests", name: "status", buttons: 3 },
-  { slide: "ladder", name: "ladder", buttons: 4 },
-  { slide: "other", name: "door", buttons: 4 },
+  { slide: "safety", name: "ladder", buttons: 4 },
+  { slide: "sectors", name: "door", buttons: 4 },
   { slide: "close", name: "door-end", buttons: 4 },
 ] as const;
 /** The slides that show a recorded Claude take (steps 1 to 4) and so carry the take chip. */
@@ -195,13 +195,13 @@ for (const edition of EDITIONS) {
     });
 
     test("r and Shift+R return to the cover; other keys and modified r do nothing", async ({ page }) => {
-      await open(page, `${edition.deck}#other/1`);
-      await expectAt(page, "#other/1", "deep link");
-      await expect(page.locator("#other")).toHaveAttribute("data-deck-active", "");
+      await open(page, `${edition.deck}#sectors/1`);
+      await expectAt(page, "#sectors/1", "deep link");
+      await expect(page.locator("#sectors")).toHaveAttribute("data-deck-active", "");
 
       for (const key of ["Space", "PageDown", "End", "Home", "5", "0", "Enter"]) {
         await page.keyboard.press(key);
-        await expectAt(page, "#other/1", `${key} is unbound`);
+        await expectAt(page, "#sectors/1", `${key} is unbound`);
       }
       const prevented = await page.evaluate(() =>
         [{ ctrlKey: true }, { metaKey: true }, { altKey: true }].map((mods) => {
@@ -211,7 +211,7 @@ for (const edition of EDITIONS) {
         }),
       );
       expect(prevented).toEqual([false, false, false]);
-      await expectAt(page, "#other/1", "modified r is the browser's");
+      await expectAt(page, "#sectors/1", "modified r is the browser's");
 
       await page.evaluate(() => {
         const input = document.createElement("input");
@@ -220,7 +220,7 @@ for (const edition of EDITIONS) {
       });
       await page.locator("#probe").focus();
       await page.keyboard.press("r");
-      await expectAt(page, "#other/1", "r inside a form control types");
+      await expectAt(page, "#sectors/1", "r inside a form control types");
       await page.locator("#probe").evaluate((input) => input.remove());
 
       await page.keyboard.press("r");
@@ -252,12 +252,13 @@ for (const edition of EDITIONS) {
     });
 
     test("r clears the room's votes along with the position", async ({ page }) => {
-      await open(page, `${edition.deck}#other/1`);
+      // the poll door shows from press 4 of the rebuilt sectors slide (REDESIGN-3 D4), so the votes are cast there
+      await open(page, `${edition.deck}#sectors/4`);
       const votes = page.locator("deck-stage [data-poll-n]");
-      const button = page.locator('#other [data-poll="door"][data-value="1"]');
+      const button = page.locator('#sectors [data-poll="door"][data-value="1"]');
       await button.click();
       await button.click();
-      await expect(page.locator('#other [data-poll="door"][data-value="1"] [data-poll-n]')).toHaveText("2");
+      await expect(page.locator('#sectors [data-poll="door"][data-value="1"] [data-poll-n]')).toHaveText("2");
       await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
       await page.keyboard.press("r");
       await expectAt(page, "#cover/0", "r resets");
@@ -338,10 +339,10 @@ for (const edition of EDITIONS) {
       expect(new URL(popup.url()).pathname).toBe(edition.presenter);
       await expect(popup.locator("#pv-conn")).toHaveAttribute("data-state", "live");
       const label = edition.lang === "de" ? "Folie" : "Slide";
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 15`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 16`);
       await page.bringToFront();
       await page.keyboard.press("ArrowRight");
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 15`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 16`);
       await popup.close();
     });
 

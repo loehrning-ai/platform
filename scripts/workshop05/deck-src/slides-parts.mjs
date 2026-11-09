@@ -3,8 +3,8 @@
  * take (or, while no take is accepted, the labelled empty frame). Nothing here is typed copy: every visible word comes
  * from deck-copy.json, every number from data.mjs, every take line from a recording (take.mjs).
  */
-import { esc, fill, rowWindow } from "./motion.mjs";
-import { durationText } from "./scene.mjs";
+import { esc, fill, rowWindow, spread } from "./motion.mjs";
+import { durationText, icon } from "./scene.mjs";
 import { chipText, compareWithKey, findingLine, statusLines, takeRows, toolsOf, turnOf } from "./take.mjs";
 
 /** An icon of the engine sprite (lib/icons.svg). */
@@ -41,10 +41,13 @@ export function promptBubble(c, n, text, { full = false } = {}) {
 /**
  * The Claude window replica: the engine's .cw, its bar with the crumbs (chrome, class fig) and one thread. `thread` is the
  * markup of the items that live in it. The window is a drawing of Claude, never the product: the crumbs say "(invented)".
+ * `plane` makes it slide in on its own depth plane during its press (a scene, REDESIGN-3 T6).
  */
-export function claudeWindow(it, { id, crumbs, thread, k = 0, out, zone = "w", win, cls = "" }) {
+export function claudeWindow(it, { id, crumbs, thread, k = 0, out, zone = "w", win, cls = "", plane = false }) {
   const bar = `<div class="cw-bar fig"><span class="cw-dots" aria-hidden="true"><b></b><b></b><b></b></span>${split(crumbs).map((x, i, all) => `<span class="cw-crumb${i === all.length - 1 ? " cw-crumb--now" : ""}">${esc(x)}</span>`).join("")}</div>`;
   const body = `<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread tk-thread">${thread}</div></div></div>`;
+  // plane: the window slides in on its own depth (T6, lib/w05-fx.css .w05-plane), a 3D scene of its press
+  if (plane) return it({ id, tag: "div", cls: `cw tk-cw w05-plane${cls ? ` ${cls}` : ""}`, zone, k, out, win, fx: "none", attrs: "data-scene", html: bar + body });
   return it({ id, tag: "div", cls: `cw tk-cw${cls ? ` ${cls}` : ""}`, zone, k, out, win, html: bar + body });
 }
 
@@ -131,9 +134,10 @@ export function statusBoard(it, { c, k, zone, id, out, turn, ms }) {
   const word = c.take.status;
   const tally = { covered: 0, weak: 0, gap: 0 };
   for (const l of lines) tally[l.status] += 1;
-  const tiles = lines.map((l, i) => it({ tag: "li", cls: `board__t board__t--${l.status}`, k, win: rowWindow(i, ms, 0.35, 36, 0.3), html: `<span>${esc(l.id)}</span>` })).join("");
+  // each tile turns over from a blank card to its status (a 3D scene of the press, REDESIGN-3 step slides)
+  const tiles = lines.map((l, i) => it({ tag: "li", cls: `board__t board__t--${l.status} flip3`, k, fx: "none", win: rowWindow(i, ms, 0.35, 36, 0.3), attrs: "data-scene", html: `<span class="flip3__b" aria-hidden="true"></span><span class="flip3__f"><span>${esc(l.id)}</span></span>` })).join("");
   const legend = ["covered", "weak", "gap"].map((s) => `<span class="board__k board__k--${s}"><i></i><b>${tally[s]}</b> ${esc(word[s])}</span>`).join("");
-  return it({ id, tag: "div", cls: "board fig", zone, k, out, win: ".3,.42", html: `<ul class="board__g">${tiles}</ul><p class="board__lg">${legend}</p>` });
+  return it({ id, tag: "div", cls: "board fig", zone, k, out, win: ".3,.42", html: `<ul class="board__g w05-s3d">${tiles}</ul><p class="board__lg">${legend}</p>` });
 }
 
 /**
@@ -172,7 +176,8 @@ export function takeView(it, o) {
       const win = rowWindow(item++, ms);
       const kind = lineKind(e.line, fence);
       fence = kind.fence;
-      const marked = markdownRows(e.rows);
+      // a pipe between words (check.py prints "L05 | rule | count | detail") is drawn as a column divider; the text stays verbatim
+      const marked = markdownRows(e.rows).map((h) => (kind.fence || kind.cls === " is-fence" ? h : h.replace(/(^|\s)\|(?=\s|$)/g, '$1<span class="pp">|</span>')));
       return e.rows
         .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${index === hitAt ? " is-hit" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
         .join("");
@@ -182,7 +187,7 @@ export function takeView(it, o) {
   const tools = used.length ? `<p class="tk-tools fig">${used.map((t) => `<span class="tk-tool">${esc(copy.tool[t])}</span>`).join("")}</p>` : "";
   const made = o.files ? fileChips(o.recFiles ?? rec, "", { skip: o.skipFiles }) : "";
   // The answer is printed whole at 27 px. When it is taller than the window, the flow scrolls up with the rows as they come in
-  // (the way a Claude window does, see .tk-flow in deck.css); nothing is cut, nothing is edited, and a fade at the top of the window shows it.
+  // (the way a Claude window does, see .tk-flow in deck.css); nothing is cut, nothing is edited, and a hair line at the top of the window shows it.
   const flow = `<div class="tk-flow" data-step="${k}" data-win=".3,1" data-fx="none">${tools}${rows}${made}</div>`;
   const take = it({ id: ids.take, tag: "div", cls: `cw-answer tk${o.head ? " tk--head" : ""}`, zone: zones.take, k, out: out.take, win: ".3,.45", attrs: `data-take="${rec.id}"`, html: `${flow}` });
   const chip = it({ id: ids.chip, tag: "p", cls: "tk-chip fig", zone: zones.chip, k, out: out.chip, text: chipText(rec, d.lang, diffs.length > 0, copy) });
@@ -234,11 +239,35 @@ export function fileChips(rec, fallback, { skip } = {}) {
 
 /** The produced files of a take as small page previews (a sheet with three lines and the file name), or the listed names. */
 export function filePreviews(rec, fallback, { skip } = {}) {
+  // a long name may break only after _ - or . (never inside a word or a date part)
   const fromRecording = rec?.produced_files?.length ? rec.produced_files.map((f) => String(f.name).split("/").pop()).filter((n) => !(skip && skip.test(n))) : [];
   const names = fromRecording.length ? fromRecording : fallback ? split(fallback) : [];
   if (!names.length) return "";
-  return `<div class="tk-prevs fig">${names.map((n) => `<span class="tk-prev"><i></i><i></i><i></i><b>${esc(n)}</b></span>`).join("")}</div>`;
+  return `<div class="tk-prevs fig">${names.map((n) => `<span class="tk-prev"><i></i><i></i><i></i><b>${fileName(n)}</b></span>`).join("")}</div>`;
 }
+
+/** A file name that may break only after _ - or / (never inside a word or a date part). */
+export const fileName = (name) => esc(name).replace(/([_/-])/g, "$1<wbr>");
+
+/**
+ * The kit files a prompt reads, as chips under the small prompt window (a figure cell): the prompt visibly works on files.
+ * `pick(paths)` chooses them from d.kitPaths (the zip of this edition), so no file name is typed; the top folder is cut
+ * except for a template the prompt names with its folder.
+ */
+export function promptInputs(it, d, { id = "in", zone = "in", k = 0, out, pick }) {
+  const names = pick(d.kitPaths);
+  if (!names.length) return "";
+  const items = names
+    .map((p, i) => it({ tag: "li", k, win: spread(i, names.length, 0.25, 0.45), html: `${icon(/\.csv$/.test(p) ? "spreadsheet" : "sheet")}<span>${fileName(p)}</span>` }))
+    .join("");
+  return it({ id, tag: "ul", cls: `tk-in tk-in--${Math.min(names.length, 14) > 6 ? "many" : "few"} fig`, zone, k, out, fx: "none", html: items });
+}
+/** Path pickers for promptInputs: by top folder, by file name, by a name the prompt text carries. */
+export const inFolder = (paths, folders, test = () => true) => paths.filter((p) => folders.includes(p.split("/")[0]) && test(p)).map((p) => p.split("/").slice(1).join("/"));
+export const named = (paths, text) => {
+  const said = new Set(String(text).match(/[\w./-]+\.(?:csv|md|txt)\b/g) ?? []);
+  return paths.filter((p) => said.has(p) || said.has(p.split("/").pop()));
+};
 
 /** Four dots, the one of the current step filled: where we are in the four prompts. Label-free, so it sits in a figure cell. */
 export const progress = (it, n, zone = "p") => it({ id: "prog", tag: "p", cls: "tk-prog fig", zone, attrs: `role="img" aria-label="${n} / 4"`, html: [1, 2, 3, 4].map((i) => `<i${i === n ? ' class="is-now"' : i < n ? ' class="is-done"' : ""}>${i}</i>`).join("") });

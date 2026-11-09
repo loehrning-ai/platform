@@ -58,6 +58,16 @@ No code tool in your plan, or it is switched off? Ask Claude for check.py and ru
 
 Every month: see templates/monthly-check.md.
 
+## Stay ready
+
+After the audit the register stays. The folder keep-watch/ keeps it current:
+
+- keep-watch/weekly-check_scheduled-task.md: the check as a weekly scheduled task, on paid plans only.
+- keep-watch/monthly-check_by-hand.md: the same check once a month by hand, for the Free plan.
+- keep-watch/register-project-instructions.md: the instructions for a second project that holds the register.
+- keep-watch/safety-card.md: what goes in, what never, who signs.
+- keep-watch/watch-list.md: where new rules and checks appear.
+
 ## After the visit (optional)
 
 The two files in inspector/ stay closed until their day: the request on the day of the visit, the minutes after Step 3. Open inspector/minutes_sample_2026-11-27.md and use templates/comment-on-minutes.md. Write at most four sentences on each point that does not match what happened. This is a draft only: a named person signs, or writes the reason beside the sign-off line.

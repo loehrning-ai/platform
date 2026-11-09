@@ -55,7 +55,15 @@ export function promptBlocks(startHere, heading) {
  */
 export const PUBLIC = {
   dit2025: { regular: 5664, followUp: 6515, extraordinary: 14305 },
+  /** DIT decisions in 2025 (DATA-23): about one inspection in four ended with a decision. */
+  ditDecisions2025: 6359,
   staff: 24,
+  /** Active enterprises in 2024, State Statistical Office, preliminary, published 15 Apr 2026 (verified row DATA-32). */
+  firms2024: 73310,
+  /** Firms per dot of the W05 field (cover and today): 73,310 / 10 = 7,331 dots, our own arithmetic. */
+  firmsPerDot: 10,
+  /** Active enterprises in Bitola municipality, 2024 (DATA-32): the town the cover darkens, 3,529 / 10 = 353 dots. */
+  firmsBitola2024: 3529,
 };
 
 let cached;
@@ -157,8 +165,11 @@ export function deckData(lang = "en") {
     askMissing: reg.ask.missing,
   };
 
+  const field = { firms: PUBLIC.firms2024, per: PUBLIC.firmsPerDot, dots: Math.round(PUBLIC.firms2024 / PUBLIC.firmsPerDot), bitola: PUBLIC.firmsBitola2024, near: Math.round(PUBLIC.firmsBitola2024 / PUBLIC.firmsPerDot) };
+
   return {
     lang,
+    field,
     notice: NOTICE_DATE,
     checkDate: CHECK_DATE,
     today: TODAY_IN_EXERCISE,
@@ -172,8 +183,10 @@ export function deckData(lang = "en") {
     files: entries.length,
     tree: treeNames(entries),
     treeCounts: treeCounts(entries),
+    /** Every path inside this edition's zip (the files a prompt reads are shown from here, never typed). */
+    kitPaths: entries.map(([p]) => p),
     public: PUBLIC,
-    dit: { ...dit, total: ditTotal },
+    dit: { ...dit, total: ditTotal, decisions: PUBLIC.ditDecisions2025 },
     dots,
     finds: [result.findings.length - 4, result.findings.length, result.findings.length + 4, result.findings.length * 2],
     startHere,
@@ -195,6 +208,11 @@ export function deckData(lang = "en") {
 }
 
 /** The agenda in minutes per main slide, in deck order (slides.mjs asserts that SLIDES carry exactly these). */
-export const AGENDA_MINUTES = [1, 3, 4, 5, 9, 5, 6, 9, 5, 9, 6, 12, 4, 8, 4];
-/** The three parts of the day with the start (cover and today) in front: [start, the case (slides 3 to 5), the kit (6 to 11), your firm (12 to 15)]. */
-export const AGENDA_PARTS = [[0, 2], [2, 5], [5, 11], [11, 15]].map(([from, to]) => AGENDA_MINUTES.slice(from, to).reduce((sum, n) => sum + n, 0));
+export const AGENDA_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
+/**
+ * The three parts of the day with the start (cover and today) in front, as slide index ranges [from, to):
+ * start (slides 1 and 2), the case (3 to 7: evidence, what happens, the clock, by hand), Claude the first time (8 to 12:
+ * the kit and steps 1 to 3), set up for later (13 to 16: the register, staying ready, safety, the close).
+ */
+export const AGENDA_RANGES = [[0, 2], [2, 7], [7, 12], [12, 16]];
+export const AGENDA_PARTS = AGENDA_RANGES.map(([from, to]) => AGENDA_MINUTES.slice(from, to).reduce((sum, n) => sum + n, 0));

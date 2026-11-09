@@ -21,7 +21,12 @@ export function parseHtml(html) {
     if (m[0].startsWith("<!--")) continue;
     const top = stack[stack.length - 1];
     if (m[5] !== undefined) {
-      top.children.push({ text: m[5] });
+      // text after a <wbr> continues the text before it (a line-break chance is no space)
+      const last = top.children[top.children.length - 1];
+      if (last?.text !== undefined && last.wbr) { last.text += m[5]; delete last.wbr; } else top.children.push({ text: m[5] });
+    } else if (!m[1] && m[2].toLowerCase() === "wbr") {
+      const last = top.children[top.children.length - 1];
+      if (last?.text !== undefined) last.wbr = true;
     } else if (m[1]) {
       const name = m[2].toLowerCase();
       for (let i = stack.length - 1; i > 0; i -= 1) {

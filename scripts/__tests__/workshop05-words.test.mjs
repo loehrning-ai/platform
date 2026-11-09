@@ -30,22 +30,22 @@ import {
   withoutNotes,
 } from "../workshop05/deck-src/deck-html.mjs";
 
-const ids = ["cover", "today", "why", "we", "letter", "kit", "step1", "step2", "tests", "step3", "ladder", "register", "other", "own", "close"];
+const ids = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
 
 /** The counted words per press state of each main slide (SPEC-2 2.3; the rule is in the header). A null is a press that shows a
  *  recorded take: its count depends on the chip variant and is asserted by the fixture tests below. */
 const COUNTS = {
   en: {
-    cover: [12], today: [1, 1, 18, 24], why: [11, 11, 11, 11, 11, 19, 11, 19], we: [13, 16, 25, 24, 25],
-    letter: [7, 25, 22, 20, 25, 19, 18, 22], kit: [2, 2, 2, 24], step1: [17, 25, null], step2: [17, 19, null],
-    tests: [7, 7, 11, 23, 17], step3: [17, null, 14, 22], ladder: [6, 6, 6, 22, 25, 11],
-    register: [23, 17, null, 10, 17, 12, null, 22], other: [5, 20, 20], own: [5, 5, 17, 20, 24], close: [6, 24, 18],
+    cover: [12], today: [1, 1, 1, 22], why: [17, 23, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
+    letter: [16, 18, 22, 22, 18, 20, 14, 21], time: [19, 17, 20, 23], kit: [11, 15, 17, 24], step1: [17, 25, null], step2: [17, 19, null],
+    tests: [7, 7, 11, 23, 20], step3: [17, null, 14, 22], register: [23, 17, null, 10, 18, 12, null, 14],
+    watch: [16, 21, 22, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [21, 24, 8],
   },
   de: {
-    cover: [10], today: [1, 1, 17, 23], why: [8, 8, 8, 8, 8, 19, 8, 15], we: [11, 16, 24, 25, 25],
-    letter: [7, 24, 22, 19, 25, 17, 13, 23], kit: [2, 2, 2, 22], step1: [16, 25, null], step2: [18, 20, null],
-    tests: [7, 7, 11, 22, 14], step3: [16, null, 14, 20], ladder: [5, 5, 5, 22, 25, 8],
-    register: [22, 16, null, 9, 18, 13, null, 24], other: [5, 19, 19], own: [5, 5, 16, 20, 21], close: [6, 24, 21],
+    cover: [10], today: [1, 1, 1, 22], why: [14, 22, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
+    letter: [13, 19, 22, 20, 18, 21, 14, 20], time: [17, 17, 20, 23], kit: [10, 16, 15, 22], step1: [16, 25, null], step2: [18, 20, null],
+    tests: [7, 7, 11, 22, 18], step3: [16, null, 14, 20], register: [22, 16, null, 9, 18, 13, null, 16],
+    watch: [15, 18, 19, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [20, 24, 9],
   },
 };
 /** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
@@ -79,11 +79,11 @@ const withoutTakes = (html) => html.replace(/<(p|tr)\b[^>]*data-take="[^"]*"[^>]
 const counted = (html) => Object.fromEntries(countDeck(html).filter((x) => x.kind === "main").map((s) => [s.id, s.states.map((t) => t.length)]));
 
 for (const lang of LANGS) {
-  test(`${lang}: 15 main slides in the designed order, then four appendix slides`, () => {
+  test(`${lang}: 16 main slides in the designed order, then four appendix slides`, () => {
     const all = slidesOf(pages[lang]);
     assert.deepEqual(mainSlides(pages[lang]).map((s) => s.attrs.id), ids);
-    assert.deepEqual(all.slice(15).map((s) => s.attrs.id), ["a1", "a2", "a3", "a4"]);
-    assert.ok(all.slice(15).every((s) => s.attrs["data-kind"] === "appendix"));
+    assert.deepEqual(all.slice(16).map((s) => s.attrs.id), ["a1", "a2", "a3", "a4"]);
+    assert.ok(all.slice(16).every((s) => s.attrs["data-kind"] === "appendix"));
   });
 
   test(`${lang}: at most 25 counted words in every press state of every main slide`, () => {
@@ -185,21 +185,32 @@ for (const lang of LANGS) {
     const en = lang === "en";
     const must = (id, k, pattern, what) => assert.match(visibleTextAt(pages[lang], id, k), pattern, `${lang} ${id} press ${k}: ${what}`);
     must("cover", 0, en ? /invented/ : /erfunden/, "the case is labelled invented");
-    must("why", 1, /2025/, "the 26,484 inspections carry their year");
-    must("why", 1, /DIT/, "the 26,484 inspections carry their source");
-    must("why", 5, en ? /Own calculation/ : /Eigene Rechnung/, "the 54 of 100 is marked as our own calculation");
-    must("why", 2, /2024/, "the 31 inspections carry their year");
-    must("why", 1, /2023/, "the data exchange carries its year");
+    // builder 2 (REDESIGN-3 D4): the evidence act was rebuilt, so the presses that carry each qualifier moved
+    must("why", 0, /2025/, "the 26,484 inspections carry their year");
+    must("why", 0, /DIT/, "the 26,484 inspections carry their source");
+    // fix round 2: the kinds and the decisions share one press (5), so the regions are press 6 and Bitola press 7
+    must("why", 5, en ? /own calculation/ : /eigene Rechnung/, "one decision in four is marked as our own calculation");
+    must("why", 1, /2026/, "the first news card carries its date");
+    must("why", 2, /2024/, "the heat wave card carries its year");
+    must("why", 6, /OpenStreetMap/, "the places of the regions carry their gazetteer");
     must("we", 0, en ? /invented/ : /erfunden/, "the firm is labelled invented");
-    must("we", 3, en ? /own calculation/ : /eigene Rechnung/, "one inspection per 13 firms is marked as our own calculation");
-    must("we", 3, /2024/, "the firm count carries its year");
+    must("we", 2, /2026/, "the risk ladder carries the year of its plan");
+    must("we", 3, /2025/, "the complaints carry their year");
     must("letter", 0, en ? /invented/ : /erfunden/, "the letter case is labelled invented");
     must("letter", 3, /Law on Inspection Supervision|Gesetz über die Inspektionsaufsicht/, "the three working days carry their law");
-    must("letter", 7, /Art\. 83/, "the fine carries its article");
+    must("letter", 5, /Art\. 83/, "the fine carries its article");
+    must("time", 2, en ? /recorded|not recorded yet/ : /aufgezeichnet/, "the step times say they come from a recording, or that there is none");
     must("tests", 0, en ? /invented/ : /erfunden/, "the example row is labelled invented");
-    must("other", 0, /2025/, "the sources carry their years");
+    must("sectors", 0, /2024/, "the firm count carries its year");
+    must("sectors", 3, en ? /own calculation/ : /eigene Rechnung/, "the informal shares are marked as our own calculation");
     must("register", 3, en ? /Dates only/ : /Nur Daten/, "the register says it holds dates, no health content");
-    must("other", 2, /2022/, "the filing guide carries its year");
+    // REDESIGN-3 D4: the plan facts carry their source and date, the watch list its check date, the kit facts theirs
+    must("kit", 2, en ? /Anthropic help centre, 6 Nov 2026/ : /Anthropic-Hilfe, 6\. Nov\. 2026/, "the first-use steps carry their source");
+    must("watch", 1, en ? /no monthly option/i : /Keine monatliche Option/, "the weekly schedule says it has no monthly option");
+    must("watch", 1, en ? /Anthropic help centre, 5 Nov 2026/ : /Anthropic-Hilfe, 5\. Nov\. 2026/, "the plan facts carry their source");
+    must("watch", 3, en ? /checked 8 Nov 2026/ : /geprüft am 8\. Nov\. 2026/, "the watch list carries its check date");
+    must("safety", 4, en ? /never creates, changes or backdates/ : /nie einen Nachweis an, ändert oder rückdatiert/, "the record rule is on the never press");
+    must("safety", 5, en ? /effective 12 Nov 2026/ : /gültig ab 12\. Nov\. 2026/, "the Usage Policy carries its date");
     const html = withoutTakes(pages[lang]);
     assert.match(html, en ? /Gradba audit \(invented\)/ : /Gradba-Audit \(erfunden\)/, "the Claude window is labelled as an invented case");
   });
@@ -232,7 +243,7 @@ for (const lang of LANGS) {
         const text = slides.replace(/<[^>]+>/g, " ").replace(/\b[\w-]+\.(md|csv|py|zip|txt)\b/g, " ");
         assert.doesNotMatch(text, /\b(fuer|ueber|Pruefung\w*|Aenderung\w*|Loehr|Gebuehr\w*|Aerzt\w*|Uebung\w*|Buero\w*|Groesse|koennen|moechte|muessen|waehrend)\b/i, "an ASCII substitute for an umlaut");
       }
-      assert.doesNotMatch(html, /\/Users\/|\/private\/|mavengence|facilitator\/|CLAUDE\.md|vardar|tannwald|Vier Tage bis zur Kontrolle/i);
+      assert.doesNotMatch(html, /\/Users\/|\/private\/|mavengence|facilitator\/|CLAUDE\.md|vardar works|tannwald|Vier Tage bis zur Kontrolle/i);
     }
   });
 

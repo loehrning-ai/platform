@@ -8,7 +8,7 @@ const base = "/workshops/audit-vorbereitung-mit-ki";
 /** One deck in two editions, built from one copy source by scripts/workshop05/deck-src/build.mjs. */
 const DECK_FILE: Readonly<Record<Locale, string>> = { de: "slides.html", en: "en/slides.html" };
 
-/** The kit edition in the page's language; both hold the same 36 files, one per language. */
+/** The kit edition in the page's language; both hold the same 41 files, one per language. */
 const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zip", en: "gradba-audit-kit.zip" };
 
 /**
@@ -16,14 +16,14 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zi
  * the checks that tie every figure to them are in scripts/workshop05 (build-kit.mjs, verify-kit.mjs,
  * oracle/); the demo at /demos/audit-vorbereitung-mit-ki runs the same folder. Gradba-Pro and every
  * file are invented; laws and public numbers come from official texts. The agenda follows the deck's
- * 15 main slides, one block per slide (the detail page does not show it; tests and machine surfaces
+ * 16 main slides, one block per slide (the detail page does not show it; tests and machine surfaces
  * read it); workshops-audit.test.ts holds it equal to the deck's labels and minutes, so a slide edit
  * fails there until this array is edited too. Registered in WORKSHOPS_BY_LOCALE with the Sage poster
  * palette.
  */
 
-/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 107399 and 99375 bytes. */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "105 KB", en: "97 KB" };
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 115944 and 106762 bytes. */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "114 KB", en: "105 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -70,7 +70,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       heading: "Was ist das Kit?",
       body:
         "Ein Brief, erfundene Unterlagen, ein Lösungsschlüssel. Vier Kit-Schritte in Claude, im Deck mit aufgezeichneten Läufen zum Vergleichen. Etwa 90 Minuten am Schreibtisch (unsere Schätzung).",
-      facts: ["36 Dateien", "4 Schritte", "13 Fragen"],
+      facts: ["41 Dateien", "4 Schritte", "13 Fragen"],
     },
     audience: [
       "Büroleitungen, Buchhaltung und Inhaber kleiner Firmen in Nordmazedonien, die ein Inspektor, die Steuerbehörde (UJP) oder eine Zertifizierungsstelle prüft.",
@@ -85,18 +85,19 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agenda: [
       { label: "Titel", minutes: 1, activity: "listen" },
       { label: "Heute", minutes: 3, activity: "listen" },
-      { label: "Warum das passiert", minutes: 4, activity: "vote" },
-      { label: "Wir sind Gradba-Pro", minutes: 5, activity: "listen" },
-      { label: "Der Brief, die Woche und die Fristen", minutes: 9, activity: "vote" },
+      { label: "Was passiert", minutes: 5, activity: "vote" },
+      { label: "Welche Firmen und warum", minutes: 4, activity: "vote" },
+      { label: "Wir sind Gradba-Pro", minutes: 4, activity: "listen" },
+      { label: "Der Brief und die Fristen", minutes: 7, activity: "vote" },
+      { label: "Von Hand oder mit Claude", minutes: 4, activity: "listen" },
       { label: "Unser Kit", minutes: 5, activity: "do" },
       { label: "Schritt 1: die Tabelle bauen", minutes: 6, activity: "do" },
       { label: "Schritt 2: den Check laufen lassen", minutes: 9, activity: "do" },
       { label: "Vier Prüfungen, drei Status", minutes: 5, activity: "vote" },
-      { label: "Schritt 3: Status, Plan, Briefing", minutes: 9, activity: "do" },
-      { label: "Die Regeln und die Datenleiter", minutes: 6, activity: "vote" },
-      { label: "Schritt 4: das Register bauen", minutes: 12, activity: "do" },
-      { label: "Die anderen Kontrollen", minutes: 4, activity: "vote" },
-      { label: "Dein eigenes Audit", minutes: 8, activity: "write" },
+      { label: "Schritt 3: Status, Plan, Briefing", minutes: 8, activity: "do" },
+      { label: "Schritt 4: das Register bauen", minutes: 11, activity: "do" },
+      { label: "Bereit bleiben", minutes: 8, activity: "write" },
+      { label: "Sicherheit: was hinein darf, wer unterschreibt", minutes: 6, activity: "vote" },
       { label: "Welche Kontrolle jetzt", minutes: 4, activity: "vote" },
     ],
     agendaSource: "deck",
@@ -112,7 +113,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     notCovered: [
       "Rechtsberatung",
-      "Lebensmittel- und Datenschutzkontrollen",
+      "Lebensmittelkontrollen im Detail",
       "Zoll",
       "Die Daten deiner eigenen Firma",
     ],
@@ -127,7 +128,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "01",
         title: "Tage zählen",
         description:
-          "Zum Aufwärmen im Deck, noch vor dem Kit: von der Mitteilung bis zum Besuch zählen, Folie 5.",
+          "Zum Aufwärmen im Deck, noch vor dem Kit: von der Mitteilung bis zum Besuch zählen, Folie 6.",
         tool: "Abstimmung und Wochenlinie im Deck",
       },
       {
@@ -141,7 +142,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Check laufen lassen",
         description:
-          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, mindestens 8 geprüft ohne Befund. Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
+          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, mindestens 8 geprüft ohne Befund (ein sorgfältiger Lauf darf mehr ausschließen). Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
         tool: "Claude-Projekt",
       },
       {
@@ -155,7 +156,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "05",
         title: "Register bauen",
         description:
-          "Eine lebende Tabelle: ein Papier pro Zeile mit Datum, gültig bis, Zuständigem und Ablageort, dazu ein monatlicher Check und eine Frage ans Register.",
+          "Eine lebende Tabelle: ein Papier pro Zeile mit Datum, gültig bis, Zuständigem und Ablageort, dazu ein wöchentlicher Check (Free-Tarif: monatlich von Hand) und eine Frage ans Register.",
         tool: "Claude-Projekt, erfundene Dateien (Stufe 2)",
       },
     ],
@@ -181,8 +182,8 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
     },
     materials: materials("de", [
-      ["Deck · 15 Folien", `Für den Beamer. ${DECK_KEYS.de}`],
-      ["Gradba-Audit-Kit · .zip", "36 Textdateien: Anleitung, Regeln, Skill, Vorlagen, Feldkarten, Lösungen und der erfundene Ordner, alles auf Deutsch."],
+      ["Deck · 16 Folien", `Für den Beamer. ${DECK_KEYS.de}`],
+      ["Gradba-Audit-Kit · .zip", "41 Textdateien: Anleitung, Regeln, Skill, Vorlagen, Feldkarten, Lösungen, der erfundene Ordner und bereit-bleiben/, alles auf Deutsch."],
     ]),
     kit: AUDIT_KIT.de,
   },
@@ -207,7 +208,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       heading: "What is the kit?",
       body:
         "A letter, invented records and an answer key. Four kit steps in Claude, with recorded runs to compare in the deck. About 90 minutes at your desk (our estimate).",
-      facts: ["36 files", "4 steps", "13 questions"],
+      facts: ["41 files", "4 steps", "13 questions"],
     },
     audience: [
       "Office managers, accountants and owners of small firms in North Macedonia who get checked by an inspector, the tax authority (UJP) or a certifier.",
@@ -222,18 +223,19 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agenda: [
       { label: "Cover", minutes: 1, activity: "listen" },
       { label: "Today", minutes: 3, activity: "listen" },
-      { label: "Why this happens", minutes: 4, activity: "vote" },
-      { label: "We are Gradba-Pro", minutes: 5, activity: "listen" },
-      { label: "The letter, the week and the clocks", minutes: 9, activity: "vote" },
+      { label: "What happens", minutes: 5, activity: "vote" },
+      { label: "Which firms and why", minutes: 4, activity: "vote" },
+      { label: "We are Gradba-Pro", minutes: 4, activity: "listen" },
+      { label: "The letter and the clock", minutes: 7, activity: "vote" },
+      { label: "By hand or with Claude", minutes: 4, activity: "listen" },
       { label: "Our kit", minutes: 5, activity: "do" },
       { label: "Step 1: make the table", minutes: 6, activity: "do" },
       { label: "Step 2: run the check", minutes: 9, activity: "do" },
       { label: "Four tests, three statuses", minutes: 5, activity: "vote" },
-      { label: "Step 3: status, plan, briefing", minutes: 9, activity: "do" },
-      { label: "The rules and the data ladder", minutes: 6, activity: "vote" },
-      { label: "Step 4: build the register", minutes: 12, activity: "do" },
-      { label: "The other checks", minutes: 4, activity: "vote" },
-      { label: "Your own audit", minutes: 8, activity: "write" },
+      { label: "Step 3: status, plan, briefing", minutes: 8, activity: "do" },
+      { label: "Step 4: build the register", minutes: 11, activity: "do" },
+      { label: "Stay ready", minutes: 8, activity: "write" },
+      { label: "Safety: what goes in, who signs", minutes: 6, activity: "vote" },
       { label: "Which check now", minutes: 4, activity: "vote" },
     ],
     agendaSource: "deck",
@@ -249,7 +251,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     notCovered: [
       "Legal advice",
-      "Food safety and data protection inspections",
+      "Food safety inspections in depth",
       "Customs",
       "Your own firm's data",
     ],
@@ -264,7 +266,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "01",
         title: "Count the days",
         description:
-          "A warm-up in the deck, before the kit: count from the notice to the visit, slide 5.",
+          "A warm-up in the deck, before the kit: count from the notice to the visit, slide 6.",
         tool: "Poll and week line in the deck",
       },
       {
@@ -278,7 +280,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "03",
         title: "Run the check",
         description:
-          "A script counts every row and names the rule: 10 findings, at least 8 checked with no problem. With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
+          "A script counts every row and names the rule: 10 findings, at least 8 checked with no problem (a careful run may clear more). With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
         tool: "Claude Project",
       },
       {
@@ -292,7 +294,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "05",
         title: "Build the register",
         description:
-          "One living table: one paper per row with date, valid until, owner and where it lives, plus a monthly check and a question to the register.",
+          "One living table: one paper per row with date, valid until, owner and where it lives, plus a weekly check (Free plan: monthly by hand) and a question to the register.",
         tool: "Claude Project, invented files (Level 2)",
       },
     ],
@@ -318,8 +320,8 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
     },
     materials: materials("en", [
-      ["Deck · 15 slides", `For the projector. ${DECK_KEYS.en}`],
-      ["Gradba audit kit · .zip", "36 text files: the letter, the invented folder, rules, field cards, the skill, templates and the answer key."],
+      ["Deck · 16 slides", `For the projector. ${DECK_KEYS.en}`],
+      ["Gradba audit kit · .zip", "41 text files: the letter, the invented folder, rules, field cards, the skill, templates, the answer key and keep-watch/."],
     ]),
     kit: AUDIT_KIT.en,
   },

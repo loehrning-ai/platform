@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Checks the Workshop 05 kit ("Audit Preparation with AI: Organize Evidence and Find Gaps") against
- * itself and against the independent recount. It holds the tree (36 files per edition, 11 top-level
+ * itself and against the independent recount. It holds the tree (41 files per edition, 12 top-level
  * entries, the two roots), a label on every file, the two comment lines of every CSV, the row counts of
  * the folder (693 rows read), the four step headings and their verbatim prompts, the five-line block of
  * the start file, rules 4 to 7 of the project instructions, the numbers and the quotes of the answer
@@ -62,8 +62,8 @@ expect("filesDe", walk(KIT_DE).sort(), [...KIT_FILES_DE].sort());
 expect("zipNames", [ZIP_NAME, ZIP_NAME_DE], ["gradba-audit-kit.zip", "gradba-audit-kit-de.zip"]);
 const entriesEn = kitEntries();
 const entriesDe = kitEntriesDe();
-expect("filesWithSkill", [entriesEn.length, entriesDe.length], [36, 36]);
-expect("topLevelEntries", [new Set(entriesEn.map(([file]) => file.split("/")[0])).size, new Set(entriesDe.map(([file]) => file.split("/")[0])).size], [11, 11]);
+expect("filesWithSkill", [entriesEn.length, entriesDe.length], [41, 41]);
+expect("topLevelEntries", [new Set(entriesEn.map(([file]) => file.split("/")[0])).size, new Set(entriesDe.map(([file]) => file.split("/")[0])).size], [12, 12]);
 const skillSource = readFileSync(path.join(WEBSITE, "content/skills/audit-nachweise/SKILL.md"), "utf8");
 expect("skillInBothKits", [entriesEn, entriesDe].map((entries) => entries.find(([file]) => file === "claude/audit-nachweise/SKILL.md")?.[1].toString("utf8") === skillSource), [true, true]);
 
@@ -91,7 +91,7 @@ for (const [archive, root] of [
   [zipDe, `${KIT_NAME_DE}/`],
 ]) {
   const members = zipMembers(archive);
-  expect(`zipMembers ${root}`, [members.length, members.every((name) => name.startsWith(root))], [36, true]);
+  expect(`zipMembers ${root}`, [members.length, members.every((name) => name.startsWith(root))], [41, true]);
 }
 
 // The shared recording test forbids one lowercase word in every recorded file (SPEC-2 4.3). The count over
@@ -109,7 +109,18 @@ expect(
 );
 
 // 2. Labels, comment lines, style, words, URLs.
-const ALLOWED_URL = "https://privacy.claude.com/en/articles/7996890";
+// The one privacy link of the start file, plus the sources of keep-watch/ (DE bereit-bleiben/): two Anthropic help pages and the
+// verified watch list (research ids CLAUDE-01, 22, 82 to 85). Nothing else may link out.
+const ALLOWED_URLS = new Set([
+  "https://privacy.claude.com/en/articles/7996890",
+  "https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork",
+  "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects",
+  "https://dit.gov.mk/",
+  "https://slvesnik.com.mk/besplaten-pristap-do-izdanija.nspx",
+  "https://azlp.mk/feed/",
+  "https://mzzpr.org.mk/feed/",
+]);
+const KEEP_WATCH = /^(keep-watch|bereit-bleiben)\//;
 const INTERNAL = new RegExp(["\\/Users\\/", "\\/private\\/", "maven" + "gence", "facilitator\\/", "CLAUDE" + "\\.md", "vard" + "ar", "tann" + "wald", "plans\\/"].join("|"), "i");
 const BANNED_EN = /\b(friday|saturday|sunday|deadline|compliant|compliance|score|scores|stamp|countdown|urgent|boss|seamless|leverage|unlock|empower|robust|delve|game.?changer)\b/i;
 const BANNED_DE = /\b(Freitag|Samstag|Sonntag|Deadline|konform|Countdown|dringend|Stempel|Punkte|Chef|nahtlos|revolutionär)\b/;
@@ -128,7 +139,7 @@ for (const edition of EDITIONS) {
     } else if (!text.split("\n").slice(0, 3).join("\n").includes(edition.label)) fail(`${where}: the first 3 lines must say ${edition.label}`);
     if (/[‒–—―→←↔]/.test(text)) fail(`${where} has a dash or an arrow`);
     if (INTERNAL.test(text)) fail(`${where} holds an internal or retired word`);
-    for (const url of text.match(/https?:\/\/[^\s)>"]+/g) ?? []) if (url !== ALLOWED_URL) fail(`${where} links ${url}`);
+    for (const url of text.match(/https?:\/\/[^\s)>"]+/g) ?? []) if (!ALLOWED_URLS.has(url) || (url !== "https://privacy.claude.com/en/articles/7996890" && !KEEP_WATCH.test(file))) fail(`${where} links ${url}`);
     if (edition.banned.test(text)) fail(`${where} uses a banned word (${text.match(edition.banned)?.[0]})`);
     if (/\b(Fri|Sat|Sun|Fr|Sa|So)\b\.? \d/.test(text) || /\b(Friday|Saturday|Sunday|Freitag|Samstag|Sonntag)\b/.test(text)) fail(`${where} prints a weekday that is never printed`);
   }
@@ -226,13 +237,21 @@ const STEP4 = {
     line: "Schreibe einfache Sätze. Nimm keine Gedankenstriche und keine Pfeile. Sag Zeile für die Freigabe, wo eine Person unterschreibt.",
   },
 };
+// "Stay ready" names every file of the keep-watch folder, so a learner finds what keeps the register current after the audit.
+const STAY = {
+  en: ["## Stay ready", "keep-watch/", ["weekly-check_scheduled-task.md", "monthly-check_by-hand.md", "register-project-instructions.md", "safety-card.md", "watch-list.md"]],
+  de: ["## Bereit bleiben", "bereit-bleiben/", ["wochencheck_geplante-aufgabe.md", "monatscheck_von-hand.md", "register-projektanweisungen.md", "sicherheitskarte.md", "beobachtungsliste.md"]],
+};
 for (const [locale, text, start, step, after, marker] of [
   ["en", read("START-HERE.md"), "START-HERE.md", "Step", "## After the visit (optional)", "<!-- claude-ui:en -->"],
   ["de", readDe("START-HIER.md"), "START-HIER.md", "Schritt", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
 ]) {
+  const [stayHeading, stayDir, stayFiles] = STAY[locale];
+  const stayText = text.slice(text.indexOf(stayHeading), text.indexOf(after));
+  for (const file of stayFiles) if (!stayText.includes(`${stayDir}${file}`)) fail(`${start}: "${stayHeading}" must name ${stayDir}${file}`);
   expect(`${start} block`, text.slice(0, text.indexOf(INTRO[locale][1])).split("\n").filter((line) => line !== ""), BLOCK[locale]);
   expect(`${start} set-up opens the Project`, text.split(`${INTRO[locale][2]}\n\n`)[1]?.split("\n")[0], SETUP_FIRST[locale]);
-  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, `## ${step} 4`, after, SKILL_HEADING[locale]]);
+  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], `## ${step} 1`, `## ${step} 2`, `## ${step} 3`, `## ${step} 4`, stayHeading, after, SKILL_HEADING[locale]]);
   // The install text of the skill is the last section (optional); the file ends with its one marker line.
   expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(SKILL_HEADING[locale]), text.trimEnd().endsWith(marker)], [1, true, true]);
   const prompts = [...text.matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]);

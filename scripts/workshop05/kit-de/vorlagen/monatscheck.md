@@ -10,6 +10,8 @@ Nimm das Skript check.py aus Schritt 4 und diesen Prompt:
 
 Eine benannte Person liest die Listen, verschickt die Nachrichten und schreibt für jede Lücke ein neues datiertes Papier. Ändere nie eine alte Zeile, um eine Lücke zu verstecken.
 
+Damit das nach dem Workshop weiterläuft, siehe bereit-bleiben/: eine wöchentliche geplante Aufgabe in bezahlten Plänen, derselbe Check von Hand im Gratis-Plan.
+
 ## Weitere Orte für dasselbe Register
 
 Dasselbe Register funktioniert in einer Tabelle (eine Formel wie „Datum vor heute“ markiert abgelaufene Zeilen), in einer Microsoft-Liste oder in einer kleinen Datenbank wie SQLite. Die Spalten und die drei Listen bleiben gleich. Nur Daten, keine Gesundheitsinhalte.

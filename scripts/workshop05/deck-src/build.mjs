@@ -36,11 +36,11 @@ const PRESENTERS = { de: "presenter.html", en: "en/presenter.html" };
 const ROOT = { de: "./", en: "../" };
 export const DECK_IDS = { de: SLUG, en: `${SLUG}:en` };
 export const MAIN_SECONDS = 5400;
-export const MAIN_SLIDES = 15;
-/** The page counter "NN / 15" is written by slides.mjs; both copies of the number must agree. */
-export const MAIN_TOTAL = 15;
-/** 15 main slides and 4 appendix slides: one note each, in slide order. */
-export const NOTES_TOTAL = 19;
+export const MAIN_SLIDES = 16;
+/** The page counter "NN / 16" is written by slides.mjs; both copies of the number must agree. */
+export const MAIN_TOTAL = 16;
+/** 16 main slides and 4 appendix slides: one note each, in slide order. */
+export const NOTES_TOTAL = 20;
 
 /** Words a deck must never show on a slide (the shared copy lint covers the rest; this is the deck's own floor). */
 export const BANNED = [
@@ -101,6 +101,8 @@ ${sections.join("\n")}
 <script src="./lib/geo.js"></script>
 <script src="./lib/globe.js"></script>
 <script src="./lib/w05-tally.js"></script>
+<script src="./lib/w05-field.js"></script>
+<script src="./lib/w05-scrub.js"></script>
 </body>
 </html>
 `;

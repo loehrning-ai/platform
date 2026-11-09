@@ -5,8 +5,8 @@ import { describe, expect, it } from "vitest";
 import { COPY } from "./demo-cases/audit-vorbereitung-mit-ki/copy";
 
 /**
- * The Workshop 05 deck (both editions) tells the kit's and the demo's story: 15 main slides for 90 minutes and four appendix
- * slides outside the arrow path, the six scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
+ * The Workshop 05 deck (both editions) tells the kit's and the demo's story: 16 main slides for 90 minutes and four appendix
+ * slides outside the arrow path, the eight scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
  * quotes (the evidence wall and the notice) have their translation, every Claude result is either a recorded take with its chip or the labelled empty
  * frame, and the numbers on the slides are the kit's numbers. Built by scripts/workshop05/deck-src/build.mjs (`--check` there
  * catches drift); the word counts, polls, motion, visual law and take rendering are held by
@@ -27,8 +27,8 @@ const expected = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/w
   register: { rows: number; expired: unknown[]; expiring: unknown[]; missing: unknown[]; byDate: Record<string, { rows: number; expired: number; expiring: number; missing: number }> };
 };
 
-const MAIN_IDS = ["cover", "today", "why", "we", "letter", "kit", "step1", "step2", "tests", "step3", "ladder", "register", "other", "own", "close"];
-const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js"];
+const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
+const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js", "w05-field.js", "w05-scrub.js"];
 
 const EDITIONS = [
   { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, other: ["COVERED", "WEAK", "GAP"], cover: "erfundener Fall", frame: "noch nicht aufgezeichnet", chip: "aufgezeichnet" },
@@ -42,16 +42,16 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   const sections = Array.from(doc.querySelectorAll("deck-stage > section"));
   const main = sections.filter((section) => section.getAttribute("data-kind") === "main");
 
-  it("has 15 main slides for 90 minutes and four appendix slides outside the arrow path", () => {
+  it("has 16 main slides for 90 minutes and four appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
     expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
     expect(main.map((section) => section.id)).toEqual(MAIN_IDS);
-    expect(main.slice(0, 4).map((section) => section.id)).toEqual(["cover", "today", "why", "we"]);
+    expect(main.slice(0, 4).map((section) => section.id)).toEqual(["cover", "today", "why", "sectors"]);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
     expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3", "a4"]);
     const notes = JSON.parse(doc.getElementById("speaker-notes")?.textContent ?? "[]") as string[];
     expect(notes).toHaveLength(sections.length);
-    expect(notes).toHaveLength(19);
+    expect(notes).toHaveLength(20);
     for (const note of notes) for (const line of ["Time:", "Say:", "Students:", "Cue:", "Remember:"]) expect(note).toContain(line);
   });
 
@@ -70,8 +70,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     const we = flat(doc.getElementById("we")?.textContent ?? "");
     expect(we).toContain("Gradba-Pro");
     const html = readFileSync(resolve(root, edition.file), "utf8");
-    expect(flat(doc.body.textContent ?? "")).not.toMatch(/vardar|tannwald|Vier Tage bis zur Kontrolle/i);
-    expect(html).not.toMatch(/vardar|tannwald|Vier Tage bis zur Kontrolle/i);
+    expect(flat(doc.body.textContent ?? "")).not.toMatch(/vardar works|tannwald|Vier Tage bis zur Kontrolle/i);
+    expect(html).not.toMatch(/vardar works|tannwald|Vier Tage bis zur Kontrolle/i);
   });
 
   it("has the kit's notice date in the letter slide's text and names no weekday for the visit", () => {
@@ -142,7 +142,7 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     const step3 = flat(doc.getElementById("step3")?.textContent ?? "");
     for (const n of [expected.tally.covered, expected.tally.weak, expected.tally.gap]) expect(step3).toContain(String(n));
     const kitText = flat(doc.getElementById("kit")?.textContent ?? "");
-    expect(kitText).toContain("36");
+    expect(kitText).toContain("41");
   });
 
   it("speaks one language for the statuses and none of the banned words", () => {

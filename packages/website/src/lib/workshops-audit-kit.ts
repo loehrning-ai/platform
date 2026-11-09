@@ -7,8 +7,8 @@ import type { WorkshopKit } from "./workshop-kit";
  * locale (gradba-audit-kit-de.zip, gradba-audit-kit.zip); scripts/workshop05/verify-kit.mjs checks
  * the figures against the kit's source files and workshops-audit.test.ts checks this block against
  * the kit. The rules equal rules 4 to 7 of the project instructions of each edition without their
- * number; the page numbers them 1 to 4, so its heading names the real range (rules 4 to 7 of 13). The zip's path and size come from the workshop's kit material. The kit has 36 files in
- * 11 top-level entries per edition.
+ * number; the page numbers them 1 to 4, so its heading names the real range (rules 4 to 7 of 13). The zip's path and size come from the workshop's kit material. The kit has 41 files in
+ * 12 top-level entries per edition.
  */
 export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
@@ -16,7 +16,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     title: "Gradba-Audit-Kit",
     lead: "Eine erfundene Arbeitsinspektion, dreizehn Fragen und ein Schlüssel, der aus den Dateien gerechnet ist.",
     stats: [
-      { value: "36", label: "Dateien" },
+      { value: "41", label: "Dateien" },
       { value: "4", label: "Schritte" },
       { value: "13", label: "Regeln für Claude" },
     ],
@@ -82,6 +82,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "faelle/", description: "Feldkarten für drei Prüfungen" },
       { name: "inspektor/", description: "Verlangen und Protokoll, später öffnen" },
       { name: "vorlagen/", description: "Papier, Uhr, Nachweisindex, Register" },
+      { name: "bereit-bleiben/", description: "Wochencheck, Quellen, Sicherheitskarte" },
       { name: "claude/", description: "Skill, auch unter /skills/audit-nachweise.zip" },
     ],
   },
@@ -90,7 +91,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     title: "Gradba audit kit",
     lead: "An invented labour inspection, thirteen questions and a key computed from the files.",
     stats: [
-      { value: "36", label: "files" },
+      { value: "41", label: "files" },
       { value: "4", label: "steps" },
       { value: "13", label: "rules for Claude" },
     ],
@@ -156,6 +157,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "cases/", description: "Field cards for three audits" },
       { name: "inspector/", description: "Request and minutes, opened later" },
       { name: "templates/", description: "Paper, clock, evidence index, register" },
+      { name: "keep-watch/", description: "Weekly check, sources, safety card" },
       { name: "claude/", description: "Skill, also at /skills/audit-nachweise.zip" },
     ],
   },

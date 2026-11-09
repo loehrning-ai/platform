@@ -1,7 +1,10 @@
 /**
- * Workshop 05: the one effect script (lib/w05-tally.js) is small, quiet and safe. They hold no timer, no key handler,
- * no storage of their own, no random numbers and no backdrop-filter; they write no data-fx value outside the engine's
- * list; and each one loads in a bare context (no document) and exports its pure functions.
+ * Workshop 05: the effect scripts (lib/w05-tally.js, the dot field lib/w05-field.js, the presenter controls lib/w05-scrub.js)
+ * are small, quiet and safe. They hold no timer, no key handler, no storage of their own, no random numbers and no
+ * backdrop-filter; they write no data-fx value outside the engine's list; and each one loads in a bare context (no document)
+ * and exports its pure functions. L2 (MOTION-SCOUT section 7), on purpose: the field and the scrub scripts are admitted, the
+ * field may observe its slide with a MutationObserver (scenes.js writes data-view every frame), each new script stays at most
+ * 12 KB, and their pure functions are tested here. The icon set (lib/w05-icons.svg) is checked here too.
  * The glass test does not scan public/**\/*.js, so this test does.
  */
 import assert from "node:assert/strict";
@@ -12,12 +15,14 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib");
-const SCRIPTS = ["w05-tally.js"];
+const SCRIPTS = ["w05-tally.js", "w05-field.js", "w05-scrub.js"];
+/** L2: the size budget of each new script (MOTION-SCOUT 6.2). */
+const BUDGET = 12 * 1024;
 const BANNED = ["backdrop-filter", "setInterval", "setTimeout", "keydown", "keyup", "keypress", "localStorage", "sessionStorage", "Date.now", "Math.random", "requestAnimationFrame", "fetch(", "XMLHttpRequest", "eval(", "new Function", "innerHTML"];
 const ENGINE_FX = ["fade", "none", "line", "move", "draw", "pop", "fly", "flip", "strike", "type", "glow", "blur", "arc", "travel", "dim", "zoom", "grow"];
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
 
-test("the tally script exists and is the only w05-*.js files", () => {
+test("the tally, field and scrub scripts exist and are the only w05-*.js files", () => {
   const found = readdirSync(LIB).filter((n) => /^w05-.*\.js$/.test(n)).sort();
   assert.deepEqual(found, [...SCRIPTS].sort());
 });
@@ -85,4 +90,130 @@ test("the tally helper counts five with Shift and one without", () => {
   const tally = load("w05-tally.js");
   assert.equal(tally.clicksFor(true), 5);
   assert.equal(tally.clicksFor(false), 1);
+});
+
+const load = (name, extra = {}) => {
+  const sandbox = { module: { exports: {} }, ...extra };
+  vm.runInNewContext(read(name), sandbox, { filename: name });
+  return sandbox.module.exports;
+};
+const ring = () => {
+  const sandbox = { window: {} };
+  vm.runInNewContext(read("geo.js"), sandbox);
+  return sandbox.window.ESG_GEO.macedonia[0];
+};
+
+test("L2: the field and scrub scripts stay within 12 KB each; only the field observes, and only its slide", () => {
+  for (const name of ["w05-field.js", "w05-scrub.js"]) assert.ok(Buffer.byteLength(read(name)) <= BUDGET, `${name}: ${Buffer.byteLength(read(name))} bytes`);
+  assert.match(read("w05-field.js"), /new MutationObserver\(draw\)\.observe\(slide, \{ attributes: true, attributeFilter: \['data-view', 'data-deck-active'\] \}\)/);
+  assert.doesNotMatch(read("w05-scrub.js"), /Observer/);
+  assert.doesNotMatch(read("w05-field.js"), /addEventListener/, "the field listens to nothing: it follows data-view");
+});
+
+test("w05-field: the seeded generator, the stipple and the scatter are deterministic, and the stipple has exactly n dots inside the country", () => {
+  const f = load("w05-field.js");
+  const a = f.mulberry32(7);
+  const b = f.mulberry32(7);
+  for (let i = 0; i < 5; i += 1) assert.equal(a(), b());
+  const pr = f.projector(ring(), 1000, 790, 24);
+  const poly = ring().map((q) => [pr.x(q[0]), pr.y(q[1])]);
+  const one = f.stipple(poly, 7331, 1000, 790, 73310);
+  const two = f.stipple(poly, 7331, 1000, 790, 73310);
+  assert.equal(one.pts.length, 7331 * 2);
+  assert.deepEqual(Array.from(one.pts.slice(0, 20)), Array.from(two.pts.slice(0, 20)));
+  for (let i = 0; i < one.pts.length; i += 2) assert.ok(one.pts[i] >= 0 && one.pts[i] <= 1000 && one.pts[i + 1] >= 0 && one.pts[i + 1] <= 790);
+  assert.ok(one.spacing > 6 && one.spacing < 12, `spacing ${one.spacing}`);
+  assert.deepEqual(f.scatter(50, 100, 80, 3), f.scatter(50, 100, 80, 3));
+});
+
+test("w05-field: the projector keeps the country inside the pad and centres it", () => {
+  const f = load("w05-field.js");
+  const pr = f.projector(ring(), 1000, 790, 24);
+  const xs = ring().map((q) => pr.x(q[0]));
+  const ys = ring().map((q) => pr.y(q[1]));
+  assert.ok(Math.min(...xs) >= 23.9 && Math.max(...xs) <= 976.1);
+  assert.ok(Math.min(...ys) >= 23.9 && Math.max(...ys) <= 766.1);
+  assert.ok(Math.abs(Math.min(...xs) + Math.max(...xs) - 1000) < 0.5 || Math.abs(Math.min(...ys) + Math.max(...ys) - 790) < 0.5);
+});
+
+test("w05-field: shares add up to n by largest remainder; groups put every dot in its column and the mark first in its group", () => {
+  const f = load("w05-field.js");
+  const counts = [21373, 8321, 7956, 6146, 5649, 5066];
+  const sh = f.shares(counts, 1000);
+  assert.equal(sh.reduce((x, y) => x + y, 0), 1000);
+  assert.deepEqual(Array.from(f.shares([1, 1, 1], 10)), [4, 3, 3]);
+  const geo = f.groupsGeometry(counts, 1000, 1000, 790, { pad: 24 });
+  assert.equal(geo.rects.length, 6);
+  geo.rects.forEach((r, i) => { assert.ok(r.x >= 0 && r.x + r.w <= 1000); assert.equal(r.dots, sh[i]); if (i) assert.ok(r.x > geo.rects[i - 1].x); });
+  const from = f.scatter(1000, 1000, 790, 5);
+  const out = f.groups(from, counts, 1000, 790, { pad: 24 }, 10, 2);
+  assert.equal(out.length, 2000);
+  const r2 = geo.rects[2];
+  assert.ok(out[20] >= r2.x && out[20] <= r2.x + r2.w, "the mark sits in group 2");
+});
+
+test("w05-field: parsePlan and stateAt give the layout pair and progress for every press", () => {
+  const f = load("w05-field.js");
+  const plan = f.parsePlan("1:country>groups:a;0:scatter>country");
+  assert.deepEqual(JSON.parse(JSON.stringify(plan.map((e) => [e.k, e.from, e.to]))), [[0, "scatter", "country"], [1, "country", "groups:a"]]);
+  assert.deepEqual(Array.from(f.parsePlan("0:country").map((e) => e.to)), ["country"]);
+  assert.throws(() => f.parsePlan("x:country"));
+  const at = (view, p) => { const st = f.stateAt(plan, view, p); return [st.entry.k, st.p]; };
+  assert.deepEqual(at(0, 0.4), [0, 0.4]);
+  assert.deepEqual(at(1, 0.25), [1, 0.25]);
+  assert.deepEqual(at(3, 0.1), [1, 1], "after the last planned press the field holds the end");
+  assert.equal(f.seg(0.5, 0, 1) > 0.5, true);
+  assert.equal(f.seg(2, 0, 1), 1);
+  assert.equal(f.nearest([0, 0, 10, 10, 3, 4], 9, 9), 1);
+});
+
+test("w05-field: dots land exactly on the target at p 1 and on the start at p 0", () => {
+  const f = load("w05-field.js");
+  const a = [0, 0, 100, 50];
+  const b = [10, 20, 30, 40];
+  const out = new Float32Array(4);
+  f.lerpDots(a, b, new Float32Array([0, 0.4]), new Float32Array([0.2, -0.2]), 1, out);
+  assert.deepEqual(Array.from(out), b);
+  f.lerpDots(a, b, new Float32Array([0, 0.4]), new Float32Array([0.2, -0.2]), 0, out);
+  assert.deepEqual(Array.from(out), a);
+});
+
+test("w05-scrub: kinds, the value after a click (a hotspot clicked twice clears) and the pressed buttons", () => {
+  const s = load("w05-scrub.js");
+  assert.equal(s.kindOf({ "data-w05-toggle": "lanes" }), "toggle");
+  assert.equal(s.kindOf({ "data-w05-scrub": "days" }), "scrub");
+  assert.equal(s.kindOf({ "data-w05-hot": "wall" }), "hot");
+  assert.equal(s.kindOf({ "data-poll": "x" }), null);
+  assert.equal(s.nextValue("hot", "trade", "trade"), null);
+  assert.equal(s.nextValue("hot", "trade", "food"), "food");
+  assert.equal(s.nextValue("toggle", "hand", "hand"), "hand");
+  assert.equal(s.nextValue("scrub", "1", "3"), "3");
+  assert.deepEqual(Array.from(s.pressed(["a", "b", "c"], "b")), [false, true, false]);
+  assert.deepEqual(Array.from(s.pressed(["a", "b"], null)), [false, false]);
+});
+
+test("w05-scrub: buttons only (never a range input), one click listener and the deckreset listener", () => {
+  const src = read("w05-scrub.js");
+  const listeners = [...src.matchAll(/addEventListener\(\s*['"]([^'"]+)/g)].map((m) => m[1]);
+  assert.deepEqual(listeners.sort(), ["click", "deckreset"]);
+  assert.match(src, /button\[data-w05-scrub\]/);
+  assert.match(src, /event\.detail > 0\) button\.blur\(\)/, "a mouse click gives the arrow keys back to the deck");
+});
+
+test("w05-icons.svg: unique ids, a 24 grid, at most six shapes each, every shape pathLength 1, no fill, no banned word", () => {
+  const svg = read("w05-icons.svg");
+  const symbols = [...svg.matchAll(/<symbol id="w05-([a-z0-9-]+)" viewBox="0 0 24 24"[^>]*>([\s\S]*?)<\/symbol>/g)];
+  assert.ok(symbols.length >= 35, `${symbols.length} icons`);
+  const ids = symbols.map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const [, id, body] of symbols) {
+    const shapes = [...body.matchAll(/<(path|line|circle|rect|polyline|polygon|ellipse)\b([^>]*)>/g)];
+    assert.ok(shapes.length >= 1 && shapes.length <= 6, `${id}: ${shapes.length} shapes`);
+    for (const [, tag, attrs] of shapes) {
+      assert.match(attrs, /pathLength="1"/, `${id}: a ${tag} without pathLength 1`);
+      assert.doesNotMatch(attrs, /fill="(?!none)/, `${id}: a filled ${tag}`);
+    }
+    assert.doesNotMatch(id, /stamp|deadline|logo|score|chef|boss|countdown/);
+  }
+  assert.doesNotMatch(svg, /<text|<image|xlink:href|https?:\/\/(?!www\.w3\.org)/);
 });

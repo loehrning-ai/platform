@@ -2,6 +2,12 @@
  * Workshop 05 deck, motion law (M1 to M8), read from the BUILT pages (both editions, and the take slides built from synthetic
  * recordings too). One moving idea per press, out first and then in, only the engine's own effects, no typing, no loops, no
  * timers, press lengths of at most 1600 ms, takes that come in line by line, and a cover that has no press at all.
+ * Round 3 law changes (MOTION-SCOUT section 7), made on purpose:
+ *  L1 (M8): the cover keeps zero presses but may have ONE entry host (data-step 0, fx none, at most 1600 ms) that drives the
+ *     dot field canvas; the globe is gone; the title keeps its CSS rise.
+ *  L3: data-ease may only be "out" or "linear"; spring is forbidden, and the engine's spring effects (fly, flip) stay banned.
+ *  L5: a 3D scene (data-scene, fx none) is its own motion family; an icon that draws inside a scene of the same press belongs
+ *     to the scene, so a press is still one idea.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -33,7 +39,8 @@ function stepped(slide) {
   const walk = (node, ancestors) => {
     if (!node.tag) return;
     const isStep = node.attrs?.["data-step"] !== undefined;
-    if (isStep) out.push({ node, a: node.attrs, top: !ancestors.some((n) => n.attrs?.["data-step"] !== undefined) });
+    const scene = ancestors.some((n) => n.attrs?.["data-scene"] !== undefined && n.attrs["data-step"] === node.attrs?.["data-step"]);
+    if (isStep) out.push({ node, a: node.attrs, top: !ancestors.some((n) => n.attrs?.["data-step"] !== undefined), scene });
     for (const child of node.children ?? []) walk(child, [...ancestors, node]);
   };
   for (const child of slide.children ?? []) walk(child, []);
@@ -41,8 +48,9 @@ function stepped(slide) {
 }
 const num = (value) => Number(value);
 const window = (value) => String(value).split(",").map(Number);
-/** The motion family an entering element contributes. */
-function family(a) {
+/** The motion family an entering element contributes (L5: a 3D scene is one family, and so is what draws inside it). */
+function family(a, inScene) {
+  if (a["data-scene"] !== undefined || inScene) return "scene";
   if (a["data-count"] !== undefined) return "count";
   if (a["data-fill"] !== undefined) return "fill";
   if (a.class?.split(/\s+/).includes("w05-sweep")) return "count"; // the scan band runs with the numbers it belongs to
@@ -52,11 +60,11 @@ function family(a) {
 const mainOf = (html) => slidesOf(html).filter((s) => s.attrs["data-kind"] === "main");
 
 for (const [key, html] of Object.entries(pages)) {
-  test(`${key} M1: at most one moving idea per press (line, draw, pop, move, count or fill; the rest fades)`, () => {
+  test(`${key} M1: at most one moving idea per press (scene, line, draw, pop, move, count or fill; the rest fades)`, () => {
     for (const slide of slidesOf(html)) {
       const byPress = new Map();
-      for (const { a } of stepped(slide)) {
-        const f = family(a);
+      for (const { a, scene } of stepped(slide)) {
+        const f = family(a, scene);
         if (f === null) continue;
         const press = num(a["data-step"]);
         byPress.set(press, new Set([...(byPress.get(press) ?? []), f]));
@@ -145,22 +153,43 @@ for (const [key, html] of Object.entries(pages)) {
     }
   });
 
-  test(`${key} M8: the cover has no press, no data-fx and a static globe; its entry is CSS only`, () => {
+  test(`${key} M8 (L1): the cover has no press; one entry host of fx none drives the dot field; no globe`, () => {
     const cover = slidesOf(html)[0];
     assert.equal(cover.attrs.id, "cover");
     assert.equal(cover.attrs["data-step-total"], "0");
+    assert.ok(Number(cover.attrs["data-durations"]) <= 1600, "the entry is at most 1600 ms");
+    const els = stepped(cover);
+    const hosts = els.filter((e) => e.top);
+    assert.equal(hosts.length, 1, "one entry host");
+    const [host] = hosts;
+    assert.equal(host.a["data-step"], "0");
+    assert.equal(host.a["data-fx"], "none");
+    assert.ok(host.a["data-scene"] !== undefined, "the host is a scene");
+    const canvas = [];
+    const walk = (n) => { if (!n.tag) return; if (n.tag === "canvas" && n.attrs["data-w05-field"] !== undefined) canvas.push(n); (n.children ?? []).forEach(walk); };
+    walk(host.node);
+    assert.equal(canvas.length, 1, "the host holds the field canvas");
+    for (const { a } of els.filter((e) => !e.top)) {
+      assert.equal(a["data-step"], "0");
+      assert.equal(a["data-fx"], "none");
+    }
     const raw = html.slice(html.indexOf('id="cover"'), html.indexOf("</section>", html.indexOf('id="cover"')));
-    assert.doesNotMatch(raw, /data-fx=|data-step=/);
-    assert.match(raw, /data-speed="0"/);
-    assert.match(raw, /data-globe-steps="0:macedonia@1\.5"/);
+    assert.doesNotMatch(raw, /data-globe/);
+  });
+
+  test(`${key} L3: eases are out or linear, never spring, and no spring effect`, () => {
+    for (const m of html.matchAll(/data-ease="([^"]*)"/g)) assert.ok(["out", "linear"].includes(m[1]), `${key}: data-ease ${m[1]}`);
+    assert.doesNotMatch(html, /data-fx="(fly|flip)"/);
   });
 }
 
-test("M6: no loop and no timer in deck.css, w05-fx.css or w05-tally.js", () => {
+test("M6: no loop and no timer in deck.css, w05-fx.css, w05-tally.js, w05-field.js or w05-scrub.js", () => {
   for (const name of ["deck.css", "w05-fx.css"]) {
     assert.doesNotMatch(read(name), /\binfinite\b|animation-iteration-count/, name);
   }
-  assert.doesNotMatch(read("w05-tally.js"), /setInterval|setTimeout|requestAnimationFrame|\bloop\b/);
+  for (const name of ["w05-tally.js", "w05-field.js", "w05-scrub.js"]) {
+    assert.doesNotMatch(read(name), /setInterval|setTimeout|requestAnimationFrame|\bloop\b|Math\.random|Date\.now|performance\.now/, name);
+  }
 });
 
 test("M8: the cover entry in w05-fx.css is a 300 ms rise of 8 px, the subtitle 150 ms later, none in preview or reduced motion", () => {

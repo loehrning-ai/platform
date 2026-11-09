@@ -1,6 +1,7 @@
 /**
  * Appendix a1 to a4: reference tables, no motion, no prose. Each is reached by a link on a main slide and returns to the
- * slide it came from through a back link to that slide's id. Every table row is one figure cell (.fig).
+ * slide it came from through a back link to that slide's id. Every table row is one figure cell (.fig). a1 holds the laws and
+ * the ladder of time limits (slide 6), a3 the sources of slide 3, a4 the sector matrix of slide 4 and the blanks.
  */
 import { esc } from "./motion.mjs";
 import { foot } from "./slides-parts.mjs";
@@ -18,7 +19,7 @@ export const APPENDIX = {
     return `${head(x.title, x.back, "letter")}
 <div class="stage appx">
 ${rows(laws, "appx__rows--laws")}
-${rows(x.clock.map((l) => cell(l)), "appx__rows--notes")}
+${rows(x.ladder.map((l) => cell(l)), "appx__rows--ladder")}
 ${rows([cell(x.fines)], "appx__rows--notes")}
 <p class="appx__note">${esc(x.finesNote)}</p>
 </div>
@@ -27,7 +28,7 @@ ${foot(c, "A1", total)}`;
   a2(d, c, total) {
     const x = c.s.a2;
     const levels = x.levels.map((l) => `${cell(l.n, "appx__name")}${cell(l.text)}`);
-    return `${head(x.title, x.back, "ladder")}
+    return `${head(x.title, x.back, "safety")}
 <div class="stage appx">
 ${rows(levels, "appx__rows--levels")}
 <p class="appx__note">${esc(x.gates)}</p>
@@ -48,8 +49,9 @@ ${foot(c, "A3", total)}`;
   },
   a4(d, c, total) {
     const x = c.s.a4;
-    return `${head(x.title, x.back, "other")}
+    return `${head(x.title, x.back, "sectors")}
 <div class="stage appx">
+${rows(x.matrix.map((m) => cell(m)), "appx__rows--matrix")}
 ${rows(x.blanks.map((b) => cell(b)), "appx__rows--blanks")}
 <p class="appx__note">${esc(x.none)}</p>
 <p class="appx__note">${esc(x.tax)}</p>
