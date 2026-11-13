@@ -193,7 +193,6 @@ export function deckData(lang = "en") {
     public: PUBLIC,
     dit: { ...dit, total: ditTotal, decisions: PUBLIC.ditDecisions2025 },
     dots,
-    finds: [result.findings.length - 4, result.findings.length, result.findings.length + 4, result.findings.length * 2],
     startHere,
     prompts,
     vars,

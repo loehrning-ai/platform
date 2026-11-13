@@ -1,19 +1,17 @@
 /**
  * S15 safety: what goes in, what never, who signs (REDESIGN-3 D4). One scene: the data ladder as a stair of four steps.
- * The left column is calm: the two rules stay at its top from the entry on, and below them one slot (plus the poll's) holds
- * one card at a time, so at most three blocks show: the training facts (press 1) give their place to the never card (press 4),
- * which gives its place to the law (press 5); the poll (press 2) leaves with the answer (press 3). The stair is seen in depth (a real 3D
- * stair: each step one level higher in z, the lit step comes forward), each step with an offset outline as its edge.
- * Press 0: the two rules (AI sorts and drafts; a named person signs). Press 1: steps 1 and 2 stand up, the training fact per plan
- * (Anthropic Usage Policy). Press 2: steps 3 and 4 stand up, the poll. Press 3: the answer, step 3 lit, the poll gone. Press 4: what never goes
- * into a chat on any plan (EMBG, health content, the feedback buttons: Law on Personal Data Protection) and the record rule. Press 5: the
- * four gates and the two law cards, step 4 lit (AZLP Form No. 1, the Usage Policy, Law on Personal Data Protection Chapter V).
+ * The left column is calm: the two rules stay at its top from the entry on, and below them one slot holds one card at a
+ * time: the training facts (press 1) give their place to the never card (press 3), which gives its place to the gates (press 4).
+ * The stair is seen in depth (a real 3D stair: each step one level higher in z, the lit step comes forward), each step with an
+ * offset outline as its edge. Press 0: the two rules (AI sorts and drafts; a named person signs). Press 1: steps 1 and 2 stand
+ * up, the training fact per plan (Anthropic privacy centre). Press 2: steps 3 and 4 stand up, step 3 lit: payroll with names
+ * stays on your computer. Press 3: what never goes into a chat on any plan (the personal ID number, health content, the
+ * feedback buttons) and the record rule. Press 4: the four gates, step 4 lit (13 Nov 2026: no law cards on the main slide).
  * The stair links to appendix A2.
  */
 import { esc, spread } from "./motion.mjs";
 import { icon, standUp } from "./scene.mjs";
 import { cap } from "./slides-intro.mjs";
-import { pollButtons } from "./slides-parts.mjs";
 
 const split = (text) => String(text).split(" · ");
 
@@ -43,28 +41,26 @@ export function safety(it, ctx, d, c) {
     html: `<p>${icon("assistant", { it, k: 0, win: ".1,.7" })}<span>${esc(t.r1)}</span></p><p>${icon("person", { it, k: 0, win: ".3,.9" })}<span>${esc(t.r2)}</span></p>`,
   });
   const f1 = it({
-    id: "f1", tag: "div", cls: "sff fig", zone: "a", k: 1, out: 4,
+    id: "f1", tag: "div", cls: "sff fig", zone: "a", k: 1, out: 3,
     html: `${t.f1.map((x) => `<p>${icon("shield")}<span>${esc(x)}</span></p>`).join("")}<small>${esc(t.f1Src)}</small>`,
   });
   const nv = it({
-    id: "nv", tag: "div", cls: "sfn fig", zone: "a", k: 4, out: 5, win: ".3,1",
-    html: `<b>${esc(t.nv)}</b><ul>${t.nvi.map((x, i) => `<li>${icon("lock", { it, k: 4, win: spread(i, 3, 0.35, 0.5) })}<span>${esc(x)}</span></li>`).join("")}</ul><small>${esc(t.nvSrc)}</small>`,
+    id: "nv", tag: "div", cls: "sfn fig", zone: "a", k: 3, out: 4, win: ".3,1",
+    html: `<b>${esc(t.nv)}</b><ul>${t.nvi.map((x, i) => `<li>${icon("lock", { it, k: 3, win: spread(i, 3, 0.35, 0.5) })}<span>${esc(x)}</span></li>`).join("")}</ul><small>${esc(t.nvSrc)}</small>`,
   });
   const law = it({
-    id: "law", tag: "div", cls: "sfl fig", zone: "a", k: 5, win: ".3,1",
-    html: `<div class="sfl__g"><b>${esc(g[1])}</b><ul>${gates.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>${t.law.map((x, i) => `<p>${icon(i ? "sheet-check" : "letter")}<span>${esc(x)}</span></p>`).join("")}<small>${esc(t.lawSrc)}</small>`,
+    id: "law", tag: "div", cls: "sfl fig", zone: "a", k: 4, win: ".3,1",
+    html: `<div class="sfl__g"><b>${esc(g[1])}</b><ul>${gates.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`,
   });
   const stage = [
     it({ id: "h", tag: "h2", cls: "headline hl", zone: "h", text: t.h }),
     cap(it, "c0", t.c0, 0, 1),
     cap(it, "c1", t.c1, 1, 2),
-    it({ id: "pq", cls: "t cap fig", zone: "cap", k: 2, out: 3, text: t.pq }),
-    cap(it, "a", t.a, 3, 4),
-    cap(it, "c4", t.c4, 4, 5),
-    it({ id: "g", cls: "t cap", zone: "cap", k: 5, text: g[3] }),
+    cap(it, "a", t.a, 2, 3),
+    cap(it, "c4", t.c4, 3, 4),
+    it({ id: "g", cls: "t cap", zone: "cap", k: 4, text: g[3] }),
     rules,
     f1,
-    pollButtons(it, { id: "pb", name: "ladder", labels: t.pb, k: 2, out: 3, zone: "l" }),
     nv,
     law,
     stair,

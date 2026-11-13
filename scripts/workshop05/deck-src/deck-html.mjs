@@ -1,7 +1,7 @@
 /**
- * Reads the built Workshop 05 deck pages for the node tests (words, polls, lockstep): the page text, its slides as small
+ * Reads the built Workshop 05 deck pages for the node tests (words, structure, lockstep): the page text, its slides as small
  * element trees, the visibility rule of a press state (an element shows from its data-step to just before its data-out,
- * and only when every ancestor shows), the speaker notes and the poll buttons. Nothing here writes a file.
+ * and only when every ancestor shows), the speaker notes and the elements with an attribute. Nothing here writes a file.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";

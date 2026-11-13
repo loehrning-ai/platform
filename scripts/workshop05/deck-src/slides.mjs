@@ -45,7 +45,7 @@ export const SLIDES = [
   { id: "why", steps: 7, ms: press(7, { 0: 1400, 5: 1600, 6: 1600 }), minutes: 5, body: why },
   { id: "sectors", steps: 4, ms: press(4, { 0: 1600, 1: 1600, 2: 1400 }), minutes: 4, body: sectors },
   { id: "we", steps: 3, ms: press(3, { 0: 1400 }), minutes: 4, body: we },
-  { id: "letter", steps: 7, ms: press(7, { 0: 1600, 1: 1400, 6: 1400 }), minutes: 7, body: letter },
+  { id: "letter", steps: 2, ms: press(2, { 0: 1600, 1: 1400 }), minutes: 7, body: letter },
   { id: "time", steps: 3, ms: press(3, { 1: 1400, 2: 1400 }), minutes: 4, body: time },
   { id: "kit", steps: 3, ms: press(3), minutes: 5, body: kitSlides.kit },
   { id: "step1", steps: 2, ms: press(2, { 2: 1500 }), minutes: 6, body: kitSlides.step1, layout: "take" },
@@ -54,7 +54,7 @@ export const SLIDES = [
   { id: "step3", steps: 3, ms: press(3, { 1: 1500 }), minutes: 8, body: kitSlides.step3, layout: "take" },
   { id: "register", steps: 7, ms: press(7, { 3: 1600 }), minutes: 11, body: rules.register, layout: "take" },
   { id: "watch", steps: 4, ms: press(4), minutes: 8, body: watch },
-  { id: "safety", steps: 5, ms: press(5), minutes: 6, body: safety },
+  { id: "safety", steps: 4, ms: press(4), minutes: 6, body: safety },
   { id: "close", steps: 3, ms: press(3), minutes: 4, body: close },
   ...["a1", "a2", "a3", "a4"].map((id) => ({ id, steps: 0, ms: [600], minutes: 0, kind: "appendix", appendix: APPENDIX[id] })),
 ];

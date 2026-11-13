@@ -2,12 +2,12 @@
  * S04 sectors (REDESIGN-3 D4): which firms get checked and why. Press 0: every active firm of 2024 settles as the country
  * (one dot per twenty, already formed: the dust stays the cover's). Press 1: the dots regroup by sector, trade first. Press 2: the dots give way to a wall of nine tiles that
  * stand up: the inspectorate's seven risk areas and two Reform Agenda targets (dashed). Press 3: why, as bars of informal
- * jobs on the tiles. Press 4: the panel of who else checks (tap a tile, lib/w05-scrub.js hotspots) and the poll door, which
- * the close slide reads as ghost bars. Appendix a4 (matrix and blanks) is linked from here.
+ * jobs on the tiles. Press 4: the panel of who else checks (tap a tile, lib/w05-scrub.js hotspots). Appendix a4 (matrix and
+ * blanks) is linked from here.
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { field, fieldGroups, icon, numFmt, rise, target } from "./scene.mjs";
-import { ico, pollButtons } from "./slides-parts.mjs";
+import { ico } from "./slides-parts.mjs";
 import { cap, head, src } from "./slides-intro.mjs";
 import { BITOLA } from "./seats.mjs";
 
@@ -77,7 +77,6 @@ export function sectors(it, ctx, d, c) {
     cap(it, "c3", t.c3, 3, 4),
     src(it, "t3", t.t3, 3, 4),
     cap(it, "c4", t.c4, 4, null),
-    pollButtons(it, { id: "pb", name: "door", labels: t.pb, k: 4, zone: "pb" }),
     it({ id: "panel", tag: "div", cls: "sp fig", zone: "panel", k: 4, attrs: target("wall", { hot: "trade" }), html: `<p class="sp__h">${esc(t.ph)}</p>${panel}<p class="sp__all">${esc(t.all)}</p>` }),
   ].join("\n");
   return { head: "", stage };

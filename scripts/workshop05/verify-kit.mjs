@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Checks the Workshop 05 kit ("Audit Preparation with AI: Organize Evidence and Find Gaps") against
- * itself and against the independent recount. It holds the tree (41 files per edition, 12 top-level
+ * itself and against the independent recount. It holds the tree (41 files per edition, 10 top-level
  * entries, the two roots), a label on every file, the two comment lines of every CSV, the row counts of
  * the folder (693 rows read), the four step headings and their verbatim prompts, the five-line block of
  * the start file, rules 4 to 7 of the project instructions, the numbers and the quotes of the answer
@@ -63,9 +63,14 @@ expect("zipNames", [ZIP_NAME, ZIP_NAME_DE], ["gradba-audit-kit.zip", "gradba-aud
 const entriesEn = kitEntries();
 const entriesDe = kitEntriesDe();
 expect("filesWithSkill", [entriesEn.length, entriesDe.length], [41, 41]);
-expect("topLevelEntries", [new Set(entriesEn.map(([file]) => file.split("/")[0])).size, new Set(entriesDe.map(([file]) => file.split("/")[0])).size], [12, 12]);
+expect("topLevelEntries", [new Set(entriesEn.map(([file]) => file.split("/")[0])).size, new Set(entriesDe.map(([file]) => file.split("/")[0])).size], [10, 10]);
+// Lean layout: everything the four steps do not need sits in extras/ (the same folder name in both editions).
+expect("extrasTopLevel", [entriesEn, entriesDe].map((entries) => [...new Set(entries.filter(([file]) => file.startsWith("extras/")).map(([file]) => file.split("/")[1]))].sort()), [
+  ["cases", "claude", "inspector", "keep-watch", "templates"],
+  ["bereit-bleiben", "claude", "faelle", "inspektor", "vorlagen"],
+]);
 const skillSource = readFileSync(path.join(WEBSITE, "content/skills/audit-nachweise/SKILL.md"), "utf8");
-expect("skillInBothKits", [entriesEn, entriesDe].map((entries) => entries.find(([file]) => file === "claude/audit-nachweise/SKILL.md")?.[1].toString("utf8") === skillSource), [true, true]);
+expect("skillInBothKits", [entriesEn, entriesDe].map((entries) => entries.find(([file]) => file === "extras/claude/audit-nachweise/SKILL.md")?.[1].toString("utf8") === skillSource), [true, true]);
 
 /** Names and sizes of the members of a stored zip, read from its central directory. */
 function zipMembers(archive) {
@@ -109,7 +114,7 @@ expect(
 );
 
 // 2. Labels, comment lines, style, words, URLs.
-// The one privacy link of the start file, plus the sources of keep-watch/ (DE bereit-bleiben/): two Anthropic help pages and the
+// The one privacy link of the start file, plus the sources of extras/keep-watch/ (DE extras/bereit-bleiben/): two Anthropic help pages and the
 // verified watch list (Anthropic help centre, projects and scheduled tasks; AZLP, Služben vesnik, DIT). Nothing else may link out.
 const ALLOWED_URLS = new Set([
   "https://privacy.claude.com/en/articles/7996890",
@@ -120,7 +125,7 @@ const ALLOWED_URLS = new Set([
   "https://azlp.mk/feed/",
   "https://mzzpr.org.mk/feed/",
 ]);
-const KEEP_WATCH = /^(keep-watch|bereit-bleiben)\//;
+const KEEP_WATCH = /^extras\/(keep-watch|bereit-bleiben)\//;
 const INTERNAL = new RegExp(["\\/Users\\/", "\\/private\\/", "maven" + "gence", "facilitator\\/", "CLAUDE" + "\\.md", "vard" + "ar", "tann" + "wald", "plans\\/"].join("|"), "i");
 const BANNED_EN = /\b(friday|saturday|sunday|deadline|compliant|compliance|score|scores|stamp|countdown|urgent|boss|seamless|leverage|unlock|empower|robust|delve|game.?changer)\b/i;
 const BANNED_DE = /\b(Freitag|Samstag|Sonntag|Deadline|konform|Countdown|dringend|Stempel|Punkte|Chef|nahtlos|revolutionär)\b/;
@@ -164,11 +169,12 @@ const COUNTS = {
 expect("rowCounts", Object.fromEntries(Object.keys(COUNTS).map((name) => [name, rows(read(`folder/${name}`)).length])), COUNTS);
 expect("rowsRead", Object.values(COUNTS).reduce((sum, n) => sum + n, 0), 693);
 for (const name of Object.keys(COUNTS)) if (read(`folder/${name}`) !== readDe(`ordner/${name}`)) fail(`${name}: the CSV bytes differ between the editions`);
-for (const name of ["evidence-index.csv", "clock.csv", "sample-rows_attendance.csv", "register.csv"]) if (read(`templates/${name}`) !== readDe(`vorlagen/${name}`)) fail(`${name}: the template bytes differ between the editions`);
+for (const name of ["evidence-index.csv", "clock.csv", "register.csv"]) if (read(`templates/${name}`) !== readDe(`vorlagen/${name}`)) fail(`${name}: the template bytes differ between the editions`);
+if (read("extras/templates/sample-rows_attendance.csv") !== readDe("extras/vorlagen/sample-rows_attendance.csv")) fail("sample-rows_attendance.csv: the template bytes differ between the editions");
 expect("evidenceIndexHeader", [read("templates/evidence-index.csv").split("\n")[2], rows(read("templates/evidence-index.csv")).length], ["line_id,article,paper,owner,where,quote,period,scope,approval,status,closes_with,due", 0]);
 expect("clockHeader", [read("templates/clock.csv").split("\n")[2], rows(read("templates/clock.csv")).length], ["event,rule,date", 1]);
 expect("clockExampleRow", read("templates/clock.csv").split("\n")[3].startsWith("example"), true);
-expect("sampleRows", [read("templates/sample-rows_attendance.csv").split("\n")[2], rows(read("templates/sample-rows_attendance.csv")).map((line) => line.split(",")[0])], ["id,date,start,end,tick,code", ["X-01", "X-02", "X-03"]]);
+expect("sampleRows", [read("extras/templates/sample-rows_attendance.csv").split("\n")[2], rows(read("extras/templates/sample-rows_attendance.csv")).map((line) => line.split(",")[0])], ["id,date,start,end,tick,code", ["X-01", "X-02", "X-03"]]);
 expect("registerTemplate", [read("templates/register.csv").split("\n").slice(0, 2), read("templates/register.csv").split("\n")[2], rows(read("templates/register.csv")).length], [
   ["# Fictional training material, invented for the exercise.", "# Erfundenes Übungsmaterial, für die Übung erfunden."],
   "person_id,paper,date,valid_until,owner,where,approved_by",
@@ -177,7 +183,8 @@ expect("registerTemplate", [read("templates/register.csv").split("\n").slice(0, 
 expect("folderFiles", [FOLDER_FILES.length, FOLDER_FILES_DE.length], [14, 14]);
 
 // 4. The start files: the five-line block (the pinned COPY strings), three steps, the optional block, one marker.
-// The top block: the disclaimer, a heading and the three rule lines (the pinned COPY strings); the set-up line that opens the Project follows the set-up heading.
+// The top block: the disclaimer, a heading and the three rule lines (the pinned COPY strings); the numbered set-up (download, project,
+// instructions, the 19 files, code execution, one chat, four files before Step 3, Step 4 in the same chat) follows the set-up heading.
 const BLOCK = {
   en: [
     "Fictional training material, invented for the exercise. Not legal advice.",
@@ -195,8 +202,8 @@ const BLOCK = {
   ],
 };
 const SETUP_FIRST = {
-  en: "Open Claude, make a Project, paste project-instructions.md, add checklists/ and folder/. These files are invented, so this is Level 2 of the data ladder. Your own firm later: Level 3, only column names and 3 invented rows.",
-  de: "Öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein, füge listen/ und ordner/ hinzu. Diese Dateien sind erfunden, das ist also Stufe 2 der Datenleiter. Eigene Firma später: Stufe 3, nur Spaltennamen und 3 erfundene Zeilen.",
+  en: "1. Download gradba-audit-kit.zip from the kit page, loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit, and unzip it.",
+  de: "1. Lade gradba-audit-kit-de.zip von der Kit-Seite loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit herunter und entpacke es.",
 };
 const INTRO = { en: ["## The rules in one minute", "## What you do", "## Set up once"], de: ["## Die Regeln in einer Minute", "## Was du tust", "## Einmal einrichten"] };
 const SKILL_HEADING = { en: "## Optional: install the skill", de: "## Freiwillig: den Skill einrichten" };
@@ -212,7 +219,6 @@ const STEP4 = {
       "Build the register. Read folder-index.md and the CSV files in the folder. Skip the lines that start with #. Make register.csv with the columns of templates/register.csv and one row per person and paper. Papers: contract, registration, medical-exam (valid 24 months), leave-decision (only for people with 6 months of service on 26 Nov 2026), overtime-notice (for every person with overtime weeks) and safety-statement (one row for the firm, person_id FIRM). Take the owner from folder-index.md. Where a paper is missing, write MISSING in the date column. Where no file names an approver, write NOT IN FILES. Use ids, no names, and no health content, dates only. Then write check.py. It reads register.csv and prints three lists for today: expired, expiring in the next 60 days, missing. Run it with today's date, 26 Nov 2026. Answer in 16 lines at most: the three counts, then the first five rows of register.csv.",
     second: "Look at register.csv. Which papers are on file for E-07, which one is missing, and who owns each? Answer from register.csv only, in 8 lines at most. If a row is not there, say NOT IN FILES.",
     then: "Then ask the register:",
-    month: "Every month: see templates/monthly-check.md.",
     noCode: "Code execution switched off? Ask Claude for check.py and run it on your own computer.",
     ends: [
       ["Answer with the table only.", 0],
@@ -220,7 +226,7 @@ const STEP4 = {
       ["Answer with one line per question: line id, status, at most 8 words why. The rest goes in the files. At most 16 lines.", 2],
     ],
     intro: "In four steps Claude helps you build a table, run a check, write a plan and build a register.",
-    setup: "Add cases/case-A-labour.md and templates/register.csv to the Project as well.",
+    setup: "4. Add files to the project: all files inside checklists/ (3) and folder/ (14), plus cases/case-A-labour.md and templates/register.csv. That is 19 files.",
     signOff: "Leave every sign-off line empty.",
     line: "Write plain sentences. Use no dashes or arrows. Say sign-off line where a person signs.",
   },
@@ -229,7 +235,6 @@ const STEP4 = {
       "Baue das Register. Lies ordner-index.md und die CSV-Dateien im Ordner. Überspringe die Zeilen, die mit # beginnen. Mach register.csv mit den Spalten aus vorlagen/register.csv und einer Zeile pro Person und Papier. Papiere: contract, registration, medical-exam (gültig 24 Monate), leave-decision (nur für Personen mit 6 Monaten Betriebszugehörigkeit am 26. Nov. 2026), overtime-notice (für jede Person mit Überstundenwochen) und safety-statement (eine Zeile für die Firma, person_id FIRM). Nimm die Zuständigkeit aus ordner-index.md. Fehlt ein Papier, schreib MISSING in die Spalte date. Nennt keine Datei eine freigebende Person, schreib NICHT IN DATEIEN. Nimm Kennungen, keine Namen, und keine Gesundheitsinhalte, nur Daten. Schreibe dann check.py. Es liest register.csv und gibt für heute drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Führe es mit dem heutigen Datum aus, 26. Nov. 2026. Antworte in höchstens 16 Zeilen: die drei Zahlen, dann die ersten fünf Zeilen von register.csv.",
     second: "Sieh dir register.csv an. Welche Papiere liegen für E-07 vor, welches fehlt, und wer ist jeweils zuständig? Antworte nur aus register.csv, in höchstens 8 Zeilen. Fehlt eine Zeile, sag NICHT IN DATEIEN.",
     then: "Dann frag das Register:",
-    month: "Jeden Monat: siehe vorlagen/monatscheck.md.",
     noCode: "Codeausführung ausgeschaltet? Bitte Claude um check.py und führe es auf deinem eigenen Rechner aus.",
     ends: [
       ["Antworte nur mit der Tabelle.", 0],
@@ -237,26 +242,29 @@ const STEP4 = {
       ["Antworte mit einer Zeile pro Frage: Zeilen-Id, Status, höchstens 8 Wörter Grund. Alles andere kommt in die Dateien. Höchstens 16 Zeilen.", 2],
     ],
     intro: "In vier Schritten hilft dir Claude, eine Tabelle zu bauen, einen Check laufen zu lassen, einen Plan zu schreiben und ein Register zu bauen.",
-    setup: "Füge faelle/fall-A-arbeit.md und vorlagen/register.csv ebenfalls zum Projekt hinzu.",
+    setup: "4. Füge dem Projekt Dateien hinzu: alle Dateien in listen/ (3) und ordner/ (14), dazu faelle/fall-A-arbeit.md und vorlagen/register.csv. Das sind 19 Dateien.",
     signOff: "Lass jede Unterschriftszeile leer.",
     line: "Schreibe einfache Sätze. Nimm keine Gedankenstriche und keine Pfeile. Sag Zeile für die Freigabe, wo eine Person unterschreibt.",
   },
 };
-// "Stay ready" names every file of the keep-watch folder, so a learner finds what keeps the register current after the audit.
-const STAY = {
-  en: ["## Stay ready", "keep-watch/", ["weekly-check_scheduled-task.md", "monthly-check_by-hand.md", "register-project-instructions.md", "safety-card.md", "watch-list.md"]],
-  de: ["## Bereit bleiben", "bereit-bleiben/", ["wochencheck_geplante-aufgabe.md", "monatscheck_von-hand.md", "register-projektanweisungen.md", "sicherheitskarte.md", "beobachtungsliste.md"]],
+// The extras section names every folder of extras/ in one line each, so a learner finds what is optional after the session.
+const EXTRAS = {
+  en: ["## extras/ (optional, for after the session)", ["keep-watch", "inspector", "cases", "templates", "claude/audit-nachweise"]],
+  de: ["## extras/ (freiwillig, für nach dem Workshop)", ["bereit-bleiben", "inspektor", "faelle", "vorlagen", "claude/audit-nachweise"]],
 };
-for (const [locale, text, start, after, marker] of [
-  ["en", read("START-HERE.md"), "START-HERE.md", "## After the visit (optional)", "<!-- claude-ui:en -->"],
-  ["de", readDe("START-HIER.md"), "START-HIER.md", "## Nach dem Besuch (optional)", "<!-- claude-ui:de -->"],
+for (const [locale, text, start, marker] of [
+  ["en", read("START-HERE.md"), "START-HERE.md", "<!-- claude-ui:en -->"],
+  ["de", readDe("START-HIER.md"), "START-HIER.md", "<!-- claude-ui:de -->"],
 ]) {
-  const [stayHeading, stayDir, stayFiles] = STAY[locale];
-  const stayText = text.slice(text.indexOf(stayHeading), text.indexOf(after));
-  for (const file of stayFiles) if (!stayText.includes(`${stayDir}${file}`)) fail(`${start}: "${stayHeading}" must name ${stayDir}${file}`);
+  const [extrasHeading, extrasDirs] = EXTRAS[locale];
+  const extrasLines = text.slice(text.indexOf(extrasHeading), text.indexOf(SKILL_HEADING[locale])).split("\n").filter((line) => line.startsWith("- extras/"));
+  expect(`${start} extras lines`, extrasLines.map((line) => line.slice(2, line.indexOf("/:"))), extrasDirs.map((dir) => `extras/${dir}`));
+  // The core path names extras/ once, to leave it out of the project, plus the optional sample rows of Step 2.
+  const beforeExtras = text.slice(0, text.indexOf(extrasHeading)).replace(/extras\/(templates|vorlagen)\/sample-rows_attendance\.csv/g, "");
+  expect(`${start} core names extras/ only to leave it out`, (beforeExtras.match(/extras\//g) ?? []).length, 1);
   expect(`${start} block`, text.slice(0, text.indexOf(INTRO[locale][1])).split("\n").filter((line) => line !== ""), BLOCK[locale]);
   expect(`${start} set-up opens the Project`, text.split(`${INTRO[locale][2]}\n\n`)[1]?.split("\n")[0], SETUP_FIRST[locale]);
-  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], ...STEP_HEADINGS[locale], stayHeading, after, SKILL_HEADING[locale]]);
+  expect(`${start} headings`, text.split("\n").filter((line) => line.startsWith("## ")), [...INTRO[locale], ...STEP_HEADINGS[locale], extrasHeading, SKILL_HEADING[locale]]);
   // The install text of the skill is the last section (optional); the file ends with its one marker line.
   expect(`${start} marker`, [text.split(marker).length - 1, text.indexOf(marker) > text.indexOf(SKILL_HEADING[locale]), text.trimEnd().endsWith(marker)], [1, true, true]);
   const prompts = [...text.matchAll(/^ {4}(\S.*)$/gm)].map((match) => match[1]);
@@ -267,15 +275,15 @@ for (const [locale, text, start, after, marker] of [
   expect(`${start} step 4 words`, [v.first.split(/\s+/).length, v.second.split(/\s+/).length], locale === "en" ? [149, 37] : [145, 32]);
   for (const [sentence, index] of v.ends) if (!prompts[index].endsWith(sentence)) fail(`${start}: prompt ${index + 1} must end with "${sentence}"`);
   if (!prompts[2].includes(v.signOff)) fail(`${start}: the Step 3 prompt must say "${v.signOff}"`);
-  for (const needle of [v.then, v.month, v.noCode, v.intro, v.setup]) if (!text.includes(needle)) fail(`${start} lacks "${needle}"`);
+  for (const needle of [v.then, v.noCode, v.intro, v.setup]) if (!text.includes(needle)) fail(`${start} lacks "${needle}"`);
   if (text.split(v.noCode).length - 1 !== 2) fail(`${start}: the no-code-tool sentence must stand in Step 2 and in Step 4`);
 }
 // The room minutes are the deck's slots; the desk minutes are an estimate and the file says so.
 const timeLines = (text) => [...text.matchAll(/^(?:In the room|Im Raum) (\d+)(?: minutes| Minuten)\. (?:At your desk about|Am Schreibtisch etwa) (\d+), (?:our estimate, not measured|unsere Schätzung, nicht gemessen)\./gm)].map((match) => [Number(match[1]), Number(match[2])]);
 expect("stepMinutes", [timeLines(read("START-HERE.md")), timeLines(readDe("START-HIER.md"))], [[[6, 20], [9, 20], [8, 30], [11, 20]], [[6, 20], [9, 20], [8, 30], [11, 20]]]);
 for (const [text, word] of [
-  [read("START-HERE.md"), "Predict first, then check ANSWERS.md."],
-  [readDe("START-HIER.md"), "Sag es voraus, dann prüf es in LOESUNGEN.md."],
+  [read("START-HERE.md"), "paste this prompt and send it. Then compare the answer with ANSWERS.md."],
+  [readDe("START-HIER.md"), "diesen Prompt ein und sende ihn. Vergleiche dann die Antwort mit LOESUNGEN.md."],
 ]) if (text.split(word).length - 1 !== 4) fail(`a start file must say "${word}" in each of the four steps`);
 if (!read("START-HERE.md").includes("skipping CSV lines that start with #")) fail("Step 2 must say that lines starting with # are skipped");
 // The prompt-to-checker contract (recordings/check-take.mjs reads exactly these words): the closing totals line of Step 2,
@@ -427,30 +435,30 @@ expect("statuses EN equal DE", statusByLine.en, statusByLine.de);
 
 // 7. Document request, minutes, cases, templates: the facts they must hold.
 const mustHave = [
-  ["inspector/document-request_2026-11-27.md", ["Open on the day of the visit.", "Mon 30 November 2026", "ZIN Art. 53(1)", "E-02"]],
-  ["inspector/minutes_sample_2026-11-27.md", ["Open after Step 3.", "E-12", "the inspector issues an act with a fix period", "Reason, if you do not sign: ______"]],
-  ["templates/transfer-sheet.md", ["1. Who checks", "6. Your sentence", "Before [date], [role] checks [paper] against [rule].", "Level 4"]],
+  ["extras/inspector/document-request_2026-11-27.md", ["Open on the day of the visit.", "Mon 30 November 2026", "ZIN Art. 53(1)", "E-02"]],
+  ["extras/inspector/minutes_sample_2026-11-27.md", ["Open after Step 3.", "E-12", "the inspector issues an act with a fix period", "Reason, if you do not sign: ______"]],
+  ["extras/templates/transfer-sheet.md", ["1. Who checks", "6. Your sentence", "Before [date], [role] checks [paper] against [rule].", "Level 4"]],
   ["templates/new-paper-note.md", ["Signed by: ______", "The old paper stays untouched."]],
-  ["templates/comment-on-minutes.md", ["at most four sentences", "Signed by: ______"]],
+  ["extras/templates/comment-on-minutes.md", ["at most four sentences", "Signed by: ______"]],
   ["notice_DIT_2026-11-23.md", ["22-0487/1", "27 November 2026, 09:00", "ZIN Art. 57, 54, 55", "ZIN is the general law since 1 Jan 2026", "Name one employee"]],
   ["CHANGELOG.md", ["## 2026-11-08", "## 2026-11-07", "Rebuilt for workshop 5", "Added Step 4"]],
   ["cases/case-A-labour.md", ["## Bottlenecks", "## How often it comes and how it starts", "5,664 regular inspections in 2025 divided by 73,310 active enterprises in 2024 is, on paper, about one regular inspection a year for every 13 active enterprises. It is not the chance for one firm.", "Gradba-Pro was last inspected in spring 2024. Normally nobody opens the binders.", "Sourced:", "This kit's story (invented)", "read on 2026-11-07", "Not legal advice"]],
   ["folder/folder-index.md", ["Last labour inspection: spring 2024 (invented). Nobody has opened the binders since."]],
-  ["templates/monthly-check.md", ["Once a month, on a fixed day, one named person does this.", "Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only: send nothing and change no row.", "Never change an old row to hide a gap.", "a small database such as SQLite", "Dates only, no health content."]],
-  ["cases/case-B-tax.md", ["Sourced:", "This kit's story (invented)", "ZDP Art. 47(2)", "Size thresholds unverified", "single vendors only, not a market average"]],
-  ["cases/case-C-iso.md", ["Sourced:", "This kit's story (invented)", "IAF MD 5:2023", "not a certifier's tariff and not a market average"]],
+  ["extras/templates/monthly-check.md", ["Once a month, on a fixed day, one named person does this.", "Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only: send nothing and change no row.", "Never change an old row to hide a gap.", "a small database such as SQLite", "Dates only, no health content."]],
+  ["extras/cases/case-B-tax.md", ["Sourced:", "This kit's story (invented)", "ZDP Art. 47(2)", "Size thresholds unverified", "single vendors only, not a market average"]],
+  ["extras/cases/case-C-iso.md", ["Sourced:", "This kit's story (invented)", "IAF MD 5:2023", "not a certifier's tariff and not a market average"]],
 ];
 for (const [file, needles] of mustHave) for (const needle of needles) if (!read(file).includes(needle)) fail(`${file} lacks "${needle}"`);
 for (const [file, needles] of [
-  ["inspektor/verlangen_unterlagen_2026-11-27.md", ["Am Tag des Besuchs öffnen.", "Mo 30. November 2026", "ZIN Art. 53(1)", "E-02"]],
-  ["inspektor/protokoll_beispiel_2026-11-27.md", ["Nach Schritt 3 öffnen.", "E-12", "erlässt einen Bescheid mit einer Frist zur Behebung"]],
-  ["vorlagen/uebertragungsblatt.md", ["1. Wer prüft", "6. Dein Satz", "Stufe 4"]],
+  ["extras/inspektor/verlangen_unterlagen_2026-11-27.md", ["Am Tag des Besuchs öffnen.", "Mo 30. November 2026", "ZIN Art. 53(1)", "E-02"]],
+  ["extras/inspektor/protokoll_beispiel_2026-11-27.md", ["Nach Schritt 3 öffnen.", "E-12", "erlässt einen Bescheid mit einer Frist zur Behebung"]],
+  ["extras/vorlagen/uebertragungsblatt.md", ["1. Wer prüft", "6. Dein Satz", "Stufe 4"]],
   ["AENDERUNGEN.md", ["## 2026-11-08", "## 2026-11-07"]],
   ["faelle/fall-A-arbeit.md", ["## Wie oft sie kommt und wie sie beginnt", "5.664 reguläre Inspektionen 2025, geteilt durch 73.310 aktive Unternehmen 2024, ergibt auf dem Papier etwa eine reguläre Inspektion im Jahr auf 13 aktive Unternehmen. Das ist nicht die Chance für eine einzelne Firma.", "Gradba-Pro wurde zuletzt im Frühjahr 2024 kontrolliert.", "Belegt:", "Die Geschichte dieses Kits (erfunden)"]],
   ["ordner/ordner-index.md", ["Letzte Arbeitsinspektion: Frühjahr 2024 (erfunden). Seitdem hat niemand die Ordner geöffnet."]],
-  ["vorlagen/monatscheck.md", ["Einmal im Monat, an einem festen Tag, macht das eine benannte Person.", "Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro Rolle der Verantwortlichen. Nur Entwürfe: nichts senden und keine Zeile ändern.", "Ändere nie eine alte Zeile, um eine Lücke zu verstecken.", "einer kleinen Datenbank wie SQLite", "Nur Daten, keine Gesundheitsinhalte."]],
-  ["faelle/fall-B-steuer.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "Größenschwellen ungeprüft"]],
-  ["faelle/fall-C-iso.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "IAF MD 5:2023"]],
+  ["extras/vorlagen/monatscheck.md", ["Einmal im Monat, an einem festen Tag, macht das eine benannte Person.", "Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro Rolle der Verantwortlichen. Nur Entwürfe: nichts senden und keine Zeile ändern.", "Ändere nie eine alte Zeile, um eine Lücke zu verstecken.", "einer kleinen Datenbank wie SQLite", "Nur Daten, keine Gesundheitsinhalte."]],
+  ["extras/faelle/fall-B-steuer.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "Größenschwellen ungeprüft"]],
+  ["extras/faelle/fall-C-iso.md", ["Belegt:", "Die Geschichte dieses Kits (erfunden)", "IAF MD 5:2023"]],
 ]) for (const needle of needles) if (!readDe(file).includes(needle)) fail(`kit-de/${file} lacks "${needle}"`);
 
 // 8. The generator reproduces the CSV files (runs oracle/generate.mjs --check).

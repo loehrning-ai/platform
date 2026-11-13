@@ -197,11 +197,11 @@ for (const [key, html] of Object.entries(pages)) {
   });
 }
 
-test("M6: no loop and no timer in deck.css, w05-fx.css, w05-tally.js, w05-field.js or w05-scrub.js", () => {
+test("M6: no loop and no timer in deck.css, w05-fx.css, w05-field.js or w05-scrub.js", () => {
   for (const name of ["deck.css", "w05-fx.css"]) {
     assert.doesNotMatch(read(name), /\binfinite\b|animation-iteration-count/, name);
   }
-  for (const name of ["w05-tally.js", "w05-field.js", "w05-scrub.js"]) {
+  for (const name of ["w05-field.js", "w05-scrub.js"]) {
     assert.doesNotMatch(read(name), /setInterval|setTimeout|requestAnimationFrame|\bloop\b|Math\.random|Date\.now|performance\.now/, name);
   }
 });
@@ -215,12 +215,13 @@ test("M8: the cover entry in w05-fx.css is a 300 ms rise of 8 px, the subtitle 1
   assert.match(css, /prefers-reduced-motion:reduce\)\{[^}]*\.cover__title,\.cover__sub\{animation:none\}/s);
 });
 
-test("M10: the ghost bars of the close slide are horizontal line elements, one per option, replacing nothing static", () => {
+test("M10: the close slide's lesson press is four cards that arrive together, no ghost bars and no poll", () => {
   for (const lang of LANGS) {
     const close = slidesOf(pages[lang]).find((s) => s.attrs.id === "close");
-    const bars = stepped(close).filter((e) => (e.a.class ?? "").split(/\s+/).includes("gb__bar"));
-    assert.equal(bars.length, 4);
-    for (const { a } of bars) assert.equal(a["data-fx"], "line");
-    assert.doesNotMatch(read("deck.css") + read("w05-fx.css"), /w05-ghost/);
+    assert.equal(stepped(close).filter((e) => (e.a.class ?? "").split(/\s+/).includes("gb__bar")).length, 0);
+    const doors = stepped(close).find((e) => e.a["data-id"] === "doors");
+    assert.ok(doors, `${lang}: the four cards`);
+    assert.equal(doors.a["data-step"], "2");
+    assert.doesNotMatch(read("deck.css") + read("w05-fx.css"), /w05-ghost|\.gb__bar|\.poll__opt/);
   }
 });

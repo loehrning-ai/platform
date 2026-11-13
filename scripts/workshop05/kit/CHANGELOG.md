@@ -2,6 +2,10 @@ Fictional training material, invented for the exercise. Not legal advice.
 
 # Changelog
 
+## 2026-11-13
+
+The start file now sets up the project in eight numbered steps: the 19 files to add, the four files to add before Step 3, where to switch on code execution, and one chat for all four steps. The answer key says why a run may print 11 or 12 findings. Tested in claude.ai on 13 Nov 2026 with two full runs. Everything the four steps do not need moved into one folder, extras/: the inspector files, keep-watch/, cases B and C, four templates and the skill. The start file names what is inside in one line each. 41 files.
+
 ## 2026-11-09
 
 Aligned with the deck: the start file names each step as the deck does, the room minutes of Steps 3 and 4 are the deck's 8 and 11, code execution is on every plan (the start file only asks whether it is switched off), and on the Free plan the Project files must fit the context window. The safety card names a business subscription as the first gate, and the watch list gives the gazette's own Cyrillic name. Step 3 names the four files to add to the Project before it: the notice and three templates. 41 files.

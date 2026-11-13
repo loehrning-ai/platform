@@ -7,7 +7,7 @@ import { esc, fill, spread } from "./motion.mjs";
 import { binder, icon } from "./scene.mjs";
 import { kit as kitFile, kitDe } from "./data.mjs";
 import { head } from "./slides-intro.mjs";
-import { claudeWindow, clIcon, dolly, takeModel, fileName, filePreviews, ico, inFolder, named, pollButtons, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
+import { claudeWindow, clIcon, dolly, takeModel, fileName, filePreviews, inFolder, named, progress, promptBubble, promptInputs, takeView } from "./slides-parts.mjs";
 
 /** The checklist and folder directories of each edition (the zip's own top folders). */
 const CHECK = ["checklists", "listen"];
@@ -41,25 +41,37 @@ export function keyRow(lang, id) {
 const TEST_ICONS = ["sheet", "calendar", "person", "contract"];
 
 /**
- * S08 kit: the binder is an object, so its 3D stays (round 5); the rest is flat. Press 0: the closed binder (the zip) stands
- * up from the desk; the empty project window slides up into place. Press 1: the cover swings open on its spine and the
- * twelve top-level entries of the zip appear on the sheet. Press 2: four files lift off the binder and arc flat into the
- * project's slots (Anthropic help centre, projects); the four first-time steps run along the bottom. Press 3: the files Claude can make
- * (Anthropic help centre, files) draw in, and the data rule. The caption swaps in one place. The flying chips live in the scene host, outside
- * the window (whose thread clips), placed exactly over the window's slots.
+ * S08 kit: how to get the kit and set it up, as the numbered steps of START-HERE.md (left, a figure list that grows press by
+ * press) next to what the step makes (right). Press 0: step 1, the kit page as a QR code, its address and the zip; the closed
+ * binder (the zip) stands up from the desk. Press 1: the binder opens on its spine and shows the top-level entries of the zip.
+ * Press 2: steps 2 to 5; the binder makes way for the project window: the instructions, the files (one flat list) and the
+ * switch in Settings. Press 3: step 6, one chat for the four steps, the line on extras/ and the data rule. The caption swaps in one place.
  */
-/** Stage pixels inside the camera (measured on the rendered slide, the same in both editions; the desk is scaled to .84 from its
- *  bottom right corner and moved 120 px left, so the open cover stays inside the margin and the window gets the app's sidebar): the tree rows of the four
- *  files that fly (checklists, folder, cases, templates: rows 2, 3, 5, 6) and the four slots of the project's file grid. */
-const KIT_ROW = { x: 409, y0: 308, pitch: 36.2, rows: [2, 3, 5, 6] };
-const KIT_SLOT = { x: [1026, 1354], y: [271, 319] };
+/** The files of the project shown by name: one of each kind; the rest are counted ("+ 14 more"). */
+const SHOWN = [/^(checklists\/checklist_labour|listen\/pruefliste_arbeit)/, /^(folder|ordner)\/(folder|ordner)-index\.md$/, /^(folder|ordner)\/medical_exams\.csv$/, /^(cases|faelle)\/(case|fall)-A-/, /^(templates|vorlagen)\/register\.csv$/];
 export function kit(it, ctx, d, c) {
   const t = c.s.kit;
-  const v = (x) => fill(x, d.vars);
-  const zipText = v(t.zip);
+  const zipText = fill(t.zip, d.vars);
   const [zipName, ...zipRest] = zipText.split(",").map((x) => x.trim());
+  // the files step 4 adds: everything in the checklist and folder directories, plus the case file and the register template
+  const add = d.kitPaths.filter((p) => [...CHECK, ...FOLDER].includes(p.split("/")[0])).length + 2;
+  const vars = { ...d.vars, zip: zipName, add, entries: d.tree.length };
+  const v = (x) => fill(x, vars);
   const root = d.lang === "en" ? "../" : "./";
-  const names = split(t.tree);
+  const ed = d.lang === "en" ? "-en" : "";
+  const address = `loehrning.ai${d.lang === "en" ? "/en" : ""}/workshops/audit-vorbereitung-mit-ki/kit`;
+  // the left column: the six set-up steps; step 1 carries the kit page (QR code and address) and the zip itself
+  const zipBtn = `<a class="zipbtn" href="${root}${esc(zipName)}" download aria-label="${esc(t.zipAria)}">${icon("zip")}<b>${esc(zipName)}</b></a>`;
+  const page = `<div class="ks1"><img src="./assets/qr-kit-g26${ed}.svg" width="150" height="150" alt="${esc(`${t.page}: ${address}`)}"><span class="ks1__a"><small>${esc(t.page)}</small><b>${fileName(address)}</b>${zipBtn}</span></div>`;
+  const when = [0, 2, 2, 2, 2, 3];
+  const later = [1, 2, 3, 4];
+  const steps = t.steps.map((x, i) => it({ tag: "li", cls: `ks__i ks__i--${i + 1}`, k: when[i], win: when[i] === 2 ? spread(later.indexOf(i), 4, 0.3, 0.45) : when[i] === 3 ? ".2,.7" : ".2,.7", html: `<b>${i + 1}</b><div class="ks__t"><span>${esc(v(x))}</span>${i === 0 ? page : ""}</div>` })).join("");
+  const list = it({ id: "steps", tag: "div", cls: "ksteps fig", zone: "steps", fx: "none", html: `<ol>${steps}</ol>${it({ tag: "small", k: 2, win: ".6,1", text: t.stepsSrc })}` });
+  // the optional folder gets one line under the Settings card, on the last press: everything outside the core path lives there
+  const extras = it({ id: "kx", tag: "p", cls: "ks__x fig", zone: "kx", k: 3, win: ".5,1", html: `${icon("folder")}<span>${esc(t.extras)}</span>` });
+  // the right column, presses 0 and 1: the kit as a binder that stands up and opens on its spine; its entries are the zip's
+  // own top-level names, read from this edition's zip (never typed)
+  const names = d.tree;
   const rows = names
     .map((name, i) => {
       const folder = name.endsWith("/");
@@ -68,46 +80,44 @@ export function kit(it, ctx, d, c) {
     })
     .join("");
   const front = `<span class="kb__cover">${icon("zip", { cls: "dr" })}<b>${esc(zipName)}</b><small>${esc(zipRest.join(", "))}</small></span><span class="kb__inside" aria-hidden="true"><b>${fileName(zipName)}</b><small>${esc(zipRest[0] ?? "")}</small></span>`;
-  const book = binder(it, { id: "kb", zone: "kb", k: 1, sheets: 2, cls: "kb fig", attrs: `data-keep role="img" aria-label="${esc(v(t.binderAria))}"`, front, html: `<ul class="kb__tree">${rows}</ul>` });
-  const fly = split(t.fly);
-  // each chip starts on its tree row of the binder sheet and lands on its slot in the project: a flat arc (a lift in y, a pure
-  // function of --p; round 5, no depth), drawn above the window so the window's thread never clips it
-  const chips = fly.map((x, i) => {
-    const to = { x: KIT_SLOT.x[i % 2], y: KIT_SLOT.y[Math.floor(i / 2)] };
-    const from = { x: KIT_ROW.x, y: KIT_ROW.y0 + (KIT_ROW.rows[i] - 2) * KIT_ROW.pitch };
-    return it({ tag: "li", cls: "kfly", k: 2, fx: "none", win: spread(i, fly.length, 0.25, 0.55), attrs: `style="left:${to.x}px;top:${to.y}px;--dx:${from.x - to.x}px;--dy:${from.y - to.y}px"`, html: `${icon(x.endsWith("/") ? "folder" : "sheet")}<span>${esc(x)}</span>` });
-  }).join("");
-  const made = it({ tag: "div", cls: "kw__made", k: 3, fx: "none", html: `${["spreadsheet", "sheet", "sheet-check"].map((n, i) => icon(n, { it, k: 3, win: spread(i, 3, 0.1, 0.6) })).join("")}<span><b>${esc(t.made)}</b><small>${esc(t.madeSrc)}</small></span>` });
-  // the project stands empty from the entry (its slots outlined); press 2 fills it
-  const ins = it({ tag: "p", cls: "kw__ins", k: 2, win: ".1,.5", html: `${icon("sheet")}<b>${esc(t.insFile)}</b><small>${esc(t.insNote)}</small>` });
-  // the project page of the app: the project's name (the last crumb) as its title, then its instructions and its files
-  const thread = `<div class="kw__p fig"><p class="kw__t">${clIcon("folder")}<b>${esc(split(t.win).at(-1))}</b></p><p class="kw__h">${esc(t.ins)}</p><div class="kw__slot kw__slot--ins">${ins}</div><p class="kw__h">${esc(t.files)}</p><ul class="kw__files"><li class="kw__ghost" aria-hidden="true">${"<i></i>".repeat(fly.length)}</li></ul>${made}</div>`;
-  const win = claudeWindow(it, { id: "win", ui: c.claudeUi, side: "full", recents: [c.s.step1.h, c.s.step2.h, c.s.step3.h], crumbs: t.win, thread, k: 0, plane: true, cls: "tk-cw--small kw" });
-  // the binder lies on the desk at --p 0 of the entry and stands up on its bottom edge
+  const book = binder(it, { id: "kb", k: 1, sheets: 2, cls: "kb", attrs: `data-keep role="img" aria-label="${esc(v(t.binderAria))}"`, front, html: `<ul class="kb__tree">${rows}</ul>` });
   const desk = it({ tag: "div", cls: "kb-host", k: 0, fx: "none", attrs: "data-scene", html: book });
-  // the scene of press 2: the files arc from the binder into the project (flat since round 5: no camera turn)
-  const cam = it({ id: "cam", tag: "div", cls: "kcam fig", zone: "cam", k: 2, fx: "none", attrs: "data-scene data-keep", html: `${desk}<div class="kw-host">${win}</div><ul class="kfly-l" aria-hidden="true">${chips}</ul>` });
-  const steps = t.steps.map((x, i) => it({ tag: "li", k: 2, win: spread(i, 4, 0.3, 0.45), html: `<b>${i + 1}</b><span>${esc(x)}</span>` })).join("");
+  const kbz = it({ id: "kbz", tag: "div", cls: "kbz fig", zone: "right", out: 2, win: "0,.15", html: desk });
+  // press 2: the project window: its instructions and its files, one flat list, the rest counted
+  const shown = SHOWN.map((re) => d.kitPaths.find((p) => re.test(p))).filter(Boolean);
+  if (shown.length !== SHOWN.length) throw new Error(`kit: ${shown.length} of ${SHOWN.length} shown files found in the ${d.lang} zip`);
+  const chips = shown.map((p) => `<li>${icon(/\.csv$/.test(p) ? "spreadsheet" : "sheet")}<span>${esc(p.split("/").at(-1))}</span></li>`).join("");
+  const more = `<li class="kw__more">${esc(fill(t.more, { n: add - shown.length }))}</li>`;
+  const ins = `<p class="kw__ins">${icon("sheet")}<b>${esc(t.insFile)}</b><small>${esc(t.insNote)}</small></p>`;
+  const thread = `<div class="kw__p fig"><p class="kw__t">${clIcon("folder")}<b>${esc(split(t.win).at(-1))}</b></p><p class="kw__h">${esc(t.ins)}</p>${ins}<p class="kw__h">${esc(t.files)}<em>${esc(v(t.count))}</em></p><ul class="kw__files">${chips}${more}</ul></div>`;
+  const win = claudeWindow(it, { id: "win", ui: c.claudeUi, side: "full", recents: [c.s.step1.h, c.s.step2.h, c.s.step3.h], crumbs: t.win, thread, k: 2, zone: "right", plane: true, cls: "tk-cw--small kw" });
+  // the switch of step 5 lives in Settings, not in the project: its own card under the window
+  const cap5 = it({ id: "kcap", tag: "div", cls: "kcap fig", zone: "kcap", k: 2, win: ".55,1", html: `<p class="kcap__h">${esc(t.capH)}</p><p class="kcap__r"><span>${esc(t.capOn)}</span><i class="kcap__sw" aria-hidden="true"><i></i></i></p>` });
   const stage = [
     head(it, t),
     cap(it, "c0", v(t.c0), 0, 1),
-    cap(it, "c1", t.c1, 1, 2),
+    cap(it, "c1", v(t.c1), 1, 2),
     cap(it, "c2", t.c2, 2, 3),
     cap(it, "c3", t.c3, 3, null),
-    cam,
-    it({ id: "zip", tag: "p", cls: "kzip fig", zone: "zip", html: `<a class="zipbtn" href="${root}${esc(zipName)}" download aria-label="${esc(t.zipAria)}">${icon("zip")}<b>${esc(zipName)}</b></a>` }),
-    it({ id: "steps", tag: "div", cls: "ksteps fig", zone: "steps", k: 2, fx: "none", html: `<ol>${steps}</ol><small>${esc(t.stepsSrc)}</small>` }),
+    list,
+    kbz,
+    win,
+    cap5,
+    extras,
   ].join("\n");
   return { head: "", stage };
 }
 
-/** The left column of a take slide: the headline and the four-dot progress stay; the captions swap in the slots l1 to l3. */
-function promptPress(it, c, d, t, n, text) {
+/**
+ * The left column of a take slide: the headline and the four-dot progress stay; the captions swap in the slots l1 to l3.
+ * The prompt leaves the window on press `promptOut` (1; step 2 keeps it until its answer comes on press 2).
+ */
+function promptPress(it, c, d, t, n, text, { promptOut = 1 } = {}) {
   return {
     h: it({ id: "h", tag: "h2", cls: "headline headline--s", zone: "h", text: t.h }),
     pl: it({ id: "pl", cls: "t t--s", zone: "l1", out: 1, text: t.pl }),
     pf: it({ id: "pf", cls: "src", zone: "l2", out: 1, text: t.pf }),
-    pr: it({ id: "pr", tag: "div", cls: "tk-slot", zone: "t", out: 1, html: promptBubble(c, n, text) }),
+    pr: it({ id: "pr", tag: "div", cls: "tk-slot", zone: "t", out: promptOut, html: promptBubble(c, n, text) }),
     prog: progress(it, n),
   };
 }
@@ -136,18 +146,18 @@ export function step1(it, ctx, d, c, T) {
 /** S08: step 2, run the check: the answer comes with a scan band and counters, then the measured time. */
 export function step2(it, ctx, d, c, T) {
   const t = c.s.step2;
-  const p = promptPress(it, c, d, t, 2, d.prompts.step2);
-  const poll = pollButtons(it, { id: "pb", name: "finds", labels: d.finds.map(String), k: 1, out: 2, zone: "t", cls: "pb--grid" });
+  const v = (x) => fill(x, d.vars);
+  const p = promptPress(it, c, d, t, 2, d.prompts.step2, { promptOut: 2 });
   // the answer uses the window's full width (15 words a row) and draws the script's rows as a grid, so all ten findings fit
   const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step2", k: 2, ms: 1500, hit: true, head: true, wrap: 15, scan: { id: "scan", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
-  // the camera moves in on the window with the poll (press 1); press 2 belongs to the scan and its counters
-  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${poll}${take.take}`, plane: true, zone: null }) });
+  // the camera moves in on the prompt (press 1), while the left column says what the check looks for; press 2 belongs to the scan and its counters
+  const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}`, plane: true, zone: null }) });
   // the check reads every file of the folder
   const inputs = promptInputs(it, d, { out: 2, pick: (paths) => inFolder(paths, FOLDER) });
   const stage = [
     p.h, win, inputs, p.pl, p.pf, p.prog,
     it({ id: "fd", cls: "tk-def fig", zone: "l1", k: 1, out: 2, text: t.fd }),
-    it({ id: "pq", cls: "t t--s", zone: "l2", k: 1, out: 2, text: t.pq }),
+    it({ id: "sc", cls: "t t--s", zone: "l2", k: 1, out: 2, text: v(t.sc) }),
     take.chip, take.key, take.scan,
   ].join("\n");
   return { head: "", stage, take };
@@ -170,7 +180,7 @@ export function tests(it, ctx, d, c) {
   // the ten job slots sit inside the scope tile: it is the one test that counts people; press 3 names the count and fills eight
   const scope = `<span class="ttj">${it({ tag: "span", cls: "jobs__slots", k: 3, fx: "none", fill: listed, win: ".1,.9", attrs: "data-keep", html: slots })}${it({ tag: "span", cls: "jobs__l", k: 3, win: ".1,.5", text: v(t.jl) })}${names}</span>`;
   // each test's result on L10, from the kit's answer key: the tests it fails are listed there; the quote is the one it copied.
-  // Press 3 shows the tests that do not decide the status (the vote still has to apply the weakest part); press 4 the one that
+  // Press 3 shows the tests that do not decide the status (the weakest part is still to come); press 4 the one that
   // fails. APPROVAL stays open when the key's evidence table names no owner (step 1 taught that), and PERIOD says that this line
   // sets no deadline (the checklist row names none): neither is a pass, so both get a neutral chip with their reason.
   const key = keyRow(d.lang, "L10");
@@ -199,11 +209,12 @@ export function tests(it, ctx, d, c) {
     row,
     // the register's ten jobs stand under the row while the tests arrive (the people the scope test will count on press 3)
     it({ id: "crowd", tag: "div", cls: "crowd fig", zone: "scale", out: 2, attrs: img(v(t.reg)), html: `<b class="crowd__l">${esc(v(t.reg))}</b><span class="crowd__p">${Array.from({ length: jobs }, () => icon("person")).join("")}</span>` }),
-    // the three statuses make room for the vote on press 3: the buttons carry the same three words, in the same place
-    it({ id: "scale", tag: "ul", cls: "sc fig", zone: "scale", k: 2, out: 3, fx: "none", html: levels }),
+    cap(it, "c0", t.c0, 0, 1),
+    cap(it, "c1", t.c1, 1, 2),
+    // the three statuses stay to the end: the verdict on press 4 is one of them
+    it({ id: "scale", tag: "ul", cls: "sc fig", zone: "scale", k: 2, fx: "none", html: levels }),
     cap(it, "w", t.w, 2, 3),
-    cap(it, "pq", v(t.pq), 3, 4),
-    pollButtons(it, { id: "pb", name: "status", labels: t.pb, k: 3, out: 4, zone: "pb", win: ".3,1" }),
+    cap(it, "c3", v(t.c3), 3, 4),
     cap(it, "r", null, 4, null, { html: `<b class="gapword">${esc(t.r.split(":")[0])}:</b> ${esc(t.r.slice(t.r.indexOf(": ") + 2))}`, text: undefined }),
   ].join("\n");
   return { head: "", stage };

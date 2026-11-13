@@ -6,10 +6,10 @@ import { COPY } from "./demo-cases/audit-vorbereitung-mit-ki/copy";
 
 /**
  * The Workshop 05 deck (both editions) tells the kit's and the demo's story: 16 main slides for 90 minutes and four appendix
- * slides outside the arrow path, the eight scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
+ * slides outside the arrow path, the seven scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
  * quotes (the evidence wall and the notice) have their translation, every Claude result is either a recorded take with its chip or the labelled empty
  * frame, and the numbers on the slides are the kit's numbers. Built by scripts/workshop05/deck-src/build.mjs (`--check` there
- * catches drift); the word counts, polls, motion, visual law and take rendering are held by
+ * catches drift); the word counts, the no-poll rule, motion, visual law and take rendering are held by
  * scripts/__tests__/workshop05-*.test.mjs.
  */
 
@@ -28,7 +28,7 @@ const expected = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/w
 };
 
 const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
-const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js", "w05-field.js", "w05-scrub.js"];
+const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-field.js", "w05-scrub.js"];
 
 const EDITIONS = [
   { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, other: ["COVERED", "WEAK", "GAP"], cover: "erfundener Fall", frame: "noch nicht aufgezeichnet", chip: "aufgezeichnet" },

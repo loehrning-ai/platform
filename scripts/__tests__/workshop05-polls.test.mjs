@@ -1,9 +1,10 @@
 /**
- * Workshop 05 deck, structure and polls. Reads the BUILT pages (both editions and both presenter pages):
+ * Workshop 05 deck, structure and the no-poll rule. Reads the BUILT pages (both editions and both presenter pages):
  *  - 16 main slides with their ids, minutes and labels (REDESIGN-3 D4), 5400 seconds, four appendix slides, 20 notes per edition;
- *  - the six polls, each name on exactly one slide, with their button counts, values and labels;
- *  - the ghost bars on the close slide read the poll "door";
- *  - the W05 scripts (tally, field, scrub) after the engine scripts, no inline script but the notes, no key handler of ours,
+ *  - no poll, no vote button, no ghost bar and no question to the room on any slide (Tim, 13 Nov 2026: the slides explain, they
+ *    do not quiz); a question mark is allowed only where a slide quotes a checklist question of the inspector, a kit prompt or
+ *    a recorded answer;
+ *  - the W05 scripts (field, scrub) after the engine scripts, no inline script but the notes, no key handler of ours,
  *    w05-fx.css after deck.css on the two decks only, and every local file the pages name exists;
  *  - every appendix slide is reachable from a link and links back.
  */
@@ -28,37 +29,33 @@ const IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", 
 const MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
 const APPENDIX = ["a1", "a2", "a3", "a4"];
 
+/** The labels are the agenda of the workshop page too (workshops-audit.ts); they change only in lockstep with it. */
 const LABELS = {
   en: ["Cover", "Today", "Audits happen here", "Which firms and why", "We are Gradba-Pro", "A visit in four days", "Where is our data?", "Our kit", "Step 1: make the table", "Step 2: run the check", "Four tests, three statuses", "Step 3: status, plan, briefing", "Step 4: build the register", "Stay ready", "Safety: what goes in, who signs", "Which check now"],
   de: ["Titel", "Heute", "Hier wird oft kontrolliert", "Welche Firmen und warum", "Wir sind Gradba-Pro", "Besuch in vier Tagen", "Wo sind unsere Daten?", "Unser Kit", "Schritt 1: die Tabelle bauen", "Schritt 2: den Check laufen lassen", "Vier Prüfungen, drei Status", "Schritt 3: Status, Plan, Briefing", "Schritt 4: das Register bauen", "Bereit bleiben", "Sicherheit: was hinein darf, wer unterschreibt", "Welche Kontrolle jetzt"],
 };
 
-/** Poll name, the slide it lives on, and the button labels per language (values count from 0 in this order). */
-const POLLS = {
-  clock: { slide: "letter", en: ["Yes", "No"], de: ["Ja", "Nein"] },
-  finds: { slide: "step2", en: ["6", "10", "14", "20"], de: ["6", "10", "14", "20"] },
-  status: { slide: "tests", en: ["COVERED", "WEAK", "GAP"], de: ["BELEGT", "SCHWACH", "LÜCKE"] },
-  ladder: { slide: "safety", en: ["Public text", "Invented rows", "AI writes, you run", "Real data, four gates"], de: ["Öffentlicher Text", "Erfundene Zeilen", "KI schreibt, du führst aus", "Echte Daten, vier Tore"] },
-  door: { slide: "sectors", en: ["Labour", "Tax", "Certifier", "Not sure"], de: ["Arbeit", "Steuer", "Zertifizierer", "Unsicher"] },
-  "door-end": { slide: "close", en: ["Labour", "Tax", "Certifier", "Not sure"], de: ["Arbeit", "Steuer", "Zertifizierer", "Unsicher"] },
-};
+/** Where a slide may show a question mark: a checklist question of the inspector (the step 1 document, the L10 row of the tests
+ *  slide), a kit prompt, a recorded answer or a quote. Everything else on a slide is a statement. */
+const QUOTED = ["tk-doc", "rw", "prompt", "prompt-body", "qd", "qd-gloss", "out"];
 
-/** Ghost bars: the slide that shows them and the poll they read. */
-const SHOWS = [{ slide: "close", reads: "door" }];
-
-/** Appendix slide, the main slide that links to it (and it links back to). */
+/** Appendix slide, the main slide that links to it (and it links back to). 13 Nov 2026 (Tim): no main slide links to law detail,
+ *  so a1 (laws) is linked from no main slide; its back link still returns to the letter. */
 const LINKS = { a1: "letter", a2: "safety", a3: "why", a4: "sectors" };
+const LINKED_FROM = { a1: [], a2: ["safety"], a3: ["why"], a4: ["sectors"] };
 
-const SCRIPT_ORDER = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js", "w05-field.js", "w05-scrub.js"];
+const SCRIPT_ORDER = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-field.js", "w05-scrub.js"];
 
 const pages = Object.fromEntries(LANGS.map((lang) => [lang, readPage(lang)]));
 const classOf = (node) => (node.attrs?.class ?? "").split(/\s+/);
-/** The visible label of a poll button: its text without the counter. */
-const labelOf = (button) => {
-  const words = (node) => (node.text !== undefined ? tokensIn(node) : node.attrs?.["data-poll-n"] !== undefined ? [] : (node.children ?? []).flatMap(words));
-  return words(button).join(" ");
-};
-const slideIn = (lang, id) => slidesOf(pages[lang]).find((s) => s.attrs.id === id);
+/** The text of a slide outside quoted places (checklist questions, prompts, recorded lines, quotes). */
+function ownText(node, out = []) {
+  if (node.text !== undefined) out.push(node.text);
+  else if (node.tag && !["script", "style", "svg"].includes(node.tag) && node.attrs?.["data-take"] === undefined && !classOf(node).some((c) => QUOTED.includes(c))) {
+    for (const child of node.children ?? []) ownText(child, out);
+  }
+  return out;
+}
 
 test("the designed minutes add up to 90", () => {
   assert.equal(IDS.length, 16);
@@ -94,37 +91,23 @@ for (const lang of LANGS) {
     });
   });
 
-  test(`${lang}: the six polls, each name on exactly one slide, with their buttons, values and labels`, () => {
-    const found = {};
+  test(`${lang}: no poll, no vote button and no ghost bar on any slide`, () => {
     for (const s of slidesOf(pages[lang])) {
-      for (const button of withAttr(s, "data-poll")) {
-        (found[button.attrs["data-poll"]] ??= []).push({ slide: s.attrs.id, button });
+      for (const name of ["data-poll", "data-poll-name", "data-poll-show", "data-poll-n"]) {
+        assert.equal(withAttr(s, name).length, 0, `${lang} ${s.attrs.id}: an element with ${name}`);
       }
-    }
-    assert.deepEqual(Object.keys(found).sort(), Object.keys(POLLS).sort());
-    for (const [name, spec] of Object.entries(POLLS)) {
-      const buttons = found[name];
-      assert.ok(buttons.every((b) => b.slide === spec.slide), `${lang} poll ${name} sits on ${spec.slide} only`);
-      assert.equal(buttons.length, spec[lang].length, `${lang} poll ${name}: button count`);
-      assert.deepEqual(buttons.map((b) => b.button.attrs["data-value"]), spec[lang].map((_, i) => String(i)), `${lang} poll ${name}: values`);
-      assert.deepEqual(buttons.map((b) => labelOf(b.button)), spec[lang], `${lang} poll ${name}: labels`);
-      for (const { button } of buttons) {
-        assert.equal(button.tag, "button", `${lang} poll ${name}: a real button`);
-        assert.equal(withAttr(button, "data-poll-n").length, 1, `${lang} poll ${name}: one counter per button`);
-      }
-      const keys = buttons.filter((b) => classOf(b.button).includes("is-key")).map((b) => Number(b.button.attrs["data-value"]));
-      assert.deepEqual(keys, spec.key === undefined ? [] : [spec.key], `${lang} poll ${name}: is-key marks the answer the slide reveals`);
-    }
-  });
-
-  test(`${lang}: ghost bars read the poll door, and no poll name or ghost is left over`, () => {
-    for (const { slide, reads } of SHOWS) {
-      const shows = withAttr(slideIn(lang, slide), "data-poll-show").map((n) => n.attrs["data-poll-show"]);
-      assert.ok(shows.includes(reads), `${lang} ${slide} shows poll ${reads}`);
-      for (const name of shows) assert.ok(name in POLLS, `${lang} ${slide} reads an existing poll`);
     }
     for (const el of everyElement(pages[lang])) {
-      if (el.attrs?.["data-poll-show"] !== undefined) assert.ok(el.attrs["data-poll-show"] in POLLS, `ghost of ${el.attrs["data-poll-show"]}`);
+      assert.ok(!classOf(el).some((c) => ["poll", "pb", "poll__opt", "gb", "gb__bar"].includes(c)), `${lang}: a poll or ghost element (${el.attrs?.class})`);
+    }
+    assert.doesNotMatch(pages[lang], /w05-tally/, `${lang}: the poll counter script is gone`);
+  });
+
+  test(`${lang}: no question to the room: a question mark only in a checklist question, a prompt, a recorded line or a quote`, () => {
+    for (const s of slidesOf(pages[lang])) {
+      const text = ownText(s).join(" ").replace(/\s+/g, " ");
+      const at = text.indexOf("?");
+      assert.equal(at, -1, `${lang} ${s.attrs.id}: a question on the slide near ${JSON.stringify(text.slice(Math.max(0, at - 70), at + 1))}`);
     }
   });
 
@@ -150,7 +133,7 @@ for (const lang of LANGS) {
     }
   });
 
-  test(`${lang}: every appendix slide is linked from a main slide and links back to a main slide`, () => {
+  test(`${lang}: every appendix slide but a1 is linked from a main slide, and each links back to a main slide`, () => {
     const targets = {};
     for (const s of slidesOf(pages[lang])) {
       const walk = (node) => {
@@ -164,7 +147,7 @@ for (const lang of LANGS) {
     for (const [from, tos] of Object.entries(targets)) for (const to of tos) assert.ok(ids.has(to), `${lang}: ${from} links to missing #${to}`);
     for (const a of APPENDIX) {
       const from = Object.entries(targets).filter(([id, tos]) => IDS.includes(id) && tos.includes(a)).map(([id]) => id);
-      assert.deepEqual(from, [LINKS[a]], `${lang}: ${a} is linked from ${LINKS[a]} only`);
+      assert.deepEqual(from, LINKED_FROM[a], `${lang}: ${a} is linked from ${LINKED_FROM[a].join(", ") || "no main slide"} only`);
       const back = targets[a] ?? [];
       assert.deepEqual(back, [LINKS[a]], `${lang}: ${a} links back to ${LINKS[a]}`);
     }
@@ -178,7 +161,7 @@ test("the presenter pages do not load the deck stylesheets or the W05 scripts", 
   }
 });
 
-test("both editions have the same ids, the same polls and the same number of steps per slide", () => {
+test("both editions have the same ids and the same number of steps per slide", () => {
   const shape = (lang) => slidesOf(pages[lang]).map((s) => `${s.attrs.id}:${s.attrs["data-step-total"]}:${s.attrs["data-seconds"]}`);
   assert.deepEqual(shape("de"), shape("en"));
 });

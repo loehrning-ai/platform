@@ -7,9 +7,10 @@
  * Press 1: the two ways to keep the rhythm stand beside it; the toggle shows the Free plan's monthly rhythm instead (Anthropic
  * help centre, scheduled tasks: scheduled tasks are paid only, the built-in schedule has no monthly option); in Free, three of four weeks fade.
  * Press 2: check day: the check's three lists for the exercise day (expected.json). Press 3: the watch list of official
- * sources rises in (AZLP, Služben vesnik, DIT; ENER rejected, not shown). Press 4: the sentence template for the learner's own firm.
- * The slide builds: the two plans, the toggle and the check's result stay to the end; the watch list and then the sentence
- * template take the lower slot in turn.
+ * sources rises in (the labour inspectorate, the official gazette, the data protection agency). Press 4: the next audit works
+ * the same way: the kit's three cases (labour today, tax and ISO as field cards), their files read from the zip.
+ * The slide builds: the two plans, the toggle and the check's result stay to the end; the watch list and then the three cases
+ * take the lower slot in turn.
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { icon, rise, toggle } from "./scene.mjs";
@@ -71,10 +72,13 @@ export function watch(it, ctx, d, c) {
   const listIcons = ["inspector", "notebook", "lock"];
   const cards = t.list.map(([n, w, h], i) => rise(it, { cls: "wl__c", k: 3, win: spread(i, 3, 0, 0.6), html: `${icon(listIcons[i], { it, k: 3, win: spread(i, 3, 0.2, 0.6) })}<b>${esc(n)}</b><span>${esc(w)}</span><small>${esc(h)}</small>` })).join("");
   const list = it({ id: "list", tag: "div", cls: "wl fig", zone: "list", k: 3, out: 4, fx: "none", html: `${cards}<p class="wl__src">${esc(t.listSrc)}</p>` });
-  const yours = it({
-    id: "yours", tag: "div", cls: "wy", zone: "yours", k: 4, win: ".3,1",
-    html: `${it({ tag: "p", cls: "t t--tpl wy__tp", k: 4, text: t.tp })}<p class="wy__ex fig">${esc(t.ex)}</p><p class="wy__line fig"><span>${esc(t.yours)}</span>${it({ tag: "i", cls: "yours__line", k: 4, fx: "line", win: ".35,1" })}</p>`,
-  });
+  // press 4: the three cases of the kit; the file names come from the zip of this edition: case A in the core path
+  // (cases/, faelle/), cases B and C wherever the zip keeps them (extras/ since the lean kit of 13 Nov 2026)
+  const caseFiles = ["A", "B", "C"].map((x) => d.kitPaths.find((p) => new RegExp(`(^|/)(case|fall)-${x}-[^/]*\\.md$`).test(p)));
+  if (caseFiles.some((p) => !p) || caseFiles.length !== t.cases.length) throw new Error(`watch: the three case files are not all in the ${d.lang} zip`);
+  const caseIcons = ["inspector", "coin", "sheet-check"];
+  const caseCards = t.cases.map(([n, w], i) => rise(it, { cls: `wl__c${i === 0 ? " wl__c--on" : ""}`, k: 4, win: spread(i, 3, 0.3, 0.5), html: `${icon(caseIcons[i])}<b>${esc(n)}</b><span>${esc(w)}</span><small>${esc(caseFiles[i])}</small>` })).join("");
+  const cases = it({ id: "cases", tag: "div", cls: "wl fig", zone: "cases", k: 4, fx: "none", html: `${caseCards}<p class="wl__src">${esc(t.casesSrc)}</p>` });
   // the toggle's target holds the ring and the plans: the Free state dims three week nodes and the paid card (CSS)
   const scene = `<div class="wv" data-w05-name="plan" data-w05-start-toggle="paid" data-w05-state="paid">${ringHost}${plans}</div>`;
   const stage = [
@@ -89,7 +93,7 @@ export function watch(it, ctx, d, c) {
     toggle(it, { id: "tg", zone: "tg", k: 1, win: ".6,1", target: "plan", values: ["paid", "free"], labels: t.tg, aria: t.tgAria }),
     res,
     list,
-    yours,
+    cases,
   ].join("\n");
   return { head: "", stage };
 }

@@ -1,5 +1,5 @@
 /**
- * Pieces the slides share: icons, poll buttons, the collapsed kit prompt, the Claude window replica and the recorded
+ * Pieces the slides share: icons, the collapsed kit prompt, the Claude window replica and the recorded
  * take (or, while no take is accepted, the labelled empty frame). Nothing here is typed copy: every visible word comes
  * from deck-copy.json, every number from data.mjs, every take line from a recording (take.mjs).
  */
@@ -18,17 +18,6 @@ const split = (text) => String(text).split(" · ");
 export function foot(c, n, total) {
   const label = typeof n === "number" ? `${String(n).padStart(2, "0")} / ${total}` : `${esc(c.appendix)} ${n}`;
   return `<footer class="foot"><span class="foot__inv"></span><span class="foot__n">${label}</span></footer>`;
-}
-
-/**
- * Poll buttons in one element: four (or two, or three) chips with an outline, each with its counter. The counter digits are
- * counted words, the labels too. The buttons fade in together with their container.
- */
-export function pollButtons(it, { id, name, labels, k, zone, out, win, cls = "", wide = false }) {
-  const buttons = labels
-    .map((label, i) => `<button class="poll__opt" type="button" data-poll="${name}" data-value="${i}"><span>${esc(label)}</span><span data-poll-n>0</span></button>`)
-    .join("");
-  return it({ id, tag: "div", cls: `poll pb${wide ? " pb--wide" : ""} pb--${labels.length}${cls ? ` ${cls}` : ""}`, zone, k, out, win, html: buttons, attrs: `data-poll-name="${name}"` });
 }
 
 /**

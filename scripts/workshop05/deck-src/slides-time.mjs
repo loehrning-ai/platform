@@ -78,12 +78,10 @@ export function time(it, ctx, d, c, takes) {
   const steps = recordedSteps(takes);
   const claude = claudeLane(it, t, d, takes, steps);
   // the two hero numbers, one per lane: the invented four days and the recorded total
-  // on the entry both hero places hold a question mark: the slide asks before it answers
-  const ask = (out) => it({ tag: "p", cls: "tln__n tln__q", k: 0, out, html: "<b>?</b>" });
-  const heroHand = `<div class="tln__hero">${ask(1)}${it({ tag: "p", cls: "tln__n", k: 1, win: ".5,1", html: `<b>${esc(t.handN)}</b>` })}</div>`;
+  const heroHand = `<div class="tln__hero">${it({ tag: "p", cls: "tln__n", k: 1, win: ".5,1", html: `<b>${esc(t.handN)}</b>` })}</div>`;
   // "4 min 15 s" breaks after the minutes, so the number stands as large as "4 days"; it is labelled as Claude's run time and
   // says once what it leaves out (the papers must already be in one folder; reading and checking stay with the firm)
-  const heroClaude = `<div class="tln__hero">${ask(2)}${it({ tag: "p", cls: "tln__rl", k: 2, win: ".4,.8", text: t.runLabel })}${it({ tag: "p", cls: "tln__n", k: 2, win: ".45,.9", html: `<b>${esc(claude.hero).replace(/ min /, " min<br>")}</b>` })}${steps ? it({ tag: "p", cls: "tln__hon", k: 2, win: ".6,1", text: t.honest }) : ""}</div>`;
+  const heroClaude = `<div class="tln__hero">${it({ tag: "p", cls: "tln__rl", k: 2, win: ".4,.8", text: t.runLabel })}${it({ tag: "p", cls: "tln__n", k: 2, win: ".45,.9", html: `<b>${esc(claude.hero).replace(/ min /, " min<br>")}</b>` })}${steps ? it({ tag: "p", cls: "tln__hon", k: 2, win: ".6,1", text: t.honest }) : ""}</div>`;
   const lanes = it({
     id: "lanes", tag: "div", cls: "tl2s fig", zone: "lanes", fx: "none", attrs: `role="img" aria-label="${esc(t.lanesAria)}" ${target("lanes", { state: "both" })}`,
     html: `<span class="tl2s__grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div class="tln tln--hand"><div class="tln__l"><b>${esc(t.lanes[0])}</b>${heroHand}</div><div class="tln__days">${hand}</div></div><div class="tln tln--claude"><div class="tln__l"><b>${esc(t.lanes[1])}</b>${heroClaude}</div><div class="tln__days tc">${claude.html}</div></div>`,

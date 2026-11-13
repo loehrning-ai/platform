@@ -10,4 +10,4 @@ On a Free plan Claude does not run on a schedule. You keep the rhythm, Claude do
 
     Run check.py on register.csv with today's date. Print three lists: expired, expiring in the next 60 days, missing. Then draft one short message per owner role. Draft only: send nothing and change no row.
 
-The person reads the lists, sends the messages and writes a new dated paper for every gap. Never change an old row to hide a gap. On a paid plan the same prompt works as an extra check by hand. The same check is in templates/monthly-check.md.
+The person reads the lists, sends the messages and writes a new dated paper for every gap. Never change an old row to hide a gap. On a paid plan the same prompt works as an extra check by hand. The same check is in extras/templates/monthly-check.md.

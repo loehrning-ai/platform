@@ -10,7 +10,7 @@ Use the script check.py from Step 4 and this prompt:
 
 A named person reads the lists, sends the messages and writes a new dated paper for every gap. Never change an old row to hide a gap.
 
-To keep this going after the workshop, see keep-watch/: a weekly scheduled task on paid plans, the same check by hand on a Free plan.
+To keep this going after the workshop, see extras/keep-watch/: a weekly scheduled task on paid plans, the same check by hand on a Free plan.
 
 ## Other homes for the same register
 

@@ -22,8 +22,8 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "gradba-audit-kit-de.zi
  * palette.
  */
 
-/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 117940 and 108496 bytes. */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "115 KB", en: "106 KB" };
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes): 120314 and 110627 bytes. */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "117 KB", en: "108 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -56,24 +56,24 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden",
     eyebrow: "Workshop 05 · Audit-Vorbereitung",
     summary:
-      "Eine erfundene Firma bekommt Besuch vom Arbeitsinspektor. Du sammelst ihre Papiere mit KI, findest die Lücken und baust ein Register für die nächste Prüfung.",
+      "Lerne Claude an einem Übungsfall: Eine erfundene Firma bekommt Besuch vom Arbeitsinspektor. Claude ordnet die Papiere, findet Lücken, baut ein Register.",
     lede:
       "Am Montag kommt ein Brief: In vier Tagen kommt der Arbeitsinspektor, und die Papiere liegen an fünf Orten. Claude sucht und prüft. Eine Person liest und unterschreibt.",
     description:
-      "Prüfungen kommen oft und in mehreren Formen. Bereite dich mit KI vor: ein Ordner, klare Regeln, ein Register, das du wieder nutzt. Kostenlos, mit Kit.",
+      "Lerne Claude an einem erfundenen Audit: ein Projekt, klare Regeln, Code, der zählt, und ein Register, das du wieder nutzt. Kostenlos, mit Kit.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Schritt 2 startet ein kleines Skript: Schalte in Claude die Codeausführung an (jeder Tarif) oder lass check.py auf deinem eigenen Rechner laufen.",
+      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Du legst ein Claude-Projekt mit 19 Kit-Dateien an und schaltest die Codeausführung ein (jeder Tarif); die Kit-Seite zeigt jeden Klick.",
     outcome: "Ein Status je Frage und ein Register, das du wieder nutzt",
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Ein Brief, ein erfundener Ordner und ein Lösungsschlüssel. Vier Schritte in Claude, zu jedem zeigt das Deck einen aufgezeichneten Lauf. Etwa 90 Minuten am Schreibtisch (unsere Schätzung).",
+        "Du lernst Claude an einem erfundenen Fall: ein Brief, ein Ordner und ein Lösungsschlüssel. Du lädst 19 Dateien in ein Claude-Projekt, machst vier Schritte in einem Chat und vergleichst jede Antwort mit dem Schlüssel. Freiwilliges liegt in extras/. Etwa 90 Minuten am Schreibtisch (unsere Schätzung).",
       facts: ["41 Dateien", "4 Schritte", "13 Fragen"],
     },
     audience: [
-      "Büroleitungen, Buchhaltung und Inhaber kleiner Firmen in Nordmazedonien, die geprüft werden: vom Arbeitsinspektor, von der Steuerbehörde (UJP) oder von einer ISO-Zertifizierungsstelle.",
+      "Büroleitungen, Buchhaltung und Inhaber kleiner Firmen in Nordmazedonien, die geprüft werden: vom Arbeitsinspektor, vom Steueramt oder von einer Zertifizierungsstelle.",
     ],
     notForYou: "Du brauchst Rechtsberatung für einen echten Fall, oder ein Werkzeug, das Papiere für dich ausfüllt.",
     question: "Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?",
@@ -104,7 +104,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 90,
     needs: [
-      "Einen Browser und Claude, in jedem Tarif (Codeausführung an)",
+      "Einen Browser und Claude in jedem Tarif, mit einem Projekt und eingeschalteter Codeausführung",
       "Schritt 2 schreibt und startet ein kleines Skript",
     ],
     notNeeded: [
@@ -183,7 +183,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       ["Deck · 16 Folien", `Für den Beamer. ${DECK_KEYS.de}`],
-      ["Gradba-Audit-Kit · .zip", "41 Textdateien auf Deutsch: der Brief, der erfundene Ordner, die vier Prompts, der Lösungsschlüssel und Karten für drei Prüfungen (Arbeit, Steuer, ISO)."],
+      ["Gradba-Audit-Kit · .zip", "41 Textdateien auf Deutsch: der Brief, der erfundene Ordner, die vier Prompts und der Lösungsschlüssel. Freiwilliges für nach dem Workshop liegt in extras/."],
     ]),
     kit: AUDIT_KIT.de,
   },
@@ -194,24 +194,24 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit Preparation with AI: Organize Evidence and Find Gaps",
     eyebrow: "Workshop 05 · Audit preparation",
     summary:
-      "An invented firm gets a visit from the labour inspector. You gather its papers with AI, find the gaps and build a register for the next audit.",
+      "Learn to use Claude on a practice case: an invented firm gets a visit from the labour inspector. Claude sorts its papers, finds the gaps and builds a register.",
     lede:
       "On Monday a letter arrives: the labour inspector comes in four days, and the papers are in five places. Claude does the searching and checking. A person reads and signs.",
     description:
-      "Audits come often and in several kinds. Prepare with AI: one folder, clear rules and a register you can reuse. Free workshop with kit.",
+      "Learn to use Claude on an invented audit: one project, clear rules, code that counts and a register you can reuse. Free workshop with kit.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "Everything runs on invented files, so no real data is needed. Step 2 runs a small script: turn on code execution in Claude (any plan) or run check.py on your own computer.",
+      "Everything runs on invented files, so no real data is needed. You set up one Claude project with 19 kit files and switch on code execution (any plan); the kit page shows every click.",
     outcome: "A status for each question and a register you can reuse",
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A letter, an invented folder and an answer key. Four steps in Claude, and the deck shows a recorded run of each. About 90 minutes at your desk (our estimate).",
+        "You learn Claude on an invented case: a letter, a folder and an answer key. You add 19 files to one Claude project, run four steps in one chat and compare each answer with the key. Optional extras sit in extras/. About 90 minutes at your desk (our estimate).",
       facts: ["41 files", "4 steps", "13 questions"],
     },
     audience: [
-      "Office managers, accountants and owners of small firms in North Macedonia who get audited: by the labour inspector, the tax authority (UJP) or an ISO certifier.",
+      "Office managers, accountants and owners of small firms in North Macedonia who get audited: by the labour inspector, the tax office or a certifier.",
     ],
     notForYou: "You need legal advice for a real case, or a tool that fills in papers for you.",
     question: "Which check could come to you, and would your papers hold up?",
@@ -242,7 +242,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 90,
     needs: [
-      "A browser and Claude, on any plan (code execution on)",
+      "A browser and Claude on any plan, with one project and code execution switched on",
       "Step 2 writes and runs a small script",
     ],
     notNeeded: [
@@ -321,7 +321,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       ["Deck · 16 slides", `For the projector. ${DECK_KEYS.en}`],
-      ["Gradba audit kit · .zip", "41 text files: the letter, the invented folder, the four prompts, the answer key and cards for three audits (labour, tax, ISO)."],
+      ["Gradba audit kit · .zip", "41 text files: the letter, the invented folder, the four prompts and the answer key. Optional extras for after the session sit in extras/."],
     ]),
     kit: AUDIT_KIT.en,
   },

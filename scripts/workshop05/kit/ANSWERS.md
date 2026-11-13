@@ -62,6 +62,8 @@ Findings:
 
 The eleventh check, training given later than the hire date, finds 0 (see D7).
 
+A run may print 11 or 12 findings because it splits the leave line (missing, under 20 days) or lists a check that found 0; what counts is the 10 findings in this table.
+
 What to say:
 
 - F1: say that it breaches Art. 13(7) and that the inspector decides the measure. E-05 had a contract, so the Art. 265(1) case of no contract and no registration does not fit.

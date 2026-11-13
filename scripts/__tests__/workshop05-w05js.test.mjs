@@ -1,5 +1,6 @@
 /**
- * Workshop 05: the effect scripts (lib/w05-tally.js, the dot field lib/w05-field.js, the presenter controls lib/w05-scrub.js)
+ * Workshop 05: the effect scripts (the dot field lib/w05-field.js, the presenter controls lib/w05-scrub.js; the poll counter
+ * lib/w05-tally.js is gone with the polls, 13 Nov 2026)
  * are small, quiet and safe. They hold no timer, no key handler, no storage of their own, no random numbers and no
  * backdrop-filter; they write no data-fx value outside the engine's list; and each one loads in a bare context (no document)
  * and exports its pure functions. L2 (MOTION-SCOUT section 7), on purpose: the field and the scrub scripts are admitted, the
@@ -19,7 +20,7 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const LIB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../packages/website/public/workshops/audit-vorbereitung-mit-ki/lib");
-const SCRIPTS = ["w05-tally.js", "w05-field.js", "w05-scrub.js"];
+const SCRIPTS = ["w05-field.js", "w05-scrub.js"];
 /** L2: the size budget of each new script (MOTION-SCOUT 6.2). */
 const BUDGET = 12 * 1024;
 /** Round 4: the field draws the year of rings too. */
@@ -28,7 +29,7 @@ const BANNED = ["backdrop-filter", "setInterval", "setTimeout", "keydown", "keyu
 const ENGINE_FX = ["fade", "none", "line", "move", "draw", "pop", "fly", "flip", "strike", "type", "glow", "blur", "arc", "travel", "dim", "zoom", "grow"];
 const read = (name) => readFileSync(path.join(LIB, name), "utf8");
 
-test("the tally, field and scrub scripts exist and are the only w05-*.js files", () => {
+test("the field and scrub scripts exist and are the only w05-*.js files", () => {
   const found = readdirSync(LIB).filter((n) => /^w05-.*\.js$/.test(n)).sort();
   assert.deepEqual(found, [...SCRIPTS].sort());
 });
@@ -85,17 +86,6 @@ test("no script and no stylesheet names an internal path, a person or a secret",
 
 test("w05-fx.css states its end state for reduced motion", () => {
   assert.match(read("w05-fx.css"), /@media \(prefers-reduced-motion:\s*reduce\)/);
-});
-
-test("the tally helper counts five with Shift and one without", () => {
-  const load = (name) => {
-    const sandbox = { module: { exports: {} } };
-    vm.runInNewContext(read(name), sandbox, { filename: name });
-    return sandbox.module.exports;
-  };
-  const tally = load("w05-tally.js");
-  assert.equal(tally.clicksFor(true), 5);
-  assert.equal(tally.clicksFor(false), 1);
 });
 
 const load = (name, extra = {}) => {

@@ -6,13 +6,12 @@
  * inspectorate's rhythm as a clock (round 4): one ring per rung, trade on the two-year ring, the hand at the letter; the
  * visits without a plan run along the line as a band.
  * S06: the envelope rises from lying flat, opens, and the letter comes forward (an object: its 3D stays); below it the week
- * is a flat calendar strip of working days (round 5, D2); the events of the week rise into their days; the poll and a
- * scrubber that moves the visit marker along the days; the braces of the clocks draw; on press 6 the strip slides left to
- * the time limits after the visit, four steps in one flat row; the hardest case.
+ * is a flat calendar strip of the days to the visit (round 5, D2); a card says plainly who wrote, when the visit is and what
+ * comes with it; the events of the week rise into their days; the kit's three checklists close the slide.
  */
 import { esc, fill, spread } from "./motion.mjs";
 import { icon, rise, scrubber, target } from "./scene.mjs";
-import { ico, pollButtons } from "./slides-parts.mjs";
+import { ico } from "./slides-parts.mjs";
 import { cap, head, src } from "./slides-intro.mjs";
 
 const img = (label) => ` role="img" aria-label="${esc(label)}"`;
@@ -112,70 +111,48 @@ export function we(it, ctx, d, c) {
 }
 
 /* ── S06 letter ─────────────────────────────────────────────────────── */
+/**
+ * S06 (13 Nov 2026, Tim: no legal detail, no acronyms): the letter and what it says, the week, and the lesson for Claude.
+ * Press 0: the envelope opens; a card says who wrote, when the visit is and what comes with it. Press 1: the events of the
+ * week rise into their days. Press 2: the card makes way for the three checklists of the kit, the questions Claude checks
+ * our files against (their file names read from this edition's zip, never typed).
+ */
 export function letter(it, ctx, d, c) {
   const t = c.s.letter;
   const env = it({
     id: "env", tag: "div", cls: "w05-env lt-env", zone: "env", fx: "none", attrs: 'data-scene',
     html: `<div class="envelope"><div class="envelope__back"></div><div class="envelope__flap"></div><div class="envelope__letter">${ico("file")}<p class="qd lt-env__t" lang="mk">${esc(t.qd)}</p><p class="qd-gloss lt-env__g">${esc(t.gl)}</p><p class="lt-env__d fig">${esc(t.dates)}</p></div><div class="envelope__front"></div></div>`,
   });
+  // what the letter says, in three plain rows: who sends it, when the visit is, what comes with it
+  const what = it({ id: "what", tag: "div", cls: "lt-what fig", zone: "law", k: 0, out: 2, win: ".45,1", html: t.what.map(([k, v]) => `<p class="lt-what__r"><b>${esc(k)}</b><span>${esc(v)}</span></p>`).join("") });
   const week = t.wk.map((x, i) => rise(it, { cls: `ltw ltw--${i + 1}`, k: 1, win: spread(i, 3, 0, 0.6), text: x })).join("");
   const tiles = t.days
     .map((day, i) => {
       let body = "";
       if (i === 0) body = `<span class="ltd__ev">${ico("envelope")}${esc(t.ev[0])}</span>`;
-      if (i === 4) body = `<span class="ltd__ev ltd__ev--v">${esc(t.ev[4])}</span>`;
-      if (i === 5) body = it({ tag: "span", cls: "ltd__ev ltd__ev--due", k: 5, win: ".5,1", text: t.ev[5] });
+      if (i === t.days.length - 1) body = `<span class="ltd__ev ltd__ev--v">${esc(t.ev[i])}</span>`;
       return `<div class="ltd ltd--${i}"><b class="ltd__h">${esc(day)}</b>${body}</div>`;
     })
     .join("");
-  // after the visit: four steps in one flat row (record, answer, act, appeal), each rising into place as the strip arrives
-  const chips = t.chips
-    .map((x, i) => {
-      const [name, due] = x.split(": ");
-      return rise(it, { cls: `ltc ltc--${i}`, k: 6, win: spread(i, 4, 0.3, 0.65), html: `<b class="ltc__t">${esc(name)}</b><span class="ltc__d">${esc(due)}</span>` });
-    })
-    .join("");
-  const after = `<div class="ltd--after"><div class="ltd__chips">${chips}</div></div>`;
-  const marker = it({ tag: "span", cls: "lt-mk", k: 2, out: 3, html: `<span class="lt-mk__h"><b>${esc(t.mk2)}</b><i></i></span>` });
-  const ro = `<p class="lt-ro">${t.ro.map((x, i) => `<span class="lt-ro__r lt-ro__r--${i}">${esc(x)}</span>`).join("")}</p>`;
-  const braces = [
-    it({ tag: "i", cls: "lt-br lt-br--3", k: 3, fx: "line", win: ".1,.7" }),
-    it({ tag: "span", cls: "lt-brl lt-brl--3", k: 3, win: ".6,1", text: t.br3 }),
-    it({ tag: "i", cls: "lt-br lt-br--5", k: 5, fx: "line", win: ".1,.7" }),
-    it({ tag: "span", cls: "lt-brl lt-brl--5", k: 5, win: ".6,1", text: t.br5 }),
-    // after the visit: a brace over the four steps, like the clocks before it, drawn as the strip arrives
-    it({ tag: "i", cls: "lt-br lt-br--6", k: 6, fx: "line", win: ".45,.9" }),
-    it({ tag: "span", cls: "lt-brl lt-brl--6", k: 6, win: ".7,1", text: t.after }),
-  ].join("");
-  const floor = it({
-    id: "floor", tag: "div", cls: "ltf fig", zone: "floor", fx: "none", attrs: `${img(t.ln)} ${target("visit", { at: 0 })}`,
-    // the flat strip slides left on press 6, from the week to the steps after the visit
-    html: it({ tag: "div", cls: "ltf__cam", k: 6, fx: "none", win: "0,.6", attrs: "data-scene data-keep", html: `${tiles}${after}<div class="ltw-host">${week}</div>${marker}${braces}` }),
+  const floor = it({ id: "floor", tag: "div", cls: "ltf fig", zone: "floor", fx: "none", attrs: img(t.ln).trim(), html: `<div class="ltf__row">${tiles}<div class="ltw-host">${week}</div></div>` });
+  // press 2: the three checklists of the kit, by file name (the questions the inspector will ask)
+  const lists = d.kitPaths.filter((p) => /^(checklists|listen)\/[^/]+\.md$/.test(p));
+  if (lists.length !== 3) throw new Error(`letter: ${lists.length} checklist files in the ${d.lang} zip, want 3`);
+  const dir = `${lists[0].split("/")[0]}/`;
+  const card = it({
+    id: "lists", tag: "div", cls: "lt-wc lt-lists fig", zone: "law", k: 2, win: ".3,1",
+    html: `<p class="lt-lists__h">${ico("folder")}<b>${esc(dir)}</b><span>${esc(t.listsH)}</span></p><ul>${lists.map((p) => `<li>${ico("file")}<span>${esc(p.split("/").at(-1))}</span></li>`).join("")}</ul>`,
   });
   const stage = [
     pill(it, t),
-    `<a class="bk fig" href="#a1">${ico("book")}<span class="bk__l">${esc(t.sources)}</span></a>`,
     head(it, t),
     env,
     floor,
     cap(it, "c0", t.c0, 0, 1),
+    what,
     cap(it, "c1", t.c1, 1, 2),
-    cap(it, "c2", t.c2, 2, 3),
-    pollButtons(it, { id: "pb", name: "clock", labels: t.pb, k: 2, out: 3, zone: "pb" }),
-    scrubber(it, { id: "sc", zone: "sc", k: 2, out: 3, target: "visit", values: ["0", "1", "2", "3"], labels: t.sc, aria: t.scAria }),
-    it({ id: "ro", tag: "div", cls: "lt-rob fig", zone: "ro", k: 2, out: 3, attrs: `aria-live="polite"`, html: ro }),
-    cap(it, "c3", t.c3, 3, 4),
-    it({ id: "l3", tag: "p", cls: "lt-law fig", zone: "law", k: 3, out: 4, text: t.l3 }),
-    cap(it, "c4", t.c4, 4, 5),
-    icon("inspector", { it, k: 4, win: ".1,.9", cls: "dr lt-ins" }).replace("<svg ", '<svg data-zone="ins" data-id="ins" '),
-    it({ id: "l4", tag: "p", cls: "lt-law fig", zone: "law", k: 4, out: 5, text: t.l4 }),
-    cap(it, "c5", t.c5, 5, 6),
-    it({ id: "l5", tag: "p", cls: "lt-law fig", zone: "law", k: 5, out: 6, text: t.l5 }),
-    cap(it, "c6", t.c6, 6, 7),
-    it({ id: "l6", tag: "p", cls: "lt-law fig", zone: "law", k: 6, out: 7, text: t.l6 }),
-    it({ id: "wc", tag: "p", cls: "lt-wc fig", zone: "law", k: 7, fx: "pop", win: ".3,1", text: t.wc }),
-    cap(it, "c7", t.c7, 7, null),
-    src(it, "t7", t.t7, 7, null),
+    cap(it, "c2", t.c2, 2, null),
+    card,
   ].join("\n");
   return { head: "", stage };
 }

@@ -10,4 +10,4 @@ Im Free-Tarif läuft Claude nicht nach Zeitplan. Du hältst den Rhythmus, Claude
 
     Führe check.py auf register.csv mit dem heutigen Datum aus. Gib drei Listen aus: abgelaufen, läuft in den nächsten 60 Tagen ab, fehlt. Entwirf dann eine kurze Nachricht pro Rolle der Verantwortlichen. Nur Entwürfe: nichts senden und keine Zeile ändern.
 
-Die Person liest die Listen, schickt die Nachrichten und schreibt für jede Lücke ein neues, datiertes Papier. Nie eine alte Zeile ändern, um eine Lücke zu verdecken. In einem bezahlten Tarif taugt derselbe Prompt als zusätzlicher Check von Hand. Derselbe Check steht in vorlagen/monatscheck.md.
+Die Person liest die Listen, schickt die Nachrichten und schreibt für jede Lücke ein neues, datiertes Papier. Nie eine alte Zeile ändern, um eine Lücke zu verdecken. In einem bezahlten Tarif taugt derselbe Prompt als zusätzlicher Check von Hand. Derselbe Check steht in extras/vorlagen/monatscheck.md.

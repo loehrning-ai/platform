@@ -35,25 +35,29 @@ const ids = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", 
 /** The counted words per press state of each main slide (SPEC-2 2.3; the rule is in the header). A null is a press that shows a
  *  recorded take: its count depends on the chip variant and is asserted by the fixture tests below. Round 4: Today counts the two
  *  station notes at its last press (the counter reads own steps, and the camera wrappers that hold the stations step at 3).
- *  Round 4: the close has four presses (last time, the fold into the register row and the weekly check, the doors, the QR cards). */
+ *  Round 4: the close has four presses (last time, the fold into the register row and the weekly check, the doors, the QR cards).
+ *  13 Nov 2026: no poll and no question on a slide; the letter has seven states and the safety slide five, the kit explains the
+ *  download and the six set-up steps, the close ends on the four lessons and "Time for questions".
+ *  13 Nov 2026, later (Tim: the workshop teaches Claude, no legal detail, no acronyms, a lean kit): the letter has three states
+ *  (the letter, the week, the three checklists), the kit slide counts the files to load and names extras/. */
 const COUNTS = {
   en: {
-    cover: [12], today: [1, 1, 1, 13], why: [17, 24, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
-    letter: [16, 18, 22, 22, 18, 20, 14, 21], time: [18, 16, 19, 22], kit: [14, 15, 17, 24], step1: [17, 25, null], step2: [17, 19, null],
-    tests: [7, 7, 11, 23, 20], step3: [17, null, 14, 22], register: [23, 17, null, 10, 18, 12, null, 20],
-    watch: [16, 21, 20, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [13, 13, 24, 8],
+    cover: [12], today: [1, 1, 1, 15], why: [17, 24, 16, 18, 19, 22, 17, 17], sectors: [20, 22, 20, 22, 18], we: [14, 18, 22, 23],
+    letter: [23, 18, 22], time: [19, 17, 22, 25], kit: [22, 19, 22, 22], step1: [23, 25, null], step2: [19, 22, null],
+    tests: [22, 20, 16, 16, 20], step3: [24, null, 18, 22], register: [23, 19, null, 10, 18, 12, null, 20],
+    watch: [19, 21, 20, 16, 24], safety: [22, 17, 23, 19, 21], close: [13, 13, 19, 10],
   },
   de: {
-    cover: [10], today: [1, 1, 1, 11], why: [14, 18, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
-    letter: [12, 18, 21, 19, 17, 19, 13, 19], time: [17, 16, 19, 22], kit: [13, 16, 15, 22], step1: [16, 25, null], step2: [18, 20, null],
-    tests: [7, 7, 11, 22, 18], step3: [16, null, 14, 20], register: [22, 16, null, 9, 18, 13, null, 21],
-    watch: [15, 18, 17, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [13, 12, 24, 9],
+    cover: [10], today: [1, 1, 1, 13], why: [14, 18, 14, 15, 17, 21, 15, 15], sectors: [18, 21, 18, 21, 14], we: [12, 18, 19, 23],
+    letter: [20, 18, 21], time: [19, 17, 22, 25], kit: [20, 18, 18, 21], step1: [22, 24, null], step2: [20, 22, null],
+    tests: [22, 17, 16, 15, 18], step3: [24, null, 18, 20], register: [22, 19, null, 9, 18, 13, null, 21],
+    watch: [19, 18, 17, 16, 23], safety: [21, 17, 25, 21, 19], close: [13, 12, 19, 11],
   },
 };
 /** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
 const TAKE_COUNTS = {
-  en: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 17, 6: 17 } },
-  de: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 18, 6: 16 } },
+  en: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 17, 6: 22 } },
+  de: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 18, 6: 21 } },
 };
 
 const GLOSS_CAP = { en: 12, de: 14 };
@@ -194,7 +198,7 @@ for (const lang of LANGS) {
     must("cover", 0, en ? /invented/ : /erfunden/, "the case is labelled invented");
     // builder 2 (REDESIGN-3 D4): the evidence act was rebuilt, so the presses that carry each qualifier moved
     must("why", 0, /2025/, "the 26,484 inspections carry their year");
-    must("why", 0, /DIT/, "the 26,484 inspections carry their source");
+    must("why", 0, en ? /Labour inspectorate/ : /Arbeitsinspektion/, "the 26,484 inspections carry their source");
     // fix round 2: the kinds and the decisions share one press (5), so the regions are press 6 and Bitola press 7
     must("why", 5, en ? /own calculation/ : /eigene Rechnung/, "one decision in four is marked as our own calculation");
     must("why", 1, /2026/, "the first news card carries its date");
@@ -204,20 +208,25 @@ for (const lang of LANGS) {
     must("we", 2, /2026/, "the risk ladder carries the year of its plan");
     must("we", 3, /2025/, "the complaints carry their year");
     must("letter", 0, en ? /invented/ : /erfunden/, "the letter case is labelled invented");
-    must("letter", 3, /Law on Inspection Supervision|Gesetz über die Inspektionsaufsicht/, "the three working days carry their law");
-    must("letter", 5, /Art\. 83/, "the fine carries its article");
+    // 13 Nov 2026 (Tim): no law detail on the letter; it says who wrote, when the visit is and what comes with it
+    must("letter", 0, en ? /labour inspectorate, the authority that checks employers/ : /Arbeitsinspektion, der Behörde, die Arbeitgeber prüft/, "the letter says who the sender is");
+    must("letter", 2, en ? /checklist_labour_excerpt\.md/ : /pruefliste_arbeit_auszug\.md/, "the three checklists are named by their kit files");
     must("time", 2, en ? /recorded|not recorded yet/ : /aufgezeichnet/, "the step times say they come from a recording, or that there is none");
+    must("time", 3, /World Bank|Weltbank/, "the share of managers' time carries its survey");
     must("tests", 0, en ? /invented/ : /erfunden/, "the example row is labelled invented");
     must("sectors", 0, /2024/, "the firm count carries its year");
     must("sectors", 3, en ? /own calculation/ : /eigene Rechnung/, "the informal shares are marked as our own calculation");
     must("register", 3, en ? /Dates only/ : /Nur Daten/, "the register says it holds dates, no health content");
     // REDESIGN-3 D4: the plan facts carry their source and date, the watch list its check date, the kit facts theirs
     must("kit", 2, en ? /Anthropic help centre, 6 Nov 2026/ : /Anthropic-Hilfe, 6\. Nov\. 2026/, "the first-use steps carry their source");
+    must("kit", 2, en ? /tested in claude\.ai on 13 Nov 2026/ : /getestet in claude\.ai am 13\. Nov\. 2026/, "the set-up steps say when they were tested");
     must("watch", 1, en ? /no monthly option/i : /Keine monatliche Option/, "the weekly schedule says it has no monthly option");
     must("watch", 1, en ? /Anthropic help centre, 5 Nov 2026/ : /Anthropic-Hilfe, 5\. Nov\. 2026/, "the plan facts carry their source");
     must("watch", 3, en ? /checked 8 Nov 2026/ : /geprüft am 8\. Nov\. 2026/, "the watch list carries its check date");
-    must("safety", 4, en ? /never creates, changes or backdates/ : /nie einen Nachweis an, ändert oder rückdatiert/, "the record rule is on the never press");
-    must("safety", 5, en ? /taking effect 12 Nov 2026/ : /gültig ab 12\. Nov\. 2026/, "the Usage Policy carries its date (a version that takes effect after today)");
+    // 13 Nov 2026: the safety slide lost its poll press, so the never press is 3 and the gates press 4
+    must("safety", 3, en ? /never creates, changes or backdates/ : /nie einen Nachweis an, ändert oder rückdatiert/, "the record rule is on the never press");
+    must("kit", 3, /extras\//, "the kit slide says where the optional files are");
+    must("watch", 4, /extras\//, "the next-audit cases point to extras/");
     const html = withoutTakes(pages[lang]);
     assert.match(html, en ? /Gradba audit \(invented\)/ : /Gradba-Audit \(erfunden\)/, "the Claude window is labelled as an invented case");
   });
@@ -252,6 +261,29 @@ for (const lang of LANGS) {
       }
       assert.doesNotMatch(html, /\/Users\/|\/private\/|mavengence|facilitator\/|CLAUDE\.md|vardar works|tannwald|Vier Tage bis zur Kontrolle/i);
     }
+  });
+
+  // 13 Nov 2026 (Tim): the workshop teaches Claude; the main slides and their notes carry no legal detail and no acronyms. Kit file
+  // names stay as they are (notice_DIT_2026-11-23.md, registration_M1M2_2026.csv); recorded answers, prompts and quotes are exempt.
+  test(`${lang}: no acronym of an authority, an ID or a law and no article number on a main slide or in its note`, () => {
+    const LEGAL = /\b(DIT|UJP|EMBG|AZLP|ZIN|ZRO|ZBZR|ZDP|PDPL|M1|M2)\b|\bArt\.\s*\d|Law on|Gesetz über|Gazette\b.*\bNo\.|as a rule|in der Regel/i;
+    const skip = (n) => n.attrs?.["data-take"] !== undefined || classesOf(n).some((c) => ["prompt-body", "qd", "qd-gloss", "out"].includes(c));
+    for (const section of mainSlides(pages[lang])) {
+      const out = [];
+      const walk = (n) => {
+        if (n.text !== undefined) return void out.push(n.text);
+        if (!n.tag || ["script", "style"].includes(n.tag) || skip(n)) return;
+        for (const [name, value] of Object.entries(n.attrs ?? {})) if (["aria-label", "alt", "title"].includes(name)) out.push(value);
+        (n.children ?? []).forEach(walk);
+      };
+      walk(section);
+      const hit = LEGAL.exec(out.join(" "));
+      assert.equal(hit, null, `${lang} ${section.attrs.id}: ${JSON.stringify(hit?.[0])}`);
+    }
+    notesOf(pages[lang]).slice(0, 16).forEach((note, i) => {
+      const hit = LEGAL.exec(note.replace(/\b[\w-]+\.(md|csv|py|zip|txt)\b/g, " "));
+      assert.equal(hit, null, `${lang} note ${i + 1}: ${JSON.stringify(hit?.[0])}`);
+    });
   });
 
   test(`${lang}: the class lists of exempt elements never hide counted text behind an exempt wrapper`, () => {

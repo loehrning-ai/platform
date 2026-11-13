@@ -187,7 +187,9 @@ test("V11: every var() of deck.css and w05-fx.css is defined in engine.css, deck
   const RUNTIME = new Set(["--p", "--share", "--cx"]);
   // written inline by the build (a scene's own place), never by a sheet
   // round 4, builder B on purpose: the why wall's camera offset (--wx; --ry is shared) and the tower heights (--h)
-  const INLINE = new Set(["--y0", "--y1", "--cy", "--cz", "--ry", "--bx", "--by", "--bz", "--fwd", "--wx", "--h"]);
+  // 13 Nov 2026: the register grid's cell count (--n) and the close's day shift (--dx) were also defined by the poll and kit
+  // flight rules, which are gone; both are written inline and read with a fallback
+  const INLINE = new Set(["--y0", "--y1", "--cy", "--cz", "--ry", "--bx", "--by", "--bz", "--fwd", "--wx", "--h", "--n", "--dx"]);
   const page = readFileSync(path.join(LIB, "..", "slides.html"), "utf8");
   const styles = [...page.matchAll(/style="([^"]*)"/g)].map((m) => m[1]).join(";");
   for (const name of ["deck.css", "w05-fx.css"]) {

@@ -5,7 +5,7 @@
  * translation under it); the card before dims a little as the next arrives. The map stays in view at a quarter. Press 5: the cards leave while the dots pour into three columns by kind, a bracket over all three
  * carries the decisions. Press 6 builds on the cover's year instead of replaying it: the dots return to the country, the map
  * tilts back into a floor and the eight DIT regions rise as towers, each as tall as its inspections. Press 7 outlines the
- * Pelagonia tower (Bitola), shows Bitola's plan against what was done as two true-scale bars, and asks the room.
+ * Pelagonia tower (Bitola) and shows Bitola's plan against what was done as two true-scale bars.
  */
 import { esc, fill } from "./motion.mjs";
 import { field, fieldGroups, fieldPoint, numFmt, rise as riseIn } from "./scene.mjs";
@@ -149,7 +149,7 @@ export function why(it, ctx, d, c) {
     src(it, "t6", t.t6, 5, 6),
     cap(it, "c7", t.c7, 6, 7),
     src(it, "t7", t.t7, 6, 7),
-    cap(it, "q8", t.q8, 7, null, { cls: "t cap ask" }),
+    cap(it, "c8", t.c8, 7, null),
     bitola,
   ].join("\n");
   return { head: "", stage };

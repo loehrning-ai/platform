@@ -29,10 +29,8 @@ const KIT_TOP = [
   "checklists/",
   "folder/",
   "cases/",
-  "inspector/",
   "templates/",
-  "keep-watch/",
-  "claude/",
+  "extras/",
 ];
 
 const KIT_TOP_DE = [
@@ -44,10 +42,8 @@ const KIT_TOP_DE = [
   "listen/",
   "ordner/",
   "faelle/",
-  "inspektor/",
   "vorlagen/",
-  "bereit-bleiben/",
-  "claude/",
+  "extras/",
 ];
 
 /** The deck's main slides in order: their kind (the registry activity) and their minutes. */
@@ -110,8 +106,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     // The head before the colon is the plakat head; the old story title lives only inside the story.
     for (const workshop of both) expect(workshop.title).not.toMatch(/Vier Tage bis zur Kontrolle|Four Days Until/i);
     // The teaser names the invented firm, the papers organized with AI and the register.
-    expect(en.summary).toMatch(/^An invented firm gets a visit.+papers with AI.+register/);
-    expect(de.summary).toMatch(/^Eine erfundene Firma bekommt Besuch.+Papiere mit KI.+Register/);
+    expect(en.summary).toMatch(/^Learn to use Claude.+an invented firm gets a visit.+register/);
+    expect(de.summary).toMatch(/^Lerne Claude an einem Übungsfall.+Eine erfundene Firma bekommt Besuch.+Register/);
     for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
     // The lede opens with the letter on Monday.
     expect(de.lede).toMatch(/^Am Montag kommt ein Brief/);
@@ -210,7 +206,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(de.kit?.rulesHeading).toMatch(/Regeln 4 bis 7 von 13/);
   });
 
-  it.each(["de", "en"] as const)("matches the %s kit: 41 files, 12 entries, four steps, the statuses and the register of the key", (locale) => {
+  it.each(["de", "en"] as const)("matches the %s kit: 41 files, 10 entries (optional parts in extras/), four steps, the statuses and the register of the key", (locale) => {
     const edition = EDITION[locale];
     const workshop = AUDIT_WORKSHOP[locale];
     const names = zipNames(edition.zip).filter((name) => !name.endsWith("/"));
@@ -221,17 +217,20 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       return rest.includes("/") ? `${rest.split("/")[0]}/` : rest;
     }));
     expect([...top].sort()).toEqual([...edition.top].sort());
-    expect(names).toContain(`${edition.root}claude/audit-nachweise/SKILL.md`);
+    expect(names).toContain(`${edition.root}extras/claude/audit-nachweise/SKILL.md`);
     expect(readZipText(new Uint8Array(readFileSync(edition.zip)), `${edition.root}${edition.instructionsFile}`)).toBe(edition.instructions);
     expect([...edition.start.matchAll(locale === "de" ? /^## Schritt \d/gm : /^## Step \d/gm)]).toHaveLength(4);
     const kit = workshop.kit!;
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
     expect(kit.stats.map((stat) => stat.value)).toEqual(["41", "4", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
-    // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
+    // Paste, then compare: the page shows no result bars and asks for no prediction; the steps say how to run them and name the key.
     expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined, undefined]);
-    expect(kit.steps[0]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
-    expect(kit.steps[1]?.note).toMatch(locale === "de" ? /Sag es zuerst voraus/ : /Predict first/);
+    for (const step of kit.steps) expect(step.note ?? "").not.toMatch(/predict|guess|vote|poll|quiz|voraus|raten|tipp|abstimm|umfrage/i);
+    expect(kit.labels?.result).toBe(locale === "de" ? "So läuft es" : "How to run it");
+    expect(kit.steps[0]?.note).toMatch(locale === "de" ? /dann vergleiche die Antwort mit LOESUNGEN\.md/ : /then compare the answer with ANSWERS\.md/);
+    expect(kit.steps[1]?.note).toMatch(locale === "de" ? /Codeausführung/ : /code execution/);
+    expect(kit.steps[2]?.note).toMatch(locale === "de" ? /Mitteilung und drei Vorlagen/ : /notice and three templates/);
     const count = (text: string) => text.split(/\s+/).filter(Boolean).length;
     // The register line of step 4 is the literal summary line of the key and the deck: DE needs 11 words.
     for (const step of kit.steps) {
@@ -249,9 +248,41 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     const registerLine = locale === "de" ? "register.csv mit 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen" : "register.csv with 98 rows, 4 expired, 1 expiring, 4 missing";
     expect(kit.steps[3]?.output).toBe(registerLine);
     expect(edition.key).toContain(locale === "de" ? "Zählung: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen." : "Count: 98 rows, 4 expired, 1 expiring, 4 missing.");
-    expect(kit.steps[3]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
+    expect(kit.steps[3]?.note).toMatch(locale === "de" ? /Im selben Chat\. Frag danach das Register nach E-07\./ : /Same chat\. Then ask the register about E-07\./);
     expect(kit.stepsHeading).toBe(locale === "de" ? "Vier Schritte" : "Four steps");
     expect(kit.contents.find((item) => item.name === (locale === "de" ? "START-HIER.md" : "START-HERE.md"))?.description).toMatch(locale === "de" ? /vier Prompts/ : /four prompts/);  });
+
+  it.each(["de", "en"] as const)("gives the %s kit page the start file's numbered setup, same order and same file names", (locale) => {
+    const edition = EDITION[locale];
+    const setup = AUDIT_WORKSHOP[locale].kit?.setup ?? [];
+    // The start file's list sits under its set-up heading: "1. ..." to "8. ...".
+    const section = edition.start.slice(edition.start.indexOf(locale === "de" ? "## Einmal einrichten" : "## Set up once"));
+    const listed = [...section.slice(0, section.indexOf("\n## ", 3)).matchAll(/^(\d)\. (.+)$/gm)].map((match) => [Number(match[1]), match[2]] as const);
+    expect(listed.map(([n]) => n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(setup).toHaveLength(8);
+    // The page says "this page" where the file names the kit page, and the start file by name where the file says "this file".
+    const local = (line: string) =>
+      locale === "de"
+        ? line.replace("von der Kit-Seite loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit", "auf dieser Seite").replace("aus dieser Datei", "aus START-HIER.md")
+        : line.replace("from the kit page, loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit,", "from this page").replace("from this file", "from START-HERE.md");
+    expect(setup).toEqual(listed.map(([, line]) => local(line)));
+    // The canonical order: download, project, instructions, the 19 files, code execution, one chat, four files before Step 3, Step 4 in the same chat.
+    const files = locale === "de"
+      ? ["gradba-audit-kit-de.zip", "projektanweisungen.md", "listen/ (3)", "ordner/ (14)", "faelle/fall-A-arbeit.md", "vorlagen/register.csv", "19 Dateien", "Code execution and file creation", "START-HIER.md", "LOESUNGEN.md", "mitteilung_DIT_2026-11-23.md", "vorlagen/evidence-index.csv", "vorlagen/clock.csv", "vorlagen/neues-papier.md", "E-07"]
+      : ["gradba-audit-kit.zip", "project-instructions.md", "checklists/ (3)", "folder/ (14)", "cases/case-A-labour.md", "templates/register.csv", "19 files", "Code execution and file creation", "START-HERE.md", "ANSWERS.md", "notice_DIT_2026-11-23.md", "templates/evidence-index.csv", "templates/clock.csv", "templates/new-paper-note.md", "E-07"];
+    const joined = setup.join("\n");
+    let at = -1;
+    for (const name of files) {
+      const next = joined.indexOf(name, at + 1);
+      expect(next, name).toBeGreaterThan(at);
+      at = next;
+    }
+    // Every file the setup names is in the zip of the edition.
+    const names = zipNames(edition.zip).map((name) => name.slice(edition.root.length));
+    for (const name of files.filter((file) => /\.(md|csv)$/.test(file))) expect(names, name).toContain(name);
+    const added = names.filter((name) => /^(checklists|listen|folder|ordner)\//.test(name));
+    expect(added).toHaveLength(17);
+  });
 
   it("keeps the copy plain: no urgency, no boss, no score, no compliance claim", () => {
     const text = strings(both).join("\n");

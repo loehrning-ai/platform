@@ -53,7 +53,7 @@ test("the oracle answer on the kit equals expected.json and the numbers the deck
   assert.deepEqual([d.tally.covered, d.tally.weak, d.tally.gap], [2, 1, 10]);
   assert.equal(d.vars.rows, 13);
   assert.equal(d.files, 41, "41 files: keep-watch/ adds five (REDESIGN-3 D5)");
-  assert.deepEqual(d.tree.length, 12, "twelve top-level entries in the kit (keep-watch/ joined, REDESIGN-3 D5)");
+  assert.deepEqual(d.tree.length, 10, "ten top-level entries in the kit (13 Nov 2026: the optional files moved into extras/)");
   assert.deepEqual([data.de.rowsRead, data.de.findings.length, data.de.files, data.de.tree.length], [d.rowsRead, d.findings.length, d.files, d.tree.length]);
 });
 
@@ -106,19 +106,32 @@ test("the built pages show the computed numbers: the register counts, the tally 
   }
 });
 
-test("the findings poll: the computed count is one of the buttons", () => {
-  const d = data.en;
-  const buttons = withAttr(slide("en", "step2"), "data-poll").map((b) => Number(tokensIn(b)[0]));
-  assert.deepEqual(buttons, d.finds);
-  assert.ok(buttons.includes(d.findings.length), "the computed answer is a button");
+test("step 2 says the computed findings and near misses; the kit slide counts the project's files from the zip", () => {
+  for (const lang of LANGS) {
+    const d = data[lang];
+    const step2 = tokensIn(slide(lang, "step2"));
+    for (const n of [d.findings.length, d.decoys.length]) assert.ok(step2.includes(String(n)), `${lang}: step 2 names ${n}`);
+    // set-up step 4: every file of the checklist and folder directories, plus the case file and the register template
+    const add = d.kitPaths.filter((p) => /^(checklists|listen|folder|ordner)\//.test(p)).length + 2;
+    assert.equal(add, 19, `${lang}: 19 files go into the project (START-HERE, set up once, step 4)`);
+    const kit = textOf(slide(lang, "kit"));
+    assert.match(kit, new RegExp(`\\b${add} (files|Dateien)\\b`), `${lang}: the kit slide counts ${add} files`);
+    for (const p of lang === "en" ? ["cases/case-A-labour.md", "templates/register.csv"] : ["faelle/fall-A-arbeit.md", "vorlagen/register.csv"]) {
+      assert.ok(d.kitPaths.includes(p), `${lang}: ${p} is in the zip`);
+      assert.ok(kit.includes(p), `${lang}: the kit slide names ${p}`);
+    }
+  }
 });
 
-test("the kit tree on slide 6 names the top-level entries of the zip (the notice file by its short name)", () => {
+test("the kit binder on slide 8 lists exactly the top-level entries of the zip, extras/ among them", () => {
+  const text = (n) => (n.text !== undefined ? n.text : (n.children ?? []).map(text).join(""));
+  const find = (n, cls) => (n.attrs?.class?.split(/\s+/).includes(cls) ? n : (n.children ?? []).map((x) => find(x, cls)).find(Boolean));
   for (const lang of LANGS) {
-    const shown = copy[lang].s.kit.tree.split(" · ");
-    const real = data[lang].tree;
-    assert.equal(shown.length, real.length, `${lang}: twelve entries`);
-    for (const name of shown) assert.ok(real.some((r) => r === name || (name === "notice" && r.startsWith("notice_")) || (name === "mitteilung" && r.startsWith("mitteilung_"))), `${lang}: ${name} is in the kit`);
+    const tree = find(slide(lang, "kit"), "kb__tree");
+    // each row: the name, then (for a folder) its file count
+    const shown = tree.children.filter((n) => n.tag === "li").map((li) => text(li).replace(/\d+$/, ""));
+    assert.deepEqual(shown, data[lang].tree, `${lang}: the binder rows are the zip's top-level entries`);
+    assert.ok(shown.includes("extras/"), `${lang}: the zip has extras/`);
   }
 });
 
@@ -170,7 +183,7 @@ test("the notes take the kit and oracle numbers from placeholders, not from typi
 test("nothing of the old matrix, days, clock or gates scenes is left in the deck folder or the built pages", () => {
   const lib = path.join(DECK_DIR, "lib");
   for (const name of ["w05-clock.js", "w05-days.js", "w05-gates.js", "w05-matrix.js"]) assert.ok(!existsSync(path.join(lib, name)), `${name} is gone`);
-  assert.deepEqual(readdirSync(lib).filter((n) => /^w05-.*\.js$/.test(n)).sort(), ["w05-field.js", "w05-scrub.js", "w05-tally.js"]);
+  assert.deepEqual(readdirSync(lib).filter((n) => /^w05-.*\.js$/.test(n)).sort(), ["w05-field.js", "w05-scrub.js"]);
   for (const lang of LANGS) assert.doesNotMatch(pages[lang], /w05-(clock|days|gates|matrix)|data-notice|data-band|data-day-tile/, lang);
   assert.ok(!existsSync(path.join(SRC, "matrix-data.mjs")));
 });

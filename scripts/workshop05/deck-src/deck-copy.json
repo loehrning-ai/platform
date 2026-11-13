@@ -87,35 +87,35 @@
         "legend": "1 dot = {per} firms. {firms} active firms in 2024, State Statistical Office, preliminary.",
         "map": "North Macedonia as {dots} dots, one of them in Bitola: the invented Gradba-Pro",
         "near": "Bitola: {firms} firms",
-        "count": "2025 · DIT, proposed annual report",
+        "count": "2025 · labour inspectorate, proposed report",
         "unit": "labour inspections",
         "months": [
           "Jan",
           "Dec"
         ],
-        "year": "The eight DIT regions shaded by their {n} labour inspections of 2025: the darker, the more.",
-        "shade": "darker = more inspections in 2025, by DIT region"
+        "year": "The eight regions of the labour inspectorate shaded by their {n} inspections of 2025: the darker, the more.",
+        "shade": "darker = more inspections in 2025, by region"
       },
       "today": {
         "h": "Today",
-        "case": "Gradba-Pro (invented): 24 people, building materials, Bitola.",
+        "case": "Practice case: Gradba-Pro (invented), 24 people, Bitola.",
         "o": [
-          "Know what an inspector can ask for",
-          "Check your papers with AI",
-          "Build a register that stays current"
+          "Why audits matter to a small firm",
+          "Set up a Claude Project, run four steps",
+          "Keep a register Claude checks for you"
         ],
         "seg": [
           "The case",
-          "The kit with Claude",
+          "Claude, step by step",
           "Stay ready"
         ],
-        "bar": "90 minutes in three parts: the case, the kit with Claude, staying ready",
+        "bar": "90 minutes in three parts: the case, Claude step by step, staying ready",
         "min": "min",
         "seg0": "Start",
-        "loop": "Next audit: the same register.",
+        "loop": "Next audit: the same Project and register.",
         "tags": [
           "audits, our firm, the letter",
-          "Claude, the first time",
+          "one Project, four steps",
           "keeping watch, safety"
         ],
         "floor": "The map of the cover as the floor of the session, the Bitola dot in front",
@@ -124,9 +124,9 @@
       },
       "why": {
         "h": "Audits happen here, often",
-        "n": "inspections in 2025 by the State Labour Inspectorate (DIT)",
+        "n": "labour inspections in 2025",
         "c0": "One year of labour inspections in North Macedonia.",
-        "t0": "DIT proposed annual report 2025",
+        "t0": "Labour inspectorate, proposed report 2025",
         "cards": [
           {
             "date": "26 May 2026",
@@ -138,7 +138,7 @@
           },
           {
             "date": "14 Aug 2024",
-            "src": "Netpress, DIT via MIA",
+            "src": "Netpress",
             "mk": "Инспекторите донеле 79 решенија за забрана за работа поради непочитување на препораките за заштита од топлотен бран",
             "gl": "Inspectors issued 79 work bans for ignoring heat wave protection advice",
             "lang": "mk",
@@ -146,7 +146,7 @@
           },
           {
             "date": "21 Aug 2025",
-            "src": "Plusinfo, tax office (UJP)",
+            "src": "Plusinfo",
             "mk": "УЈП ИЗВРШИ 243 КОНТРОЛИ, КАЗНИ 91 СУБЈЕКТ ЗА ЕДНА НЕДЕЛА",
             "gl": "Tax office made 243 checks and fined 91 businesses in one week",
             "lang": "mk",
@@ -154,11 +154,11 @@
           },
           {
             "date": "24 Jul 2025",
-            "src": "Telma, head of labour relations, DIT",
+            "src": "Telma",
             "mk": "За жал не е доволно, имаме поголема потреба од инспектори.",
             "gl": "Unfortunately it is not enough, we need more inspectors.",
             "lang": "mk",
-            "cap": "123 labour inspectors for the whole country in mid 2025. Not enough, says DIT."
+            "cap": "123 labour inspectors for the whole country in mid 2025. Not enough, says the inspectorate."
           }
         ],
         "legend": "here 1 dot = 10 inspections, not 10 firms",
@@ -170,9 +170,8 @@
         "c6": "One in five was a planned visit. About one decision for every four visits.",
         "t6": "Same report, own calculation",
         "c7": "Pelagonia, our region around Bitola: 3,497 inspections in 2025.",
-        "t7": "Regions: DIT report 2025. Places: OpenStreetMap",
+        "t7": "Labour inspectorate, 2025 · OpenStreetMap",
         "bitola": "Bitola 2025: 815 in the plan, 1,215 done",
-        "q8": "Does this sound like your firm? Hands up.",
         "sources": "Sources of the cards",
         "field": "{dots} dots, ten inspections each, as the country, then by kind and by region",
         "regions": [
@@ -185,7 +184,8 @@
           "Northeast",
           "Skopje"
         ],
-        "dec": "{n} decisions: about 1 per 4 inspections"
+        "dec": "{n} decisions: about 1 per 4 inspections",
+        "c8": "In Bitola the inspectors did more visits than planned: 1,215 instead of 815."
       },
       "sectors": {
         "h": "Which firms and why",
@@ -215,37 +215,29 @@
         ],
         "wl": "dashed: more checks under the Reform Agenda, not on the 2025 risk list",
         "c2": "The inspectorate names seven risk areas. Trade is one of them.",
-        "t2": "DIT proposed annual report 2025",
+        "t2": "Labour inspectorate, proposed report 2025",
         "informal": "informal",
         "c3": "Why: accidents, undeclared work, complaints. Construction had five deaths in 2025.",
         "t3": "Bars: informal jobs, Q2 2026, own calculation",
-        "c4": "Which check could come to you?",
-        "pb": [
-          "Labour",
-          "Tax",
-          "Certifier",
-          "Not sure"
-        ],
+        "c4": "Not only labour: the tax office, the market inspectorate and certifiers check firms too.",
         "ph": "Who else checks: tap a tile with a dot",
         "hot": {
           "trade": [
-            "Market inspectorate: payment terms over 60 days only in writing, 120 at most.",
-            "A court, notary or enforcer reports an unpaid debt within 10 days: a check starts."
+            "Market inspectorate: checks payment terms between firms."
           ],
           "build": [
-            "Tax office: a compliance plan for construction since January 2025.",
-            "A serious injury goes to DIT at once, within 48 hours at the latest (2007 law text)."
+            "Tax office: a compliance plan for construction since 2025."
           ],
           "make": [
-            "Certifier (ISO): a surveillance audit every calendar year.",
-            "Buyer audit (amfori BSCI, foreign rule): every 2 years, a follow-up after a grade of C or lower."
+            "Certifier (ISO): a surveillance audit every year.",
+            "Buyer audits: every two years."
           ],
           "food": [
-            "Food agency: up to 3 visits a year by risk (food of animal origin).",
+            "Food agency: up to three visits a year, by risk.",
             "Market inspectorate, 2025: 297 checks of venues after the Kočani fire."
           ]
         },
-        "all": "Tax office: a control is announced 2 weeks ahead, 4 for large taxpayers.",
+        "all": "Tax office: checks firms in every sector.",
         "hotAria": [
           "Show who else checks industry",
           "Show who else checks construction",
@@ -309,10 +301,10 @@
         ],
         "pt": "plan target",
         "c2": "Trade is medium risk: a planned visit at least once in two years.",
-        "t2": "DIT annual plan 2026",
+        "t2": "Labour inspectorate, plan 2026",
         "band": "unplanned visits: any day",
         "c3": "Over half of the visits were unplanned. 3,400 in 2025 followed a complaint.",
-        "t3": "DIT proposed annual report 2025",
+        "t3": "Labour inspectorate, proposed report 2025",
         "clk": "a clock of three years from our last inspection in spring 2024: the plan targets of one, two and three years, and the hand at November 2026",
         "od": "overdue"
       },
@@ -327,77 +319,51 @@
           "Tue 24",
           "Wed 25",
           "Thu 26",
-          "27",
-          "30"
+          "27"
         ],
         "ev": [
           "the letter",
           "five places",
           "late evening",
           "late evening",
-          "visit, 09:00",
-          "papers due"
+          "visit, 09:00"
         ],
-        "after": "after the visit",
-        "c0": "Monday morning a letter from the labour inspectorate arrives.",
+        "c0": "Monday: the labour inspector writes. The visit is on 27 Nov, with three checklists of questions.",
         "wk": [
           "we search five places",
           "late evening",
           "late evening, papers still missing"
         ],
         "c1": "Tuesday we search five places. Wednesday and Thursday we stay late.",
-        "c2": "Could the visit have been on 24 November, the next day?",
-        "pb": [
-          "Yes",
-          "No"
+        "ln": "the week from Monday 23 November to the visit on 27 November",
+        "what": [
+          [
+            "From",
+            "the labour inspectorate, the authority that checks employers"
+          ],
+          [
+            "Visit",
+            "27 Nov, 09:00, a planned inspection"
+          ],
+          [
+            "With",
+            "three checklists (labour, safety at work, employee records): the questions the inspector will ask"
+          ]
         ],
-        "mk2": "visit?",
-        "sc": [
-          "24",
-          "25",
-          "26",
-          "27"
-        ],
-        "scAria": "Move the visit to another day",
-        "ro": [
-          "0 working days between",
-          "1 working day between",
-          "2 working days between",
-          "3 working days between"
-        ],
-        "c3": "No. As a rule a planned visit comes with 3 working days of written notice.",
-        "l3": "Law on Inspection Supervision, Art. 57(3), since 1 Jan 2026",
-        "br3": "3 working days",
-        "c4": "Unplanned visits come as a rule without notice, on any day.",
-        "l4": "Art. 58(2): extraordinary (unplanned), as a rule unannounced · Law on Labour Inspection, Art. 10: entry at any time",
-        "c5": "Hand over papers within 3 days of the request, or risk a fine.",
-        "br5": "3 days after the request, Art. 53(1)",
-        "l5": "Art. 83, EUR: micro firm 500 to 1,000 · small firm 1,500 to 2,000 · responsible person 250 to 500",
-        "chips": [
-          "record: on the spot or 3 days",
-          "reply: 8 days",
-          "order: 8 days",
-          "appeal: 15 days, order holds"
-        ],
-        "c6": "After the visit the clocks keep running.",
-        "wc": "Worker without a contract: an open-ended contract within 8 days. Again within a year: the workplace closes for 15 days.",
-        "c7": "The hardest case: a worker without a contract.",
-        "t7": "Law on Labour Relations, Art. 259",
-        "ln": "the week from Monday 23 November to the visit on 27 November and the papers on 30 November",
-        "sources": "Laws and time limits",
-        "l6": "Law on Inspection Supervision, Art. 65, 68, 70: record, order, appeal"
+        "c2": "The checklists are the inspector's questions. In the kit, Claude checks our files against them.",
+        "listsH": "the inspector's questions, in the kit"
       },
       "time": {
         "pill": "invented case",
-        "h": "Where is our data?",
+        "h": "By hand or with Claude",
         "days": [
           "Mon",
           "Tue",
           "Wed",
           "Thu"
         ],
-        "yard": "3 working days of notice, by law",
-        "c0": "The papers are in five places. How long does the search take?",
+        "yard": "four days to get ready",
+        "c0": "Our papers are in five places. Four days remain until the visit.",
         "lanes": [
           "By hand",
           "With Claude"
@@ -417,7 +383,7 @@
         ],
         "chip": "recorded {date} with {model}",
         "none": "not recorded yet",
-        "c2": "With the kit, Claude does the four steps. Times from our recorded run.",
+        "c2": "In one folder, Claude does the four steps in minutes. Times from our recorded run.",
         "tg": [
           "By hand",
           "Both",
@@ -428,7 +394,7 @@
           "2019: 2.5 % of managers' time on regulation",
           "2023: 5.8 %"
         ],
-        "c3": "No source counts prep hours. Time spent on rules more than doubled.",
+        "c3": "No source counts prep hours. Managers' share of time on rules more than doubled.",
         "t3": "World Bank Enterprise Surveys",
         "lanesAria": "two lanes: our invented week by hand and the four recorded steps with Claude",
         "trueScale": "true to scale",
@@ -441,47 +407,51 @@
         "honest": "once the papers are in one folder; you read and sign"
       },
       "kit": {
-        "h": "Load the kit into Claude",
+        "h": "One Claude Project for the kit",
         "zip": "gradba-audit-kit.zip, {files} files",
-        "tree": "START-HERE.md · project-instructions.md · checklists/ · folder/ · inspector/ · cases/ · templates/ · keep-watch/ · claude/ · ANSWERS.md · CHANGELOG.md · notice_DIT_2026-11-23.md",
         "win": "Projects · Gradba audit (invented)",
         "ins": "Instructions",
         "insFile": "project-instructions.md",
         "insNote": "applies to every chat in the project",
         "files": "Files",
-        "fly": "checklists/ · folder/ · case-A-labour.md · templates/register.csv",
-        "made": "Claude makes Excel, Word and PDF files, on every plan",
-        "madeSrc": "Anthropic help centre, 5 Nov 2026",
         "steps": [
-          "Unzip the kit.",
-          "New project. Free plan: up to five.",
-          "Paste the instructions.",
-          "Add the four items shown: two folders, two files."
+          "Download {zip} from the kit page. Unzip it.",
+          "Open Claude (claude.ai or the desktop app): Projects, New project. Name it Gradba audit.",
+          "Open project-instructions.md, copy all of it into the project's instructions. Save.",
+          "Add the files inside checklists/ and folder/, plus cases/case-A-labour.md and templates/register.csv: {add} files. A flat list is fine.",
+          "Settings, Capabilities: switch on Code execution and file creation.",
+          "Start a chat in the project. Paste each step's prompt from START-HERE.md, then compare with ANSWERS.md."
         ],
-        "stepsSrc": "Anthropic help centre, 6 Nov 2026",
-        "c0": "One zip, {files} text files about an invented firm.",
-        "c1": "Inside: the letter, the firm's folder, the questions, the key.",
-        "c2": "Load it once. The instructions apply to every chat in the project.",
-        "c3": "Invented files may go into Claude. Real data needs rules: slide 15. No Claude plan? Watch the recorded runs.",
+        "stepsSrc": "Anthropic help centre, 6 Nov 2026 · tested in claude.ai on 13 Nov 2026",
+        "c0": "Download the kit from the kit page and unzip it: {files} files about an invented firm.",
+        "c1": "You load {add} files to start. extras/ is optional, for after the session.",
+        "c2": "Set up one Project, once: the instructions and the files. Every chat in it sees both.",
+        "c3": "Four steps in one chat; check each answer with ANSWERS.md. Only invented files go in today.",
         "zipAria": "Download the kit",
-        "binderAria": "The kit as a binder: twelve entries, {files} files"
+        "binderAria": "The kit as a binder: {entries} entries, {files} files",
+        "page": "Kit page",
+        "count": "{add} files",
+        "capH": "Settings · Capabilities",
+        "capOn": "Code execution and file creation",
+        "more": "+ {n} more",
+        "extras": "extras/: optional, for after the session."
       },
       "step1": {
         "h": "Step 1: make the table",
         "win": "Projects · Gradba audit (invented)",
-        "pl": "Prompt 1 of 4: make the table",
+        "pl": "Start a chat in the project, paste prompt 1, then compare with ANSWERS.md.",
         "pf": "Full text: START-HERE.md, step 1",
         "qs": "L01 Is there a written contract for every worker? · L06 Is there a written notice to the inspector for every overtime period? · L10 Does the safety statement name every job position?",
-        "pd": "The inspector sends {rows} questions. One row per question: which paper answers it?",
-        "pg": "Guess: which questions have no named owner?"
+        "pd": "One row for each of the {rows} questions: paper, owner, place.",
+        "pg": "No file, no guess: Claude writes NOT IN FILES."
       },
       "step2": {
         "h": "Step 2: run the check",
         "win": "Projects · Gradba audit (invented)",
-        "pl": "Prompt 2 of 4: run the check",
+        "pl": "Same chat: paste prompt 2, then compare with ANSWERS.md.",
         "pf": "Full text: START-HERE.md, step 2",
-        "fd": "A finding: a date too old or a person missing.",
-        "pq": "How many findings will it print?"
+        "fd": "Finding: a date too old or a person missing. Near miss: it only looks like one.",
+        "sc": "Claude writes a script; the script counts. It finds {findings} problems and rules out {decoys} near misses."
       },
       "tests": {
         "pill": "invented case",
@@ -494,13 +464,7 @@
         "s1": "COVERED: all four hold.",
         "s2": "WEAK: the paper is there, only date or approval fails.",
         "s3": "GAP: someone has no paper, or the rule is broken.",
-        "w": "The weakest part counts.",
-        "pq": "L10: the statement lists {listed} of our {jobs} jobs. Status?",
-        "pb": [
-          "COVERED",
-          "WEAK",
-          "GAP"
-        ],
+        "w": "Then one status per paper. The weakest part counts.",
         "r": "GAP: two jobs have no paper. Order picker and forklift operator are missing.",
         "miss": [
           "order picker",
@@ -513,15 +477,18 @@
           "t2": "this line sets no time limit",
           "t4": "open: no named owner (step 1)"
         },
-        "reg": "the register: {jobs} jobs"
+        "reg": "the register: {jobs} jobs",
+        "c0": "The instructions give Claude four tests. A paper counts only if it passes all four.",
+        "c1": "Each test checks one part: the words, the date, the people, the owner.",
+        "c3": "L10: the statement names {listed} of our {jobs} jobs."
       },
       "step3": {
         "h": "Step 3: status, plan, briefing",
         "win": "Projects · Gradba audit (invented)",
-        "pl": "Prompt 3 of 4: status, plan, briefing",
+        "pl": "First add the 4 files shown. Same chat: paste prompt 3, compare with ANSWERS.md.",
         "pf": "Full text: START-HERE.md, step 3",
         "files": "evidence-index.csv · clock.csv · briefing · new-paper-note",
-        "fc": "Drafts only. A named person reads, dates and signs.",
+        "fc": "Claude writes the files as drafts. A named person reads, dates and signs.",
         "fix": "If a paper is wrong, write a new one with today's date. Never change the old one.",
         "fixOld": "old paper stays as it is",
         "fixNew": "new paper, dated today"
@@ -530,20 +497,16 @@
         "h": "Step 4: build the register",
         "st": "Some visits come without notice. Then there is no week to prepare. The register is what you have.",
         "win": "Projects · Gradba audit (invented) · register.csv",
-        "pl": "Prompt 4 of 4: build the register",
+        "pl": "Same chat: paste prompt 4, then compare with ANSWERS.md.",
         "pf": "Full text: START-HERE.md, step 4",
         "hc": "Dates only. No health content.",
         "chip": "recorded 26 October 2026, differs from the key",
         "key": "Key: 98 rows, 4 expired, 1 expiring, 4 missing. This run: same.",
         "n": "{expired} medical exams expired · {expiring} runs out within {expiringDays} days · {missing} papers missing",
         "m": "Every week, or every month by hand: a named person reads the lists.",
-        "aq": "Ask the register",
+        "aq": "Same chat: ask the register about worker E-07.",
         "chip2": "recorded 26 October 2026, differs from the key",
         "key2": "Key: 4 on file, 1 missing. This run: same.",
-        "hm": "Google Sheet · Excel · Microsoft list · small database",
-        "hmc": "Same columns, same check. Even a shared sheet answers any letter from one table.",
-        "fd": "M1 and M2 are the forms that report a worker to the state. Employers can file them online. Check which dates you can copy.",
-        "fdt": "Employment Service Agency guide, 2022",
         "z": "Start with a table; it stays for the next audit. Move to a shared register or a small database when you outgrow it. A person approves every change.",
         "dm": "Later dates, same register. The counts change.",
         "cols": [
@@ -580,7 +543,7 @@
         "h": "Stay ready: Claude keeps watch",
         "reg": "register.csv",
         "regN": "rows",
-        "c0": "The register stays. Who looks at it, and when?",
+        "c0": "The register stays after the audit. A regular check keeps it current.",
         "tg": [
           "Paid plan",
           "Free plan"
@@ -612,27 +575,39 @@
         "c2": "On check day: what ran out, what runs out soon, what is missing.",
         "list": [
           [
-            "DIT",
-            "inspectorate news, plans, reports",
+            "Labour inspectorate",
+            "news, plans, reports",
             "no feed: look in once a week"
           ],
           [
-            "Služben vesnik",
-            "official gazette, new laws",
+            "Official Gazette",
+            "new laws",
             "free issues, no feed"
           ],
           [
-            "AZLP",
-            "data protection guidance",
+            "Data protection agency",
+            "guidance",
             "feed and newsletter"
           ]
         ],
-        "listSrc": "checked 8 Nov 2026 · in the kit: keep-watch/",
+        "listSrc": "checked 8 Nov 2026 · in the kit: extras/keep-watch/",
         "c3": "Watch where new rules appear. Subscribe where you can.",
-        "tp": "Before [date], [role] checks [paper] against [rule].",
-        "ex": "Before 30 Nov, the office manager checks the medical exam dates against 24 months.",
-        "yours": "your sentence",
-        "c4": "Write yours. Use an invented example."
+        "c4": "Next audit, same method: one Project, the same four steps. Cases B and C are in extras/.",
+        "cases": [
+          [
+            "Case A",
+            "labour inspection"
+          ],
+          [
+            "Case B",
+            "tax control"
+          ],
+          [
+            "Case C",
+            "ISO 9001 and customer audits"
+          ]
+        ],
+        "casesSrc": "extras/: optional, for after the session"
       },
       "safety": {
         "h": "What goes in, what never, who signs",
@@ -646,53 +621,34 @@
           "real rows sent to the AI, after four gates"
         ],
         "rgAria": "The data ladder as a stair, appendix A2",
-        "c0": "What may go into a tool you do not control?",
+        "c0": "Not all data may go into a tool you do not control. Four levels decide.",
         "f1": [
           "Team, Enterprise, API: chats do not train Claude by default.",
           "Free, Pro, Max: you choose, in Settings, Privacy."
         ],
         "f1Src": "Anthropic privacy centre, Aug 2026",
         "c1": "Level 1 and 2 go in: public text, invented rows.",
-        "pq": "Payroll with names: how can AI help with it?",
-        "pb": [
-          "Public text",
-          "Invented rows",
-          "AI writes, you run",
-          "Real data, four gates"
-        ],
-        "a": "Level 3: the AI writes the check, you run it on your own machine.",
+        "a": "Level 3: payroll with names stays on your computer. Claude writes the script, you run it.",
         "nv": "Never in a chat, on any plan",
         "nvi": [
-          "the ID number (EMBG)",
+          "the personal ID number",
           "health content: dates only",
           "a thumbs up or down on real rows: it stores the whole chat up to 5 years"
         ],
-        "nvSrc": "Data Protection Law; Anthropic privacy centre",
+        "nvSrc": "Data protection rules · Anthropic privacy centre",
         "c4": "AI never creates, changes or backdates a record. A named person signs.",
-        "g": "Four gates: business subscription, data processing contract, security measures, rules for sending data abroad. Ask your data protection adviser.",
-        "law": [
-          "Data to the US: notify AZLP on its Form No. 1, since the 2025 amendment.",
-          "Usage Policy: no falsified employment records. A qualified person stays accountable for HR decisions."
-        ],
-        "lawSrc": "AZLP Form No. 1 · Anthropic Usage Policy, version taking effect 12 Nov 2026"
+        "g": "Four gates: business subscription, data processing contract, security measures, rules for sending data abroad. Level 4, real data, only after these four gates. Ask your data protection adviser."
       },
       "close": {
-        "h": "Which check could come to you?",
-        "pb": [
-          "Labour",
-          "Tax",
-          "Certifier",
-          "Not sure"
-        ],
-        "gb": "ghost bars of the first vote, filling left to right",
-        "pc": "Same question as on slide 4. Did anyone change?",
+        "h": "One folder, clear rules, a person signs.",
+        "pc": "Claude searches, counts and drafts. A named person reads, decides and signs.",
         "t2": "Take the kit. Start with one register.",
         "qr": [
           "kit",
           "demo",
           "skill"
         ],
-        "qs": "Questions?",
+        "qs": "Time for questions.",
         "qrLabels": [
           "Kit",
           "Demo",
@@ -701,7 +657,25 @@
         "h0": "Next audit: open the register.",
         "pay": "Last time four days and two late evenings. Next time the register and a weekly check.",
         "now": "Next time: the register and a weekly check",
-        "wk": "every week"
+        "wk": "every week",
+        "lessons": [
+          [
+            "One Project",
+            "instructions and files set up once, for every chat"
+          ],
+          [
+            "Ask for proof",
+            "a quote from the files, or NOT IN FILES"
+          ],
+          [
+            "Let code count",
+            "a script counts; check the answer with a key"
+          ],
+          [
+            "A person signs",
+            "invented data goes in; real personal data stays on your computer"
+          ]
+        ]
       },
       "a1": {
         "title": "Laws, as of 7 November 2026",
@@ -756,7 +730,7 @@
             "text": "False entries can apply"
           }
         ],
-        "fines": "ZIN Art. 83, EUR: micro 500 to 1,000 · small 1,500 to 2,000 · medium 3,000 to 6,000 · large 5,000 to 10,000 · person 250 to 500",
+        "fines": "ZIN Art. 83, EUR: micro 500 to 1,000 · small 1,500 to 2,000 · medium 3,000 to 6,000 · large 5,000 to 10,000 · person 250 to 500 · PDPL (personal data) Art. 32 contract, 36 security, 48 transfers: fines up to 2 and 4 percent of income, ceilings",
         "finesNote": "Size thresholds unverified.",
         "ladder": [
           "ZIN Art. 57(3) · regular visit: written notice with the checklist, at least 3 working days ahead (since 1 Jan 2026)",
@@ -792,10 +766,9 @@
         "terms": [
           "Anthropic consumer terms · effective 8 Oct 2025 · read 7 Nov 2026",
           "Anthropic commercial terms · 17 Jun 2025 · read 7 Nov 2026",
-          "For comparison, another vendor: OpenAI enterprise privacy page · version of 8 Jan 2026 · live page not reachable on 7 Nov 2026",
-          "PDPL · Art. 32 contract · Art. 36 security · Art. 48 transfers · fines up to 2 and 4 percent of income, ceilings"
+          "For comparison, another vendor: OpenAI enterprise privacy page · version of 8 Jan 2026 · live page not reachable on 7 Nov 2026"
         ],
-        "ceiling": "Fines are ceilings. Health data needs an exception.",
+        "ceiling": "Health data needs an exception.",
         "transfer": "How the transfer rules apply to a chat tool is not settled in our sources: ask your own data protection adviser."
       },
       "a3": {
@@ -841,23 +814,23 @@
       }
     },
     "notes": [
-      "01 · Cover\nTime: 1 min\nSay: Today: audits, when an authority checks your papers. Each dot is ten real firms in North Macedonia; darker regions had more labour inspections. The Bitola dot is our firm, Gradba-Pro. The dots are real; the firm is invented.\nStudents: Listen.\nCue: Plays by itself; any press goes on.\nRemember: Real dots, invented firm. Late? Cut half of slide 13, then 4, then half of 14. Never cut 9, 10, 12.",
-      "02 · Today\nTime: 3 min\nSay: I am Tim Löhr; I run a small AI company, loehrning.ai, alone. Where I do the same there, I will say so. Ninety minutes, three parts; you work in each. The case: what an inspector can ask for. The kit: {files} invented files, checked with Claude. Staying ready: a register you reuse for the next audit.\nStudents: Listen.\nCue: Press 1 case, 2 kit, 3 staying ready.\nRemember: Gradba-Pro is invented; my company is real.",
-      "03 · Audits happen here\nTime: 5 min\nSay: Audits happen here, often. Read the big number. Not only labour: the tax office checks too. About one visit in five is planned; over half are unplanned. Ask: does this sound like your firm?\nStudents: Show of hands.\nCue: Press 1 to 4 reports, 5 by kind, 6 regions, 7 Bitola.\nRemember: The report is a proposal: say proposed.",
-      "04 · Which firms and why\nTime: 4 min\nSay: Trade is the largest group, also in Bitola, and a named risk area. Why: accidents, undeclared work, complaints. Tap a tile: tax office, market inspectorate, ISO certifier check too. Several kinds of audit.\nStudents: Vote: which check could come to you?\nCue: Press 1 sectors, 2 tiles, 3 reasons, 4 poll.\nRemember: No right answer. Slide 16 asks again.",
-      "05 · We are Gradba-Pro\nTime: 4 min\nSay: We are the firm: a building materials shop in Bitola, 24 people. Last inspection spring 2024; nobody opened the binders since. On paper trade gets a planned visit at least once in two years; in 2025 over half of all visits were unplanned.\nStudents: Hands up: who has a binder nobody opened in two years?\nCue: Press 1 time line, 2 planning clock, 3 unplanned visits.\nRemember: Invented firm. Two years is a target, not a promise.",
-      "06 · A visit in four days\nTime: 7 min\nSay: It happened to us. Monday a letter: the labour inspector comes in four days. We search five places and stay late twice. Could the visit have been the next day? Let them vote. Then: no. A planned visit needs three working days of written notice; an unplanned one needs none. Then read the last three captions: papers within 3 days of a request, the time limits after the visit, a worker without a contract.\nStudents: Vote yes or no.\nCue: Press 1 week, 2 question, 3 answer, 4 no notice, 5 papers, 6 after, 7 no contract.\nRemember: Right answer: No. Say the date, 27 November, never the weekday.",
-      "07 · Where is our data?\nTime: 4 min\nSay: Why prepare? Our data sits in five places. By hand: four days, two late evenings, and papers still missing. In one folder, Claude searches and checks in minutes; we read and sign. My company: every number lives in one place, not five tools.\nStudents: Ask one person: where does your firm keep its papers today?\nCue: Press 1 by hand, 2 Claude's steps, 3 World Bank bars.\nRemember: Step times are measured. Never claim hours by hand.",
-      "08 · Our kit\nTime: 5 min\nSay: So we put every paper in one folder: that is the kit. The kit: one zip, {files} invented files: letter, firm folder, questions, answer key. Load it with me: unzip, new project, paste the instructions, add the four items shown. No Claude plan? Watch the recorded runs.\nStudents: Do: set up the project.\nCue: Press 1 kit opens, 2 files into the project, 3 the data rule.\nRemember: Today only invented files go into Claude. Slide 15 says why.",
-      "09 · Step 1: make the table\nTime: 6 min\nSay: Step 1. The inspector sends {rows} questions; Claude writes one row each: paper, owner, place. Guess: which have no named owner? Then the run and the key.\nStudents: Do step 1, then check ANSWERS.md.\nCue: Press 1 questions and guess, 2 run and key.\nRemember: Answer: L10 and L11.",
-      "10 · Step 2: run the check\nTime: 9 min\nSay: Step 2: Claude writes a small script and runs it on every file. A finding: a date too old, a person missing. How many? The script counts, not Claude. Key: it reads {rowsRead} rows, finds {findings} real problems and rules out {decoys} near misses that only look like problems.\nStudents: Vote, then run step 2.\nCue: Press 1 finding and poll, 2 run and key.\nRemember: Right answer: {findings}. If a run differs, the key is right.",
-      "11 · Four tests, three statuses\nTime: 5 min\nSay: Findings are not yet answers. Four tests turn each paper into a status: copied words, a date that fits, everyone covered, a named owner. COVERED, WEAK or GAP: the weakest part counts. L10: the safety statement names 8 of our 10 jobs. Which status?\nStudents: Vote.\nCue: Press 1 tests, 2 statuses, 3 jobs and poll, 4 answer.\nRemember: Right answer: GAP. Order picker and forklift operator have no paper.",
-      "12 · Step 3: status, plan, briefing\nTime: 8 min\nSay: Step 3: each question gets a status with a quote. For each gap the plan names the new paper a person must make. The person at the visit gets a briefing. Key: {covered} COVERED, {weak} WEAK, {gap} GAP. Claude drafts and signs nothing. A mistake gets a new dated paper, never an edit.\nStudents: Do step 3, compare with the key.\nCue: Press 1 run and key, 2 files, 3 rule for mistakes.\nRemember: Claude only drafts: it never creates, changes or backdates a record.",
-      "13 · Step 4: build the register\nTime: 11 min\nSay: Without notice there is no week: the register is what you have. One table: every paper, date, owner, place. Claude builds it, a script counts, you ask it questions. My company: AI drafts, code computes every number, I decide.\nStudents: Do step 4, then ask the register which papers worker E-07 has. Key: 4 on file, 1 missing.\nCue: Press 1 prompt, 2 run, 3 table, 4 by due date, 5 later dates, 6 ask, 7 where it lives.\nRemember: A working file, not a record. Medical exams: the date only, no health details.",
-      "14 · Stay ready\nTime: 8 min\nSay: The register stays. A check reads it: weekly on paid plans, monthly by hand on Free. Three lists: ran out, runs out soon, missing; a named person reads them. My company: each morning one short message tells me what broke and what is missing. I decide. Next audit: same steps, the kit has tax and ISO cases.\nStudents: Say Free or paid; click that toggle. Then write one sentence: Before [date], [role] checks [paper] against [rule].\nCue: Press 1 the two plans (click one), 2 three lists, 3 where new rules appear, 4 sentence.\nRemember: Scheduled tasks: paid plans only, no monthly option.",
-      "15 · Safety: what goes in, who signs\nTime: 6 min\nSay: AI sorts, counts and drafts; a named person signs. Public text and invented rows may go in. Payroll with names: how can AI help? Let them vote. Then: the payroll stays on your machine; Claude writes the script, you run it. My company: users' personal data never leaves the app's database, only counts.\nStudents: Vote.\nCue: Press 1 first two levels, 2 last two levels and poll, 3 answer, 4 never in a chat, 5 four gates.\nRemember: Right answer: AI writes, you run. Not legal advice.",
-      "16 · Which check now\nTime: 4 min\nSay: Last time: four days, two late evenings. Next time: open the register; the check already sent the lists. One folder, clear rules, a person signs; AI searches and checks. Same vote as slide 4. Take the kit, start with one register.\nStudents: Vote again, then questions.\nCue: Press 1 register row, 2 poll, 3 QR codes.\nRemember: Never press r: it clears every vote, also the slide 4 vote shown here.",
-      "a1 · Laws, as of 7 November 2026\nTime: 0 min\nSay: If asked: laws and time limits.\nStudents: Nothing.\nCue: From slide 6, back link.\nRemember: Special laws can differ.",
+      "01 · Cover\nTime: 1 min\nSay: Today you learn to use Claude, on one practice case: an audit, when an authority checks a firm's papers. Each dot is ten real firms in North Macedonia; darker regions had more labour inspections in 2025. The Bitola dot is our firm, Gradba-Pro. The dots are real; the firm is invented.\nStudents: Listen.\nCue: Plays by itself; any press goes on.\nRemember: Late? Cut half of slide 13, then 4, then half of 14. Never cut 9, 10, 12.",
+      "02 · Today\nTime: 3 min\nSay: I am Tim Löhr; I run a small AI company, loehrning.ai, alone. Where I do the same there, I say so. The workshop is about Claude; the audit is the practice case. Part 1, the case: why audits matter and what happened to our firm. Part 2, Claude step by step: one Project, {files} invented files, four steps. Part 3, staying ready: a register Claude checks for you, and what data may go in.\nStudents: Listen.\nCue: Press 1 the case, 2 Claude, 3 staying ready.\nRemember: Gradba-Pro is invented; my company is real.",
+      "03 · Audits happen here\nTime: 5 min\nSay: Audits are common here. The big number is the labour inspections of 2025. The four cards are news: a building site banned, checks in a heat wave, one week of tax checks, too few inspectors. About one visit in five was planned. Our region is Pelagonia; in Bitola the inspectors made more visits than planned.\nStudents: Listen.\nCue: Press 1 to 4 news cards, 5 by kind, 6 regions, 7 Bitola.\nRemember: The 2025 report is a proposal: say proposed.",
+      "04 · Which firms and why\nTime: 4 min\nSay: Trade is the largest group, also in Bitola, and one of the seven risk areas of the labour inspectorate. Why they check: accidents, undeclared work, complaints. Labour is not the only check: the tax office, the market inspectorate and certifiers check firms too. On the last press, tap a tile with a dot to show who else checks that sector.\nStudents: Listen.\nCue: Press 1 sectors, 2 risk tiles, 3 reasons, 4 who else checks (tap a tile).\nRemember: The informal bars are our own calculation.",
+      "05 · We are Gradba-Pro\nTime: 4 min\nSay: We are the firm: a building materials shop in Bitola, 24 people. Goran is the director, Elena runs the office. The last inspection was in spring 2024; nobody opened the binders since. For trade the plan is a visit at least once in two years, so we are due. Over half of all visits in 2025 were unplanned.\nStudents: Listen.\nCue: Press 1 time line (drag it), 2 planning clock, 3 unplanned visits.\nRemember: Invented firm. Two years is a plan target, not a promise.",
+      "06 · A visit in four days\nTime: 7 min\nSay: It happened to us. On Monday 23 November a letter comes from the labour inspectorate, the authority that checks employers. An inspector visits on 27 November at 09:00. With the letter come three checklists: labour, safety at work, employee records. They are the questions the inspector will ask. We have Monday to Thursday. On Tuesday we search five places; on Wednesday and Thursday we stay late. The three checklists are in the kit: Claude checks our files against them.\nStudents: Listen.\nCue: Press 1 the week, 2 the three checklists.\nRemember: Say the date, 27 November, not the weekday.",
+      "07 · Where is our data?\nTime: 4 min\nSay: Our papers sit in five places. By hand: four days, two late evenings, papers still missing. Once the papers are in one folder in a Claude Project, Claude does the searching and checking in minutes; we read and sign. The times come from our recorded run. The World Bank bars: managers spend more of their time on rules than a few years ago. My company: every number lives in one place, not in five tools.\nStudents: Listen.\nCue: Press 1 by hand, 2 Claude's four steps (the toggle shows one lane or both), 3 World Bank bars.\nRemember: The step times are measured. Never claim hours by hand.",
+      "08 · Our kit\nTime: 5 min\nSay: The lesson: a Project holds the instructions and the files once; every chat in it sees both. The kit is one zip with {files} invented files. Do it with me. Download and unzip. In Claude: Projects, New project, name it Gradba audit. Paste project-instructions.md into the instructions and save. Add the files of checklists/ and folder/, plus cases/case-A-labour.md and templates/register.csv. In Settings, Capabilities, switch on Code execution and file creation. extras/ is for after the session.\nStudents: Do: set up the project. Without a Claude account, watch the recorded runs.\nCue: Press 1 the kit opens, 2 set-up steps 2 to 5, 3 step 6 and extras/.\nRemember: Only invented files go into Claude today. Without code execution: ask Claude for check.py and run it on your computer.",
+      "09 · Step 1: make the table\nTime: 6 min\nSay: Step 1. The three checklists hold {rows} questions. Claude writes one row for each: the paper, the owner, the place. The rule in the instructions: no guessing. When no file answers, Claude writes NOT IN FILES. That is how you ask Claude for proof. In the key, L10 and L11 have no named owner.\nStudents: Do: start a chat in the project, paste prompt 1, compare with ANSWERS.md.\nCue: Press 1 the questions and the rule, 2 the recorded run and the key.\nRemember: If a run differs, the key is right.",
+      "10 · Step 2: run the check\nTime: 9 min\nSay: Step 2. Claude writes a small script and runs it on every file. The lesson: let code count, not the model. A finding is a real problem: a date too old, a person missing. A near miss only looks like one. Key: the script reads {rowsRead} rows, finds {findings} problems and rules out {decoys} near misses.\nStudents: Do: in the same chat, paste prompt 2, compare with ANSWERS.md.\nCue: Press 1 finding and near miss, 2 the recorded run and the key.\nRemember: Needs Code execution switched on. If a run differs, the key is right.",
+      "11 · Four tests, three statuses\nTime: 5 min\nSay: Clear rules give clear answers. The instructions give Claude four tests for every paper: words copied from the file, a date that fits, everyone covered, a named owner. Then one status: COVERED, WEAK or GAP; the weakest part counts. Example L10: the safety statement names {listed} of our {jobs} jobs, so it is a GAP.\nStudents: Listen.\nCue: Press 1 the four tests, 2 the three statuses, 3 the jobs, 4 the GAP.\nRemember: Order picker and forklift operator have no paper.",
+      "12 · Step 3: status, plan, briefing\nTime: 8 min\nSay: Before step 3, add four files to the project: notice_DIT_2026-11-23.md, templates/evidence-index.csv, templates/clock.csv and templates/new-paper-note.md. Each question gets a status with a quote from the files. For each gap the plan names the new paper a person must make, and the person at the visit gets a briefing. Claude writes these files as drafts. Key: {covered} COVERED, {weak} WEAK, {gap} GAP.\nStudents: Do: add the four files, paste prompt 3 in the same chat, compare with ANSWERS.md.\nCue: Press 1 the run and the key, 2 the files Claude wrote, 3 the rule for mistakes.\nRemember: A mistake gets a new dated paper, never an edit. Claude signs nothing.",
+      "13 · Step 4: build the register\nTime: 11 min\nSay: Some visits come without notice; then there is no week to prepare. The register is what you have: one table of every paper with its date, owner and place. Step 4 runs in the same chat. Claude builds the table, a script counts, and you can ask it questions. My company: AI drafts, code computes every number, I decide.\nStudents: Do: paste prompt 4, then ask the register which papers worker E-07 has. Key: {askOnFile} on file, {askMissing} missing.\nCue: Press 1 prompt, 2 run and key, 3 the table, 4 who reads the lists, 5 later dates (drag), 6 ask about E-07, 7 start with a table.\nRemember: A working file, not a record. Medical exams: the date only, no health details.",
+      "14 · Stay ready\nTime: 8 min\nSay: The register stays after the audit. On paid plans a scheduled task in Claude checks it every week; on Free one person pastes the saved prompt once a month. The prompt is in extras/keep-watch/. The check gives three lists: ran out, runs out soon, missing; a named person reads them. Watch where new rules appear. The next audit uses the same Project method; cases B and C are in extras/. My company: each morning one short message tells me what broke and what is missing. I decide.\nStudents: Listen.\nCue: Press 1 the two plans (the toggle shows Free), 2 the three lists, 3 where new rules appear, 4 the next audit.\nRemember: Scheduled tasks: paid plans only, no monthly option.",
+      "15 · Safety: what goes in, who signs\nTime: 6 min\nSay: AI sorts, counts and drafts; a named person checks and signs. Four levels. Public text and invented rows may go in. Payroll with names stays on your computer: Claude writes the script, you run it. Never in a chat: the personal ID number, health content, a thumbs up or down on real rows. Real data only after four gates; ask your data protection adviser. My company: users' personal data never leaves the app's database, only counts.\nStudents: Listen.\nCue: Press 1 levels 1 and 2, 2 levels 3 and 4, 3 never in a chat, 4 the four gates.\nRemember: Not legal advice. Never call a tool safe.",
+      "16 · Which check now\nTime: 4 min\nSay: Last time: four days, two late evenings. Next time: open the register; the weekly check already sent the lists. Four lessons for your own work: one Project holds the instructions and the files; ask for proof; let code count and check the answer with a key; a person signs. Take the kit and start with one register.\nStudents: Questions.\nCue: Press 1 the register row, 2 the four lessons, 3 QR codes and questions.\nRemember: The skill QR code leads to the Claude skill; it is also in extras/claude/.",
+      "a1 · Laws, as of 7 November 2026\nTime: 0 min\nSay: If asked: laws and time limits.\nStudents: Nothing.\nCue: Not linked from a main slide; Back goes to slide 6.\nRemember: Special laws can differ.",
       "a2 · Accounts and the data ladder\nTime: 0 min\nSay: If asked: data levels and vendor terms.\nStudents: Nothing.\nCue: From slide 15, back link.\nRemember: Never call a tool safe.",
       "a3 · Sources of the cards\nTime: 0 min\nSay: If asked: sources of slide 3.\nStudents: Nothing.\nCue: From slide 3, back link.\nRemember: The translations are ours.",
       "a4 · Sectors and blanks\nTime: 0 min\nSay: If asked: sectors and blanks.\nStudents: Nothing.\nCue: From slide 4, back link.\nRemember: Not found is not proof."
@@ -951,35 +924,35 @@
         "legend": "1 Punkt = {per} Firmen. {firms} aktive Firmen 2024, Staatliches Statistikamt, vorläufig.",
         "map": "Nordmazedonien als {dots} Tupfen, einer davon in Bitola: die erfundene Gradba-Pro",
         "near": "Bitola: {firms} Firmen",
-        "count": "2025 · DIT, Entwurf des Jahresberichts",
+        "count": "2025 · Arbeitsinspektion, Entwurf des Berichts",
         "unit": "Arbeitskontrollen",
         "months": [
           "Jan.",
           "Dez."
         ],
-        "year": "Die acht DIT-Regionen getönt nach ihren {n} Arbeitskontrollen 2025: je dunkler, desto mehr.",
-        "shade": "dunkler = mehr Kontrollen 2025, je DIT-Region"
+        "year": "Die acht Regionen der Arbeitsinspektion getönt nach ihren {n} Kontrollen 2025: je dunkler, desto mehr.",
+        "shade": "dunkler = mehr Kontrollen 2025, je Region"
       },
       "today": {
         "h": "Heute",
-        "case": "Gradba-Pro (erfunden): 24 Leute, Baustoffhandel, Bitola.",
+        "case": "Übungsfall: Gradba-Pro (erfunden), 24 Leute, Bitola.",
         "o": [
-          "Wissen, was ein Inspektor verlangen kann",
-          "Deine Papiere mit KI prüfen",
-          "Ein Register bauen, das aktuell bleibt"
+          "Warum Kontrollen eine kleine Firma treffen",
+          "Ein Claude-Projekt einrichten, vier Schritte gehen",
+          "Ein Register führen, das Claude für dich prüft"
         ],
         "seg": [
           "Der Fall",
-          "Das Kit mit Claude",
+          "Claude, Schritt für Schritt",
           "Bereit bleiben"
         ],
-        "bar": "90 Minuten in drei Teilen: der Fall, das Kit mit Claude, bereit bleiben",
+        "bar": "90 Minuten in drei Teilen: der Fall, Claude Schritt für Schritt, bereit bleiben",
         "min": "Min.",
         "seg0": "Start",
-        "loop": "Nächstes Audit: dasselbe Register.",
+        "loop": "Nächstes Audit: dasselbe Projekt, dasselbe Register.",
         "tags": [
           "Kontrollen, wir, der Brief",
-          "Claude, das erste Mal",
+          "ein Projekt, vier Schritte",
           "Wache halten, Sicherheit"
         ],
         "floor": "Die Karte des Titels als Boden der Sitzung, vorn der Tupfen Bitola",
@@ -988,9 +961,9 @@
       },
       "why": {
         "h": "Hier wird oft kontrolliert",
-        "n": "Kontrollen 2025 durch die staatliche Arbeitsinspektion (DIT)",
+        "n": "Arbeitskontrollen 2025",
         "c0": "Ein Jahr Arbeitskontrollen in Nordmazedonien.",
-        "t0": "DIT, Entwurf des Jahresberichts 2025",
+        "t0": "Arbeitsinspektion, Entwurf des Jahresberichts 2025",
         "cards": [
           {
             "date": "26. Mai 2026",
@@ -1002,7 +975,7 @@
           },
           {
             "date": "14. Aug. 2024",
-            "src": "Netpress, DIT über MIA",
+            "src": "Netpress",
             "mk": "Инспекторите донеле 79 решенија за забрана за работа поради непочитување на препораките за заштита од топлотен бран",
             "gl": "Inspektoren verhängten 79 Arbeitsverbote, weil Hitzeschutz-Empfehlungen missachtet wurden",
             "lang": "mk",
@@ -1010,7 +983,7 @@
           },
           {
             "date": "21. Aug. 2025",
-            "src": "Plusinfo, Steueramt (UJP)",
+            "src": "Plusinfo",
             "mk": "УЈП ИЗВРШИ 243 КОНТРОЛИ, КАЗНИ 91 СУБЈЕКТ ЗА ЕДНА НЕДЕЛА",
             "gl": "Steueramt: 243 Kontrollen, 91 Betriebe in einer Woche bestraft",
             "lang": "mk",
@@ -1018,11 +991,11 @@
           },
           {
             "date": "24. Juli 2025",
-            "src": "Telma, Leitung Arbeitsbeziehungen, DIT",
+            "src": "Telma",
             "mk": "За жал не е доволно, имаме поголема потреба од инспектори.",
             "gl": "Leider reicht es nicht, wir brauchen mehr Inspektoren.",
             "lang": "mk",
-            "cap": "123 Arbeitsinspektoren für das ganze Land, Mitte 2025. Zu wenig, sagt die DIT."
+            "cap": "123 Arbeitsinspektoren für das ganze Land, Mitte 2025. Zu wenig, sagt die Inspektion."
           }
         ],
         "legend": "hier 1 Punkt = 10 Kontrollen, nicht 10 Firmen",
@@ -1034,9 +1007,8 @@
         "c6": "Eine von fünf war ein geplanter Besuch. Etwa ein Bescheid auf vier Kontrollen.",
         "t6": "Derselbe Bericht, eigene Rechnung",
         "c7": "Pelagonien, unsere Region um Bitola: 3.497 Kontrollen 2025.",
-        "t7": "Regionen: DIT-Bericht 2025. Orte: OpenStreetMap",
+        "t7": "Arbeitsinspektion, 2025 · OpenStreetMap",
         "bitola": "Bitola 2025: 815 im Plan, 1.215 gemacht",
-        "q8": "Kommt dir das bekannt vor? Hand hoch.",
         "sources": "Quellen der Karten",
         "field": "Feld aus {dots} Kreisen, je zehn Kontrollen, als Land, dann nach Art und nach Region",
         "regions": [
@@ -1049,7 +1021,8 @@
           "Nordosten",
           "Skopje"
         ],
-        "dec": "{n} Bescheide: etwa 1 auf 4 Kontrollen"
+        "dec": "{n} Bescheide: etwa 1 auf 4 Kontrollen",
+        "c8": "In Bitola gab es mehr Kontrollen als geplant: 1.215 statt 815."
       },
       "sectors": {
         "h": "Welche Firmen und warum",
@@ -1079,37 +1052,29 @@
         ],
         "wl": "gestrichelt: mehr Kontrollen laut Reformagenda, nicht auf der Risikoliste 2025",
         "c2": "Die Arbeitsinspektion nennt sieben Risikobereiche. Handel ist einer davon.",
-        "t2": "DIT, Entwurf des Jahresberichts 2025",
+        "t2": "Arbeitsinspektion, Entwurf des Jahresberichts 2025",
         "informal": "informell",
         "c3": "Warum: Unfälle, Schwarzarbeit, Beschwerden. Am Bau starben 2025 fünf Menschen.",
         "t3": "Balken: informelle Jobs, Q2 2026, eigene Rechnung",
-        "c4": "Welche Kontrolle könnte zu dir kommen?",
-        "pb": [
-          "Arbeit",
-          "Steuer",
-          "Zertifizierer",
-          "Unsicher"
-        ],
+        "c4": "Nicht nur Arbeit: auch Steueramt, Marktinspektion und Zertifizierer prüfen Firmen.",
         "ph": "Wer noch prüft: eine Kachel mit Punkt antippen",
         "hot": {
           "trade": [
-            "Marktinspektion: Zahlungsziele über 60 Tage nur schriftlich, höchstens 120.",
-            "Gericht, Notar oder Vollstrecker melden eine offene Schuld binnen 10 Tagen: eine Prüfung beginnt."
+            "Marktinspektion: prüft Zahlungsziele zwischen Firmen."
           ],
           "build": [
-            "Steueramt: ein Prüfplan für den Bau seit Januar 2025.",
-            "Ein schwerer Unfall geht sofort an die DIT, spätestens binnen 48 Stunden (Gesetzestext 2007)."
+            "Steueramt: ein Prüfplan für den Bau seit 2025."
           ],
           "make": [
-            "Zertifizierer (ISO): ein Überwachungsaudit in jedem Kalenderjahr.",
-            "Kundenaudit (amfori BSCI, ausländische Regel): alle 2 Jahre, nach Note C oder schlechter ein Nachaudit."
+            "Zertifizierer (ISO): ein Überwachungsaudit jedes Jahr.",
+            "Kundenaudits: alle zwei Jahre."
           ],
           "food": [
-            "Lebensmittelbehörde: bis zu 3 Besuche im Jahr nach Risiko (tierische Lebensmittel).",
+            "Lebensmittelbehörde: bis zu drei Besuche im Jahr, je nach Risiko.",
             "Marktinspektion, 2025: 297 Kontrollen von Lokalen nach dem Brand in Kočani."
           ]
         },
-        "all": "Steueramt: eine Kontrolle wird 2 Wochen vorher angekündigt, 4 bei großen Steuerzahlern.",
+        "all": "Steueramt: prüft Firmen aller Branchen.",
         "hotAria": [
           "Zeigen, wer die Industrie noch prüft",
           "Zeigen, wer den Bau noch prüft",
@@ -1173,10 +1138,10 @@
         ],
         "pt": "Planziel",
         "c2": "Handel ist mittleres Risiko: ein geplanter Besuch mindestens alle zwei Jahre.",
-        "t2": "DIT, Jahresplan 2026",
+        "t2": "Arbeitsinspektion, Jahresplan 2026",
         "band": "ungeplante Besuche: jeder Tag",
         "c3": "Mehr als die Hälfte der Besuche war ungeplant. 3.400 folgten 2025 einer Beschwerde.",
-        "t3": "DIT, Entwurf des Jahresberichts 2025",
+        "t3": "Arbeitsinspektion, Entwurf des Jahresberichts 2025",
         "clk": "eine Uhr über drei Jahre ab unserer letzten Kontrolle im Frühjahr 2024: die Planziele von einem, zwei und drei Jahren, der Zeiger im November 2026",
         "od": "überfällig"
       },
@@ -1191,77 +1156,51 @@
           "Di 24.",
           "Mi 25.",
           "Do 26.",
-          "27.",
-          "30."
+          "27."
         ],
         "ev": [
           "der Brief",
           "fünf Orte",
           "bis spät abends",
           "bis spät abends",
-          "Besuch, 09:00",
-          "Papiere fällig"
+          "Besuch, 09:00"
         ],
-        "after": "nach dem Besuch",
-        "c0": "Montagmorgen kommt ein Brief der Arbeitsinspektion.",
+        "c0": "Montag: Die Arbeitsinspektion schreibt. Der Besuch ist am 27.11., mit drei Prüflisten voller Fragen.",
         "wk": [
           "wir suchen an fünf Orten",
           "bis spät abends",
           "bis spät abends, Papiere fehlen noch"
         ],
         "c1": "Dienstag suchen wir an fünf Orten. Mittwoch und Donnerstag bleiben wir lange.",
-        "c2": "Hätte der Besuch am 24. November sein können, am nächsten Tag?",
-        "pb": [
-          "Ja",
-          "Nein"
+        "ln": "die Woche von Montag, 23. November, bis zum Besuch am 27. November",
+        "what": [
+          [
+            "Von",
+            "der Arbeitsinspektion, der Behörde, die Arbeitgeber prüft"
+          ],
+          [
+            "Besuch",
+            "27.11., 09:00, eine geplante Kontrolle"
+          ],
+          [
+            "Dazu",
+            "drei Prüflisten (Arbeit, Arbeitsschutz, Personalunterlagen): die Fragen, die der Inspektor stellen wird"
+          ]
         ],
-        "mk2": "Besuch?",
-        "sc": [
-          "24.",
-          "25.",
-          "26.",
-          "27."
-        ],
-        "scAria": "Den Besuch auf einen anderen Tag legen",
-        "ro": [
-          "0 Arbeitstage dazwischen",
-          "1 Arbeitstag dazwischen",
-          "2 Arbeitstage dazwischen",
-          "3 Arbeitstage dazwischen"
-        ],
-        "c3": "Nein. Ein geplanter Besuch wird in der Regel 3 Arbeitstage vorher schriftlich angekündigt.",
-        "l3": "Gesetz über die Inspektionsaufsicht, Art. 57(3), seit 1.1.2026",
-        "br3": "3 Arbeitstage",
-        "c4": "Ungeplante Besuche kommen in der Regel ohne Ankündigung, an jedem Tag.",
-        "l4": "Art. 58(2): außerordentlich (ungeplant), in der Regel unangekündigt · Gesetz über die Arbeitsinspektion, Art. 10: Zutritt jederzeit",
-        "c5": "Papiere sind binnen 3 Tagen nach der Anfrage fällig, sonst droht ein Bußgeld.",
-        "br5": "3 Tage nach der Anfrage, Art. 53(1)",
-        "l5": "Art. 83, EUR: Kleinstfirma 500 bis 1.000 · kleine Firma 1.500 bis 2.000 · verantwortliche Person 250 bis 500",
-        "chips": [
-          "Protokoll: vor Ort oder 3 Tage",
-          "Antwort: 8 Tage",
-          "Bescheid: 8 Tage",
-          "Einspruch: 15 Tage, Bescheid gilt"
-        ],
-        "c6": "Nach dem Besuch laufen die Fristen weiter.",
-        "wc": "Beschäftigte ohne Vertrag: ein unbefristeter Vertrag binnen 8 Tagen. Wieder binnen eines Jahres: der Betrieb schließt 15 Tage.",
-        "c7": "Der härteste Fall: jemand arbeitet ohne Vertrag.",
-        "t7": "Gesetz über die Arbeitsverhältnisse, Art. 259",
-        "ln": "die Woche von Montag, 23. November, bis zum Besuch am 27. November und den Papieren am 30. November",
-        "sources": "Gesetze und Fristen",
-        "l6": "Gesetz über die Inspektionsaufsicht, Art. 65, 68, 70: Protokoll, Bescheid, Einspruch"
+        "c2": "Die Prüflisten sind die Fragen des Inspektors. Im Kit prüft Claude unsere Dateien gegen sie.",
+        "listsH": "die Fragen des Inspektors, im Kit"
       },
       "time": {
         "pill": "erfundener Fall",
-        "h": "Wo sind unsere Daten?",
+        "h": "Von Hand oder mit Claude",
         "days": [
           "Mo",
           "Di",
           "Mi",
           "Do"
         ],
-        "yard": "3 Arbeitstage Ankündigung, laut Gesetz",
-        "c0": "Die Papiere liegen an fünf Orten. Wie lange dauert die Suche?",
+        "yard": "vier Tage zum Vorbereiten",
+        "c0": "Unsere Papiere liegen an fünf Orten. Bis zum Besuch bleiben vier Tage.",
         "lanes": [
           "Von Hand",
           "Mit Claude"
@@ -1281,7 +1220,7 @@
         ],
         "chip": "aufgezeichnet am {date} mit {model}",
         "none": "noch nicht aufgezeichnet",
-        "c2": "Mit dem Kit macht Claude die vier Schritte. Zeiten aus unserem aufgezeichneten Lauf.",
+        "c2": "In einem Ordner macht Claude die vier Schritte in Minuten. Zeiten aus unserem aufgezeichneten Lauf.",
         "tg": [
           "Von Hand",
           "Beide",
@@ -1292,7 +1231,7 @@
           "2019: 2,5 % der Zeit der Geschäftsführung für Vorschriften",
           "2023: 5,8 %"
         ],
-        "c3": "Keine Quelle zählt Vorbereitungsstunden. Die Zeit für Vorschriften hat sich mehr als verdoppelt.",
+        "c3": "Keine Quelle zählt Vorbereitungsstunden. Der Zeitanteil der Geschäftsführung für Vorschriften hat sich mehr als verdoppelt.",
         "t3": "Weltbank, Enterprise Surveys",
         "lanesAria": "zwei Spuren: unsere erfundene Woche von Hand und die vier aufgezeichneten Schritte mit Claude",
         "trueScale": "maßstabsgetreu",
@@ -1305,47 +1244,51 @@
         "honest": "sobald die Papiere in einem Ordner liegen; du liest und unterschreibst"
       },
       "kit": {
-        "h": "Das Kit in Claude laden",
+        "h": "Ein Claude-Projekt für das Kit",
         "zip": "gradba-audit-kit-de.zip, {files} Dateien",
-        "tree": "START-HIER.md · projektanweisungen.md · listen/ · ordner/ · inspektor/ · faelle/ · vorlagen/ · bereit-bleiben/ · claude/ · LOESUNGEN.md · AENDERUNGEN.md · mitteilung_DIT_2026-11-23.md",
-        "win": "Projekte · Gradba-Audit (erfunden)",
+        "win": "Projects · Gradba-Audit (erfunden)",
         "ins": "Anweisungen",
         "insFile": "projektanweisungen.md",
         "insNote": "gilt für jeden Chat im Projekt",
         "files": "Dateien",
-        "fly": "listen/ · ordner/ · fall-A-arbeit.md · vorlagen/register.csv",
-        "made": "Claude erstellt Excel-, Word- und PDF-Dateien, in jedem Tarif",
-        "madeSrc": "Anthropic-Hilfe, 5. Nov. 2026",
         "steps": [
-          "Kit entpacken.",
-          "Neues Projekt. Free-Tarif: bis zu fünf.",
-          "Anweisungen einfügen.",
-          "Die vier Einträge oben dazu: zwei Ordner, zwei Dateien."
+          "Lade {zip} von der Kit-Seite herunter. Entpacke es.",
+          "Öffne Claude (claude.ai oder die Desktop-App): Projects, New project. Nenne es Gradba-Audit.",
+          "Öffne projektanweisungen.md, kopiere den ganzen Text in die Anweisungen des Projekts. Speichere.",
+          "Füge die Dateien in listen/ und ordner/ hinzu, dazu faelle/fall-A-arbeit.md und vorlagen/register.csv: {add} Dateien. Eine flache Liste ist in Ordnung.",
+          "Settings, Capabilities: schalte Code execution and file creation ein.",
+          "Starte einen Chat im Projekt. Füge den Prompt jedes Schritts aus START-HIER.md ein, vergleiche dann mit LOESUNGEN.md."
         ],
-        "stepsSrc": "Anthropic-Hilfe, 6. Nov. 2026",
-        "c0": "Eine Zip-Datei, {files} Textdateien zu einer erfundenen Firma.",
-        "c1": "Darin: der Brief, der Ordner der Firma, die Fragen, der Schlüssel.",
-        "c2": "Einmal laden. Die Anweisungen gelten für jeden Chat im Projekt.",
-        "c3": "Erfundene Dateien dürfen in Claude. Echte Daten brauchen Regeln: Folie 15. Kein Claude-Tarif? Schau die aufgezeichneten Läufe.",
+        "stepsSrc": "Anthropic-Hilfe, 6. Nov. 2026 · getestet in claude.ai am 13. Nov. 2026",
+        "c0": "Lade das Kit von der Kit-Seite und entpacke es: {files} Dateien zu einer erfundenen Firma.",
+        "c1": "Zum Start lädst du {add} Dateien. extras/ ist freiwillig, für nach dem Workshop.",
+        "c2": "Richte ein Projekt einmal ein: Anweisungen und Dateien. Jeder Chat darin sieht beides.",
+        "c3": "Vier Schritte in einem Chat; prüf jede Antwort mit LOESUNGEN.md. Heute kommen nur erfundene Dateien hinein.",
         "zipAria": "Kit herunterladen",
-        "binderAria": "Das Kit als Ordner: zwölf Einträge, {files} Dateien"
+        "binderAria": "Das Kit als Ordner: {entries} Einträge, {files} Dateien",
+        "page": "Kit-Seite",
+        "count": "{add} Dateien",
+        "capH": "Settings · Capabilities",
+        "capOn": "Code execution and file creation",
+        "more": "+ {n} weitere",
+        "extras": "extras/: freiwillig, für nach dem Workshop."
       },
       "step1": {
         "h": "Schritt 1: die Tabelle bauen",
-        "win": "Projekte · Gradba-Audit (erfunden)",
-        "pl": "Prompt 1 von 4: die Tabelle bauen",
+        "win": "Projects · Gradba-Audit (erfunden)",
+        "pl": "Starte einen Chat im Projekt, füge Prompt 1 ein, vergleiche dann mit LOESUNGEN.md.",
         "pf": "Volltext: START-HIER.md, Schritt 1",
         "qs": "L01 Gibt es für jede Person einen schriftlichen Vertrag? · L06 Gibt es für jeden Überstundenzeitraum eine schriftliche Meldung an den Inspektor? · L10 Nennt die Sicherheitserklärung jede Stelle?",
-        "pd": "Der Inspektor schickt {rows} Fragen. Eine Zeile pro Frage: Welches Papier beantwortet sie?",
-        "pg": "Rate: Welche Fragen haben keine benannte Person?"
+        "pd": "Eine Zeile für jede der {rows} Fragen: Papier, Zuständigkeit, Ort.",
+        "pg": "Keine Datei, kein Raten: Claude schreibt NICHT IN DATEIEN."
       },
       "step2": {
         "h": "Schritt 2: den Check laufen lassen",
-        "win": "Projekte · Gradba-Audit (erfunden)",
-        "pl": "Prompt 2 von 4: den Check laufen lassen",
+        "win": "Projects · Gradba-Audit (erfunden)",
+        "pl": "Gleicher Chat: füge Prompt 2 ein, vergleiche dann mit LOESUNGEN.md.",
         "pf": "Volltext: START-HIER.md, Schritt 2",
-        "fd": "Ein Fund: ein Datum ist zu alt oder eine Person fehlt.",
-        "pq": "Wie viele Funde wird er ausgeben?"
+        "fd": "Fund: ein Datum ist zu alt oder eine Person fehlt. Grenzfall: sieht nur so aus.",
+        "sc": "Claude schreibt ein Skript; das Skript zählt. Es findet {findings} Probleme und schließt {decoys} Grenzfälle aus."
       },
       "tests": {
         "pill": "erfundener Fall",
@@ -1358,13 +1301,7 @@
         "s1": "BELEGT: alle vier stimmen.",
         "s2": "SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmen nicht.",
         "s3": "LÜCKE: für jemanden fehlt das Papier, oder die Regel ist verletzt.",
-        "w": "Der schwächste Teil zählt.",
-        "pq": "L10: Die Erklärung nennt {listed} unserer {jobs} Stellen. Status?",
-        "pb": [
-          "BELEGT",
-          "SCHWACH",
-          "LÜCKE"
-        ],
+        "w": "Dann ein Status pro Papier. Der schwächste Teil zählt.",
         "r": "LÜCKE: für zwei Stellen fehlt das Papier. Lagerkommissionierer und Gabelstaplerfahrer fehlen.",
         "miss": [
           "Lagerkommissionierer",
@@ -1377,15 +1314,18 @@
           "t2": "diese Zeile nennt keine Frist",
           "t4": "offen: keine benannte Person (Schritt 1)"
         },
-        "reg": "das Register: {jobs} Stellen"
+        "reg": "das Register: {jobs} Stellen",
+        "c0": "Die Anweisungen geben Claude vier Prüfungen. Ein Papier zählt nur, wenn es alle vier besteht.",
+        "c1": "Jede Prüfung schaut auf einen Teil: Wortlaut, Datum, Personen, Zuständigkeit.",
+        "c3": "L10: Die Erklärung nennt {listed} unserer {jobs} Stellen."
       },
       "step3": {
         "h": "Schritt 3: Status, Plan, Briefing",
-        "win": "Projekte · Gradba-Audit (erfunden)",
-        "pl": "Prompt 3 von 4: Status, Plan, Briefing",
+        "win": "Projects · Gradba-Audit (erfunden)",
+        "pl": "Füge zuerst die 4 gezeigten Dateien hinzu. Gleicher Chat: Prompt 3 einfügen, mit LOESUNGEN.md vergleichen.",
         "pf": "Volltext: START-HIER.md, Schritt 3",
         "files": "evidence-index.csv · clock.csv · Briefing · neues-papier",
-        "fc": "Nur Entwürfe. Eine benannte Person liest, datiert und unterschreibt.",
+        "fc": "Claude schreibt die Dateien als Entwürfe. Eine benannte Person liest, datiert und unterschreibt.",
         "fix": "Ist ein Papier falsch, schreib ein neues mit dem heutigen Datum. Ändere nie das alte.",
         "fixOld": "altes Papier bleibt, wie es ist",
         "fixNew": "neues Papier, mit heutigem Datum"
@@ -1393,21 +1333,17 @@
       "register": {
         "h": "Schritt 4: das Register bauen",
         "st": "Manche Besuche kommen ohne Ankündigung. Dann gibt es keine Woche zum Vorbereiten. Das Register hast du dann.",
-        "win": "Projekte · Gradba-Audit (erfunden) · register.csv",
-        "pl": "Prompt 4 von 4: das Register bauen",
+        "win": "Projects · Gradba-Audit (erfunden) · register.csv",
+        "pl": "Gleicher Chat: füge Prompt 4 ein, vergleiche dann mit LOESUNGEN.md.",
         "pf": "Volltext: START-HIER.md, Schritt 4",
         "hc": "Nur Daten. Keine Gesundheitsinhalte.",
         "chip": "aufgezeichnet 26.10.2026, weicht vom Schlüssel ab",
         "key": "Schlüssel: 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen. Dieser Lauf: gleich.",
         "n": "{expired} Untersuchungen abgelaufen · {expiring} läuft in {expiringDays} Tagen ab · {missing} Papiere fehlen",
         "m": "Jede Woche, oder jeden Monat von Hand: Eine benannte Person liest die Listen.",
-        "aq": "Frag das Register",
+        "aq": "Gleicher Chat: frag das Register nach Person E-07.",
         "chip2": "aufgezeichnet 26.10.2026, weicht vom Schlüssel ab",
         "key2": "Schlüssel: 4 vorhanden, 1 fehlt. Dieser Lauf: gleich.",
-        "hm": "Google Sheet · Excel · Microsoft-Liste · kleine Datenbank",
-        "hmc": "Gleiche Spalten, gleicher Check. Schon eine geteilte Tabelle beantwortet jeden Brief aus einer Tabelle.",
-        "fd": "M1 und M2 sind die Formulare, mit denen du eine Arbeitskraft beim Staat meldest. Arbeitgeber können sie online einreichen. Prüfe, welche Daten du kopieren kannst.",
-        "fdt": "Leitfaden der Arbeitsagentur, 2022",
         "z": "Fang mit einer Tabelle an; sie bleibt fürs nächste Audit. Wechsle zu einem gemeinsamen Register oder einer kleinen Datenbank, wenn du aus ihr herauswächst. Eine Person gibt jede Änderung frei.",
         "dm": "Spätere Daten, dasselbe Register. Die Zahlen ändern sich.",
         "cols": [
@@ -1447,7 +1383,7 @@
         "h": "Bereit bleiben: Claude hält Wache",
         "reg": "register.csv",
         "regN": "Zeilen",
-        "c0": "Das Register bleibt. Wer schaut hinein, und wann?",
+        "c0": "Das Register bleibt nach dem Audit. Ein regelmäßiger Check hält es aktuell.",
         "tg": [
           "Bezahlter Tarif",
           "Free-Tarif"
@@ -1479,27 +1415,39 @@
         "c2": "Am Prüftag: was abgelaufen ist, was bald abläuft, was fehlt.",
         "list": [
           [
-            "DIT",
+            "Arbeitsinspektion",
             "Nachrichten, Pläne, Berichte",
             "kein Feed: einmal pro Woche nachsehen"
           ],
           [
-            "Služben vesnik",
-            "Amtsblatt, neue Gesetze",
+            "Amtsblatt",
+            "neue Gesetze",
             "freie Ausgaben, kein Feed"
           ],
           [
-            "AZLP",
+            "Datenschutzbehörde",
             "Hinweise zum Datenschutz",
             "Feed und Newsletter"
           ]
         ],
-        "listSrc": "geprüft am 8. Nov. 2026 · im Kit: bereit-bleiben/",
+        "listSrc": "geprüft am 8. Nov. 2026 · im Kit: extras/bereit-bleiben/",
         "c3": "Beobachte, wo neue Regeln erscheinen. Abonniere, wo es geht.",
-        "tp": "Vor [Datum] prüft [Rolle] [Papier] gegen [Regel].",
-        "ex": "Vor dem 30. Nov. prüft die Büroleiterin die Untersuchungsdaten gegen 24 Monate.",
-        "yours": "dein Satz",
-        "c4": "Schreib deinen. Nimm ein erfundenes Beispiel."
+        "c4": "Nächstes Audit, dieselbe Methode: ein Projekt, dieselben vier Schritte. Fall B und C liegen in extras/.",
+        "cases": [
+          [
+            "Fall A",
+            "Arbeitsinspektion"
+          ],
+          [
+            "Fall B",
+            "Steuerprüfung"
+          ],
+          [
+            "Fall C",
+            "ISO 9001 und Kundenaudits"
+          ]
+        ],
+        "casesSrc": "extras/: freiwillig, für nach dem Workshop"
       },
       "safety": {
         "h": "Was hinein darf, was nie, wer unterschreibt",
@@ -1513,53 +1461,34 @@
           "echte Zeilen gehen an die KI, nach vier Toren"
         ],
         "rgAria": "Die Datenleiter als Treppe, Anhang A2",
-        "c0": "Was darf in ein Werkzeug, das du nicht kontrollierst?",
+        "c0": "Nicht alle Daten dürfen in ein Werkzeug, das du nicht kontrollierst. Vier Stufen entscheiden.",
         "f1": [
           "Team, Enterprise, API: Chats trainieren Claude standardmäßig nicht.",
           "Free, Pro, Max: Du wählst, unter Einstellungen, Datenschutz."
         ],
         "f1Src": "Anthropic-Datenschutzseiten, Aug. 2026",
         "c1": "Stufe 1 und 2 dürfen hinein: öffentlicher Text, erfundene Zeilen.",
-        "pq": "Lohnliste mit Namen: wie darf KI dabei helfen?",
-        "pb": [
-          "Öffentlicher Text",
-          "Erfundene Zeilen",
-          "KI schreibt, du führst aus",
-          "Echte Daten, vier Tore"
-        ],
-        "a": "Stufe 3: Die KI schreibt den Check, du führst ihn auf deinem eigenen Rechner aus.",
+        "a": "Stufe 3: Die Lohnliste mit Namen bleibt auf deinem Rechner. Claude schreibt das Skript, du führst es aus.",
         "nv": "Nie in einen Chat, in keinem Tarif",
         "nvi": [
-          "die Identifikationsnummer (EMBG)",
+          "die persönliche Identifikationsnummer",
           "Gesundheitsinhalte: nur Daten",
           "Daumen hoch oder runter auf echten Zeilen: speichert den ganzen Chat bis zu 5 Jahre"
         ],
-        "nvSrc": "Datenschutzgesetz; Anthropic-Datenschutzseiten",
+        "nvSrc": "Datenschutzregeln · Anthropic-Datenschutzseiten",
         "c4": "KI legt nie einen Nachweis an, ändert oder rückdatiert ihn. Eine benannte Person unterschreibt.",
-        "g": "Vier Tore: Geschäftstarif, Auftragsverarbeitungsvertrag, Sicherheitsmaßnahmen, Regeln für die Datenübermittlung ins Ausland. Frag deine Datenschutzberatung.",
-        "law": [
-          "Daten in die USA: der AZLP melden, auf ihrem Formular Nr. 1, seit der Änderung von 2025.",
-          "Nutzungsrichtlinie: keine gefälschten Beschäftigungsunterlagen. Für Personalentscheidungen bleibt eine qualifizierte Person verantwortlich."
-        ],
-        "lawSrc": "AZLP-Formular Nr. 1 · Anthropic-Nutzungsrichtlinie, gültig ab 12. Nov. 2026"
+        "g": "Vier Tore: Geschäftstarif, Auftragsverarbeitungsvertrag, Sicherheitsmaßnahmen, Regeln für die Datenübermittlung ins Ausland. Stufe 4, echte Daten, erst nach diesen vier Toren. Frag deine Datenschutzberatung."
       },
       "close": {
-        "h": "Welche Kontrolle könnte zu dir kommen?",
-        "pb": [
-          "Arbeit",
-          "Steuer",
-          "Zertifizierer",
-          "Unsicher"
-        ],
-        "gb": "Geisterbalken der ersten Abstimmung, von links nach rechts gefüllt",
-        "pc": "Gleiche Frage wie auf Folie 4. Hat sich jemand umentschieden?",
+        "h": "Ein Ordner, klare Regeln, ein Mensch unterschreibt.",
+        "pc": "Claude sucht, zählt und entwirft. Eine benannte Person liest, entscheidet und unterschreibt.",
         "t2": "Nimm das Kit. Fang mit einem Register an.",
         "qr": [
           "Kit",
           "Demo",
           "Skill"
         ],
-        "qs": "Fragen?",
+        "qs": "Zeit für Fragen.",
         "qrLabels": [
           "Kit",
           "Demo",
@@ -1568,7 +1497,25 @@
         "h0": "Nächstes Audit: das Register öffnen.",
         "pay": "Letztes Mal vier Tage und zwei späte Abende. Nächstes Mal das Register und ein Wochencheck.",
         "now": "Nächstes Mal: das Register und ein Wochencheck",
-        "wk": "jede Woche"
+        "wk": "jede Woche",
+        "lessons": [
+          [
+            "Ein Projekt",
+            "Anweisungen und Dateien einmal eingerichtet, für jeden Chat"
+          ],
+          [
+            "Beleg verlangen",
+            "ein Zitat aus den Dateien oder NICHT IN DATEIEN"
+          ],
+          [
+            "Code zählen lassen",
+            "ein Skript zählt; prüf die Antwort mit einem Schlüssel"
+          ],
+          [
+            "Ein Mensch unterschreibt",
+            "erfundene Daten dürfen hinein; echte Personendaten bleiben auf deinem Rechner"
+          ]
+        ]
       },
       "a1": {
         "title": "Gesetze, Stand 7. November 2026",
@@ -1623,7 +1570,7 @@
             "text": "Falsche Einträge können greifen"
           }
         ],
-        "fines": "ZIN Art. 83, EUR: sehr klein 500 bis 1.000 · klein 1.500 bis 2.000 · mittel 3.000 bis 6.000 · groß 5.000 bis 10.000 · Person 250 bis 500",
+        "fines": "ZIN Art. 83, EUR: sehr klein 500 bis 1.000 · klein 1.500 bis 2.000 · mittel 3.000 bis 6.000 · groß 5.000 bis 10.000 · Person 250 bis 500 · PDPL (Personendaten) Art. 32 Vertrag, 36 Sicherheit, 48 Übermittlung: Bußgelder bis 2 und 4 Prozent des Einkommens, Obergrenzen",
         "finesNote": "Größenschwellen ungeprüft.",
         "ladder": [
           "ZIN Art. 57(3) · regulärer Besuch: schriftlich mit Checkliste, mindestens 3 Arbeitstage vorher (seit 1.1.2026)",
@@ -1659,10 +1606,9 @@
         "terms": [
           "Anthropic Verbraucherbedingungen · gültig ab 8. Okt. 2025 · gelesen am 7. Nov. 2026",
           "Anthropic Geschäftsbedingungen · 17. Jun. 2025 · gelesen am 7. Nov. 2026",
-          "Zum Vergleich, ein anderer Anbieter: OpenAI Datenschutzseite für Unternehmen · Fassung vom 8. Jan. 2026 · Live-Seite am 7. Nov. 2026 nicht erreichbar",
-          "PDPL · Art. 32 Vertrag · Art. 36 Sicherheit · Art. 48 Übermittlung · Bußgelder bis 2 und 4 Prozent des Einkommens, Obergrenzen"
+          "Zum Vergleich, ein anderer Anbieter: OpenAI Datenschutzseite für Unternehmen · Fassung vom 8. Jan. 2026 · Live-Seite am 7. Nov. 2026 nicht erreichbar"
         ],
-        "ceiling": "Bußgelder sind Obergrenzen. Gesundheitsdaten brauchen eine Ausnahme.",
+        "ceiling": "Gesundheitsdaten brauchen eine Ausnahme.",
         "transfer": "Wie die Übermittlungsregeln für ein Chat-Werkzeug gelten, ist in unseren Quellen nicht geklärt: Frag deine eigene Datenschutzberatung."
       },
       "a3": {
@@ -1708,23 +1654,23 @@
       }
     },
     "notes": [
-      "01 · Titel\nTime: 1 min\nSay: Heute: Audits, also eine Behörde prüft deine Papiere. Jeder Tupfen sind zehn echte Firmen in Nordmazedonien; dunklere Regionen hatten mehr Arbeitskontrollen. Der Tupfen in Bitola ist unsere Firma, Gradba-Pro. Die Tupfen sind echt, die Firma ist erfunden.\nStudents: Zuhören.\nCue: Läuft von selbst; jeder Druck geht weiter.\nRemember: Echte Tupfen, erfundene Firma. Zu spät? Kürze Folie 13 zur Hälfte, dann 4, dann 14 zur Hälfte. Nie 9, 10, 12 kürzen.",
-      "02 · Heute\nTime: 3 min\nSay: Ich bin Tim Löhr und führe allein eine kleine KI-Firma, loehrning.ai. Wo ich dort dasselbe mache, sage ich es. Neunzig Minuten, drei Teile; du arbeitest in jedem. Der Fall: was ein Inspektor verlangen kann. Das Kit: {files} erfundene Dateien, mit Claude geprüft. Bereit bleiben: ein Register für das nächste Audit.\nStudents: Zuhören.\nCue: Druck 1 Fall, 2 Kit, 3 bereit bleiben.\nRemember: Gradba-Pro ist erfunden, meine Firma ist echt.",
-      "03 · Hier wird oft kontrolliert\nTime: 5 min\nSay: Kontrollen gibt es hier oft. Lies die große Zahl vor. Nicht nur die Arbeitsinspektion: auch das Steueramt prüft. Etwa jeder fünfte Besuch ist geplant; mehr als die Hälfte ist ungeplant. Frag: Kommt dir das bekannt vor?\nStudents: Handzeichen.\nCue: Druck 1 bis 4 Berichte, 5 nach Art, 6 Regionen, 7 Bitola.\nRemember: Der Bericht ist ein Entwurf: sag Entwurf.",
-      "04 · Welche Firmen und warum\nTime: 4 min\nSay: Der Handel ist die größte Gruppe, auch in Bitola, und ein genannter Risikobereich. Warum: Unfälle, Schwarzarbeit, Beschwerden. Tipp eine Kachel an: auch Steueramt, Marktinspektion, ISO-Zertifizierer prüfen. Mehrere Arten von Audit.\nStudents: Abstimmen: Welche Kontrolle könnte zu dir kommen?\nCue: Druck 1 Branchen, 2 Kacheln, 3 Gründe, 4 Umfrage.\nRemember: Keine richtige Antwort. Folie 16 fragt noch einmal.",
-      "05 · Wir sind Gradba-Pro\nTime: 4 min\nSay: Wir sind die Firma: ein Baustoffhandel in Bitola, 24 Leute. Letzte Kontrolle im Frühjahr 2024; seitdem hat niemand die Ordner geöffnet. Auf dem Papier bekommt der Handel mindestens alle zwei Jahre einen geplanten Besuch; 2025 war mehr als die Hälfte aller Besuche ungeplant.\nStudents: Hände hoch: Wer hat einen Ordner, den seit zwei Jahren niemand geöffnet hat?\nCue: Druck 1 Zeitleiste, 2 Plan-Uhr, 3 ungeplante Besuche.\nRemember: Erfundene Firma. Zwei Jahre sind ein Ziel, kein Versprechen.",
-      "06 · Besuch in vier Tagen\nTime: 7 min\nSay: Es ist uns passiert. Montag ein Brief: Der Arbeitsinspektor kommt in vier Tagen. Wir suchen an fünf Orten und bleiben zweimal lange. Hätte der Besuch am nächsten Tag sein können? Erst abstimmen lassen. Dann: Nein. Ein geplanter Besuch braucht drei Arbeitstage schriftliche Ankündigung, ein ungeplanter keine. Dann die letzten drei Zeilen vorlesen: Papiere binnen 3 Tagen nach der Anfrage, die Fristen nach dem Besuch, ein Arbeiter ohne Vertrag.\nStudents: Ja oder Nein abstimmen.\nCue: Druck 1 Woche, 2 Frage, 3 Antwort, 4 ohne Ankündigung, 5 Papiere, 6 danach, 7 ohne Vertrag.\nRemember: Richtige Antwort: Nein. Sag das Datum, 27. November, nie den Wochentag.",
-      "07 · Wo sind unsere Daten?\nTime: 4 min\nSay: Warum vorbereiten? Unsere Daten liegen an fünf Orten. Von Hand: vier Tage, zwei späte Abende, und es fehlen immer noch Papiere. In einem Ordner sucht und prüft Claude in Minuten; wir lesen und unterschreiben. Meine Firma: Jede Zahl liegt an einem Ort, nicht in fünf Werkzeugen.\nStudents: Eine Person fragen: Wo liegen die Papiere eurer Firma heute?\nCue: Druck 1 von Hand, 2 Claudes Schritte, 3 Balken der Weltbank.\nRemember: Die Zeiten sind gemessen. Nie Stunden von Hand behaupten.",
-      "08 · Unser Kit\nTime: 5 min\nSay: Also legen wir jedes Papier in einen Ordner: das ist das Kit. Das Kit: eine Zip-Datei, {files} erfundene Dateien: Brief, Firmenordner, Fragen, Lösungsschlüssel. Lad es mit mir: entpacken, neues Projekt, Anweisungen einfügen, die vier gezeigten Einträge hinzufügen. Kein Claude-Tarif? Schau die aufgezeichneten Läufe an.\nStudents: Tun: das Projekt anlegen.\nCue: Druck 1 Kit öffnet sich, 2 Dateien ins Projekt, 3 die Datenregel.\nRemember: Heute kommen nur erfundene Dateien in Claude. Folie 15 sagt, warum.",
-      "09 · Schritt 1: die Tabelle bauen\nTime: 6 min\nSay: Schritt 1. Der Inspektor schickt {rows} Fragen; Claude schreibt je eine Zeile: Papier, zuständige Person, Ablageort. Rate: Welche haben keine benannte Person? Dann der Lauf und der Schlüssel.\nStudents: Schritt 1 ausführen, dann LOESUNGEN.md prüfen.\nCue: Druck 1 Fragen und Raten, 2 Lauf und Schlüssel.\nRemember: Antwort: L10 und L11.",
-      "10 · Schritt 2: den Check laufen lassen\nTime: 9 min\nSay: Schritt 2: Claude schreibt ein kleines Skript und führt es auf jeder Datei aus. Ein Fund: ein zu altes Datum, eine fehlende Person. Wie viele? Das Skript zählt, nicht Claude. Schlüssel: Es liest {rowsRead} Zeilen, findet {findings} echte Probleme und schließt {decoys} Grenzfälle aus, die nur wie Probleme aussehen.\nStudents: Abstimmen, dann Schritt 2 ausführen.\nCue: Druck 1 Fund und Umfrage, 2 Lauf und Schlüssel.\nRemember: Richtige Antwort: {findings}. Weicht ein Lauf ab, gilt der Schlüssel.",
-      "11 · Vier Prüfungen, drei Status\nTime: 5 min\nSay: Funde sind noch keine Antworten. Vier Prüfungen machen aus jedem Papier einen Status: kopierte Worte, ein passendes Datum, alle abgedeckt, eine benannte Person. BELEGT, SCHWACH oder LÜCKE: der schwächste Teil zählt. L10: die Sicherheitserklärung nennt 8 unserer 10 Stellen. Welcher Status?\nStudents: Abstimmen.\nCue: Druck 1 Prüfungen, 2 Status, 3 Stellen und Umfrage, 4 Antwort.\nRemember: Richtige Antwort: LÜCKE. Lagerkommissionierer und Gabelstaplerfahrer haben kein Papier.",
-      "12 · Schritt 3: Status, Plan, Briefing\nTime: 8 min\nSay: Schritt 3: Jede Frage bekommt einen Status mit Zitat. Für jede Lücke nennt der Plan das neue Papier, das eine Person anlegt. Die Person beim Besuch bekommt ein Briefing. Schlüssel: {covered} BELEGT, {weak} SCHWACH, {gap} LÜCKE. Claude entwirft und unterschreibt nichts. Ein Fehler bekommt ein neues datiertes Papier, nie eine Änderung.\nStudents: Schritt 3 ausführen, mit dem Schlüssel vergleichen.\nCue: Druck 1 Lauf und Schlüssel, 2 Dateien, 3 Regel für Fehler.\nRemember: Claude entwirft nur: Es legt nie einen Nachweis an, ändert oder rückdatiert ihn.",
-      "13 · Schritt 4: das Register bauen\nTime: 11 min\nSay: Ohne Ankündigung keine Woche: dann ist das Register, was du hast. Eine Tabelle: jedes Papier, Datum, zuständige Person, Ablageort. Claude baut es, ein Skript zählt, du kannst es fragen. Meine Firma: KI entwirft, Code rechnet jede Zahl aus, ich entscheide.\nStudents: Schritt 4 ausführen, dann das Register fragen, welche Papiere Mitarbeiter E-07 hat. Schlüssel: 4 vorhanden, 1 fehlt.\nCue: Druck 1 Prompt, 2 Lauf, 3 Tabelle, 4 nach Fälligkeit, 5 spätere Daten, 6 fragen, 7 wo es liegt.\nRemember: Eine Arbeitsdatei, kein Nachweis. Ärztliche Untersuchungen: nur das Datum, keine Gesundheitsangaben.",
-      "14 · Bereit bleiben\nTime: 8 min\nSay: Das Register bleibt. Ein Check liest es: im bezahlten Tarif jede Woche, im Free-Tarif monatlich von Hand. Drei Listen: abgelaufen, läuft bald ab, fehlt; eine benannte Person liest sie. Meine Firma: Jeden Morgen sagt mir eine kurze Nachricht, was kaputt ist und was fehlt. Ich entscheide. Nächstes Audit: dieselben Schritte, das Kit hat einen Steuer- und einen ISO-Fall.\nStudents: Free oder bezahlt nennen; den Schalter darauf klicken. Dann einen Satz schreiben: Vor [Datum] prüft [Rolle] [Papier] gegen [Regel].\nCue: Druck 1 die zwei Tarife (einen anklicken), 2 drei Listen, 3 wo neue Regeln erscheinen, 4 Satz.\nRemember: Geplante Aufgaben: nur bezahlt, keine monatliche Option.",
-      "15 · Sicherheit: was hinein darf, wer unterschreibt\nTime: 6 min\nSay: KI sortiert, zählt und entwirft; eine benannte Person unterschreibt. Öffentlicher Text und erfundene Zeilen dürfen hinein. Lohnliste mit Namen: Wie hilft KI? Erst abstimmen lassen. Dann: Die Lohnliste bleibt auf deinem Rechner; Claude schreibt das Skript, du führst es aus. Meine Firma: Personenbezogene Daten der Nutzer verlassen nie die Datenbank der App, nur Zählungen.\nStudents: Abstimmen.\nCue: Druck 1 die ersten zwei Stufen, 2 die letzten zwei und Umfrage, 3 Antwort, 4 nie in einen Chat, 5 vier Tore.\nRemember: Richtige Antwort: KI schreibt, du führst aus. Keine Rechtsberatung.",
-      "16 · Welche Kontrolle jetzt\nTime: 4 min\nSay: Letztes Mal: vier Tage, zwei späte Abende. Nächstes Mal: das Register öffnen; der Check hat die Listen schon geschickt. Ein Ordner, klare Regeln, eine Person unterschreibt; KI sucht und prüft. Dieselbe Abstimmung wie auf Folie 4. Nimm das Kit, fang mit einem Register an.\nStudents: Noch einmal abstimmen, dann Fragen.\nCue: Druck 1 Registerzeile, 2 Umfrage, 3 QR-Codes.\nRemember: Nie r drücken: Das löscht alle Stimmen, auch die von Folie 4.",
-      "a1 · Gesetze, Stand 7. November 2026\nTime: 0 min\nSay: Auf Nachfrage: Gesetze und Fristen.\nStudents: Nichts.\nCue: Von Folie 6, Rücklink.\nRemember: Sondergesetze können abweichen.",
+      "01 · Titel\nTime: 1 min\nSay: Heute lernst du, Claude zu nutzen, an einem Übungsfall: einem Audit, also eine Behörde prüft die Papiere einer Firma. Jeder Tupfen sind zehn echte Firmen in Nordmazedonien; dunklere Regionen hatten 2025 mehr Arbeitskontrollen. Der Tupfen in Bitola ist unsere Firma, Gradba-Pro. Die Tupfen sind echt, die Firma ist erfunden.\nStudents: Zuhören.\nCue: Läuft von selbst; jeder Druck geht weiter.\nRemember: Zu spät? Kürze Folie 13 zur Hälfte, dann 4, dann 14 zur Hälfte. Nie 9, 10, 12 kürzen.",
+      "02 · Heute\nTime: 3 min\nSay: Ich bin Tim Löhr und führe allein eine kleine KI-Firma, loehrning.ai. Wo ich dort dasselbe mache, sage ich es. Der Workshop handelt von Claude; das Audit ist der Übungsfall. Teil 1, der Fall: warum Kontrollen zählen und was unserer Firma passiert ist. Teil 2, Claude Schritt für Schritt: ein Projekt, {files} erfundene Dateien, vier Schritte. Teil 3, bereit bleiben: ein Register, das Claude für dich prüft, und welche Daten hinein dürfen.\nStudents: Zuhören.\nCue: Druck 1 der Fall, 2 Claude, 3 bereit bleiben.\nRemember: Gradba-Pro ist erfunden, meine Firma ist echt.",
+      "03 · Hier wird oft kontrolliert\nTime: 5 min\nSay: Kontrollen gibt es hier oft. Die große Zahl sind die Arbeitskontrollen 2025. Die vier Karten sind Nachrichten: eine gesperrte Baustelle, Kontrollen in einer Hitzewelle, eine Woche Steuerkontrollen, zu wenige Inspektoren. Etwa jeder fünfte Besuch war geplant. Unsere Region ist Pelagonien; in Bitola gab es mehr Besuche als geplant.\nStudents: Zuhören.\nCue: Druck 1 bis 4 Nachrichten, 5 nach Art, 6 Regionen, 7 Bitola.\nRemember: Der Bericht 2025 ist ein Entwurf: sag Entwurf.",
+      "04 · Welche Firmen und warum\nTime: 4 min\nSay: Der Handel ist die größte Gruppe, auch in Bitola, und einer der sieben Risikobereiche der Arbeitsinspektion. Warum sie prüft: Unfälle, Schwarzarbeit, Beschwerden. Die Arbeitsinspektion ist nicht die einzige Kontrolle: auch Steueramt, Marktinspektion und Zertifizierer prüfen Firmen. Beim letzten Druck tippst du eine Kachel mit Punkt an: dann siehst du, wer diese Branche noch prüft.\nStudents: Zuhören.\nCue: Druck 1 Branchen, 2 Risikokacheln, 3 Gründe, 4 wer noch prüft (Kachel antippen).\nRemember: Die Balken der informellen Jobs sind eigene Rechnung.",
+      "05 · Wir sind Gradba-Pro\nTime: 4 min\nSay: Wir sind die Firma: ein Baustoffhandel in Bitola, 24 Leute. Goran ist der Direktor, Elena leitet das Büro. Die letzte Kontrolle war im Frühjahr 2024; seitdem hat niemand die Ordner geöffnet. Für den Handel sieht der Plan mindestens alle zwei Jahre einen Besuch vor, wir sind also dran. 2025 war mehr als die Hälfte aller Besuche ungeplant.\nStudents: Zuhören.\nCue: Druck 1 Zeitleiste (ziehen), 2 Plan-Uhr, 3 ungeplante Besuche.\nRemember: Erfundene Firma. Zwei Jahre sind ein Planziel, kein Versprechen.",
+      "06 · Besuch in vier Tagen\nTime: 7 min\nSay: Es ist uns passiert. Am Montag, 23. November, kommt ein Brief der Arbeitsinspektion, der Behörde, die Arbeitgeber prüft. Ein Inspektor kommt am 27. November um 09:00. Mit dem Brief kommen drei Prüflisten: Arbeit, Arbeitsschutz, Personalunterlagen. Das sind die Fragen, die der Inspektor stellen wird. Wir haben Montag bis Donnerstag. Am Dienstag suchen wir an fünf Orten, am Mittwoch und Donnerstag bleiben wir lange. Die drei Prüflisten sind im Kit: Claude prüft unsere Dateien gegen sie.\nStudents: Zuhören.\nCue: Druck 1 die Woche, 2 die drei Prüflisten.\nRemember: Sag das Datum, 27. November, nicht den Wochentag.",
+      "07 · Wo sind unsere Daten?\nTime: 4 min\nSay: Unsere Papiere liegen an fünf Orten. Von Hand: vier Tage, zwei späte Abende, und es fehlen immer noch Papiere. Sobald die Papiere in einem Ordner in einem Claude-Projekt liegen, sucht und prüft Claude in Minuten; wir lesen und unterschreiben. Die Zeiten stammen aus unserem aufgezeichneten Lauf. Die Balken der Weltbank: Die Geschäftsführung verbringt mehr Zeit mit Vorschriften als vor ein paar Jahren. Meine Firma: Jede Zahl liegt an einem Ort, nicht in fünf Werkzeugen.\nStudents: Zuhören.\nCue: Druck 1 von Hand, 2 Claudes vier Schritte (der Schalter zeigt eine Spur oder beide), 3 Balken der Weltbank.\nRemember: Die Zeiten sind gemessen. Nie Stunden von Hand behaupten.",
+      "08 · Unser Kit\nTime: 5 min\nSay: Die Lektion: Ein Projekt hält die Anweisungen und die Dateien einmal; jeder Chat darin sieht beides. Das Kit ist eine Zip-Datei mit {files} erfundenen Dateien. Mach es mit mir. Herunterladen und entpacken. In Claude: Projects, New project, Name Gradba-Audit. Füge projektanweisungen.md in die Anweisungen ein und speichere. Füge die Dateien aus listen/ und ordner/ hinzu, dazu faelle/fall-A-arbeit.md und vorlagen/register.csv. Unter Settings, Capabilities schaltest du Code execution and file creation ein. extras/ ist für nach dem Workshop.\nStudents: Tun: das Projekt anlegen. Ohne Claude-Konto die aufgezeichneten Läufe ansehen.\nCue: Druck 1 das Kit öffnet sich, 2 Schritte 2 bis 5, 3 Schritt 6 und extras/.\nRemember: Heute kommen nur erfundene Dateien in Claude. Ohne Code execution: Claude um check.py bitten und es auf dem eigenen Rechner ausführen.",
+      "09 · Schritt 1: die Tabelle bauen\nTime: 6 min\nSay: Schritt 1. Die drei Prüflisten haben {rows} Fragen. Claude schreibt für jede eine Zeile: das Papier, die zuständige Person, den Ablageort. Die Regel in den Anweisungen: nicht raten. Beantwortet keine Datei die Frage, schreibt Claude NICHT IN DATEIEN. So verlangst du von Claude einen Beleg. Im Schlüssel haben L10 und L11 keine benannte Person.\nStudents: Tun: einen Chat im Projekt starten, Prompt 1 einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 die Fragen und die Regel, 2 der aufgezeichnete Lauf und der Schlüssel.\nRemember: Weicht ein Lauf ab, gilt der Schlüssel.",
+      "10 · Schritt 2: den Check laufen lassen\nTime: 9 min\nSay: Schritt 2. Claude schreibt ein kleines Skript und führt es auf jeder Datei aus. Die Lektion: Code zählen lassen, nicht das Modell. Ein Fund ist ein echtes Problem: ein zu altes Datum, eine fehlende Person. Ein Grenzfall sieht nur so aus. Schlüssel: Das Skript liest {rowsRead} Zeilen, findet {findings} Probleme und schließt {decoys} Grenzfälle aus.\nStudents: Tun: im gleichen Chat Prompt 2 einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 Fund und Grenzfall, 2 der aufgezeichnete Lauf und der Schlüssel.\nRemember: Braucht eingeschaltete Code execution. Weicht ein Lauf ab, gilt der Schlüssel.",
+      "11 · Vier Prüfungen, drei Status\nTime: 5 min\nSay: Klare Regeln geben klare Antworten. Die Anweisungen geben Claude vier Prüfungen für jedes Papier: wörtlich aus der Datei kopiert, ein passendes Datum, alle erfasst, eine benannte Person. Dann ein Status: BELEGT, SCHWACH oder LÜCKE; der schwächste Teil zählt. Beispiel L10: Die Sicherheitserklärung nennt {listed} unserer {jobs} Stellen, also LÜCKE.\nStudents: Zuhören.\nCue: Druck 1 die vier Prüfungen, 2 die drei Status, 3 die Stellen, 4 die LÜCKE.\nRemember: Lagerkommissionierer und Gabelstaplerfahrer haben kein Papier.",
+      "12 · Schritt 3: Status, Plan, Briefing\nTime: 8 min\nSay: Vor Schritt 3 fügst du vier Dateien zum Projekt hinzu: mitteilung_DIT_2026-11-23.md, vorlagen/evidence-index.csv, vorlagen/clock.csv und vorlagen/neues-papier.md. Jede Frage bekommt einen Status mit einem Zitat aus den Dateien. Für jede Lücke nennt der Plan das neue Papier, das eine Person anlegt, und die Person beim Besuch bekommt ein Briefing. Claude schreibt diese Dateien als Entwürfe. Schlüssel: {covered} BELEGT, {weak} SCHWACH, {gap} LÜCKE.\nStudents: Tun: die vier Dateien hinzufügen, Prompt 3 im gleichen Chat einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 Lauf und Schlüssel, 2 die Dateien von Claude, 3 die Regel für Fehler.\nRemember: Ein Fehler bekommt ein neues datiertes Papier, nie eine Änderung. Claude unterschreibt nichts.",
+      "13 · Schritt 4: das Register bauen\nTime: 11 min\nSay: Manche Besuche kommen ohne Ankündigung; dann gibt es keine Woche zum Vorbereiten. Das Register hast du dann: eine Tabelle mit jedem Papier, seinem Datum, der zuständigen Person und dem Ablageort. Schritt 4 läuft im gleichen Chat. Claude baut die Tabelle, ein Skript zählt, und du kannst sie fragen. Meine Firma: KI entwirft, Code rechnet jede Zahl aus, ich entscheide.\nStudents: Tun: Prompt 4 einfügen, dann das Register fragen, welche Papiere Mitarbeiter E-07 hat. Schlüssel: {askOnFile} vorhanden, {askMissing} fehlt.\nCue: Druck 1 Prompt, 2 Lauf und Schlüssel, 3 die Tabelle, 4 wer die Listen liest, 5 spätere Daten (ziehen), 6 nach E-07 fragen, 7 mit einer Tabelle anfangen.\nRemember: Eine Arbeitsdatei, kein Nachweis. Ärztliche Untersuchungen: nur das Datum, keine Gesundheitsangaben.",
+      "14 · Bereit bleiben\nTime: 8 min\nSay: Das Register bleibt nach dem Audit. Im bezahlten Tarif prüft es eine geplante Aufgabe in Claude jede Woche; im Free-Tarif fügt eine Person einmal im Monat den gespeicherten Prompt ein. Der Prompt liegt in extras/bereit-bleiben/. Der Check gibt drei Listen: abgelaufen, läuft bald ab, fehlt; eine benannte Person liest sie. Beobachte, wo neue Regeln erscheinen. Das nächste Audit nutzt dieselbe Projekt-Methode; Fall B und C liegen in extras/. Meine Firma: Jeden Morgen sagt mir eine kurze Nachricht, was kaputt ist und was fehlt. Ich entscheide.\nStudents: Zuhören.\nCue: Druck 1 die zwei Tarife (der Schalter zeigt Free), 2 die drei Listen, 3 wo neue Regeln erscheinen, 4 das nächste Audit.\nRemember: Geplante Aufgaben: nur bezahlt, keine monatliche Option.",
+      "15 · Sicherheit: was hinein darf, wer unterschreibt\nTime: 6 min\nSay: KI sortiert, zählt und entwirft; eine benannte Person prüft und unterschreibt. Vier Stufen. Öffentlicher Text und erfundene Zeilen dürfen hinein. Die Lohnliste mit Namen bleibt auf deinem Rechner: Claude schreibt das Skript, du führst es aus. Nie in einen Chat: die persönliche Identifikationsnummer, Gesundheitsinhalte, Daumen hoch oder runter auf echten Zeilen. Echte Daten erst nach vier Toren; frag deine Datenschutzberatung. Meine Firma: Personenbezogene Daten der Nutzer verlassen nie die Datenbank der App, nur Zählungen.\nStudents: Zuhören.\nCue: Druck 1 Stufe 1 und 2, 2 Stufe 3 und 4, 3 nie in einen Chat, 4 die vier Tore.\nRemember: Keine Rechtsberatung. Nenne nie ein Werkzeug sicher.",
+      "16 · Welche Kontrolle jetzt\nTime: 4 min\nSay: Letztes Mal: vier Tage, zwei späte Abende. Nächstes Mal: das Register öffnen; der Wochencheck hat die Listen schon geschickt. Vier Lektionen für deine eigene Arbeit: Ein Projekt hält Anweisungen und Dateien; verlang einen Beleg; lass Code zählen und prüf die Antwort mit einem Schlüssel; ein Mensch unterschreibt. Nimm das Kit und fang mit einem Register an.\nStudents: Fragen.\nCue: Druck 1 die Registerzeile, 2 die vier Lektionen, 3 QR-Codes und Fragen.\nRemember: Der QR-Code Skill führt zum Claude-Skill; er liegt auch in extras/claude/.",
+      "a1 · Gesetze, Stand 7. November 2026\nTime: 0 min\nSay: Auf Nachfrage: Gesetze und Fristen.\nStudents: Nichts.\nCue: Von keiner Hauptfolie verlinkt; Zurück führt zu Folie 6.\nRemember: Sondergesetze können abweichen.",
       "a2 · Konten und die Datenleiter\nTime: 0 min\nSay: Auf Nachfrage: Datenstufen und Anbieterbedingungen.\nStudents: Nichts.\nCue: Von Folie 15, Rücklink.\nRemember: Nie ein Werkzeug sicher nennen.",
       "a3 · Quellen der Karten\nTime: 0 min\nSay: Auf Nachfrage: Quellen von Folie 3.\nStudents: Nichts.\nCue: Von Folie 3, Rücklink.\nRemember: Die Übersetzungen sind unsere.",
       "a4 · Branchen und Lücken\nTime: 0 min\nSay: Auf Nachfrage: Branchen und Lücken.\nStudents: Nichts.\nCue: Von Folie 4, Rücklink.\nRemember: Nicht gefunden ist kein Beweis."
