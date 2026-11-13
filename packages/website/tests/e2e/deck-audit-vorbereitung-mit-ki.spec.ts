@@ -25,7 +25,7 @@ test.use({ contextOptions: { reducedMotion: "reduce" } });
 const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"] as const;
 const APPENDIX_IDS = ["a1", "a2", "a3", "a4"] as const;
 /** The slides that show a recorded Claude take (steps 1 to 4) and so carry the take chip. */
-const TAKE_SLIDES = ["step1", "step2", "step3", "register"] as const;
+const TAKE_SLIDES = ["step1", "step2", "register"] as const;
 /** Visual law V1 exemptions, the same list as `workshop05-visual.test.mjs`: icon masks, the globe canvas, the unused tile back. */
 const V1_EXEMPT = [".ico", "[data-glyph]", "canvas", ".tile > .face--back"] as const;
 
@@ -364,7 +364,7 @@ for (const edition of EDITIONS) {
       }
     });
 
-    test("the recorded-take chip is on steps 1 to 4 and nowhere else", async ({ page }) => {
+    test("the recorded-take chip is on steps 1, 2 and the register and nowhere else", async ({ page }) => {
       const chip = edition.lang === "de" ? /aufgezeichnet|weicht vom Schlüssel ab/ : /recorded|differs from the key/;
       for (const id of MAIN_IDS) {
         const total = await (async () => {

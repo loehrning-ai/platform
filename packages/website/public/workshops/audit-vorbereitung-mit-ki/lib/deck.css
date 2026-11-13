@@ -176,6 +176,8 @@ html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .c
 .slide.step2 .out.rec.is-pipe{padding-top:2px;padding-bottom:2px}
 /* a script row with a count of 0 is no finding: it steps back, so the ten findings are the rows that read */
 .out.rec.is-nil{opacity:.4}
+/* a recorded line kept in the page, verbatim, but not drawn: the room sees only the lines that carry the point */
+.rec.is-off,table.rec tr.is-off{display:none}
 /* the window ends on a whole line (a hair line under it), never through the middle of one: the cut is set per edition, since
    the two recordings wrap differently (measured at the stage size, which every viewport scales) */
 .slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:734px}
@@ -1165,3 +1167,7 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .stage.appx{display:grid;gap:22px;align-content:start;align-items:start}
 .tk-def{margin:0;padding:16px 22px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 28px/1.25 var(--sans)}
 .cap.fig{font-family:var(--sans)}
+/* the tests slide teaches one idea: the proof quote under the row, then one NOT IN FILES card across the width */
+.slide.tests .tp{margin:0;font:500 34px/1.3 var(--sans)}
+.slide.tests .tp .tt__q{font-size:34px}
+.slide.tests .sc{grid-template-columns:minmax(0,1fr)}

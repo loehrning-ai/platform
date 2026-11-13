@@ -39,7 +39,6 @@ for (const lang of Object.keys(shown)) {
 const CHIPS = [
   ["step1", "chain", "step1", "chip"],
   ["step2", "chain", "step2", "chip"],
-  ["step3", "chain", "step3", "chip"],
   ["register", "register", "step4", "chip"],
   ["register", "register", "ask", "chip2"],
 ];

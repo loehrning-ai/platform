@@ -129,7 +129,7 @@ export function step1(it, ctx, d, c, T) {
   const p = promptPress(it, c, d, t, 1, d.prompts.step1);
   const questions = split(t.qs).map((q) => { const [id, ...rest] = q.split(" "); return `<li><b>${esc(id)}</b> ${esc(rest.join(" "))}</li>`; }).join("");
   const qs = it({ id: "qs", tag: "div", cls: "tk-doc fig", zone: "t", k: 1, out: 2, html: `<ul>${questions}</ul>` });
-  const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step1", k: 2, ms: 1500, head: true, hitRows: d.key.noOwner, zoom: ".78,1", ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
+  const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step1", k: 2, ms: 1500, head: true, show: (x) => /^(L01|L10|L11)$/.test(x), hitRows: d.key.noOwner, zoom: ".78,1", ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the window as the recorded table streams (press 2)
   const win = dolly(it, { k: 2, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${qs}${take.take}`, plane: true, zone: null }) });
   // the files this prompt reads: the three checklist excerpts and the folder index
@@ -149,7 +149,7 @@ export function step2(it, ctx, d, c, T) {
   const v = (x) => fill(x, d.vars);
   const p = promptPress(it, c, d, t, 2, d.prompts.step2, { promptOut: 2 });
   // the answer uses the window's full width (15 words a row) and draws the script's rows as a grid, so all ten findings fit
-  const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step2", k: 2, ms: 1500, hit: true, head: true, wrap: 15, scan: { id: "scan", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
+  const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step2", k: 2, ms: 1500, show: (x) => /^(Totals|\*\*Summen)|^(- )?L1[02]\b/.test(x), hit: true, head: true, wrap: 15, scan: { id: "scan", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
   // the camera moves in on the prompt (press 1), while the left column says what the check looks for; press 2 belongs to the scan and its counters
   const win = dolly(it, { k: 1, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}`, plane: true, zone: null }) });
   // the check reads every file of the folder
@@ -163,83 +163,36 @@ export function step2(it, ctx, d, c, T) {
   return { head: "", stage, take };
 }
 
-/** S09: the L10 row stays at one size; four tests are laid onto it one after another, the ten job slots in the scope test fill (eight listed), three statuses, the GAP lands on the row. */
+/**
+ * S09: one idea. A paper counts only with proof: Claude copies the words from the file (the L10 quote, read from the kit's
+ * answer key at build time), or writes NOT IN FILES (L11 has no named owner in the files). Press 0 the proof, press 1 the
+ * NOT IN FILES card.
+ */
 export function tests(it, ctx, d, c) {
   const t = c.s.tests;
-  const v = (x) => fill(x, d.vars);
   const pill = it({ id: "pill", tag: "p", cls: "pill pill--quiet", zone: "pill", text: t.pill });
-  const [c0, c1, ...meta] = split(v(t.row));
+  const [c0, c1, ...meta] = split(t.row);
   const rowHtml = `<span class="rw__c rw__c--0">${esc(c0)}</span><span class="rw__c rw__c--1">${esc(c1)}</span><div class="rw__m">${meta.map((x, i) => `<span class="rw__c rw__c--${i + 2}">${esc(x)}</span>`).join("")}</div>`;
-  const jobs = Number(d.vars.jobs);
-  const listed = Number(d.vars.listed);
-  // the ten jobs as ten people: press 3 lights the eight the statement lists
-  const slots = Array.from({ length: jobs }, (_, i) => `<i${i < listed ? " data-cell" : ""}>${icon("person")}</i>`).join("");
-  const missing = t.miss.map((m, i) => `<b class="jobs__nm jobs__nm--${i}">${esc(m)}</b>`).join("");
-  const names = it({ tag: "span", cls: "jobs__names", k: 4, fx: "fade", win: ".3,1", html: missing });
-  const verdict = it({ tag: "span", cls: "chip chip--lg rwv", k: 4, win: ".3,1", attrs: 'data-tone="luecke"', text: t.s3.split(":")[0] });
-  // the ten job slots sit inside the scope tile: it is the one test that counts people; press 3 names the count and fills eight
-  const scope = `<span class="ttj">${it({ tag: "span", cls: "jobs__slots", k: 3, fx: "none", fill: listed, win: ".1,.9", attrs: "data-keep", html: slots })}${it({ tag: "span", cls: "jobs__l", k: 3, win: ".1,.5", text: v(t.jl) })}${names}</span>`;
-  // each test's result on L10, from the kit's answer key: the tests it fails are listed there; the quote is the one it copied.
-  // Press 3 shows the tests that do not decide the status (the weakest part is still to come); press 4 the one that
-  // fails. APPROVAL stays open when the key's evidence table names no owner (step 1 taught that), and PERIOD says that this line
-  // sets no deadline (the checklist row names none): neither is a pass, so both get a neutral chip with their reason.
   const key = keyRow(d.lang, "L10");
-  const result = (id, i) => {
-    const word = t[id].split(":")[0];
-    const fails = key.failing.split(/,\s*/).includes(word);
-    const quote = i === 0 ? `<q class="tt__q">${esc(key.quote.replace(/^["„“]|["“”]$/g, ""))}</q>` : "";
-    const open = !fails && ((id === "t4" && key.noOwner) || id === "t2");
-    const word2 = fails ? t.fail : open ? t.open[id] : t.pass;
-    const tone = fails ? "fail" : open ? "open" : "pass";
-    return it({ tag: "span", cls: `tt__r tt__r--${tone}`, k: fails ? 4 : 3, win: fails ? ".3,1" : spread(i, 4, 0.5, 0.4), html: `${quote}<b>${esc(word2)}</b>` });
-  };
-  // press 0: four outlined slots, each with its drawing; press 1 lays the four tests onto them, one after another: each comes
-  // down onto its slot and covers its drawing (a scene; flat since round 5)
-  // press 0: the four slots rise into the card one after another (a scene), so the entry is not four still outlines
-  const tiles = ["t1", "t2", "t3", "t4"].map((id, i) => it({ tag: "li", cls: `tt__s tt__s--${i + 1}`, k: 0, fx: "none", win: spread(i, 4, 0.1, 0.5), attrs: "data-scene", html: `<i class="tt__g" aria-hidden="true">${icon(TEST_ICONS[i])}</i>${it({ tag: "span", cls: `tt__i tt__i--${i + 1}`, k: 1, fx: "none", win: spread(i, 4, 0, 0.55), attrs: "data-scene", html: `${icon(TEST_ICONS[i], { cls: "tt__ic" })}<span class="tt__f">${labelled(t[id])}</span>${id === "t3" ? scope : ""}${result(id, i)}` })}` })).join("");
+  const quote = key.quote.replace(/^["„“]|["“”]$/g, "");
   const row = it({
-    id: "row", tag: "div", cls: "rwcard fig", zone: "row", fx: "none", attrs: img(v(t.row)),
-    html: `<div class="rw">${rowHtml}</div><ul class="tt">${tiles}</ul>${verdict}`,
+    id: "row", tag: "div", cls: "rwcard fig", zone: "row", fx: "none", attrs: img(t.row),
+    html: `<div class="rw">${rowHtml}</div><p class="tp"><b>${esc(t.proof)}</b> <q class="tt__q">${esc(quote)}</q></p>`,
   });
-  const tone = { s1: "belegt", s2: "schwach", s3: "luecke" };
-  const levels = ["s1", "s2", "s3"].map((id, i) => it({ tag: "li", cls: "sc__i", k: 2, win: spread(i, 3, 0.3, 0.45), attrs: `data-tone="${tone[id]}"`, html: `<span class="chip chip--lg" data-tone="${tone[id]}">${esc(t[id].split(":")[0])}</span><span>${esc(t[id].slice(t[id].indexOf(": ") + 2))}</span>` })).join("");
-  const stage = [
-    head(it, t, "h"),
-    pill,
-    row,
-    // the register's ten jobs stand under the row while the tests arrive (the people the scope test will count on press 3)
-    it({ id: "crowd", tag: "div", cls: "crowd fig", zone: "scale", out: 2, attrs: img(v(t.reg)), html: `<b class="crowd__l">${esc(v(t.reg))}</b><span class="crowd__p">${Array.from({ length: jobs }, () => icon("person")).join("")}</span>` }),
-    cap(it, "c0", t.c0, 0, 1),
-    cap(it, "c1", t.c1, 1, 2),
-    // the three statuses stay to the end: the verdict on press 4 is one of them
-    it({ id: "scale", tag: "ul", cls: "sc fig", zone: "scale", k: 2, fx: "none", html: levels }),
-    cap(it, "w", t.w, 2, 3),
-    cap(it, "c3", v(t.c3), 3, 4),
-    cap(it, "r", null, 4, null, { html: `<b class="gapword">${esc(t.r.split(":")[0])}:</b> ${esc(t.r.slice(t.r.indexOf(": ") + 2))}`, text: undefined }),
-  ].join("\n");
+  const none = it({ id: "scale", tag: "div", cls: "sc fig", zone: "scale", k: 1, html: `<p class="sc__i"><span class="chip chip--lg">${esc(t.none)}</span><span>${esc(t.noneL)}</span></p>` });
+  const stage = [head(it, t, "h"), pill, row, none, cap(it, "c0", t.c0, 0, 1), cap(it, "c1", t.c1, 1, null)].join("\n");
   return { head: "", stage };
 }
 
-/** S10: step 3: status, plan, briefing. The files open as page previews; the rule for mistakes is a record card and its new one. */
-export function step3(it, ctx, d, c, T) {
+/** S10: optional at home: the prompt card of step 3 (the kit's START block, byte for byte) and one line; no recorded run. */
+export function step3(it, ctx, d, c) {
   const t = c.s.step3;
-  const p = promptPress(it, c, d, t, 3, d.prompts.step3);
-  const take = takeView(it, { c, d, takes: T, key: "chain", slot: "step3", k: 1, ms: 1500, head: true, out: { take: 2, chip: 2, key: 2 }, board: { id: "board", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
-  const files = it({ id: "files", tag: "div", cls: "tk-filesbox", zone: "t", k: 2, out: 3, html: filePreviews(T.chain, t.files, { skip: /^check\.py$/, it, k: 2 }) });
-  // the camera moves in on the window as the status answer streams (press 1); the window leaves for the fix pair (press 3)
-  const win = dolly(it, { k: 1, out: 3, html: claudeWindow(it, { id: "win", ui: c.claudeUi, model: takeModel(take), crumbs: t.win, thread: `${p.pr}${take.take}${files}`, out: 3, plane: true, zone: null }) });
-  // the templates this prompt fills, and the notice it reads the clock from
-  const inputs = promptInputs(it, d, { out: 1, pick: (paths) => [...paths.filter((p) => /^(notice|mitteilung)_/.test(p)), ...named(paths, d.prompts.step3)] });
-  const fixsc = it({
-    id: "fixsc", tag: "div", cls: "fixsc fig", zone: "w", k: 3, fx: "none",
-    html: `<span class="fixsc__c fixsc__c--old">${icon("sheet", { cls: "dr" })}<small>${esc(t.fixOld)}</small></span>${it({ tag: "i", cls: "fixsc__link", k: 3, fx: "line", win: ".45,1" })}<span class="fixsc__c fixsc__c--new">${icon("sheet-check", { cls: "dr" })}<small>${esc(t.fixNew)}</small></span>`,
-  });
   const stage = [
-    p.h, win, inputs, p.pl, p.pf, p.prog,
-    take.chip, take.key, take.board,
-    it({ id: "fc", cls: "t t--s", zone: "l1", k: 2, out: 3, text: t.fc }),
-    fixsc,
-    it({ id: "fix", cls: "t t--s", zone: "l1", k: 3, text: t.fix }),
+    it({ id: "h", tag: "h2", cls: "headline headline--s", zone: "h", text: t.h }),
+    it({ id: "pl", cls: "t t--s", zone: "l1", text: t.pl }),
+    it({ id: "pf", cls: "src", zone: "l2", text: t.pf }),
+    it({ id: "pr", tag: "div", cls: "tk-slot", zone: "t", html: promptBubble(c, 3, d.prompts.step3) }),
+    progress(it, 3),
   ].join("\n");
-  return { head: "", stage, take };
+  return { head: "", stage };
 }

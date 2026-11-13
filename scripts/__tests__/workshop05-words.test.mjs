@@ -43,21 +43,21 @@ const ids = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", 
 const COUNTS = {
   en: {
     cover: [12], today: [1, 1, 1, 15], why: [17, 24, 16, 18, 19, 22, 17, 17], sectors: [20, 22, 20, 22, 18], we: [14, 18, 22, 23],
-    letter: [23, 18, 22], time: [19, 17, 22, 25], kit: [22, 19, 22, 22], step1: [23, 25, null], step2: [19, 22, null],
-    tests: [22, 20, 16, 16, 20], step3: [24, null, 18, 22], register: [23, 19, null, 10, 18, 12, null, 20],
+    letter: [23, 18, 22], time: [19, 17, 22, 25], kit: [22, 19, 22, 22], step1: [23, 25, null], step2: [19, 18, null],
+    tests: [20, 20], step3: [23], register: [23, 19, null, 10, 18, 12, null, 20],
     watch: [19, 21, 20, 16, 24], safety: [22, 17, 23, 19, 21], close: [13, 13, 19, 10],
   },
   de: {
     cover: [10], today: [1, 1, 1, 13], why: [14, 18, 14, 15, 17, 21, 15, 15], sectors: [18, 21, 18, 21, 14], we: [12, 18, 19, 23],
-    letter: [20, 18, 21], time: [19, 17, 22, 25], kit: [20, 18, 18, 21], step1: [22, 24, null], step2: [20, 22, null],
-    tests: [22, 17, 16, 15, 18], step3: [24, null, 18, 20], register: [22, 19, null, 9, 18, 13, null, 21],
+    letter: [20, 18, 21], time: [19, 17, 22, 25], kit: [20, 18, 18, 21], step1: [22, 24, null], step2: [20, 19, null],
+    tests: [20, 20], step3: [20], register: [22, 19, null, 9, 18, 13, null, 21],
     watch: [19, 18, 17, 16, 23], safety: [21, 17, 25, 21, 19], close: [13, 12, 19, 11],
   },
 };
 /** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
 const TAKE_COUNTS = {
-  en: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 17, 6: 22 } },
-  de: { step1: { 2: 19 }, step2: { 2: 19 }, step3: { 1: 15 }, register: { 2: 18, 6: 21 } },
+  en: { step1: { 2: 19 }, step2: { 2: 19 }, register: { 2: 17, 6: 22 } },
+  de: { step1: { 2: 19 }, step2: { 2: 19 }, register: { 2: 18, 6: 21 } },
 };
 
 const GLOSS_CAP = { en: 12, de: 14 };
@@ -235,7 +235,7 @@ for (const lang of LANGS) {
     const html = pages[lang];
     const frame = lang === "en" ? /Your Claude result: not recorded yet\./ : /Dein Claude-Ergebnis: noch nicht aufgezeichnet\./;
     const chip = lang === "en" ? /recorded \d{1,2} \w+ \d{4}, / : /aufgezeichnet \d\d\.\d\d\.\d{4}, /;
-    for (const [id, k] of [["step1", 2], ["step2", 2], ["step3", 1], ["register", 2], ["register", 6]]) {
+    for (const [id, k] of [["step1", 2], ["step2", 2], ["register", 2], ["register", 6]]) {
       const section = slide(lang, id);
       const hasTake = /"data-take":"/.test(JSON.stringify(section));
       assert.match(visibleTextAt(html, id, k), hasTake ? chip : frame, `${lang} ${id} press ${k}`);

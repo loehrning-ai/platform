@@ -47,8 +47,8 @@ const KIT_TOP_DE = [
 ];
 
 /** The deck's main slides in order: their kind (the registry activity) and their minutes. */
-const DECK_ACTIVITY = ["listen", "listen", "vote", "vote", "listen", "vote", "listen", "do", "do", "do", "vote", "do", "do", "write", "vote", "vote"];
-const DECK_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
+const DECK_ACTIVITY = ["listen", "listen", "vote", "vote", "listen", "vote", "listen", "do", "do", "do", "vote", "listen", "do", "write", "vote", "vote"];
+const DECK_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 8, 12, 2, 2, 15, 8, 6, 4];
 const DECK_FILE = { de: "slides.html", en: "en/slides.html" } as const;
 
 /** The main slides of a built deck edition: label and minutes, read from its sections. */
@@ -120,8 +120,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       expect(workshop.needs.join(" ")).not.toContain("Codex");
       expect(workshop.stageExplainer.facts).toHaveLength(3);
     }
-    expect(de.stageExplainer.facts).toEqual(["41 Dateien", "4 Schritte", "13 Fragen"]);
-    expect(en.stageExplainer.facts).toEqual(["41 files", "4 steps", "13 questions"]);
+    expect(de.stageExplainer.facts).toEqual(["19 Dateien", "3 Schritte", "13 Fragen"]);
+    expect(en.stageExplainer.facts).toEqual(["19 files", "3 steps", "13 questions"]);
     // The question is the deck's two hands-up prompts and its close, word for word.
     expect(en.question).toBe("Which check could come to you, and would your papers hold up?");
     expect(de.question).toBe("Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?");

@@ -101,7 +101,7 @@
         "case": "Practice case: Gradba-Pro (invented), 24 people, Bitola.",
         "o": [
           "Why audits matter to a small firm",
-          "Set up a Claude Project, run four steps",
+          "Set up a Claude Project, run three steps",
           "Keep a register Claude checks for you"
         ],
         "seg": [
@@ -115,7 +115,7 @@
         "loop": "Next audit: the same Project and register.",
         "tags": [
           "audits, our firm, the letter",
-          "one Project, four steps",
+          "one Project, three steps",
           "keeping watch, safety"
         ],
         "floor": "The map of the cover as the floor of the session, the Bitola dot in front",
@@ -426,7 +426,7 @@
         "c0": "Download the kit from the kit page and unzip it: {files} files about an invented firm.",
         "c1": "You load {add} files to start. extras/ is optional, for after the session.",
         "c2": "Set up one Project, once: the instructions and the files. Every chat in it sees both.",
-        "c3": "Four steps in one chat; check each answer with ANSWERS.md. Only invented files go in today.",
+        "c3": "Three steps in one chat today; check each answer with ANSWERS.md. Only invented files go in.",
         "zipAria": "Download the kit",
         "binderAria": "The kit as a binder: {entries} entries, {files} files",
         "page": "Kit page",
@@ -451,47 +451,22 @@
         "pl": "Same chat: paste prompt 2, then compare with ANSWERS.md.",
         "pf": "Full text: START-HERE.md, step 2",
         "fd": "Finding: a date too old or a person missing. Near miss: it only looks like one.",
-        "sc": "Claude writes a script; the script counts. It finds {findings} problems and rules out {decoys} near misses."
+        "sc": "Claude writes a script, and the script counts. Code counts, not the model."
       },
       "tests": {
         "pill": "invented case",
-        "h": "Four tests for every paper",
-        "row": "L10 · Does the safety statement name every job position? · Paper: safety statement 2019 · Jobs: {jobs} · Listed: {listed}",
-        "t1": "QUOTE: words copied from the file",
-        "t2": "PERIOD: the date fits the rule",
-        "t3": "SCOPE: every job is named",
-        "t4": "APPROVAL: a named person owns it",
-        "s1": "COVERED: all four hold.",
-        "s2": "WEAK: the paper is there, only date or approval fails.",
-        "s3": "GAP: someone has no paper, or the rule is broken.",
-        "w": "Then one status per paper. The weakest part counts.",
-        "r": "GAP: two jobs have no paper. Order picker and forklift operator are missing.",
-        "miss": [
-          "order picker",
-          "forklift operator"
-        ],
-        "jl": "{listed} of {jobs} jobs named",
-        "pass": "passes",
-        "fail": "fails",
-        "open": {
-          "t2": "this line sets no time limit",
-          "t4": "open: no named owner (step 1)"
-        },
-        "reg": "the register: {jobs} jobs",
-        "c0": "The instructions give Claude four tests. A paper counts only if it passes all four.",
-        "c1": "Each test checks one part: the words, the date, the people, the owner.",
-        "c3": "L10: the statement names {listed} of our {jobs} jobs."
+        "h": "Proof or NOT IN FILES",
+        "row": "L10 · Paper: safety statement 2019",
+        "proof": "Proof:",
+        "none": "NOT IN FILES",
+        "noneL": "L11: no file answers, so Claude does not guess.",
+        "c0": "Claude must copy the words from the file. The copy is the proof.",
+        "c1": "No file, no answer: Claude writes NOT IN FILES. You check the quote."
       },
       "step3": {
-        "h": "Step 3: status, plan, briefing",
-        "win": "Projects · Gradba audit (invented)",
-        "pl": "First add the 4 files shown. Same chat: paste prompt 3, compare with ANSWERS.md.",
-        "pf": "Full text: START-HERE.md, step 3",
-        "files": "evidence-index.csv · clock.csv · briefing · new-paper-note",
-        "fc": "Claude writes the files as drafts. A named person reads, dates and signs.",
-        "fix": "If a paper is wrong, write a new one with today's date. Never change the old one.",
-        "fixOld": "old paper stays as it is",
-        "fixNew": "new paper, dated today"
+        "h": "Optional at home: status and plan",
+        "pl": "At home: paste prompt 3. Claude drafts a status and a plan.",
+        "pf": "Full text: START-HERE.md, step 3"
       },
       "register": {
         "h": "Step 4: build the register",
@@ -814,22 +789,22 @@
       }
     },
     "notes": [
-      "01 · Cover\nTime: 1 min\nSay: Today you learn to use Claude, on one practice case: an audit, when an authority checks a firm's papers. Each dot is ten real firms in North Macedonia; darker regions had more labour inspections in 2025. The Bitola dot is our firm, Gradba-Pro. The dots are real; the firm is invented.\nStudents: Listen.\nCue: Plays by itself; any press goes on.\nRemember: Late? Cut half of slide 13, then 4, then half of 14. Never cut 9, 10, 12.",
-      "02 · Today\nTime: 3 min\nSay: I am Tim Löhr; I run a small AI company, loehrning.ai, alone. Where I do the same there, I say so. The workshop is about Claude; the audit is the practice case. Part 1, the case: why audits matter and what happened to our firm. Part 2, Claude step by step: one Project, {files} invented files, four steps. Part 3, staying ready: a register Claude checks for you, and what data may go in.\nStudents: Listen.\nCue: Press 1 the case, 2 Claude, 3 staying ready.\nRemember: Gradba-Pro is invented; my company is real.",
-      "03 · Audits happen here\nTime: 5 min\nSay: Audits are common here. The big number is the labour inspections of 2025. The four cards are news: a building site banned, checks in a heat wave, one week of tax checks, too few inspectors. About one visit in five was planned. Our region is Pelagonia; in Bitola the inspectors made more visits than planned.\nStudents: Listen.\nCue: Press 1 to 4 news cards, 5 by kind, 6 regions, 7 Bitola.\nRemember: The 2025 report is a proposal: say proposed.",
-      "04 · Which firms and why\nTime: 4 min\nSay: Trade is the largest group, also in Bitola, and one of the seven risk areas of the labour inspectorate. Why they check: accidents, undeclared work, complaints. Labour is not the only check: the tax office, the market inspectorate and certifiers check firms too. On the last press, tap a tile with a dot to show who else checks that sector.\nStudents: Listen.\nCue: Press 1 sectors, 2 risk tiles, 3 reasons, 4 who else checks (tap a tile).\nRemember: The informal bars are our own calculation.",
-      "05 · We are Gradba-Pro\nTime: 4 min\nSay: We are the firm: a building materials shop in Bitola, 24 people. Goran is the director, Elena runs the office. The last inspection was in spring 2024; nobody opened the binders since. For trade the plan is a visit at least once in two years, so we are due. Over half of all visits in 2025 were unplanned.\nStudents: Listen.\nCue: Press 1 time line (drag it), 2 planning clock, 3 unplanned visits.\nRemember: Invented firm. Two years is a plan target, not a promise.",
-      "06 · A visit in four days\nTime: 7 min\nSay: It happened to us. On Monday 23 November a letter comes from the labour inspectorate, the authority that checks employers. An inspector visits on 27 November at 09:00. With the letter come three checklists: labour, safety at work, employee records. They are the questions the inspector will ask. We have Monday to Thursday. On Tuesday we search five places; on Wednesday and Thursday we stay late. The three checklists are in the kit: Claude checks our files against them.\nStudents: Listen.\nCue: Press 1 the week, 2 the three checklists.\nRemember: Say the date, 27 November, not the weekday.",
-      "07 · Where is our data?\nTime: 4 min\nSay: Our papers sit in five places. By hand: four days, two late evenings, papers still missing. Once the papers are in one folder in a Claude Project, Claude does the searching and checking in minutes; we read and sign. The times come from our recorded run. The World Bank bars: managers spend more of their time on rules than a few years ago. My company: every number lives in one place, not in five tools.\nStudents: Listen.\nCue: Press 1 by hand, 2 Claude's four steps (the toggle shows one lane or both), 3 World Bank bars.\nRemember: The step times are measured. Never claim hours by hand.",
-      "08 · Our kit\nTime: 5 min\nSay: The lesson: a Project holds the instructions and the files once; every chat in it sees both. The kit is one zip with {files} invented files. Do it with me. Download and unzip. In Claude: Projects, New project, name it Gradba audit. Paste project-instructions.md into the instructions and save. Add the files of checklists/ and folder/, plus cases/case-A-labour.md and templates/register.csv. In Settings, Capabilities, switch on Code execution and file creation. extras/ is for after the session.\nStudents: Do: set up the project. Without a Claude account, watch the recorded runs.\nCue: Press 1 the kit opens, 2 set-up steps 2 to 5, 3 step 6 and extras/.\nRemember: Only invented files go into Claude today. Without code execution: ask Claude for check.py and run it on your computer.",
-      "09 · Step 1: make the table\nTime: 6 min\nSay: Step 1. The three checklists hold {rows} questions. Claude writes one row for each: the paper, the owner, the place. The rule in the instructions: no guessing. When no file answers, Claude writes NOT IN FILES. That is how you ask Claude for proof. In the key, L10 and L11 have no named owner.\nStudents: Do: start a chat in the project, paste prompt 1, compare with ANSWERS.md.\nCue: Press 1 the questions and the rule, 2 the recorded run and the key.\nRemember: If a run differs, the key is right.",
-      "10 · Step 2: run the check\nTime: 9 min\nSay: Step 2. Claude writes a small script and runs it on every file. The lesson: let code count, not the model. A finding is a real problem: a date too old, a person missing. A near miss only looks like one. Key: the script reads {rowsRead} rows, finds {findings} problems and rules out {decoys} near misses.\nStudents: Do: in the same chat, paste prompt 2, compare with ANSWERS.md.\nCue: Press 1 finding and near miss, 2 the recorded run and the key.\nRemember: Needs Code execution switched on. If a run differs, the key is right.",
-      "11 · Four tests, three statuses\nTime: 5 min\nSay: Clear rules give clear answers. The instructions give Claude four tests for every paper: words copied from the file, a date that fits, everyone covered, a named owner. Then one status: COVERED, WEAK or GAP; the weakest part counts. Example L10: the safety statement names {listed} of our {jobs} jobs, so it is a GAP.\nStudents: Listen.\nCue: Press 1 the four tests, 2 the three statuses, 3 the jobs, 4 the GAP.\nRemember: Order picker and forklift operator have no paper.",
-      "12 · Step 3: status, plan, briefing\nTime: 8 min\nSay: Before step 3, add four files to the project: notice_DIT_2026-11-23.md, templates/evidence-index.csv, templates/clock.csv and templates/new-paper-note.md. Each question gets a status with a quote from the files. For each gap the plan names the new paper a person must make, and the person at the visit gets a briefing. Claude writes these files as drafts. Key: {covered} COVERED, {weak} WEAK, {gap} GAP.\nStudents: Do: add the four files, paste prompt 3 in the same chat, compare with ANSWERS.md.\nCue: Press 1 the run and the key, 2 the files Claude wrote, 3 the rule for mistakes.\nRemember: A mistake gets a new dated paper, never an edit. Claude signs nothing.",
-      "13 · Step 4: build the register\nTime: 11 min\nSay: Some visits come without notice; then there is no week to prepare. The register is what you have: one table of every paper with its date, owner and place. Step 4 runs in the same chat. Claude builds the table, a script counts, and you can ask it questions. My company: AI drafts, code computes every number, I decide.\nStudents: Do: paste prompt 4, then ask the register which papers worker E-07 has. Key: {askOnFile} on file, {askMissing} missing.\nCue: Press 1 prompt, 2 run and key, 3 the table, 4 who reads the lists, 5 later dates (drag), 6 ask about E-07, 7 start with a table.\nRemember: A working file, not a record. Medical exams: the date only, no health details.",
-      "14 · Stay ready\nTime: 8 min\nSay: The register stays after the audit. On paid plans a scheduled task in Claude checks it every week; on Free one person pastes the saved prompt once a month. The prompt is in extras/keep-watch/. The check gives three lists: ran out, runs out soon, missing; a named person reads them. Watch where new rules appear. The next audit uses the same Project method; cases B and C are in extras/. My company: each morning one short message tells me what broke and what is missing. I decide.\nStudents: Listen.\nCue: Press 1 the two plans (the toggle shows Free), 2 the three lists, 3 where new rules appear, 4 the next audit.\nRemember: Scheduled tasks: paid plans only, no monthly option.",
-      "15 · Safety: what goes in, who signs\nTime: 6 min\nSay: AI sorts, counts and drafts; a named person checks and signs. Four levels. Public text and invented rows may go in. Payroll with names stays on your computer: Claude writes the script, you run it. Never in a chat: the personal ID number, health content, a thumbs up or down on real rows. Real data only after four gates; ask your data protection adviser. My company: users' personal data never leaves the app's database, only counts.\nStudents: Listen.\nCue: Press 1 levels 1 and 2, 2 levels 3 and 4, 3 never in a chat, 4 the four gates.\nRemember: Not legal advice. Never call a tool safe.",
-      "16 · Which check now\nTime: 4 min\nSay: Last time: four days, two late evenings. Next time: open the register; the weekly check already sent the lists. Four lessons for your own work: one Project holds the instructions and the files; ask for proof; let code count and check the answer with a key; a person signs. Take the kit and start with one register.\nStudents: Questions.\nCue: Press 1 the register row, 2 the four lessons, 3 QR codes and questions.\nRemember: The skill QR code leads to the Claude skill; it is also in extras/claude/.",
+      "01 · Cover\nTime: 1 min\nSay: Today you learn Claude on one practice case, an audit. The dots are real firms; our firm, Gradba-Pro, is invented.\nStudents: Listen.\nCue: Plays by itself; any press goes on.\nRemember: Late? Shorten slide 14 first.",
+      "02 · Today\nTime: 3 min\nSay: I run loehrning.ai alone. The workshop is about Claude; the audit is the practice case. Claude does three steps on {files} invented files.\nStudents: Listen.\nCue: Press 1 the case, 2 Claude, 3 staying ready.\nRemember: The firm is invented.",
+      "03 · Audits happen here\nTime: 5 min\nSay: Audits are common here. The big number is the labour inspections of 2025. Pick one news card, not all four.\nStudents: Listen.\nCue: Press 1 to 4 news, 5 kinds, 6 regions, 7 Bitola.\nRemember: Keep it short.",
+      "04 · Which firms and why\nTime: 4 min\nSay: Trade is the largest group, also in Bitola. Inspectors come after accidents, undeclared work and complaints.\nStudents: Listen.\nCue: Press 1 sectors, 2 risk tiles, 3 reasons, 4 tap a tile.\nRemember: The informal bars are our own calculation.",
+      "05 · We are Gradba-Pro\nTime: 4 min\nSay: We are a shop in Bitola with 24 people. Nobody opened the binders since the last inspection, so we are due.\nStudents: Listen.\nCue: Press 1 time line, 2 planning clock, 3 unplanned visits.\nRemember: Invented firm.",
+      "06 · A visit in four days\nTime: 7 min\nSay: On Monday a letter comes: an inspector visits on 27 November. Three checklists come with it; they are in the kit.\nStudents: Listen.\nCue: Press 1 the week, 2 the checklists.\nRemember: Say the date, not the weekday.",
+      "07 · Where is our data?\nTime: 4 min\nSay: Our papers sit in five places. By hand: four days. In one Claude Project: minutes.\nStudents: Listen.\nCue: Press 1 by hand, 2 Claude, 3 the bars.\nRemember: Times are recorded.\nMy company: every number lives in one place.",
+      "08 · Our kit\nTime: 5 min\nSay: A Project holds instructions and files once; every chat sees both. Set it up with me: {files} files.\nStudents: Do: set up the project.\nCue: Press 1 the kit, 2 steps 2 to 5, 3 step 6.\nRemember: Code execution on.",
+      "09 · Step 1: make the table\nTime: 8 min\nSay: One row for each of the {rows} questions. No file, no guess: NOT IN FILES. Look at L10, L11.\nStudents: Do: prompt 1, check ANSWERS.md.\nCue: Press 1 the questions, 2 the run.\nRemember: The key is right.",
+      "10 · Step 2: run the check\nTime: 12 min\nSay: Let code count, not the model. Key: {rowsRead} rows, {findings} findings, {decoys} near misses.\nStudents: Do: prompt 2, check ANSWERS.md.\nCue: Press 1 the words, 2 the run.\nRemember: 11 or 12 near misses is fine.",
+      "11 · Proof or NOT IN FILES\nTime: 2 min\nSay: One rule makes Claude useful: quote the file as proof, or say NOT IN FILES. Then you check the quote.\nStudents: Listen.\nCue: Press 1 NOT IN FILES.\nRemember: No quote, no answer.",
+      "12 · Optional at home: status and plan\nTime: 2 min\nSay: Step 3 is for home. Claude marks each line and drafts a plan in the same chat. A person signs.\nStudents: Listen.\nCue: No press.\nRemember: Do not run it live.",
+      "13 · Step 4: build the register\nTime: 15 min\nSay: Some visits come without notice; then the register is what you have. Claude builds it.\nStudents: Do: prompt 4, then ask about worker E-07.\nCue: Press 1 to 7, as the slide grows.\nRemember: Exams: dates only.",
+      "14 · Stay ready\nTime: 8 min\nSay: The register stays. A weekly check lists what ran out, runs out or is missing.\nStudents: Listen.\nCue: Presses 1 to 4.\nRemember: Weekly tasks: paid plans.\nMy company: each morning one message says what broke or is missing; I decide.",
+      "15 · Safety: what goes in, who signs\nTime: 6 min\nSay: AI sorts, counts and drafts; a named person signs. Real data only after four gates.\nStudents: Listen.\nCue: Presses 1 to 4.\nRemember: No tool is safe.\nMy company: personal data never leaves the app's database, only counts.",
+      "16 · Which check now\nTime: 4 min\nSay: Four lessons: one Project; ask for proof; let code count; a person signs. Start with one register.\nStudents: Questions.\nCue: Press 1 the row, 2 lessons, 3 QR codes.\nRemember: End on time.",
       "a1 · Laws, as of 7 November 2026\nTime: 0 min\nSay: If asked: laws and time limits.\nStudents: Nothing.\nCue: Not linked from a main slide; Back goes to slide 6.\nRemember: Special laws can differ.",
       "a2 · Accounts and the data ladder\nTime: 0 min\nSay: If asked: data levels and vendor terms.\nStudents: Nothing.\nCue: From slide 15, back link.\nRemember: Never call a tool safe.",
       "a3 · Sources of the cards\nTime: 0 min\nSay: If asked: sources of slide 3.\nStudents: Nothing.\nCue: From slide 3, back link.\nRemember: The translations are ours.",
@@ -938,7 +913,7 @@
         "case": "Übungsfall: Gradba-Pro (erfunden), 24 Leute, Bitola.",
         "o": [
           "Warum Kontrollen eine kleine Firma treffen",
-          "Ein Claude-Projekt einrichten, vier Schritte gehen",
+          "Ein Claude-Projekt einrichten, drei Schritte gehen",
           "Ein Register führen, das Claude für dich prüft"
         ],
         "seg": [
@@ -952,7 +927,7 @@
         "loop": "Nächstes Audit: dasselbe Projekt, dasselbe Register.",
         "tags": [
           "Kontrollen, wir, der Brief",
-          "ein Projekt, vier Schritte",
+          "ein Projekt, drei Schritte",
           "Wache halten, Sicherheit"
         ],
         "floor": "Die Karte des Titels als Boden der Sitzung, vorn der Tupfen Bitola",
@@ -1263,7 +1238,7 @@
         "c0": "Lade das Kit von der Kit-Seite und entpacke es: {files} Dateien zu einer erfundenen Firma.",
         "c1": "Zum Start lädst du {add} Dateien. extras/ ist freiwillig, für nach dem Workshop.",
         "c2": "Richte ein Projekt einmal ein: Anweisungen und Dateien. Jeder Chat darin sieht beides.",
-        "c3": "Vier Schritte in einem Chat; prüf jede Antwort mit LOESUNGEN.md. Heute kommen nur erfundene Dateien hinein.",
+        "c3": "Heute drei Schritte in einem Chat; prüf jede Antwort mit LOESUNGEN.md. Nur erfundene Dateien kommen hinein.",
         "zipAria": "Kit herunterladen",
         "binderAria": "Das Kit als Ordner: {entries} Einträge, {files} Dateien",
         "page": "Kit-Seite",
@@ -1288,47 +1263,22 @@
         "pl": "Gleicher Chat: füge Prompt 2 ein, vergleiche dann mit LOESUNGEN.md.",
         "pf": "Volltext: START-HIER.md, Schritt 2",
         "fd": "Fund: ein Datum ist zu alt oder eine Person fehlt. Grenzfall: sieht nur so aus.",
-        "sc": "Claude schreibt ein Skript; das Skript zählt. Es findet {findings} Probleme und schließt {decoys} Grenzfälle aus."
+        "sc": "Claude schreibt ein Skript, und das Skript zählt. Code zählt, nicht das Modell."
       },
       "tests": {
         "pill": "erfundener Fall",
-        "h": "Vier Prüfungen für jedes Papier",
-        "row": "L10 · Nennt die Sicherheitserklärung jede Stelle? · Papier: Sicherheitserklärung 2019 · Stellen: {jobs} · Genannt: {listed}",
-        "t1": "ZITAT: wörtlich aus der Datei kopiert",
-        "t2": "ZEITRAUM: das Datum passt zur Regel",
-        "t3": "UMFANG: alle sind erfasst",
-        "t4": "FREIGABE: eine benannte Person ist zuständig",
-        "s1": "BELEGT: alle vier stimmen.",
-        "s2": "SCHWACH: das Papier ist da, nur Datum oder Freigabe stimmen nicht.",
-        "s3": "LÜCKE: für jemanden fehlt das Papier, oder die Regel ist verletzt.",
-        "w": "Dann ein Status pro Papier. Der schwächste Teil zählt.",
-        "r": "LÜCKE: für zwei Stellen fehlt das Papier. Lagerkommissionierer und Gabelstaplerfahrer fehlen.",
-        "miss": [
-          "Lagerkommissionierer",
-          "Gabelstaplerfahrer"
-        ],
-        "jl": "{listed} von {jobs} Stellen genannt",
-        "pass": "erfüllt",
-        "fail": "verfehlt",
-        "open": {
-          "t2": "diese Zeile nennt keine Frist",
-          "t4": "offen: keine benannte Person (Schritt 1)"
-        },
-        "reg": "das Register: {jobs} Stellen",
-        "c0": "Die Anweisungen geben Claude vier Prüfungen. Ein Papier zählt nur, wenn es alle vier besteht.",
-        "c1": "Jede Prüfung schaut auf einen Teil: Wortlaut, Datum, Personen, Zuständigkeit.",
-        "c3": "L10: Die Erklärung nennt {listed} unserer {jobs} Stellen."
+        "h": "Beleg oder NICHT IN DATEIEN",
+        "row": "L10 · Papier: Sicherheitserklärung 2019",
+        "proof": "Beleg:",
+        "none": "NICHT IN DATEIEN",
+        "noneL": "L11: Keine Datei antwortet, also rät Claude nicht.",
+        "c0": "Claude muss die Worte aus der Datei kopieren. Die Kopie ist der Beleg.",
+        "c1": "Keine Datei, keine Antwort: Claude schreibt NICHT IN DATEIEN. Du prüfst das Zitat."
       },
       "step3": {
-        "h": "Schritt 3: Status, Plan, Briefing",
-        "win": "Projects · Gradba-Audit (erfunden)",
-        "pl": "Füge zuerst die 4 gezeigten Dateien hinzu. Gleicher Chat: Prompt 3 einfügen, mit LOESUNGEN.md vergleichen.",
-        "pf": "Volltext: START-HIER.md, Schritt 3",
-        "files": "evidence-index.csv · clock.csv · Briefing · neues-papier",
-        "fc": "Claude schreibt die Dateien als Entwürfe. Eine benannte Person liest, datiert und unterschreibt.",
-        "fix": "Ist ein Papier falsch, schreib ein neues mit dem heutigen Datum. Ändere nie das alte.",
-        "fixOld": "altes Papier bleibt, wie es ist",
-        "fixNew": "neues Papier, mit heutigem Datum"
+        "h": "Freiwillig zu Hause: Status und Plan",
+        "pl": "Zu Hause: Prompt 3 einfügen. Claude entwirft Status und Plan.",
+        "pf": "Volltext: START-HIER.md, Schritt 3"
       },
       "register": {
         "h": "Schritt 4: das Register bauen",
@@ -1654,22 +1604,22 @@
       }
     },
     "notes": [
-      "01 · Titel\nTime: 1 min\nSay: Heute lernst du, Claude zu nutzen, an einem Übungsfall: einem Audit, also eine Behörde prüft die Papiere einer Firma. Jeder Tupfen sind zehn echte Firmen in Nordmazedonien; dunklere Regionen hatten 2025 mehr Arbeitskontrollen. Der Tupfen in Bitola ist unsere Firma, Gradba-Pro. Die Tupfen sind echt, die Firma ist erfunden.\nStudents: Zuhören.\nCue: Läuft von selbst; jeder Druck geht weiter.\nRemember: Zu spät? Kürze Folie 13 zur Hälfte, dann 4, dann 14 zur Hälfte. Nie 9, 10, 12 kürzen.",
-      "02 · Heute\nTime: 3 min\nSay: Ich bin Tim Löhr und führe allein eine kleine KI-Firma, loehrning.ai. Wo ich dort dasselbe mache, sage ich es. Der Workshop handelt von Claude; das Audit ist der Übungsfall. Teil 1, der Fall: warum Kontrollen zählen und was unserer Firma passiert ist. Teil 2, Claude Schritt für Schritt: ein Projekt, {files} erfundene Dateien, vier Schritte. Teil 3, bereit bleiben: ein Register, das Claude für dich prüft, und welche Daten hinein dürfen.\nStudents: Zuhören.\nCue: Druck 1 der Fall, 2 Claude, 3 bereit bleiben.\nRemember: Gradba-Pro ist erfunden, meine Firma ist echt.",
-      "03 · Hier wird oft kontrolliert\nTime: 5 min\nSay: Kontrollen gibt es hier oft. Die große Zahl sind die Arbeitskontrollen 2025. Die vier Karten sind Nachrichten: eine gesperrte Baustelle, Kontrollen in einer Hitzewelle, eine Woche Steuerkontrollen, zu wenige Inspektoren. Etwa jeder fünfte Besuch war geplant. Unsere Region ist Pelagonien; in Bitola gab es mehr Besuche als geplant.\nStudents: Zuhören.\nCue: Druck 1 bis 4 Nachrichten, 5 nach Art, 6 Regionen, 7 Bitola.\nRemember: Der Bericht 2025 ist ein Entwurf: sag Entwurf.",
-      "04 · Welche Firmen und warum\nTime: 4 min\nSay: Der Handel ist die größte Gruppe, auch in Bitola, und einer der sieben Risikobereiche der Arbeitsinspektion. Warum sie prüft: Unfälle, Schwarzarbeit, Beschwerden. Die Arbeitsinspektion ist nicht die einzige Kontrolle: auch Steueramt, Marktinspektion und Zertifizierer prüfen Firmen. Beim letzten Druck tippst du eine Kachel mit Punkt an: dann siehst du, wer diese Branche noch prüft.\nStudents: Zuhören.\nCue: Druck 1 Branchen, 2 Risikokacheln, 3 Gründe, 4 wer noch prüft (Kachel antippen).\nRemember: Die Balken der informellen Jobs sind eigene Rechnung.",
-      "05 · Wir sind Gradba-Pro\nTime: 4 min\nSay: Wir sind die Firma: ein Baustoffhandel in Bitola, 24 Leute. Goran ist der Direktor, Elena leitet das Büro. Die letzte Kontrolle war im Frühjahr 2024; seitdem hat niemand die Ordner geöffnet. Für den Handel sieht der Plan mindestens alle zwei Jahre einen Besuch vor, wir sind also dran. 2025 war mehr als die Hälfte aller Besuche ungeplant.\nStudents: Zuhören.\nCue: Druck 1 Zeitleiste (ziehen), 2 Plan-Uhr, 3 ungeplante Besuche.\nRemember: Erfundene Firma. Zwei Jahre sind ein Planziel, kein Versprechen.",
-      "06 · Besuch in vier Tagen\nTime: 7 min\nSay: Es ist uns passiert. Am Montag, 23. November, kommt ein Brief der Arbeitsinspektion, der Behörde, die Arbeitgeber prüft. Ein Inspektor kommt am 27. November um 09:00. Mit dem Brief kommen drei Prüflisten: Arbeit, Arbeitsschutz, Personalunterlagen. Das sind die Fragen, die der Inspektor stellen wird. Wir haben Montag bis Donnerstag. Am Dienstag suchen wir an fünf Orten, am Mittwoch und Donnerstag bleiben wir lange. Die drei Prüflisten sind im Kit: Claude prüft unsere Dateien gegen sie.\nStudents: Zuhören.\nCue: Druck 1 die Woche, 2 die drei Prüflisten.\nRemember: Sag das Datum, 27. November, nicht den Wochentag.",
-      "07 · Wo sind unsere Daten?\nTime: 4 min\nSay: Unsere Papiere liegen an fünf Orten. Von Hand: vier Tage, zwei späte Abende, und es fehlen immer noch Papiere. Sobald die Papiere in einem Ordner in einem Claude-Projekt liegen, sucht und prüft Claude in Minuten; wir lesen und unterschreiben. Die Zeiten stammen aus unserem aufgezeichneten Lauf. Die Balken der Weltbank: Die Geschäftsführung verbringt mehr Zeit mit Vorschriften als vor ein paar Jahren. Meine Firma: Jede Zahl liegt an einem Ort, nicht in fünf Werkzeugen.\nStudents: Zuhören.\nCue: Druck 1 von Hand, 2 Claudes vier Schritte (der Schalter zeigt eine Spur oder beide), 3 Balken der Weltbank.\nRemember: Die Zeiten sind gemessen. Nie Stunden von Hand behaupten.",
-      "08 · Unser Kit\nTime: 5 min\nSay: Die Lektion: Ein Projekt hält die Anweisungen und die Dateien einmal; jeder Chat darin sieht beides. Das Kit ist eine Zip-Datei mit {files} erfundenen Dateien. Mach es mit mir. Herunterladen und entpacken. In Claude: Projects, New project, Name Gradba-Audit. Füge projektanweisungen.md in die Anweisungen ein und speichere. Füge die Dateien aus listen/ und ordner/ hinzu, dazu faelle/fall-A-arbeit.md und vorlagen/register.csv. Unter Settings, Capabilities schaltest du Code execution and file creation ein. extras/ ist für nach dem Workshop.\nStudents: Tun: das Projekt anlegen. Ohne Claude-Konto die aufgezeichneten Läufe ansehen.\nCue: Druck 1 das Kit öffnet sich, 2 Schritte 2 bis 5, 3 Schritt 6 und extras/.\nRemember: Heute kommen nur erfundene Dateien in Claude. Ohne Code execution: Claude um check.py bitten und es auf dem eigenen Rechner ausführen.",
-      "09 · Schritt 1: die Tabelle bauen\nTime: 6 min\nSay: Schritt 1. Die drei Prüflisten haben {rows} Fragen. Claude schreibt für jede eine Zeile: das Papier, die zuständige Person, den Ablageort. Die Regel in den Anweisungen: nicht raten. Beantwortet keine Datei die Frage, schreibt Claude NICHT IN DATEIEN. So verlangst du von Claude einen Beleg. Im Schlüssel haben L10 und L11 keine benannte Person.\nStudents: Tun: einen Chat im Projekt starten, Prompt 1 einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 die Fragen und die Regel, 2 der aufgezeichnete Lauf und der Schlüssel.\nRemember: Weicht ein Lauf ab, gilt der Schlüssel.",
-      "10 · Schritt 2: den Check laufen lassen\nTime: 9 min\nSay: Schritt 2. Claude schreibt ein kleines Skript und führt es auf jeder Datei aus. Die Lektion: Code zählen lassen, nicht das Modell. Ein Fund ist ein echtes Problem: ein zu altes Datum, eine fehlende Person. Ein Grenzfall sieht nur so aus. Schlüssel: Das Skript liest {rowsRead} Zeilen, findet {findings} Probleme und schließt {decoys} Grenzfälle aus.\nStudents: Tun: im gleichen Chat Prompt 2 einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 Fund und Grenzfall, 2 der aufgezeichnete Lauf und der Schlüssel.\nRemember: Braucht eingeschaltete Code execution. Weicht ein Lauf ab, gilt der Schlüssel.",
-      "11 · Vier Prüfungen, drei Status\nTime: 5 min\nSay: Klare Regeln geben klare Antworten. Die Anweisungen geben Claude vier Prüfungen für jedes Papier: wörtlich aus der Datei kopiert, ein passendes Datum, alle erfasst, eine benannte Person. Dann ein Status: BELEGT, SCHWACH oder LÜCKE; der schwächste Teil zählt. Beispiel L10: Die Sicherheitserklärung nennt {listed} unserer {jobs} Stellen, also LÜCKE.\nStudents: Zuhören.\nCue: Druck 1 die vier Prüfungen, 2 die drei Status, 3 die Stellen, 4 die LÜCKE.\nRemember: Lagerkommissionierer und Gabelstaplerfahrer haben kein Papier.",
-      "12 · Schritt 3: Status, Plan, Briefing\nTime: 8 min\nSay: Vor Schritt 3 fügst du vier Dateien zum Projekt hinzu: mitteilung_DIT_2026-11-23.md, vorlagen/evidence-index.csv, vorlagen/clock.csv und vorlagen/neues-papier.md. Jede Frage bekommt einen Status mit einem Zitat aus den Dateien. Für jede Lücke nennt der Plan das neue Papier, das eine Person anlegt, und die Person beim Besuch bekommt ein Briefing. Claude schreibt diese Dateien als Entwürfe. Schlüssel: {covered} BELEGT, {weak} SCHWACH, {gap} LÜCKE.\nStudents: Tun: die vier Dateien hinzufügen, Prompt 3 im gleichen Chat einfügen, mit LOESUNGEN.md vergleichen.\nCue: Druck 1 Lauf und Schlüssel, 2 die Dateien von Claude, 3 die Regel für Fehler.\nRemember: Ein Fehler bekommt ein neues datiertes Papier, nie eine Änderung. Claude unterschreibt nichts.",
-      "13 · Schritt 4: das Register bauen\nTime: 11 min\nSay: Manche Besuche kommen ohne Ankündigung; dann gibt es keine Woche zum Vorbereiten. Das Register hast du dann: eine Tabelle mit jedem Papier, seinem Datum, der zuständigen Person und dem Ablageort. Schritt 4 läuft im gleichen Chat. Claude baut die Tabelle, ein Skript zählt, und du kannst sie fragen. Meine Firma: KI entwirft, Code rechnet jede Zahl aus, ich entscheide.\nStudents: Tun: Prompt 4 einfügen, dann das Register fragen, welche Papiere Mitarbeiter E-07 hat. Schlüssel: {askOnFile} vorhanden, {askMissing} fehlt.\nCue: Druck 1 Prompt, 2 Lauf und Schlüssel, 3 die Tabelle, 4 wer die Listen liest, 5 spätere Daten (ziehen), 6 nach E-07 fragen, 7 mit einer Tabelle anfangen.\nRemember: Eine Arbeitsdatei, kein Nachweis. Ärztliche Untersuchungen: nur das Datum, keine Gesundheitsangaben.",
-      "14 · Bereit bleiben\nTime: 8 min\nSay: Das Register bleibt nach dem Audit. Im bezahlten Tarif prüft es eine geplante Aufgabe in Claude jede Woche; im Free-Tarif fügt eine Person einmal im Monat den gespeicherten Prompt ein. Der Prompt liegt in extras/bereit-bleiben/. Der Check gibt drei Listen: abgelaufen, läuft bald ab, fehlt; eine benannte Person liest sie. Beobachte, wo neue Regeln erscheinen. Das nächste Audit nutzt dieselbe Projekt-Methode; Fall B und C liegen in extras/. Meine Firma: Jeden Morgen sagt mir eine kurze Nachricht, was kaputt ist und was fehlt. Ich entscheide.\nStudents: Zuhören.\nCue: Druck 1 die zwei Tarife (der Schalter zeigt Free), 2 die drei Listen, 3 wo neue Regeln erscheinen, 4 das nächste Audit.\nRemember: Geplante Aufgaben: nur bezahlt, keine monatliche Option.",
-      "15 · Sicherheit: was hinein darf, wer unterschreibt\nTime: 6 min\nSay: KI sortiert, zählt und entwirft; eine benannte Person prüft und unterschreibt. Vier Stufen. Öffentlicher Text und erfundene Zeilen dürfen hinein. Die Lohnliste mit Namen bleibt auf deinem Rechner: Claude schreibt das Skript, du führst es aus. Nie in einen Chat: die persönliche Identifikationsnummer, Gesundheitsinhalte, Daumen hoch oder runter auf echten Zeilen. Echte Daten erst nach vier Toren; frag deine Datenschutzberatung. Meine Firma: Personenbezogene Daten der Nutzer verlassen nie die Datenbank der App, nur Zählungen.\nStudents: Zuhören.\nCue: Druck 1 Stufe 1 und 2, 2 Stufe 3 und 4, 3 nie in einen Chat, 4 die vier Tore.\nRemember: Keine Rechtsberatung. Nenne nie ein Werkzeug sicher.",
-      "16 · Welche Kontrolle jetzt\nTime: 4 min\nSay: Letztes Mal: vier Tage, zwei späte Abende. Nächstes Mal: das Register öffnen; der Wochencheck hat die Listen schon geschickt. Vier Lektionen für deine eigene Arbeit: Ein Projekt hält Anweisungen und Dateien; verlang einen Beleg; lass Code zählen und prüf die Antwort mit einem Schlüssel; ein Mensch unterschreibt. Nimm das Kit und fang mit einem Register an.\nStudents: Fragen.\nCue: Druck 1 die Registerzeile, 2 die vier Lektionen, 3 QR-Codes und Fragen.\nRemember: Der QR-Code Skill führt zum Claude-Skill; er liegt auch in extras/claude/.",
+      "01 · Titel\nTime: 1 min\nSay: Heute lernt ihr Claude an einem Übungsfall, einer Kontrolle. Jeder Kreis steht für echte Firmen; unsere Firma, Gradba-Pro, ist erfunden.\nStudents: Zuhören.\nCue: Läuft von selbst; jeder Klick geht weiter.\nRemember: Zu spät? Zuerst Folie 14 kürzen.",
+      "02 · Heute\nTime: 3 min\nSay: Ich führe loehrning.ai allein. Es geht um Claude; die Kontrolle ist der Übungsfall. Claude macht drei Schritte mit {files} erfundenen Dateien.\nStudents: Zuhören.\nCue: Klick 1 der Fall, 2 Claude, 3 bereit bleiben.\nRemember: Die Firma ist erfunden.",
+      "03 · Hier wird oft kontrolliert\nTime: 5 min\nSay: Kontrollen sind hier häufig. Die große Zahl sind die Arbeitskontrollen 2025. Eine Nachricht zeigen, nicht alle vier.\nStudents: Zuhören.\nCue: Klick 1 bis 4 Nachrichten, 5 Arten, 6 Regionen, 7 Bitola.\nRemember: Kurz halten.",
+      "04 · Welche Firmen und warum\nTime: 4 min\nSay: Handel ist die größte Gruppe, auch in Bitola. Kontrollen kommen nach Unfällen, Schwarzarbeit und Beschwerden.\nStudents: Zuhören.\nCue: Klick 1 Branchen, 2 Risiko, 3 Gründe, 4 Kachel antippen.\nRemember: Die informellen Balken sind unsere eigene Rechnung.",
+      "05 · Wir sind Gradba-Pro\nTime: 4 min\nSay: Wir sind ein Laden in Bitola mit 24 Leuten. Seit der letzten Kontrolle hat niemand die Ordner geöffnet; wir sind dran.\nStudents: Zuhören.\nCue: Klick 1 Zeitleiste, 2 Planungsuhr, 3 ungeplante Besuche.\nRemember: Erfundene Firma.",
+      "06 · Besuch in vier Tagen\nTime: 7 min\nSay: Am Montag kommt ein Brief: Am 27. November kommt eine Inspektorin. Drei Prüflisten liegen bei; sie sind im Kit.\nStudents: Zuhören.\nCue: Klick 1 die Woche, 2 die Prüflisten.\nRemember: Das Datum sagen, nicht den Wochentag.",
+      "07 · Wo sind unsere Daten?\nTime: 4 min\nSay: Unsere Papiere liegen an fünf Orten. Von Hand dauerte es vier Tage; in einem Claude-Projekt Minuten.\nStudents: Zuhören.\nCue: Klick 1 von Hand, 2 Claude, 3 die Balken.\nRemember: Zeiten sind aufgezeichnet.\nMy company: Jede Zahl liegt an einem Ort.",
+      "08 · Unser Kit\nTime: 5 min\nSay: Ein Projekt hält Anweisungen und Dateien einmal; jeder Chat sieht beides. Richtet es mit mir ein: {files} erfundene Dateien.\nStudents: Tun: das Projekt einrichten.\nCue: Klick 1 das Kit, 2 Schritte 2 bis 5, 3 Schritt 6.\nRemember: Codeausführung einschalten.",
+      "09 · Schritt 1: die Tabelle bauen\nTime: 8 min\nSay: Claude schreibt eine Zeile für jede der {rows} Fragen. Keine Datei, kein Raten: NICHT IN DATEIEN. Schaut auf L10 und L11.\nStudents: Tun: Prompt 1, LOESUNGEN.md prüfen.\nCue: Klick 1 die Fragen, 2 der Lauf.\nRemember: Der Schlüssel stimmt.",
+      "10 · Schritt 2: den Check laufen lassen\nTime: 12 min\nSay: Code zählt, nicht das Modell. Schlüssel: {rowsRead} Zeilen, {findings} Funde, {decoys} Grenzfälle.\nStudents: Tun: Prompt 2, LOESUNGEN.md prüfen.\nCue: Klick 1 die Begriffe, 2 der Lauf.\nRemember: Ein Lauf kann 11 oder 12 Grenzfälle nennen.",
+      "11 · Beleg oder NICHT IN DATEIEN\nTime: 2 min\nSay: Eine Regel macht Claude nützlich: die Datei als Beleg zitieren oder NICHT IN DATEIEN sagen. Dann prüft ihr das Zitat.\nStudents: Zuhören.\nCue: Klick 1 NICHT IN DATEIEN.\nRemember: Kein Zitat, keine Antwort.",
+      "12 · Freiwillig zu Hause: Status und Plan\nTime: 2 min\nSay: Schritt 3 ist für zu Hause. Claude bewertet jede Zeile und entwirft im gleichen Chat einen Plan. Eine Person unterschreibt.\nStudents: Zuhören.\nCue: Kein Klick.\nRemember: Nicht live laufen lassen.",
+      "13 · Schritt 4: das Register bauen\nTime: 15 min\nSay: Manche Besuche kommen ohne Ankündigung; dann zählt das Register. Claude baut die Tabelle, ein Skript zählt.\nStudents: Tun: Prompt 4, dann nach E-07 fragen.\nCue: Klick 1 bis 7, wie die Folie wächst.\nRemember: Untersuchungen: nur das Datum.",
+      "14 · Bereit bleiben\nTime: 8 min\nSay: Das Register bleibt. Ein wöchentlicher Check gibt drei Listen: abgelaufen, läuft bald ab, fehlt.\nStudents: Zuhören.\nCue: Klick 1 bis 4.\nRemember: Wöchentlich nur bezahlt.\nMy company: Jeden Morgen sagt mir eine Nachricht, was kaputt ist oder fehlt; ich entscheide.",
+      "15 · Sicherheit: was hinein darf, wer unterschreibt\nTime: 6 min\nSay: KI sortiert, zählt und entwirft; eine benannte Person unterschreibt. Echte Daten erst nach vier Toren.\nStudents: Zuhören.\nCue: Klick 1 bis 4.\nRemember: Kein Werkzeug ist sicher.\nMy company: Personendaten verlassen nie die Datenbank der App, nur Zahlen.",
+      "16 · Welche Kontrolle jetzt\nTime: 4 min\nSay: Vier Lehren: ein Projekt; Belege verlangen; Code zählen lassen; eine Person unterschreibt. Mit einem Register anfangen.\nStudents: Fragen.\nCue: Klick 1 die Zeile, 2 Lehren, 3 QR-Codes.\nRemember: Pünktlich enden.",
       "a1 · Gesetze, Stand 7. November 2026\nTime: 0 min\nSay: Auf Nachfrage: Gesetze und Fristen.\nStudents: Nichts.\nCue: Von keiner Hauptfolie verlinkt; Zurück führt zu Folie 6.\nRemember: Sondergesetze können abweichen.",
       "a2 · Konten und die Datenleiter\nTime: 0 min\nSay: Auf Nachfrage: Datenstufen und Anbieterbedingungen.\nStudents: Nichts.\nCue: Von Folie 15, Rücklink.\nRemember: Nie ein Werkzeug sicher nennen.",
       "a3 · Quellen der Karten\nTime: 0 min\nSay: Auf Nachfrage: Quellen von Folie 3.\nStudents: Nichts.\nCue: Von Folie 3, Rücklink.\nRemember: Die Übersetzungen sind unsere.",

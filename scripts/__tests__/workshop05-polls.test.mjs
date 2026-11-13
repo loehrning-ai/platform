@@ -26,13 +26,13 @@ import {
 } from "../workshop05/deck-src/deck-html.mjs";
 
 const IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
-const MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
+const MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 8, 12, 2, 2, 15, 8, 6, 4];
 const APPENDIX = ["a1", "a2", "a3", "a4"];
 
 /** The labels are the agenda of the workshop page too (workshops-audit.ts); they change only in lockstep with it. */
 const LABELS = {
-  en: ["Cover", "Today", "Audits happen here", "Which firms and why", "We are Gradba-Pro", "A visit in four days", "Where is our data?", "Our kit", "Step 1: make the table", "Step 2: run the check", "Four tests, three statuses", "Step 3: status, plan, briefing", "Step 4: build the register", "Stay ready", "Safety: what goes in, who signs", "Which check now"],
-  de: ["Titel", "Heute", "Hier wird oft kontrolliert", "Welche Firmen und warum", "Wir sind Gradba-Pro", "Besuch in vier Tagen", "Wo sind unsere Daten?", "Unser Kit", "Schritt 1: die Tabelle bauen", "Schritt 2: den Check laufen lassen", "Vier Prüfungen, drei Status", "Schritt 3: Status, Plan, Briefing", "Schritt 4: das Register bauen", "Bereit bleiben", "Sicherheit: was hinein darf, wer unterschreibt", "Welche Kontrolle jetzt"],
+  en: ["Cover", "Today", "Audits happen here", "Which firms and why", "We are Gradba-Pro", "A visit in four days", "Where is our data?", "Our kit", "Step 1: make the table", "Step 2: run the check", "Proof or NOT IN FILES", "Optional at home: status and plan", "Step 4: build the register", "Stay ready", "Safety: what goes in, who signs", "Which check now"],
+  de: ["Titel", "Heute", "Hier wird oft kontrolliert", "Welche Firmen und warum", "Wir sind Gradba-Pro", "Besuch in vier Tagen", "Wo sind unsere Daten?", "Unser Kit", "Schritt 1: die Tabelle bauen", "Schritt 2: den Check laufen lassen", "Beleg oder NICHT IN DATEIEN", "Freiwillig zu Hause: Status und Plan", "Schritt 4: das Register bauen", "Bereit bleiben", "Sicherheit: was hinein darf, wer unterschreibt", "Welche Kontrolle jetzt"],
 };
 
 /** Where a slide may show a question mark: a checklist question of the inspector (the step 1 document, the L10 row of the tests

@@ -241,7 +241,9 @@ export function takeView(it, o) {
     .map((e, index) => {
       if (e.kind === "table") {
         // hitRows: the rows the key line names (their first cell), lit so the room finds them at once (nothing edited)
-        const trs = [e.header, ...e.body].map((r, i) => (row++, it({ tag: "tr", cls: i > 0 && o.hitRows?.includes(String(r[0]).trim()) ? "is-hit" : undefined, k, win: rowWindow(item++, ms), html: r.map((cell) => `<${i === 0 ? "th" : "td"}>${esc(cell)}</${i === 0 ? "th" : "td"}>`).join(""), attrs: `data-take="${rec.id}"` }))).join("");
+        // show: the rows kept on screen (the header always); the others stay in the page, verbatim, but are not drawn (is-off)
+        const trCls = (r, i) => [i > 0 && o.hitRows?.includes(String(r[0]).trim()) ? "is-hit" : "", i > 0 && o.show && !o.show(String(r[0]).trim()) ? "is-off" : ""].filter(Boolean).join(" ") || undefined;
+        const trs = [e.header, ...e.body].map((r, i) => (row++, it({ tag: "tr", cls: trCls(r, i), k, win: rowWindow(item++, ms), html: r.map((cell) => `<${i === 0 ? "th" : "td"}>${esc(cell)}</${i === 0 ? "th" : "td"}>`).join(""), attrs: `data-take="${rec.id}"` }))).join("");
         const table = `<table class="fig rec" data-take="${rec.id}"><tbody>${trs}</tbody></table>`;
         // zoom: once every row is in, the camera leans in on the lit rows and the others step back (a scene at the end of the press)
         return o.zoom && o.hitRows?.length ? `<div class="tk-zoom" data-step="${k}" data-win="${o.zoom}" data-fx="none">${table}</div>` : table;
@@ -258,7 +260,7 @@ export function takeView(it, o) {
         // a script row whose count cell is 0 ("L13 | ... | 0 | No finding") is not a finding: it steps back (class is-nil)
         const nil = pipe && /^\s*0\s*$/.test(String(e.line.split(/(?<=\s)\|(?=\s)/)[2] ?? ""));
         return e.rows
-        .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${pipe ? " is-pipe" : ""}${nil ? " is-nil" : ""}${index === hitAt ? " is-hit" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
+        .map((text, part) => (row++, it({ tag: "p", cls: `out rec${kind.cls}${pipe ? " is-pipe" : ""}${nil ? " is-nil" : ""}${index === hitAt ? " is-hit" : ""}${o.show && !o.show(e.line) ? " is-off" : ""}`, k, win, attrs: `data-take="${rec.id}" data-line="${index + 1}"${part ? " data-cont" : ""}`, html: marked[part] })))
         .join("");
     })
     .join("");
