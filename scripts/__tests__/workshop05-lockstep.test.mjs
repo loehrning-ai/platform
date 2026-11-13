@@ -162,7 +162,7 @@ test("the notes take the kit and oracle numbers from placeholders, not from typi
     const d = data[lang];
     const built = JSON.parse(/id="speaker-notes">([\s\S]*?)<\/script>/.exec(pages[lang])[1].replace(/\\u003c/g, "<"));
     assert.match(built[1], new RegExp(`\\b${d.files}\\b`), `${lang}: the built note 2 shows ${d.files}`);
-    assert.match(built[9], new RegExp(`${d.rowsRead}, ${d.findings.length}, ${d.decoys.length}`), `${lang}: the built note 10`);
+    assert.match(built[9], new RegExp(`\\b${d.rowsRead}\\b\\D+\\b${d.findings.length}\\b\\D+\\b${d.decoys.length}\\b`), `${lang}: the built note 10`);
     assert.match(built[11], new RegExp(`${d.tally.covered} (COVERED|BELEGT), ${d.tally.weak} (WEAK|SCHWACH), ${d.tally.gap} (GAP|LÜCKE)`), `${lang}: the built note 12`);
   }
 });

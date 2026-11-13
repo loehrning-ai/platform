@@ -29,8 +29,8 @@ const MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
 const APPENDIX = ["a1", "a2", "a3", "a4"];
 
 const LABELS = {
-  en: ["Cover", "Today", "What happens", "Which firms and why", "We are Gradba-Pro", "The letter and the clock", "By hand or with Claude", "Our kit", "Step 1: make the table", "Step 2: run the check", "Four tests, three statuses", "Step 3: status, plan, briefing", "Step 4: build the register", "Stay ready", "Safety: what goes in, who signs", "Which check now"],
-  de: ["Titel", "Heute", "Was passiert", "Welche Firmen und warum", "Wir sind Gradba-Pro", "Der Brief und die Fristen", "Von Hand oder mit Claude", "Unser Kit", "Schritt 1: die Tabelle bauen", "Schritt 2: den Check laufen lassen", "Vier Prüfungen, drei Status", "Schritt 3: Status, Plan, Briefing", "Schritt 4: das Register bauen", "Bereit bleiben", "Sicherheit: was hinein darf, wer unterschreibt", "Welche Kontrolle jetzt"],
+  en: ["Cover", "Today", "Audits happen here", "Which firms and why", "We are Gradba-Pro", "A visit in four days", "Where is our data?", "Our kit", "Step 1: make the table", "Step 2: run the check", "Four tests, three statuses", "Step 3: status, plan, briefing", "Step 4: build the register", "Stay ready", "Safety: what goes in, who signs", "Which check now"],
+  de: ["Titel", "Heute", "Hier wird oft kontrolliert", "Welche Firmen und warum", "Wir sind Gradba-Pro", "Besuch in vier Tagen", "Wo sind unsere Daten?", "Unser Kit", "Schritt 1: die Tabelle bauen", "Schritt 2: den Check laufen lassen", "Vier Prüfungen, drei Status", "Schritt 3: Status, Plan, Briefing", "Schritt 4: das Register bauen", "Bereit bleiben", "Sicherheit: was hinein darf, wer unterschreibt", "Welche Kontrolle jetzt"],
 };
 
 /** Poll name, the slide it lives on, and the button labels per language (values count from 0 in this order). */

@@ -56,40 +56,40 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden",
     eyebrow: "Workshop 05 · Audit-Vorbereitung",
     summary:
-      "Eine erfundene Firma bekommt Besuch vom Arbeitsinspektor. Du ordnest ihre Papiere mit KI, findest die Lücken und baust ein Register, das aktuell bleibt.",
+      "Eine erfundene Firma bekommt Besuch vom Arbeitsinspektor. Du sammelst ihre Papiere mit KI, findest die Lücken und baust ein Register für die nächste Prüfung.",
     lede:
-      "Am Montag kommt ein Brief: Am 27. November kommt der Arbeitsinspektor. Du hast vier Tage und dreizehn Fragen. Du bereitest die Papiere mit KI vor, eine Person unterschreibt.",
+      "Am Montag kommt ein Brief: In vier Tagen kommt der Arbeitsinspektor, und die Papiere liegen an fünf Orten. Claude sucht und prüft. Eine Person liest und unterschreibt.",
     description:
-      "Bereite dich mit KI auf eine Arbeitsinspektion vor: Papiere ordnen, Lücken finden, Register bauen. Dazu Steuerprüfung und ISO. Kostenlos, mit Kit.",
+      "Prüfungen kommen oft und in mehreren Formen. Bereite dich mit KI vor: ein Ordner, klare Regeln, ein Register, das du wieder nutzt. Kostenlos, mit Kit.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Schritt 2 führt Code aus: Das geht in jedem Claude-Tarif, sobald die Codeausführung an ist, oder du lässt check.py auf deinem eigenen Rechner laufen.",
-    outcome: "Eine Tabelle mit 13 Fragen, ein Status je Frage und ein Briefing für den Besuch",
+      "Alles läuft mit erfundenen Dateien, echte Daten sind nicht nötig. Schritt 2 startet ein kleines Skript: Schalte in Claude die Codeausführung an (jeder Tarif) oder lass check.py auf deinem eigenen Rechner laufen.",
+    outcome: "Ein Status je Frage und ein Register, das du wieder nutzt",
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Ein Brief, erfundene Unterlagen, ein Lösungsschlüssel. Vier Kit-Schritte in Claude, im Deck mit aufgezeichneten Läufen zum Vergleichen. Etwa 90 Minuten am Schreibtisch (unsere Schätzung).",
+        "Ein Brief, ein erfundener Ordner und ein Lösungsschlüssel. Vier Schritte in Claude, zu jedem zeigt das Deck einen aufgezeichneten Lauf. Etwa 90 Minuten am Schreibtisch (unsere Schätzung).",
       facts: ["41 Dateien", "4 Schritte", "13 Fragen"],
     },
     audience: [
-      "Büroleitungen, Buchhaltung und Inhaber kleiner Firmen in Nordmazedonien, die ein Inspektor, die Steuerbehörde (UJP) oder eine Zertifizierungsstelle prüft.",
+      "Büroleitungen, Buchhaltung und Inhaber kleiner Firmen in Nordmazedonien, die geprüft werden: vom Arbeitsinspektor, von der Steuerbehörde (UJP) oder von einer ISO-Zertifizierungsstelle.",
     ],
     notForYou: "Du brauchst Rechtsberatung für einen echten Fall, oder ein Werkzeug, das Papiere für dich ausfüllt.",
     question: "Welche Kontrolle könnte zu dir kommen, und halten deine Papiere?",
     outcomes: [
-      "Nenne, wonach ein Inspektor zuerst fragt, und zähle die Fristen ab einer Mitteilung.",
-      "Prüfe die Papiere hinter dreizehn Fragen des Inspektors mit vier Tests und sage BELEGT, SCHWACH oder LÜCKE.",
-      "Baue ein Register, das aktuell bleibt, und schreibe auf, was KI sortieren darf und was eine Person unterschreibt.",
+      "Nenne die Prüfungen, die zu einer kleinen Firma kommen können, und warum es sich lohnt, vor dem Brief bereit zu sein.",
+      "Lass Claude die Papiere in einem Ordner prüfen und markiere jede Frage als BELEGT, SCHWACH oder LÜCKE, mit Zitat.",
+      "Baue ein Register, das du für die nächste Prüfung wieder nutzt, und sage, was KI tun darf und was eine Person unterschreibt.",
     ],
     agenda: [
       { label: "Titel", minutes: 1, activity: "listen" },
       { label: "Heute", minutes: 3, activity: "listen" },
-      { label: "Was passiert", minutes: 5, activity: "vote" },
+      { label: "Hier wird oft kontrolliert", minutes: 5, activity: "vote" },
       { label: "Welche Firmen und warum", minutes: 4, activity: "vote" },
       { label: "Wir sind Gradba-Pro", minutes: 4, activity: "listen" },
-      { label: "Der Brief und die Fristen", minutes: 7, activity: "vote" },
-      { label: "Von Hand oder mit Claude", minutes: 4, activity: "listen" },
+      { label: "Besuch in vier Tagen", minutes: 7, activity: "vote" },
+      { label: "Wo sind unsere Daten?", minutes: 4, activity: "listen" },
       { label: "Unser Kit", minutes: 5, activity: "do" },
       { label: "Schritt 1: die Tabelle bauen", minutes: 6, activity: "do" },
       { label: "Schritt 2: den Check laufen lassen", minutes: 9, activity: "do" },
@@ -126,38 +126,38 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     steps: [
       {
         n: "01",
-        title: "Tage zählen",
+        title: "Brief lesen",
         description:
-          "Zum Aufwärmen im Deck, noch vor dem Kit: von der Mitteilung bis zum Besuch zählen, Folie 6.",
-        tool: "Abstimmung und Wochenlinie im Deck",
+          "Im Deck, vor dem Kit: Der Brief lässt vier Tage, und die Papiere liegen an fünf Orten. Von Hand heißt das zwei lange Abende.",
+        tool: "Das Deck",
       },
       {
         n: "02",
         title: "Tabelle bauen",
         description:
-          "Eine Zeile pro Frage der Prüfliste: Papier, Zuständige, Ablageort.",
+          "Eine Zeile pro Frage des Inspektors: welches Papier sie beantwortet, wer zuständig ist, wo es liegt.",
         tool: "Claude-Projekt",
       },
       {
         n: "03",
         title: "Check laufen lassen",
         description:
-          "Ein Skript zählt jede Zeile und nennt die Regel: 10 Funde, die 8 eingebauten Grenzfälle ohne Befund geprüft. Mit echten Dateien läuft das Skript auf deinem Rechner (Stufe 3), Claude-Projekt mit erfundenen Dateien (Stufe 2).",
+          "Ein Skript zählt jede Zeile. Es findet 10 echte Probleme und schließt 8 Grenzfälle aus. Mit echten Dateien läuft das Skript auf deinem eigenen Rechner.",
         tool: "Claude-Projekt",
       },
       {
         n: "04",
         title: "Status, Plan, Briefing",
         description:
-          "BELEGT, SCHWACH oder LÜCKE mit Zitat und vier Prüfungen, dazu neue Papiere mit echtem Datum, nie eine Änderung am alten, und ein Briefing für den Besuch.",
+          "Jede Frage bekommt BELEGT, SCHWACH oder LÜCKE, mit Zitat. Der Plan legt neue Papiere mit Datum an und ändert nie ein altes. Dazu ein kurzes Briefing für den Besuch.",
         tool: "Claude-Projekt",
       },
       {
         n: "05",
         title: "Register bauen",
         description:
-          "Eine lebende Tabelle: ein Papier pro Zeile mit Datum, gültig bis, Zuständigem und Ablageort, dazu ein wöchentlicher Check (Free-Tarif: monatlich von Hand) und eine Frage ans Register.",
-        tool: "Claude-Projekt, erfundene Dateien (Stufe 2)",
+          "Eine Tabelle mit jedem Papier, seinem Datum, der zuständigen Person und dem Ablageort. Ein regelmäßiger Check sagt, was abgelaufen ist und was fehlt. Der Ordner und die vier Schritte taugen auch für die nächste Prüfung.",
+        tool: "Claude-Projekt",
       },
     ],
     caseStudy: {
@@ -167,7 +167,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Baustoffhandel mit 24 Beschäftigten",
       period: "November 2026",
       narrative:
-        "Gradba-Pro verkauft Baustoffe in Bitola und hat 24 Beschäftigte. Die letzte Kontrolle war im Frühjahr 2024 und seitdem hat niemand die Ordner geöffnet, obwohl das Arbeitsinspektorat auf dem Papier etwa eine reguläre Kontrolle im Jahr auf 13 aktive Firmen macht (eigene Rechnung, grob) und Kontrollen nach einer Beschwerde oder einer Anordnung in der Regel ohne Ankündigung kommen. Am Montag, dem 23. November, kündigt das Arbeitsinspektorat einen Besuch für den 27. November an, und die Büroleiterin hat vier Tage und Papiere an fünf verschiedenen Orten.",
+        "Gradba-Pro verkauft Baustoffe in Bitola und hat 24 Beschäftigte. Die letzte Kontrolle war im Frühjahr 2024, und seitdem hat niemand die Ordner geöffnet. Am Montag, dem 23. November, kündigt das Arbeitsinspektorat einen Besuch für den 27. November an, und die Büroleiterin hat vier Tage und Papiere an fünf Orten.",
       metrics: [
         { label: "Fragen geprüft", value: "13" },
         { label: "Funde", value: "10" },
@@ -183,7 +183,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       ["Deck · 16 Folien", `Für den Beamer. ${DECK_KEYS.de}`],
-      ["Gradba-Audit-Kit · .zip", "41 Textdateien: Anleitung, Regeln, Skill, Vorlagen, Feldkarten, Lösungen, der erfundene Ordner und bereit-bleiben/, alles auf Deutsch."],
+      ["Gradba-Audit-Kit · .zip", "41 Textdateien auf Deutsch: der Brief, der erfundene Ordner, die vier Prompts, der Lösungsschlüssel und Karten für drei Prüfungen (Arbeit, Steuer, ISO)."],
     ]),
     kit: AUDIT_KIT.de,
   },
@@ -194,40 +194,40 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit Preparation with AI: Organize Evidence and Find Gaps",
     eyebrow: "Workshop 05 · Audit preparation",
     summary:
-      "An invented firm gets a visit from the labour inspector. You organize its papers with AI, find the gaps and build a register that stays current.",
+      "An invented firm gets a visit from the labour inspector. You gather its papers with AI, find the gaps and build a register for the next audit.",
     lede:
-      "On Monday a letter arrives: on 27 November the labour inspector comes. You have four days and thirteen questions. You prepare the papers with AI, a person signs.",
+      "On Monday a letter arrives: the labour inspector comes in four days, and the papers are in five places. Claude does the searching and checking. A person reads and signs.",
     description:
-      "Prepare for a labour inspection with AI: organize papers, find gaps, build a register. Plus tax control and ISO audits. Free workshop with kit.",
+      "Audits come often and in several kinds. Prepare with AI: one folder, clear rules and a register you can reuse. Free workshop with kit.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "Everything runs on invented files, so no real data is needed. Step 2 runs code: that works on every Claude plan once code execution is on, or run check.py on your own computer.",
-    outcome: "A table of 13 questions, a status for each and a briefing for the visit",
+      "Everything runs on invented files, so no real data is needed. Step 2 runs a small script: turn on code execution in Claude (any plan) or run check.py on your own computer.",
+    outcome: "A status for each question and a register you can reuse",
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A letter, invented records and an answer key. Four kit steps in Claude, with recorded runs to compare in the deck. About 90 minutes at your desk (our estimate).",
+        "A letter, an invented folder and an answer key. Four steps in Claude, and the deck shows a recorded run of each. About 90 minutes at your desk (our estimate).",
       facts: ["41 files", "4 steps", "13 questions"],
     },
     audience: [
-      "Office managers, accountants and owners of small firms in North Macedonia who get checked by an inspector, the tax authority (UJP) or a certifier.",
+      "Office managers, accountants and owners of small firms in North Macedonia who get audited: by the labour inspector, the tax authority (UJP) or an ISO certifier.",
     ],
     notForYou: "You need legal advice for a real case, or a tool that fills in papers for you.",
     question: "Which check could come to you, and would your papers hold up?",
     outcomes: [
-      "Name what an inspector asks for first and count the clocks from a notice.",
-      "Check the papers behind thirteen inspector questions with four tests and say COVERED, WEAK or GAP.",
-      "Build a register that stays current and write down what AI may sort and what a person signs.",
+      "Name the audits a small firm can get, and why it pays to be ready before the letter comes.",
+      "Let Claude check the papers in one folder and mark each question COVERED, WEAK or GAP, with a quote.",
+      "Build a register you can reuse for the next audit, and say what AI may do and what a person signs.",
     ],
     agenda: [
       { label: "Cover", minutes: 1, activity: "listen" },
       { label: "Today", minutes: 3, activity: "listen" },
-      { label: "What happens", minutes: 5, activity: "vote" },
+      { label: "Audits happen here", minutes: 5, activity: "vote" },
       { label: "Which firms and why", minutes: 4, activity: "vote" },
       { label: "We are Gradba-Pro", minutes: 4, activity: "listen" },
-      { label: "The letter and the clock", minutes: 7, activity: "vote" },
-      { label: "By hand or with Claude", minutes: 4, activity: "listen" },
+      { label: "A visit in four days", minutes: 7, activity: "vote" },
+      { label: "Where is our data?", minutes: 4, activity: "listen" },
       { label: "Our kit", minutes: 5, activity: "do" },
       { label: "Step 1: make the table", minutes: 6, activity: "do" },
       { label: "Step 2: run the check", minutes: 9, activity: "do" },
@@ -264,38 +264,38 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     steps: [
       {
         n: "01",
-        title: "Count the days",
+        title: "Read the letter",
         description:
-          "A warm-up in the deck, before the kit: count from the notice to the visit, slide 6.",
-        tool: "Poll and week line in the deck",
+          "In the deck, before the kit: the letter gives four days, and the papers are in five places. By hand that means two late evenings.",
+        tool: "The deck",
       },
       {
         n: "02",
         title: "Make the table",
         description:
-          "One row per checklist question: paper, owner, where it lives.",
+          "One row per inspector question: which paper answers it, who owns it, where it lives.",
         tool: "Claude Project",
       },
       {
         n: "03",
         title: "Run the check",
         description:
-          "A script counts every row and names the rule: 10 findings, the 8 planted near misses checked with no problem. With real files the script runs on your own computer (Level 3), Claude Project with invented files (Level 2).",
+          "A script counts every row. It finds 10 real problems and rules out 8 near misses. With real files the script runs on your own computer.",
         tool: "Claude Project",
       },
       {
         n: "04",
         title: "Status, plan, briefing",
         description:
-          "COVERED, WEAK or GAP with a quote and the four tests, plus new papers with real dates, never a change to an old one, and a briefing for the visit.",
+          "Each question gets COVERED, WEAK or GAP, with a quote. The plan adds new dated papers and never changes an old one. Then a short briefing for the visit.",
         tool: "Claude Project",
       },
       {
         n: "05",
         title: "Build the register",
         description:
-          "One living table: one paper per row with date, valid until, owner and where it lives, plus a weekly check (Free plan: monthly by hand) and a question to the register.",
-        tool: "Claude Project, invented files (Level 2)",
+          "One table of every paper, its date, its owner and where it lives. A regular check says what ran out and what is missing. The same folder and the same four steps work for the next audit.",
+        tool: "Claude Project",
       },
     ],
     caseStudy: {
@@ -305,7 +305,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "building materials trade with 24 staff",
       period: "November 2026",
       narrative:
-        "Gradba-Pro sells building materials in Bitola and has 24 employees. Its last inspection was in spring 2024 and nobody has opened the binders since, although on paper the labour inspectorate does roughly one regular inspection a year for every 13 active firms (own calculation, rough), and inspections after a complaint or an order usually come without notice. On Monday 23 November the labour inspectorate announces a visit for 27 November, and the office manager has four days and papers in five different places.",
+        "Gradba-Pro sells building materials in Bitola and has 24 employees. Its last inspection was in spring 2024, and nobody has opened the binders since. On Monday 23 November the labour inspectorate announces a visit for 27 November, and the office manager has four days and papers in five places.",
       metrics: [
         { label: "Questions checked", value: "13" },
         { label: "Findings", value: "10" },
@@ -321,7 +321,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       ["Deck · 16 slides", `For the projector. ${DECK_KEYS.en}`],
-      ["Gradba audit kit · .zip", "41 text files: the letter, the invented folder, rules, field cards, the skill, templates, the answer key and keep-watch/."],
+      ["Gradba audit kit · .zip", "41 text files: the letter, the invented folder, the four prompts, the answer key and cards for three audits (labour, tax, ISO)."],
     ]),
     kit: AUDIT_KIT.en,
   },

@@ -14,7 +14,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "gradba-audit-kit-de.zip",
     title: "Gradba-Audit-Kit",
-    lead: "Eine erfundene Arbeitsinspektion, dreizehn Fragen und ein Schlüssel, der aus den Dateien gerechnet ist.",
+    lead: "Eine erfundene Arbeitsinspektion: ein Ordner, dreizehn Fragen und ein Lösungsschlüssel. Fälle für eine Steuerprüfung und ein ISO-Audit liegen auch bei.",
     stats: [
       { value: "41", label: "Dateien" },
       { value: "4", label: "Schritte" },
@@ -38,7 +38,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Schritt 1",
         title: "Tabelle bauen",
-        input: "Drei Prüflisten und der Ordnerplan",
+        input: "Die drei Prüflisten und der Ordnerplan",
         action: "Schritt 1 im Claude-Projekt ausführen",
         output: "Tabelle mit 13 Zeilen und 5 Spalten",
         note: "Sag es voraus, dann prüf es in LOESUNGEN.md.",
@@ -46,7 +46,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Schritt 2",
         title: "Check laufen lassen",
-        input: "Die CSV-, txt- und md-Dateien in ordner/",
+        input: "Die Papiere der Firma in ordner/",
         action: "Claude schreibt und führt einen Check aus",
         output: "10 Funde und mindestens 8 geprüft ohne Befund",
         note: "Sag es zuerst voraus: Wie viele Funde? Dann prüf es in LOESUNGEN.md.",
@@ -57,7 +57,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Tabelle, Funde, die Mitteilung und drei Vorlagen",
         action: "Status je Frage, Plan, Briefing",
         output: "2 BELEGT, 1 SCHWACH, 10 LÜCKE und ein Briefing",
-        note: "Claude unterschreibt nichts. Eine benannte Person liest und unterschreibt. Echte Dateien: Stufe 3, das Skript läuft bei dir.",
+        note: "Claude unterschreibt nichts. Eine benannte Person liest und unterschreibt. Mit echten Dateien läuft das Skript auf deinem eigenen Rechner.",
       },
       {
         tag: "Schritt 4",
@@ -65,11 +65,11 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Die CSV-Dateien in ordner/ und vorlagen/register.csv",
         action: "Claude baut das Register und einen Check",
         output: "register.csv mit 98 Zeilen, 4 abgelaufen, 1 läuft ab, 4 fehlen",
-        note: "Sag es voraus, dann prüf es in LOESUNGEN.md. Nur Daten, keine Gesundheitsinhalte.",
+        note: "Sag es voraus, dann prüf es in LOESUNGEN.md. Das Register hält nur Datumsangaben, nie Gesundheitsinhalte.",
       },
     ],
     howTo:
-      "Entpacke das Kit, öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/, ordner/, faelle/fall-A-arbeit.md und vorlagen/register.csv hinzu. Die Dateien sind erfunden. Deine echten Dateien gehen erst in ein Werkzeug, wenn du die Datenstufen kennst: Folie 15 im Deck und START-HIER.md.",
+      "Entpacke das Kit, öffne Claude, lege ein Projekt an, füge projektanweisungen.md ein und füge listen/, ordner/, faelle/fall-A-arbeit.md und vorlagen/register.csv hinzu. Die Dateien sind erfunden, darum dürfen sie in Claude. Bevor du Dateien deiner eigenen Firma nutzt, lies die Sicherheitsfolie im Deck und START-HIER.md.",
     fictionalNote: "Alle Dateien sind für die Übung erfunden. Keine Rechtsberatung.",
     contents: [
       { name: "START-HIER.md", description: "Einrichtung und die vier Prompts" },
@@ -79,8 +79,8 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "mitteilung_DIT_2026-11-23.md", description: "Der Brief vom Inspektorat" },
       { name: "listen/", description: "Dreizehn Fragen in drei Auszügen" },
       { name: "ordner/", description: "Papiere der Firma, CSV und Text" },
-      { name: "faelle/", description: "Feldkarten für drei Prüfungen" },
-      { name: "inspektor/", description: "Verlangen und Protokoll, später öffnen" },
+      { name: "faelle/", description: "Fälle Arbeit, Steuer und ISO" },
+      { name: "inspektor/", description: "Anforderung und Protokoll, später öffnen" },
       { name: "vorlagen/", description: "Papier, Uhr, Nachweisindex, Register" },
       { name: "bereit-bleiben/", description: "Wochencheck, Beobachtungsliste, Sicherheitskarte" },
       { name: "claude/", description: "Skill, auch unter /skills/audit-nachweise.zip" },
@@ -89,7 +89,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "gradba-audit-kit.zip",
     title: "Gradba audit kit",
-    lead: "An invented labour inspection, thirteen questions and a key computed from the files.",
+    lead: "An invented labour inspection: one folder, thirteen questions and an answer key. Cases for a tax audit and an ISO audit are in it too.",
     stats: [
       { value: "41", label: "files" },
       { value: "4", label: "steps" },
@@ -113,7 +113,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Step 1",
         title: "Make the table",
-        input: "Three checklist excerpts and the folder map",
+        input: "The three checklists and the folder map",
         action: "Run Step 1 in your Claude Project",
         output: "A table with 13 rows and 5 columns",
         note: "Predict first, then check ANSWERS.md.",
@@ -121,7 +121,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Step 2",
         title: "Run the check",
-        input: "The CSV, txt and md files in folder/",
+        input: "The firm's papers in folder/",
         action: "Claude writes and runs a check",
         output: "10 findings and at least 8 checked with no problem",
         note: "Predict first: how many findings? Then check ANSWERS.md.",
@@ -132,7 +132,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "The table, the findings, the notice and three templates",
         action: "A status per question, a plan, a briefing",
         output: "2 COVERED, 1 WEAK, 10 GAP and a briefing",
-        note: "Claude signs nothing. A named person reads and signs. Real files: Level 3, the script runs on your side.",
+        note: "Claude signs nothing. A named person reads and signs. With real files the script runs on your own computer.",
       },
       {
         tag: "Step 4",
@@ -140,11 +140,11 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "The CSV files in folder/ and templates/register.csv",
         action: "Claude builds the register and a check",
         output: "register.csv with 98 rows, 4 expired, 1 expiring, 4 missing",
-        note: "Predict first, then check ANSWERS.md. Dates only, no health content.",
+        note: "Predict first, then check ANSWERS.md. The register holds dates only, never health content.",
       },
     ],
     howTo:
-      "Unzip the kit, open Claude, make a Project, paste project-instructions.md, then add checklists/, folder/, cases/case-A-labour.md and templates/register.csv. The files are invented. Your real files go into a tool only after you know the data levels: slide 15 in the deck and START-HERE.md.",
+      "Unzip the kit, open Claude, make a Project, paste project-instructions.md, then add checklists/, folder/, cases/case-A-labour.md and templates/register.csv. The files are invented, so they may go into Claude. Before you use your own firm's files, read the safety slide in the deck and START-HERE.md.",
     fictionalNote: "All files are invented for the exercise. Not legal advice.",
     contents: [
       { name: "START-HERE.md", description: "Setup and the four prompts" },
@@ -154,8 +154,8 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "notice_DIT_2026-11-23.md", description: "The letter from the inspectorate" },
       { name: "checklists/", description: "Thirteen questions in three excerpts" },
       { name: "folder/", description: "The firm's papers, CSV and text" },
-      { name: "cases/", description: "Field cards for three audits" },
-      { name: "inspector/", description: "Request and minutes, opened later" },
+      { name: "cases/", description: "Labour, tax and ISO cases" },
+      { name: "inspector/", description: "Request and minutes, open later" },
       { name: "templates/", description: "Paper, clock, evidence index, register" },
       { name: "keep-watch/", description: "Weekly check, watch list, safety card" },
       { name: "claude/", description: "Skill, also at /skills/audit-nachweise.zip" },

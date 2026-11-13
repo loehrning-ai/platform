@@ -38,16 +38,16 @@ const ids = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", 
  *  Round 4: the close has four presses (last time, the fold into the register row and the weekly check, the doors, the QR cards). */
 const COUNTS = {
   en: {
-    cover: [12], today: [1, 1, 1, 14], why: [17, 23, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
-    letter: [16, 18, 22, 22, 18, 20, 14, 21], time: [19, 17, 20, 23], kit: [14, 15, 17, 24], step1: [17, 25, null], step2: [17, 19, null],
-    tests: [7, 7, 11, 23, 20], step3: [17, null, 14, 22], register: [23, 17, null, 10, 18, 12, null, 14],
-    watch: [16, 21, 22, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [13, 13, 24, 8],
+    cover: [12], today: [1, 1, 1, 13], why: [17, 24, 16, 18, 18, 22, 19, 12], sectors: [20, 22, 20, 22, 19], we: [14, 18, 22, 23],
+    letter: [16, 18, 22, 22, 18, 20, 14, 21], time: [18, 16, 19, 22], kit: [14, 15, 17, 24], step1: [17, 25, null], step2: [17, 19, null],
+    tests: [7, 7, 11, 23, 20], step3: [17, null, 14, 22], register: [23, 17, null, 10, 18, 12, null, 20],
+    watch: [16, 21, 20, 16, 20], safety: [17, 17, 23, 21, 19, 12], close: [13, 13, 24, 8],
   },
   de: {
-    cover: [10], today: [1, 1, 1, 13], why: [14, 22, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
-    letter: [13, 19, 22, 20, 18, 21, 14, 20], time: [17, 17, 20, 23], kit: [13, 16, 15, 22], step1: [16, 25, null], step2: [18, 20, null],
-    tests: [7, 7, 11, 22, 18], step3: [16, null, 14, 20], register: [22, 16, null, 9, 18, 13, null, 16],
-    watch: [15, 18, 19, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [13, 12, 24, 9],
+    cover: [10], today: [1, 1, 1, 11], why: [14, 18, 14, 15, 17, 21, 17, 11], sectors: [18, 21, 18, 21, 18], we: [12, 18, 19, 23],
+    letter: [12, 18, 21, 19, 17, 19, 13, 19], time: [17, 16, 19, 22], kit: [13, 16, 15, 22], step1: [16, 25, null], step2: [18, 20, null],
+    tests: [7, 7, 11, 22, 18], step3: [16, null, 14, 20], register: [22, 16, null, 9, 18, 13, null, 21],
+    watch: [15, 18, 17, 16, 20], safety: [16, 17, 24, 22, 21, 10], close: [13, 12, 24, 9],
   },
 };
 /** The counted words of the take presses with the chip of a take that matches the key (the chip is a figure cell: it is not counted). */
