@@ -25,7 +25,6 @@ const LANGS = ["en", "de"];
 const SLOTS = [
   ["step1", "chain", "step1", "take"],
   ["step2", "chain", "step2", "take"],
-  ["step3", "chain", "step3", "take"],
   ["register", "register", "step4", "take"],
   ["register", "register", "ask", "take2"],
 ];
@@ -131,10 +130,10 @@ for (const lang of LANGS) {
     }
   });
 
-  test(`${lang}: the produced files of a take show with the recorded names (step 3 as page previews, step 4 as chips)`, () => {
+  test(`${lang}: the produced files of a take show with the recorded names (step 4 as chips; step 3 is optional at home and shows no run)`, () => {
     const { html, takes } = built[`${lang}-same`];
     const names = (slideId, cls = "cw-file") => find(slideOf(html, slideId), (n) => hasClass(n, cls)).map((n) => textOf(find(n, (x) => x.tag === "b")[0]));
-    assert.deepEqual(names("step3", "tk-prev"), takes.chain.produced_files.map((f) => f.name).filter((n) => n !== "check.py"));
+    assert.deepEqual(names("step3", "tk-prev"), []);
     assert.deepEqual(names("register"), takes.register.produced_files.map((f) => f.name));
   });
 

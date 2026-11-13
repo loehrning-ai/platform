@@ -1,13 +1,13 @@
 /**
  * S16 close (REDESIGN-3 D4). Press 0: last time, Monday to Thursday, four greyed day cards across the page. Press 1: the payoff:
  * the four days fold together into one register row, and the weekly check with its three lists for the exercise day (the
- * kit's answer key) rises under it (one scene). No duration race here: slide 7 carries Claude's run time with its caveat. Press 2: the four doors of slide 4 again, the same poll, the first vote as ghost bars.
+ * kit's answer key) rises under it (one scene). No duration race here: slide 7 carries Claude's run time with its caveat. Press 2: the
+ * lesson in one line, the rule of who signs, and four cards for what to keep (one folder, four tests, one register, data rules).
  * Press 3: the take-away, three QR cards in a clean row and the question round. Each press replaces the one before.
  */
 import { esc, spread } from "./motion.mjs";
 import { draw, icon, rise } from "./scene.mjs";
 import { cap } from "./slides-intro.mjs";
-import { pollButtons } from "./slides-parts.mjs";
 import { rowCells } from "./slides-rules.mjs";
 
 const img = (label) => ` role="img" aria-label="${esc(label)}"`;
@@ -37,18 +37,16 @@ export function close(it, ctx, d, c) {
   const pay = String(t.pay).split(/(?<=\.)\s+/);
   if (pay.length !== 2) throw new Error("close.pay: expected two sentences, last time and next time");
   const ed = d.lang === "en" ? "-en" : "";
-  const bars = [0, 1, 2, 3].map((i) => it({ tag: "i", cls: "gb__bar", k: 2, out: 3, fx: "line", win: ".3,1", attrs: `data-value="${i}"` })).join("");
-  const ghost = it({ id: "gb", tag: "div", cls: "gb fig", zone: "gb", k: 2, out: 3, fx: "none", win: ".3,1", attrs: `data-poll-show="door"${img(t.gb)}`, html: bars });
   const urls = { kit: "/workshops/audit-vorbereitung-mit-ki/kit", demo: "/demos/audit-vorbereitung-mit-ki", skill: "/skills/audit-nachweise.zip" };
   // the code carries the full address; the card names only the site, so the caption stays one line (the alt text keeps the path)
   const address = (code) => `loehrning.ai${d.lang === "en" && code !== "skill" ? "/en" : ""}${urls[code]}`;
-  // press 3: once the poll has gone (it leaves by .25) the three cards rise in turn (one scene); never over the poll icons
+  // press 3: once the four cards have gone (they leave by .25) the three QR cards rise in turn (one scene)
   const qr = ["kit", "demo", "skill"]
     .map((code, i) => rise(it, { tag: "figure", cls: "qr", k: 3, win: spread(i, 3, 0.25, 0.5), html: `<img src="./assets/qr-${code}-g26${ed}.svg" width="300" height="300" alt="${esc(`${t.qrLabels[i]}: ${address(code)}`)}"><figcaption><b>${esc(t.qrLabels[i])}</b><span class="fig qr__url">loehrning.ai</span></figcaption>` }))
     .join("");
-  // Labour is the inspector, "not sure" a question mark
-  const icons = ["inspector", "paper", "check", "question"];
-  const doors = t.pb.map((x, i) => `<li>${draw(icons[i])}<b>${esc(x)}</b></li>`).join("");
+  // the four things to keep from today, each with its drawing
+  const icons = ["folder", "check", "register", "lock"];
+  const doors = t.lessons.map(([x, y], i) => `<li>${draw(icons[i])}<b>${esc(x)}</b><span>${esc(y)}</span></li>`).join("");
   const stage = [
     it({ id: "h0", tag: "h2", cls: "headline hl", zone: "h", out: 2, text: t.h0 }),
     it({ id: "h", tag: "h2", cls: "headline hl", zone: "h", k: 2, out: 3, win: ".3,1", text: t.h }),
@@ -58,11 +56,9 @@ export function close(it, ctx, d, c) {
     cap(it, "pay1", pay[1], 1, 2, { win: ".3,1" }),
     payoff(it, c, d, { k: 1, out: 2 }),
     // entrants in zones nobody leaves start early, so the frame never passes through empty paper (the M2 law holds for shared zones)
-    // press 2 has no empty beat: the doors and the poll arrive from the first frame while the payoff fades (other zones)
+    // press 2 has no empty beat: the four cards arrive from the first frame while the payoff fades (other zones)
     it({ id: "doors", tag: "ul", cls: "doors fig", zone: "doors", k: 2, out: 3, win: "0,.4", html: doors }),
     it({ id: "pc", cls: "t cap", zone: "cap", k: 2, out: 3, win: ".3,1", text: t.pc }),
-    pollButtons(it, { id: "pb", name: "door-end", labels: t.pb, k: 2, out: 3, zone: "pb", win: "0,.45" }),
-    ghost,
     it({ id: "qr", tag: "div", cls: "qrs fig", zone: "qr", k: 3, fx: "none", attrs: img(t.qrLabels.join(", ")), html: qr }),
     it({ id: "qs", cls: "t t--lead", zone: "qs", k: 3, win: ".15,.6", text: t.qs }),
   ].join("\n");

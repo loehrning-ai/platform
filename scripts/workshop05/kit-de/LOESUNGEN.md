@@ -62,6 +62,8 @@ Funde:
 
 Die elfte Prüfung, Unterweisung später als der Einstellungstag, findet 0 (siehe D7).
 
+Ein Lauf kann 11 oder 12 Funde ausgeben, weil er die Urlaubszeile teilt (fehlt, unter 20 Tagen) oder eine Prüfung mit 0 Funden aufführt; es zählen die 10 Funde in dieser Tabelle.
+
 Was du sagst:
 
 - F1: sag, dass es gegen Art. 13(7) verstößt und dass der Inspektor über die Maßnahme entscheidet. E-05 hatte einen Vertrag, der Fall von Art. 265(1) ohne Vertrag und ohne Anmeldung passt also nicht.

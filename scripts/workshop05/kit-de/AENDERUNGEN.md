@@ -2,6 +2,10 @@ Erfundenes Übungsmaterial, für die Übung erfunden. Keine Rechtsberatung.
 
 # Änderungen
 
+## 2026-11-13
+
+Die Startdatei richtet das Projekt jetzt in acht nummerierten Schritten ein: die 19 Dateien zum Hinzufügen, die vier Dateien vor Schritt 3, wo du die Codeausführung einschaltest, und ein Chat für alle vier Schritte. Der Lösungsschlüssel sagt, warum ein Lauf 11 oder 12 Funde ausgeben kann. Getestet in claude.ai am 13. Nov. 2026 mit zwei vollen Läufen. Alles, was die vier Schritte nicht brauchen, liegt jetzt in einem Ordner, extras/: die Dateien des Inspektors, bereit-bleiben/, die Fälle B und C, vier Vorlagen und der Skill. Die Startdatei nennt den Inhalt mit je einer Zeile. 41 Dateien.
+
 ## 2026-11-09
 
 An das Deck angeglichen: Die Startdatei nennt jeden Schritt wie das Deck, die Minuten im Raum für Schritt 3 und 4 sind die 8 und 11 des Decks, die Codeausführung gibt es in jedem Tarif (die Startdatei fragt nur, ob sie ausgeschaltet ist), und im Free-Tarif müssen die Projektdateien ins Kontextfenster passen. Die Anweisungen des Registerprojekts schreiben NICHT IN DATEIEN wie die übrigen Dateien, und die Beobachtungsliste nennt das Amtsblatt auch mit seinem kyrillischen Namen. Schritt 3 nennt die vier Dateien, die vorher ins Projekt kommen: die Mitteilung und drei Vorlagen. 41 Dateien.

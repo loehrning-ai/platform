@@ -97,6 +97,12 @@ export interface WorkshopKit {
   readonly steps: readonly WorkshopKitStep[];
   /** One line: what Claude needs and that the files are transferred to Claude. */
   readonly howTo: string;
+  /**
+   * The setup click by click, from the download to the last answer, in the
+   * order and with the file names of the kit's start file. When present, the
+   * kit page shows it as a numbered list above the download.
+   */
+  readonly setup?: readonly string[];
   /** One line: the data is invented. */
   readonly fictionalNote: string;
   /** What is inside the zip, one entry per top-level file or folder. */

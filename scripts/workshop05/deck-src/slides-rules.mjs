@@ -38,8 +38,8 @@ export const sortedByDue = (rows, today) =>
 /** S12: step 4. Window on a register table: the window leaves and the table fills, three dates change its counts, a question to it, and the table stays. */
 export function register(it, ctx, d, c, T) {
   const t = c.s.register;
-  const take = takeView(it, { c, d, takes: T, key: "register", slot: "step4", k: 2, ms: 1200, head: true, out: { take: 3, chip: 3, key: 3, time: 3 }, files: true, time: { id: "time", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
-  const take2 = takeView(it, { c, d, takes: T, key: "register", slot: "ask", k: 6, ms: 1200, out: { take: 7, chip: 7, key: 7 }, tools: false, ids: { take: "take2", chip: "chip2", key: "key2" }, zones: { take: "t2", chip: "l2", key: "l3" } });
+  const take = takeView(it, { c, d, takes: T, key: "register", slot: "step4", k: 2, ms: 1200, head: true, show: (x) => /^(I built|Expired|Expiring|Missing|Ich habe register|- \*\*(Abgelaufen|Läuft|Fehlt))/.test(x), out: { take: 3, chip: 3, key: 3, time: 3 }, files: true, time: { id: "time", zone: "l3" }, ids: { take: "take", chip: "chip", key: "key" }, zones: { take: "t", chip: "l1", key: "l2" } });
+  const take2 = takeView(it, { c, d, takes: T, key: "register", slot: "ask", k: 6, ms: 1200, show: (x) => /^(register\.csv has|Missing|In register\.csv|- \*\*Fehlt)/.test(x), out: { take: 7, chip: 7, key: 7 }, tools: false, ids: { take: "take2", chip: "chip2", key: "key2" }, zones: { take: "t2", chip: "l2", key: "l3" } });
   const thread1 = [
     it({ id: "pr", tag: "div", cls: "tk-slot", zone: "t", k: 1, out: 2, html: promptBubble(c, 4, d.prompts.step4) }),
     take.take,

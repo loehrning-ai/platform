@@ -6,10 +6,10 @@ import { COPY } from "./demo-cases/audit-vorbereitung-mit-ki/copy";
 
 /**
  * The Workshop 05 deck (both editions) tells the kit's and the demo's story: 16 main slides for 90 minutes and four appendix
- * slides outside the arrow path, the eight scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
+ * slides outside the arrow path, the seven scripts in the designed order, every prompt is START-HERE.md's block, the Cyrillic
  * quotes (the evidence wall and the notice) have their translation, every Claude result is either a recorded take with its chip or the labelled empty
  * frame, and the numbers on the slides are the kit's numbers. Built by scripts/workshop05/deck-src/build.mjs (`--check` there
- * catches drift); the word counts, polls, motion, visual law and take rendering are held by
+ * catches drift); the word counts, the no-poll rule, motion, visual law and take rendering are held by
  * scripts/__tests__/workshop05-*.test.mjs.
  */
 
@@ -28,7 +28,7 @@ const expected = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/w
 };
 
 const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"];
-const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-tally.js", "w05-field.js", "w05-scrub.js"];
+const SCRIPTS = ["deck-keys.js", "deck-stage.js", "scenes.js", "geo.js", "globe.js", "w05-field.js", "w05-scrub.js"];
 
 const EDITIONS = [
   { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, other: ["COVERED", "WEAK", "GAP"], cover: "erfundener Fall", frame: "noch nicht aufgezeichnet", chip: "aufgezeichnet" },
@@ -111,7 +111,9 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   });
 
   it("shows each Claude result as a recorded take with its chip, or as the labelled empty frame, never anything else", () => {
-    for (const id of ["step1", "step2", "step3", "register"]) {
+    // step 3 is optional at home (Tim, 13 Nov 2026): its slide holds the prompt card only, no recorded run
+    expect(doc.getElementById("step3")?.querySelectorAll("[data-take], .tk-chip").length).toBe(0);
+    for (const id of ["step1", "step2", "register"]) {
       const section = doc.getElementById(id);
       const text = flat(section?.textContent ?? "");
       const takes = section?.querySelectorAll("[data-take]").length ?? 0;
@@ -136,11 +138,9 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     expect([dates[0]?.expired, dates[0]?.expiring, dates[0]?.missing]).toEqual([expected.register.expired.length, expected.register.expiring.length, expected.register.missing.length]);
     expect([dates[0]?.expired, dates[0]?.expiring, dates[0]?.missing]).toEqual([4, 1, 4]);
     expect(expected.register.rows).toBe(98);
-    // the key line of step 2 and step 3 reads the oracle: rows read, findings, checked and the tally
+    // the key line of step 2 reads the oracle: rows read
     const step2 = flat(doc.getElementById("step2")?.textContent ?? "");
     expect(step2).toContain(String(expected.rowsRead));
-    const step3 = flat(doc.getElementById("step3")?.textContent ?? "");
-    for (const n of [expected.tally.covered, expected.tally.weak, expected.tally.gap]) expect(step3).toContain(String(n));
     const kitText = flat(doc.getElementById("kit")?.textContent ?? "");
     expect(kitText).toContain("41");
   });
@@ -148,8 +148,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   it("speaks one language for the statuses and none of the banned words", () => {
     const chips = Array.from(doc.querySelectorAll(".chip")).map((chip) => flat(chip.textContent ?? ""));
     expect(chips.length).toBeGreaterThan(0);
-    const statuses = Object.values(edition.status) as string[];
-    expect(chips.filter((chip) => statuses.includes(chip)).length).toBeGreaterThan(0);
+    // the tests slide teaches one idea: proof, or NOT IN FILES (its chip); no status word of the other edition anywhere
+    expect(chips).toContain(edition.lang === "de" ? "NICHT IN DATEIEN" : "NOT IN FILES");
     for (const word of edition.other) expect(chips).not.toContain(word);
     const html = readFileSync(resolve(root, edition.file), "utf8").replace(/<(p|tr)\b[^>]*data-take=[\s\S]*?<\/\1>/g, "");
     expect(html).not.toMatch(/[‒-―→]/);

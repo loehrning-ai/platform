@@ -3,15 +3,15 @@ import { expect, type Page, test } from "@playwright/test";
 /**
  * Workshop 05 deck, both editions, on the shared deck engine: every ArrowRight press walks the main
  * slides step by step and never enters the appendix, ArrowLeft walks back, r and Shift+R return to
- * #cover/0 and clear the room's votes, unbound keys do nothing, modified r stays the browser's, P
+ * #cover/0, unbound keys do nothing, modified r stays the browser's, P
  * opens the presenter, Escape leaves an appendix page for the slide it came from, a reload keeps the
  * position the hash names, the phone note links only to a page on this site, and a phone never
  * scrolls sideways. The 16 main slides and appendix a1 to a4 of the condensed deck are pinned by id,
- * the six polls by name and button count, the recorded-take chip on the four step slides, and the
+ * no poll, vote button or ghost bar anywhere (Tim, 13 Nov 2026: the slides explain, they do not quiz), the recorded-take chip on the four step slides, and the
  * visual law is scanned on every press of every slide in both editions: V1 no ink fill, V7 text
  * contrast 4.5:1, V8 at most one accent element per press state, V9 (round 5) Claude's orange only
  * inside the drawn Claude UI (.cl-ui), V14 no bar or meter in the colour of its ground (every press,
- * every selected sectors tile, polls with votes and under hover, the ghost bars of the close).
+ * every selected sectors tile).
  */
 
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -24,17 +24,8 @@ test.use({ contextOptions: { reducedMotion: "reduce" } });
 
 const MAIN_IDS = ["cover", "today", "why", "sectors", "we", "letter", "time", "kit", "step1", "step2", "tests", "step3", "register", "watch", "safety", "close"] as const;
 const APPENDIX_IDS = ["a1", "a2", "a3", "a4"] as const;
-/** The six polls of the deck: slide, name, buttons. `door` (S04) feeds the ghost bars of `door-end` (S16). */
-const POLLS = [
-  { slide: "letter", name: "clock", buttons: 2 },
-  { slide: "step2", name: "finds", buttons: 4 },
-  { slide: "tests", name: "status", buttons: 3 },
-  { slide: "safety", name: "ladder", buttons: 4 },
-  { slide: "sectors", name: "door", buttons: 4 },
-  { slide: "close", name: "door-end", buttons: 4 },
-] as const;
 /** The slides that show a recorded Claude take (steps 1 to 4) and so carry the take chip. */
-const TAKE_SLIDES = ["step1", "step2", "step3", "register"] as const;
+const TAKE_SLIDES = ["step1", "step2", "register"] as const;
 /** Visual law V1 exemptions, the same list as `workshop05-visual.test.mjs`: icon masks, the globe canvas, the unused tile back. */
 const V1_EXEMPT = [".ico", "[data-glyph]", "canvas", ".tile > .face--back"] as const;
 
@@ -189,8 +180,7 @@ function scanVisualLaw({ exempt }: { exempt: string[] }): string[] {
  *  - every leaf fill (a class ending in __fill, __f or __bar with no filled child) has 3:1 against the colour behind it,
  *    or its own ink edge of 1.5 px or more;
  *  - such a fill never paints over the inset ink ring of its track: where it touches the track's edge, it needs 3:1
- *    against the colour outside the track (the tile), or its own ink edge;
- *  - a poll chip with votes keeps its share bar inside its 2 px ring, and its label keeps 3:1 on that bar (hover too).
+ *    against the colour outside the track (the tile), or its own ink edge.
  */
 function scanBars(): string[] {
   type Rgba = { r: number; g: number; b: number; a: number };
@@ -270,17 +260,6 @@ function scanBars(): string[] {
     const touches = Math.abs(r.left - p.left) < 1.5 || Math.abs(r.right - p.right) < 1.5 || Math.abs(r.top - p.top) < 1.5 || Math.abs(r.bottom - p.bottom) < 1.5;
     const outside = backdrop(parent.parentElement);
     if (touches && ratio(fill, outside) < 3) hits.push(`V14 ${describe(el)} paints over the ink ring of ${describe(parent)} (${ratio(fill, outside).toFixed(2)}:1 on the tile)`);
-  }
-  for (const chip of slide.querySelectorAll<HTMLElement>(".poll__opt")) {
-    if (!visible(chip) || !(parseFloat(chip.style.getPropertyValue("--share")) > 0)) continue;
-    const bar = getComputedStyle(chip, "::before");
-    const ringWidth = 2;
-    if (parseFloat(bar.top) < ringWidth || parseFloat(bar.left) < ringWidth || parseFloat(bar.bottom) < ringWidth) hits.push(`V14 ${describe(chip)}: the share bar covers the chip's ring`);
-    const ground = over(parse(bar.backgroundColor) ?? { r: 0, g: 0, b: 0, a: 0 }, backdrop(chip));
-    for (const label of [chip, ...chip.querySelectorAll<HTMLElement>("[data-poll-n]")]) {
-      const color = parse(getComputedStyle(label).color);
-      if (color && ratio(over(color, ground), ground) < 3) hits.push(`V14 ${describe(chip)}: label ${ratio(over(color, ground), ground).toFixed(2)}:1 on its share bar`);
-    }
   }
   return hits;
 }
@@ -366,34 +345,10 @@ for (const edition of EDITIONS) {
       await expectAt(page, "#letter/2", "reload keeps the position");
     });
 
-    test("r clears the room's votes along with the position", async ({ page }) => {
-      // the poll door shows from press 4 of the rebuilt sectors slide (REDESIGN-3 D4), so the votes are cast there
-      await open(page, `${edition.deck}#sectors/4`);
-      const votes = page.locator("deck-stage [data-poll-n]");
-      const button = page.locator('#sectors [data-poll="door"][data-value="1"]');
-      await button.click();
-      await button.click();
-      await expect(page.locator('#sectors [data-poll="door"][data-value="1"] [data-poll-n]')).toHaveText("2");
-      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-      await page.keyboard.press("r");
-      await expectAt(page, "#cover/0", "r resets");
-      await expect.poll(async () => (await votes.allTextContents()).every((text) => text.trim() === "0")).toBe(true);
-      expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.includes(":poll:")))).toEqual([]);
-    });
-
-    test("the six polls sit on their slides with their buttons and nothing else", async ({ page }) => {
+    test("no poll, vote button, vote counter or ghost bar on any slide", async ({ page }) => {
       await open(page, edition.deck);
-      const found = await page.evaluate(() => {
-        const result: Record<string, { slide: string; buttons: number }> = {};
-        for (const button of document.querySelectorAll<HTMLElement>("deck-stage [data-poll][data-value]")) {
-          const name = button.dataset.poll!;
-          const slide = button.closest("section.slide")!.id;
-          result[name] = { slide, buttons: (result[name]?.buttons ?? 0) + 1 };
-        }
-        return result;
-      });
-      expect(Object.keys(found).sort()).toEqual(POLLS.map((poll) => poll.name).sort());
-      for (const poll of POLLS) expect(found[poll.name], poll.name).toEqual({ slide: poll.slide, buttons: poll.buttons });
+      await expect(page.locator("deck-stage [data-poll], deck-stage [data-poll-n], deck-stage .poll, deck-stage .poll__opt, deck-stage .gb")).toHaveCount(0);
+      expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.includes(":poll:")))).toEqual([]);
     });
 
     test("the appendix is a1 to a4, never reached by arrows, and a5 does not exist", async ({ page }) => {
@@ -409,7 +364,7 @@ for (const edition of EDITIONS) {
       }
     });
 
-    test("the recorded-take chip is on steps 1 to 4 and nowhere else", async ({ page }) => {
+    test("the recorded-take chip is on steps 1, 2 and the register and nowhere else", async ({ page }) => {
       const chip = edition.lang === "de" ? /aufgezeichnet|weicht vom Schlüssel ab/ : /recorded|differs from the key/;
       for (const id of MAIN_IDS) {
         const total = await (async () => {
@@ -448,7 +403,7 @@ for (const edition of EDITIONS) {
       expect(problems, problems.slice(0, 20).join("\n")).toEqual([]);
     });
 
-    test("V14: bars and meters keep their ground when a sectors tile is selected and when polls hold votes or are hovered", async ({ page }) => {
+    test("V14: bars and meters keep their ground when a sectors tile is selected", async ({ page }) => {
       const problems: string[] = [];
       const scan = async (state: string) => {
         for (const hit of await page.evaluate(scanBars)) problems.push(`${state} ${hit}`);
@@ -460,23 +415,6 @@ for (const edition of EDITIONS) {
         await expect(page.locator(`#sectors .st__b[data-value="${value}"]`)).toHaveAttribute("aria-pressed", "true");
         await scan(`sectors/4 ${value} selected`);
       }
-      const door = (value: number) => page.locator(`#sectors [data-poll="door"][data-value="${value}"]`);
-      await door(1).click();
-      await door(1).click();
-      await door(3).click();
-      await page.mouse.move(1, 1);
-      await scan("sectors/4 door voted");
-      await door(1).hover();
-      await scan("sectors/4 door leader hovered");
-      await page.evaluate(() => {
-        location.hash = "#close/2";
-      });
-      await expect(page.locator("#close")).toHaveAttribute("data-deck-active", "");
-      await page.locator('#close [data-poll="door-end"][data-value="2"]').click();
-      await page.mouse.move(1, 1);
-      await scan("close/2 ghost bars and door-end voted");
-      await page.locator('#close [data-poll="door-end"][data-value="2"]').hover();
-      await scan("close/2 door-end leader hovered");
       expect(problems, problems.slice(0, 20).join("\n")).toEqual([]);
     });
     test("P opens this edition's presenter view, which follows the deck", async ({ page }) => {

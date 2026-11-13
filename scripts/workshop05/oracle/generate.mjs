@@ -3,7 +3,7 @@
  * Seeded generator for the dated kit files of Workshop 05 (the invented firm Gradba-Pro). Seed 2611.
  *
  * Writes every dated CSV and the overtime notices listing into scripts/workshop05/kit/folder/ and the
- * German tree (kit-de/ordner/), and the four CSV templates (evidence index, clock, register, sample rows) into templates/ and vorlagen/. The CSV bytes
+ * German tree (kit-de/ordner/), and the CSV templates (evidence index, clock, register into templates/ and vorlagen/; sample rows into extras/templates/ and extras/vorlagen/). The CSV bytes
  * are identical in both editions (both label lines are in every file).
  *
  *   node scripts/workshop05/oracle/generate.mjs            writes the files
@@ -291,15 +291,17 @@ export function generateAll() {
   out["folder/overtime_notices_folder.txt"] = notices.en;
   out["ordner/meldungen_ueberstunden_ordner.txt"] = notices.de;
   for (const [name, text] of Object.entries(templates)) {
-    out[`templates/${name}`] = text;
-    out[`vorlagen/${name}`] = text;
+    // The sample rows are optional practice, so they sit in extras/ (the same folder name in both editions).
+    const extra = name === "sample-rows_attendance.csv" ? "extras/" : "";
+    out[`${extra}templates/${name}`] = text;
+    out[`${extra}vorlagen/${name}`] = text;
   }
   return out;
 }
 
-/** Path on disk for a generated key: folder/ and templates/ in kit/, ordner/ and vorlagen/ in kit-de/. */
+/** Path on disk for a generated key: folder/ and (extras/)templates/ in kit/, ordner/ and (extras/)vorlagen/ in kit-de/. */
 export function diskPath(key) {
-  return path.join(key.startsWith("folder/") || key.startsWith("templates/") ? KIT_DIR : KIT_DIR_DE, key);
+  return path.join(/^(folder|templates|extras\/templates)\//.test(key) ? KIT_DIR : KIT_DIR_DE, key);
 }
 
 export function checkAll() {

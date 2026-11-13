@@ -19,7 +19,7 @@ describe("W05 kit lockstep", () => {
   it("kit.ts holds every kit file byte for byte, except the start files", () => {
     const en = walk(KIT_DIR).map((path) => relative(KIT_DIR, path)).filter((file) => file !== "START-HERE.md");
     const de = walk(KIT_DIR_DE).map((path) => relative(KIT_DIR_DE, path)).filter((file) => file !== "START-HIER.md");
-    // 39 besides the start file: keep-watch/ (de: bereit-bleiben/) added five files (REDESIGN-3 D5)
+    // 39 besides the start file, extras/ included (keep-watch/, de: bereit-bleiben/, added five files in REDESIGN-3 D5)
     expect(en).toHaveLength(39);
     expect(de).toHaveLength(39);
     expect(Object.keys(KIT_TEXT).sort()).toEqual([...en, ...de.map((file) => `de/${file}`)].sort());

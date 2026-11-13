@@ -28,7 +28,6 @@ a{color:inherit}
 .t--lead{font-size:68px;font-weight:700;line-height:1.06;letter-spacing:-.03em;text-wrap:balance}
 .t--s{font-size:32px}
 .t--q{font-size:84px;line-height:1.08;max-width:1560px;text-wrap:balance}
-.t--tpl{font-size:46px;font-weight:600}
 .slide .src{max-width:1400px;font:500 24px/1.35 var(--sans);color:var(--muted)}
 .src a,.t a{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.22em}
 .src a:hover,.src a:focus-visible,.t a:hover,.t a:focus-visible{color:var(--accent)}
@@ -177,6 +176,8 @@ html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .c
 .slide.step2 .out.rec.is-pipe{padding-top:2px;padding-bottom:2px}
 /* a script row with a count of 0 is no finding: it steps back, so the ten findings are the rows that read */
 .out.rec.is-nil{opacity:.4}
+/* a recorded line kept in the page, verbatim, but not drawn: the room sees only the lines that carry the point */
+.rec.is-off,table.rec tr.is-off{display:none!important}
 /* the window ends on a whole line (a hair line under it), never through the middle of one: the cut is set per edition, since
    the two recordings wrap differently (measured at the stage size, which every viewport scales) */
 .slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:734px}
@@ -241,13 +242,6 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .tk-side li:first-child{background:var(--w05-sage-100)}
 .tk-side svg.ico{width:30px;height:30px;stroke-width:1.7}
 
-/* polls: two to four outlined chips on a sage-100 surface */
-.pb{grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:20px;width:100%;max-width:1500px}
-.pb--2{--n:2}.pb--3{--n:3}.pb--4{--n:4}
-.pb .poll__opt{grid-template-columns:minmax(0,1fr) auto;min-height:96px;padding:0 28px;font-size:34px;line-height:1.1}
-.pb .poll__opt [data-poll-n]{font-size:34px}
-.pb--grid{max-width:none}
-.slide--take .pb .poll__opt{min-height:84px;padding:0 20px;font-size:30px}
 
 /* 5 ── slide pieces ────────────────────────────────────────────────── */
 .zipbtn{display:inline-flex;align-items:center;gap:16px;padding:14px 26px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);text-decoration:none;font:600 28px/1.2 var(--mono)}
@@ -268,8 +262,6 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .hm__c{padding:10px 24px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 30px/1.2 var(--mono)}
 
 
-.gb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:100%;max-width:1500px;height:22px}
-.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);background:var(--w05-sage-400)}
 .qrs{display:flex;gap:36px}
 .qr img{display:block;width:210px;height:210px;border-radius:12px}
 .qr figcaption{max-width:250px;font:600 21px/1.25 var(--mono)}
@@ -431,9 +423,7 @@ table.rec{width:100%;margin:2px 0 6px;border-collapse:collapse;table-layout:fixe
 .slide.tests .stage > [data-zone="pill"]{grid-area:pill;justify-self:end;align-self:center}
 .slide.tests .stage > [data-zone="row"]{grid-area:row}
 .slide.tests .stage > [data-zone="scale"]{grid-area:scale}
-.slide.tests .stage > [data-zone="pb"]{grid-area:scale}
 .slide.tests .cap{font-size:44px;max-width:none}
-.slide.tests .pb .poll__opt{min-height:100px}
 .rwcard{position:relative;display:grid;gap:26px;padding:30px 40px 34px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .rwcard [data-step][data-off]{visibility:hidden}
 .rwcard .tt__i:not([data-off]) .jobs__slots[data-off]{visibility:visible}
@@ -500,7 +490,7 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .reg__gz{margin-left:auto;align-self:center;transform-origin:100% 0}
 .slide.register .reg__gz[data-step][data-fx]{transform:scale(calc(1.18 - .18 * var(--p,1)))}
 .reg__g{--z:var(--p,1);display:grid;grid-template-columns:repeat(20,26px);gap:5px}
-.reg__g > i{display:block;height:26px;border-radius:5px;box-shadow:inset 0 0 0 2px var(--w05-hair);opacity:clamp(0,calc(var(--z) * (var(--n) + 12) - var(--i)) / 12,1)}
+.reg__g > i{display:block;height:26px;border-radius:5px;box-shadow:inset 0 0 0 2px var(--w05-hair);opacity:clamp(0,calc(var(--z) * (var(--n,98) + 12) - var(--i)) / 12,1)}
 .slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="x"]{background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
 .slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="s"]{background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink)}
 .slide.register:not(:is([data-view="0"],[data-view="1"],[data-view="2"],[data-view="3"])) .reg__g > i[data-s="m"]{box-shadow:none;outline:2px dashed var(--ink);outline-offset:-2px}
@@ -524,14 +514,10 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .ct__row + .ct__row{border-top:0}
 .ct__row:last-of-type{border-bottom:2px solid var(--w05-hair)}
 
-.yours__line{display:block;height:0;border-top:5px solid var(--accent);transform:scaleX(var(--p,1));transform-origin:left center}
 
 .doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;height:100%}
 .doors li{display:grid;justify-items:center;align-content:center;gap:28px;border-radius:24px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:700 44px/1.1 var(--sans)}
 .doors svg.dr{width:210px;height:210px}
-.gb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;width:100%;max-width:none;height:22px}
-/* a ghost bar stands on the paper alone and carries the first vote with no number: an ink ring keeps its length readable */
-.gb__bar{display:block;height:100%;width:calc(var(--share,0) * 100%);border-radius:6px;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
 .qrs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .qr{margin:0;display:grid;grid-template-rows:auto 1fr;gap:12px;padding:18px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .qr img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:10px}
@@ -552,8 +538,6 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .slide .bk.fig{display:inline-flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;font:500 22px/1.2 var(--mono)}
 .slide .bk.fig .ico{width:30px;height:30px;color:var(--ink)}
 .slide .bk.fig:hover,.slide .bk.fig:focus-visible{color:var(--accent)}
-.ask{margin:0}
-.ask.t--lead{font-size:64px}
 
 /* S03 why (round 4): number, caption and source on the left; on the right a wall of news cards in depth, then the field,
    which tilts into a floor on press 6 where the eight regions rise as towers */
@@ -570,7 +554,6 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .slide.why:is([data-view="1"],[data-view="2"],[data-view="3"],[data-view="4"]) .wf[data-step][data-fx]{opacity:.25}
 @media (prefers-reduced-motion:reduce){.slide.why .wf[data-step][data-fx]{transition:none}}
 .slide.why .bk{left:0;right:auto}
-.slide.why .ask.cap{font:700 60px/1.06 var(--sans);letter-spacing:-.03em}
 .bign{display:grid;gap:22px;justify-items:start}
 .bign__n{font:700 136px/.9 var(--sans);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
 .bign__l{max-width:540px;font:600 28px/1.25 var(--sans)}
@@ -634,18 +617,15 @@ svg.tt__ic{width:64px;height:64px;stroke-width:1.3}
 .wb7__bar--done{background:var(--w05-sage-400)}
 
 /* S04 sectors (round 4): the field is the hero on the right (every firm, then the sector columns); then the nine risk tiles
-   fly in from depth over the same place; on press 4 the poll and a large panel of who else checks fill the left column */
+   fly in from depth over the same place; on press 4 a large panel of who else checks fills the left column */
 .slide.sectors .stage > [data-zone="cap"]{left:0;top:120px;width:500px}
 .slide.sectors .stage > [data-zone="src"]{left:0;top:330px;width:500px}
-.slide.sectors .stage > [data-zone="pb"]{left:0;top:236px;width:500px}
 .slide.sectors .stage > [data-zone="map"]{left:608px;top:166px}
 .slide.sectors .stage > [data-zone="wall"]{left:560px;top:100px;width:1136px}
-.slide.sectors .stage > [data-zone="panel"]{left:0;top:448px;width:500px}
+.slide.sectors .stage > [data-zone="panel"]{left:0;top:300px;width:500px}
 .slide.sectors .bk{left:auto;right:0;top:0;bottom:auto}
 /* the bar tracks come with their bars on press 3 (no empty boxes before) */
 .slide.sectors[data-view="2"] .st__bar{visibility:hidden}
-.slide.sectors .pb{--n:2;gap:16px}
-.slide.sectors .pb .poll__opt{min-height:84px;font-size:30px}
 /* the column labels stand on top of their columns: drawing, sector, count */
 .sf__lb{position:absolute;translate:-50% -100%;display:grid;justify-items:center;gap:4px;width:158px;text-align:center;font:600 25px/1.08 var(--sans)}
 .sf__lb b{font:700 26px/1.1 var(--sans);font-variant-numeric:tabular-nums}
@@ -759,20 +739,12 @@ svg.pp__i{width:66px;height:66px}
 .tl2[data-w05-at="0"] .tl2__r--0,.tl2[data-w05-at="1"] .tl2__r--1,.tl2[data-w05-at="2"] .tl2__r--2,.tl2[data-w05-at="3"] .tl2__r--3{display:inline}
 
 /* S06 letter: the envelope rises from lying flat and opens (an object, 3D); the week is a flat calendar strip of working days
-   (pitch 224 px, round 5) that slides left on press 6 to the four steps after the visit; caption, poll, scrubber and the law
-   on the right */
+   (pitch 224 px, round 5) that slides left on press 5 to the four steps after the visit; caption, the card of what the
+   letter says and the law on the right */
 .slide.letter .stage > [data-zone="env"]{left:40px;top:276px}
 .slide.letter .stage > [data-zone="cap"]{left:700px;top:112px;width:996px}
-.slide.letter .stage > [data-zone="pb"]{left:700px;top:250px;width:460px}
-.slide.letter .stage > [data-zone="sc"]{left:700px;top:362px}
-.slide.letter .stage > [data-zone="ro"]{left:700px;top:444px}
 .slide.letter .stage > [data-zone="law"]{left:700px;top:250px;width:780px}
-.slide.letter .stage > [data-zone="src"]{left:700px;top:444px;width:780px}
-.slide.letter .stage > [data-zone="ins"]{left:1536px;top:240px;width:150px;height:150px}
 .slide.letter .stage > [data-zone="floor"]{left:0;top:560px;width:1696px;height:340px}
-.slide.letter .bk{left:0;right:auto;top:auto;bottom:-26px}
-.slide.letter .pb .poll__opt{min-height:84px}
-.slide.letter .w05-btn{padding:10px 22px}
 /* the envelope: lying flat it tips up (first third of press 0), the flap opens, then the letter rises and comes forward */
 .slide.letter .lt-env[data-step][data-fx]{transform-origin:50% 100%;transform:perspective(1400px) rotateX(calc((1 - clamp(0,calc(var(--p,1) / .35),1)) * 72deg)) translateY(calc((1 - clamp(0,calc(var(--p,1) / .35),1)) * 40px))}
 .lt-env .envelope{width:520px;height:290px}
@@ -782,40 +754,28 @@ svg.pp__i{width:66px;height:66px}
 .lt-env__t{margin:0;padding-right:56px;font-size:30px;line-height:1.05}
 .lt-env__g{margin:4px 0 0;font-size:21px;line-height:1.2}
 .lt-env__d{margin-top:4px;font:600 23px/1.2 var(--sans)}
-.lt-law{padding:14px 20px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.3 var(--mono)}
+.lt-what{display:grid;gap:12px;padding:18px 24px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--w05-hair)}
+.lt-what__r{display:grid;grid-template-columns:118px minmax(0,1fr);column-gap:18px;margin:0;font:500 26px/1.25 var(--sans)}
+.lt-what__r b{padding-top:3px;font:700 21px/1.4 var(--mono);letter-spacing:.04em;text-transform:uppercase}
 .lt-wc{padding:18px 24px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 27px/1.3 var(--sans)}
 /* the strip: flat on the page, clipped to the stage so the slide never shows past the frame */
 .slide.letter .ltf[data-step][data-fx]{overflow:hidden}
-.slide.letter .ltf__cam[data-step][data-fx]{position:relative;display:grid;grid-template-columns:repeat(6,200px) 1248px;column-gap:24px;width:max-content;height:100%;padding-top:110px;transform:translateX(calc(var(--p,1) * -896px))}
+.slide.letter .ltf__row{position:relative;display:grid;grid-template-columns:repeat(5,200px);column-gap:24px;width:max-content;height:100%;padding-top:110px}
 .ltd{position:relative;display:grid;align-content:start;gap:12px;height:224px;padding:16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .ltd--4{background:var(--w05-sage-100)}
 .ltd__h{font:700 34px/1.1 var(--mono)}
 .ltd__ev{display:flex;align-items:center;gap:8px;font:600 25px/1.2 var(--sans)}
 .ltd__ev svg.ico{width:34px;height:34px}
 .ltd__ev--v{font-weight:700}
-.ltd--after{position:relative}
-.ltd__chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:20px}
-.ltc{display:grid;align-content:start;gap:8px;height:224px;padding:16px 18px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
-.ltc__t{font:600 26px/1.15 var(--sans)}
-.ltc__d{font:700 30px/1.15 var(--mono)}
-.ltw-host{position:absolute;left:0;top:110px;width:1344px;height:224px;pointer-events:none}
+.ltw-host{position:absolute;left:0;top:110px;width:1096px;height:224px;pointer-events:none}
 .ltw{position:absolute;top:74px;width:184px;padding:8px 10px;border-radius:12px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.15 var(--sans)}
 .ltw--1{left:232px}.ltw--2{left:456px}.ltw--3{left:680px}
-.lt-mk{position:absolute;left:224px;top:30px;width:200px;height:80px}
-.lt-mk__h{position:absolute;inset:0;display:grid;justify-items:center;align-content:start;gap:4px;transform:translateX(calc(var(--at) * 224px));transition:transform .3s ease-out}
-.lt-mk__h b{padding:4px 14px;border-radius:999px;background:var(--surface);outline:2px dashed var(--ink);outline-offset:-2px;font:600 24px/1.2 var(--sans)}
-.lt-mk__h i{display:block;width:0;height:30px;border-left:2px solid var(--ink)}
-.lt-br{position:absolute;top:90px;height:0;border-top:2px solid var(--ink)}
-.lt-br::before,.lt-br::after{content:"";position:absolute;top:-10px;height:20px;border-left:2px solid var(--ink)}
-.lt-br::before{left:0}.lt-br::after{right:0}
-.lt-br--3,.lt-brl--3{left:224px;width:648px}
-.lt-br--5,.lt-brl--5{left:896px;width:424px}
-.lt-br--6,.lt-brl--6{left:1344px;width:1248px}
-.lt-brl{position:absolute;top:56px;text-align:center;font:600 24px/1.1 var(--mono);white-space:nowrap}
-.lt-brl.lt-brl--5{top:28px;white-space:normal}
-.lt-ro__r{display:none;font:600 26px/1.2 var(--sans)}
-.ltf[data-w05-at="0"] ~ .lt-rob .lt-ro__r--0,.ltf[data-w05-at="1"] ~ .lt-rob .lt-ro__r--1,.ltf[data-w05-at="2"] ~ .lt-rob .lt-ro__r--2,.ltf[data-w05-at="3"] ~ .lt-rob .lt-ro__r--3{display:inline}
-svg.lt-ins{width:150px;height:150px}
+.lt-lists{display:grid;gap:12px}
+.lt-lists__h{display:flex;align-items:center;gap:12px;margin:0;font:600 26px/1.25 var(--sans)}
+.lt-lists__h b{font:700 26px/1.2 var(--mono)}
+.lt-lists ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.lt-lists li{display:flex;align-items:center;gap:10px;font:600 24px/1.2 var(--mono)}
+.lt-lists svg.ico{width:30px;height:30px;flex:none}
 
 /* S07 time: one calendar of four days, two lanes with one hero number each. By hand: four flat day cards rise (round 5).
    With Claude: a hairline at Monday is the true scale of the recorded run; a loupe lays the same steps out large. */
@@ -844,8 +804,6 @@ svg.lt-ins{width:150px;height:150px}
 .tln__l > b{font:700 34px/1.1 var(--sans)}
 .tln__n{margin:0}
 .tln__hero{position:relative;display:grid;gap:6px}
-.tln__q{position:absolute;left:0;top:0}
-.tln .tln__n.tln__q b{color:var(--muted)}
 .tln__rl{margin:0;font:700 24px/1.15 var(--mono);color:var(--muted)}
 .tln__hon{margin:4px 0 0;max-width:300px;font:600 22px/1.25 var(--sans);color:var(--muted)}
 .tl-mon{grid-row:1;grid-column:1;align-self:center;justify-self:center;z-index:0}
@@ -891,7 +849,7 @@ svg.lt-ins{width:150px;height:150px}
 .wb__t{position:relative;display:block;height:26px;border-radius:13px;background:var(--surface);border:2px solid var(--ink);overflow:hidden}
 i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%);background:var(--w05-sage-600)}
 .wb__l{font:600 24px/1.2 var(--sans)}
-@media (prefers-reduced-motion:reduce){.tl2__head,.lt-mk__h,.tln{transition:none}}
+@media (prefers-reduced-motion:reduce){.tl2__head,.tln{transition:none}}
 
 /* appendix: a1 holds the laws and the ladder, a4 the matrix and the blanks; the rows stay one line where they can */
 .slide.a1 .appx__rows,.slide.a4 .appx__rows{gap:4px}
@@ -906,18 +864,35 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .slide:is(.kit,.watch,.safety,.close) .cap{max-width:none;font:500 38px/1.2 var(--sans);letter-spacing:-.012em;text-wrap:pretty}
 .slide:is(.kit,.watch,.safety,.close) .stage > [data-zone="cap"]{left:0;top:104px;width:1696px}
 
-/* S08 kit: the binder (an object, its 3D stays) stands up from the desk (entry) and opens on its spine (press 1); on press 2
-   four files arc flat from its sheet into the project's slots (round 5: no camera turn, no depth) */
-.slide.kit .stage > [data-zone="zip"]{left:0;top:212px}
-.slide.kit .zipbtn{grid-auto-flow:column;align-items:center;gap:14px;padding:10px 22px}
-.slide.kit .zipbtn svg.ico{width:30px;height:30px}
-.slide.kit .stage > [data-zone="cam"]{left:0;top:190px;width:1696px;height:730px}
+/* S08 kit: the six set-up steps of START-HERE.md on the left (a list that grows press by press; step 1 carries the kit page's
+   QR code, its address and the zip); on the right what the steps make: the binder (the zip, an object: its 3D stays) stands up
+   and opens on its spine, then the project window and the switch in Settings take its place */
+.slide.kit .stage > [data-zone="steps"]{left:0;top:236px;width:800px}
+.slide.kit .stage > [data-zone="right"]{left:860px;top:236px;width:836px;height:440px}
+.slide.kit .stage > .kbz{height:640px}
+.slide.kit .stage > [data-zone="kcap"]{left:860px;top:700px;width:836px}
+.ksteps ol{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.ksteps li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;align-items:start;padding:12px 0 10px;border-top:2px solid var(--w05-hair);font:600 23px/1.22 var(--sans)}
+.ksteps li:first-child{border-top:0;padding-top:0}
+.ksteps li > b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 21px/1 var(--mono)}
+.ks__t{display:grid;gap:10px;padding-top:7px}
+.ks1{display:grid;grid-template-columns:128px minmax(0,1fr);gap:20px;align-items:center}
+.ks1 img{display:block;width:128px;height:128px;border-radius:10px;outline:2px solid var(--ink);outline-offset:-2px}
+.ks1__a{display:grid;gap:6px;justify-items:start;min-width:0}
+.ks1__a small{font:500 19px/1.2 var(--mono);color:var(--muted)}
+.ks1__a b{font:600 21px/1.25 var(--mono)}
+.slide.kit .zipbtn{grid-auto-flow:column;align-items:center;gap:12px;margin-top:4px;padding:8px 18px}
+.slide.kit .zipbtn b{font-size:21px}
+.slide.kit .zipbtn svg.ico{width:26px;height:26px}
+.ksteps small{display:block;margin-top:10px;font:500 19px/1.2 var(--mono);color:var(--muted)}
+.slide.kit .stage > [data-zone="kx"]{left:860px;top:818px;width:836px}
+.ks__x{display:flex;align-items:center;gap:12px;margin:0;padding:12px 18px;border-radius:14px;box-shadow:inset 0 0 0 2px var(--w05-hair);font:600 24px/1.25 var(--sans)}
+.ks__x svg{width:30px;height:30px;flex:none}
 /* the desk: the binder lies flat at the start of the entry and stands up on its bottom edge */
-.kb-host{position:absolute;left:0;top:122px;width:880px;height:584px;transform-style:preserve-3d}
-/* round 6: the desk steps 120 px left and a little smaller, so the project window gets the width of the app's open sidebar */
-.slide.kit .kb-host[data-step][data-fx]{transform-origin:100% 100%;transform:translateX(-120px) perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg)) scale(.84);opacity:min(1,calc(var(--p,1) * 4))}
-.kb{position:absolute;left:430px;top:0;width:470px;height:584px}
-/* the open cover stays inside the 112 px margin (w05-fx.css sets 158 deg for every binder) */
+.kb-host{position:absolute;inset:0;transform-style:preserve-3d}
+.slide.kit .kb-host[data-step][data-fx]{transform-origin:50% 100%;transform:perspective(3200px) rotateX(calc((1 - var(--p,1)) * 74deg));opacity:min(1,calc(var(--p,1) * 4))}
+.kb{position:absolute;left:396px;top:16px;width:440px;height:604px}
+/* the open cover stays inside the right column (w05-fx.css sets 158 deg for every binder) */
 .slide.kit .kb{--open:130deg}
 .kb .w05-binder__front{display:grid;place-items:center;backface-visibility:visible}
 .slide.kit .kb[data-step][data-fx] .w05-binder__front{transform:translateZ(3px) rotateY(calc(var(--p,1) * var(--open) * -1))}
@@ -928,49 +903,41 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .kb__cover small{font:600 26px/1.2 var(--mono)}
 /* the inside of the open cover: the zip name and its file count, mirrored so it reads once the cover has swung past 90 degrees */
 .kb__inside{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;gap:10px;padding:24px;text-align:center;transform:rotateY(180deg)}
-.kb__inside b{font:700 28px/1.2 var(--mono);overflow-wrap:normal}
-.kb__inside small{font:600 26px/1.2 var(--mono)}
+.kb__inside b{font:700 26px/1.2 var(--mono);overflow-wrap:normal}
+.kb__inside small{font:600 24px/1.2 var(--mono)}
 .kb[data-step] .kb__inside{opacity:clamp(0,calc((var(--p,1) - .55) * 4),1)}
-.kb__tree{position:absolute;inset:24px 22px 24px 32px;display:grid;align-content:start;gap:3px;margin:0;padding:0;list-style:none;transform:translateZ(1px)}
-.kb__tree li{display:flex;align-items:center;gap:12px;min-width:0;min-height:40px;font:500 23px/1.12 var(--mono)}
+.kb__tree{position:absolute;inset:24px 22px 24px 28px;display:grid;align-content:start;gap:3px;margin:0;padding:0;list-style:none;transform:translateZ(1px)}
+.kb__tree li{display:flex;align-items:center;gap:12px;min-width:0;min-height:43px;font:500 22px/1.12 var(--mono)}
 .kb__tree li span{flex:1 1 auto;min-width:0;overflow-wrap:normal}
 .kb__tree svg.ico{flex:none;width:28px;height:28px}
 .kb__tree em{margin-left:auto;padding:1px 12px;border-radius:999px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 1.5px var(--ink);font:600 20px/1.2 var(--mono);font-style:normal}
-.slide.kit .kw-host{position:absolute;left:800px;top:22px;width:896px;height:452px}
-.slide.kit .kw{position:absolute;inset:0;font-size:26px}
+.slide.kit .kw{font-size:26px}
 .kw__p{display:grid;gap:8px}
 .slide.kit .kw .tk-thread{padding:.55em .85em .5em}
 /* the project page: its name in the app's serif, then its instructions and its files (sentence case, as the app writes them) */
 .kw__t{display:flex;align-items:center;gap:12px;margin:0;font:400 29px/1.15 var(--cl-serif);letter-spacing:-.015em;color:var(--cw-t1)}
 .kw__t b{font-weight:400}
 .kw__t svg{flex:none;width:28px;height:28px;color:var(--cw-t3)}
-.kw__h{margin:2px 0 0;font:600 20px/1.2 var(--cw-sans);color:var(--cw-t2)}
+.kw__h{display:flex;justify-content:space-between;gap:16px;margin:2px 0 0;font:600 20px/1.2 var(--cw-sans);color:var(--cw-t2)}
+.kw__h em{font-style:normal;font-weight:500;color:var(--cw-t3)}
 .kw__ins{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;align-items:center;margin:0;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
 .kw__ins svg{grid-row:1/3;width:30px;height:30px;color:var(--cw-t2)}
 .kw__ins b{font:600 22px/1.2 var(--cw-sans)}
 .kw__ins small{font:400 20px/1.25 var(--cw-sans);color:var(--cw-t2)}
-.kw__files{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:88px;margin:0;padding:0;list-style:none}
-.kw__slot{min-height:72px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
-.kw__files > .kw__ghost{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:40px 40px;gap:8px;padding:0;background:none;box-shadow:none;pointer-events:none}
-.kw__files > .kw__ghost > i{position:static;display:block;height:40px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--cl-edge)}
-/* the flying files: above the window (later in the scene, so painted on top), each placed on its slot and flown from its tree row */
-.kfly-l{--cw-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
-/* a file of the project: a white card with a hair edge (round 6), the name in the app's sans */
-.kfly{--dx:0px;--dy:0px;position:absolute;display:flex;align-items:center;gap:10px;width:320px;height:40px;padding:6px 12px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--w05-hair);font:500 20px/1.2 var(--cw-sans);white-space:nowrap;overflow:hidden}
-.slide.kit .kfly[data-step][data-fx]{transform:translate(calc((1 - var(--p,1)) * var(--dx)),calc((1 - var(--p,1)) * var(--dy) - var(--p,1) * (1 - var(--p,1)) * 240px))}
-.kfly svg{flex:none;width:24px;height:24px}
-.kfly span{min-width:0;overflow-wrap:normal;white-space:nowrap;font-size:20px}
+/* the project's files: one flat list, as the app shows them; the rest of the nineteen counted */
+.kw__files{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0;padding:0;list-style:none}
+.kw__files li{display:flex;align-items:center;gap:10px;min-width:0;height:40px;padding:6px 12px;border-radius:10px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge);font:500 20px/1.2 var(--cw-sans);white-space:nowrap;overflow:hidden}
+.kw__files li svg{flex:none;width:24px;height:24px;color:var(--cw-t2)}
+.kw__files li span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.kw__files li.kw__more{background:none;box-shadow:none;color:var(--cw-t2)}
 .nobr{white-space:nowrap}
-.kw__made{display:flex;align-items:center;gap:10px;margin-top:2px;padding:8px 16px;border-radius:12px;background:var(--cw-white);box-shadow:inset 0 0 0 1px var(--cl-edge)}
-.kw__made svg{flex:none;width:34px;height:34px}
-.kw__made span{display:grid;gap:2px;margin-left:6px}
-.kw__made b{font:600 22px/1.2 var(--cw-sans)}
-.kw__made small{font:500 19px/1.2 var(--mono);color:var(--muted)}
-.slide.kit .stage > [data-zone="steps"]{left:800px;top:688px;width:896px}
-.ksteps ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
-.ksteps li{display:grid;align-content:start;gap:8px;min-height:160px;padding:14px 16px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:600 26px/1.2 var(--sans)}
-.ksteps li b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--w05-sage-200);box-shadow:inset 0 0 0 2px var(--ink);font:700 22px/1 var(--mono)}
-.ksteps small{display:block;margin-top:8px;font:500 21px/1.2 var(--mono);color:var(--muted)}
+/* step 5's switch lives in Settings, so it is its own card under the project window, switched on */
+.kcap{display:grid;gap:8px;padding:14px 22px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.kcap p{margin:0}
+.kcap__h{font:600 20px/1.2 var(--mono);color:var(--muted)}
+.kcap__r{display:flex;align-items:center;justify-content:space-between;gap:20px;font:600 26px/1.2 var(--sans)}
+.kcap__sw{position:relative;flex:none;width:64px;height:36px;border-radius:999px;background:var(--w05-sage-400);box-shadow:inset 0 0 0 2px var(--ink)}
+.kcap__sw i{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 
 /* the status tiles of step 3: a blank paper tile whose status shows through as --p runs (flat, round 5: the blank cover
    fades, nothing turns) */
@@ -1097,18 +1064,12 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .wl__c span{font:500 23px/1.25 var(--sans)}
 .wl__c small{margin-top:auto;padding-top:10px;border-top:2px solid var(--w05-hair);font:600 23px/1.25 var(--mono)}
 .wl__src{grid-column:1/-1;margin:0}
-.wy{left:820px;top:626px;width:876px;display:grid;gap:16px}
-.wy p{margin:0}
-.wy__tp{font:600 40px/1.2 var(--sans);letter-spacing:-.015em}
-.wy__ex{padding:14px 24px;border-radius:20px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 29px/1.3 var(--sans)}
-.wy__line{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:end;gap:24px;padding-top:12px}
-.wy__line span{font:600 30px/1.2 var(--mono)}
+.wl__c--on{background:var(--w05-sage-100)}
 
 /* S15 safety: the left column holds the two rules and one card at a time; the stair of four levels climbs on the right and links to A2 */
 .slide.safety .stage > [data-zone="cap"]{width:840px}
 .slide.safety .stage > [data-zone="r"]{left:0;top:236px;width:840px}
 .slide.safety .stage > [data-zone="a"]{left:0;top:378px;width:840px}
-.slide.safety .stage > [data-zone="l"]{left:0;top:642px;width:840px}
 .sfr,.sff,.sfn{display:grid;gap:14px}
 .sfl{display:grid;gap:14px}
 .sff p,.sfl p{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin:0;padding:16px 26px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink);font:500 30px/1.24 var(--sans)}
@@ -1118,8 +1079,6 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .sfr svg{width:48px;height:48px}
 .sff svg,.sfl svg{width:50px;height:50px}
 .sff small,.sfn small,.sfl small{font:500 22px/1.25 var(--mono);color:var(--muted)}
-.slide.safety .pb{--n:2;gap:16px;width:840px}
-.slide.safety .pb .poll__opt{min-height:96px;font-size:30px}
 .sfn{gap:12px;padding:20px 28px;border-radius:22px;background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
 .sfn > b{font:700 34px/1.2 var(--sans)}
 .sfn ul{display:grid;gap:12px;margin:0;padding:0;list-style:none}
@@ -1143,16 +1102,16 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .sf3__s--2{left:120px;top:424px}.sf3__s--2 .sf3__face{background:var(--w05-sage-100)}
 .sf3__s--3{left:240px;top:244px}.sf3__s--3 .sf3__face{background:var(--w05-sage-200)}
 .sf3__s--4{left:360px;top:64px}.sf3__s--4 .sf3__face{background:var(--w05-sage-400)}
-.slide.safety[data-view="3"] .sf3__s--3,.slide.safety[data-view="4"] .sf3__s--3,.slide.safety[data-view="5"] .sf3__s--4{translate:0 0 calc(var(--i) * 40px + 40px)}
+.slide.safety[data-view="2"] .sf3__s--3,.slide.safety[data-view="3"] .sf3__s--3,.slide.safety[data-view="4"] .sf3__s--4{translate:0 0 calc(var(--i) * 40px + 40px)}
 .sf3 .sf3__g{position:absolute;width:470px;height:176px;border-radius:20px;background:none;box-shadow:none;border:2px dashed var(--w05-hair);translate:0 0 calc(var(--i) * 40px)}
 .sf3__l{font:600 22px/1.2 var(--mono)}
 .sf3__n{font:700 36px/1.12 var(--sans)}
 .sf3__s small{font:500 25px/1.25 var(--sans)}
 @media (prefers-reduced-motion:reduce){.sf3__s{transition:none}}
 /* the answer and the gates: the other steps step back */
-.slide.safety[data-view="3"] :is(.sf3__s--1,.sf3__s--2,.sf3__s--4),.slide.safety[data-view="5"] :is(.sf3__s--1,.sf3__s--2,.sf3__s--3){opacity:.4}
+.slide.safety[data-view="2"] :is(.sf3__s--1,.sf3__s--2),.slide.safety[data-view="4"] :is(.sf3__s--1,.sf3__s--2,.sf3__s--3){opacity:.4}
 
-/* S16 close: last time (four greyed days), the fold into one register row and the weekly loop, then the doors and the poll, then
+/* S16 close: last time (four greyed days), the fold into one register row and the weekly loop, then the lesson and its four cards, then
    the take-away and the QR cards. The fold is one scene (children read the host's --p): the four day cards gather onto Monday
    one after another and flatten to the row's height, the gathered card unrolls to the right as the register row, and the weekly
    check rises under it. --q is each card's own share of the press (Thursday first) */
@@ -1178,14 +1137,14 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .cp__wk span b{font:700 112px/1 var(--mono)}
 .cp__wk small{font:600 32px/1.2 var(--mono)}
 .cp svg.cp__loop{flex:none;width:128px;height:128px;stroke-width:1.3}
-.slide.close .stage > [data-zone="doors"]{left:0;top:200px;width:1696px;height:360px}
-.slide.close .doors svg.dr{width:180px;height:180px}
-.slide.close .doors li{gap:16px;font-size:40px}
-.slide.close .stage > [data-zone="pb"]{left:0;top:600px;width:1696px}
-.slide.close .pb{max-width:none}
-.slide.close .pb .poll__opt{min-height:96px;font-size:32px}
-.slide.close .stage > [data-zone="gb"]{left:0;top:720px;width:1696px}
+.slide.close .stage > [data-zone="doors"]{left:0;top:236px;width:1696px;height:440px}
+.slide.close .doors svg.dr{width:160px;height:160px}
+/* the four lesson cards start at the same top, so the drawings and titles line up when a line runs shorter */
+.slide.close .doors li{align-content:start;gap:14px;padding:44px 28px 28px;font-size:40px;text-align:center}
+.slide.close .doors li span{font:500 28px/1.3 var(--sans)}
 .slide.close .stage > [data-zone="cap"]{top:104px}
+/* the lesson headline of press 2 runs the full stage width, so the German line stays on one line above its caption */
+.slide.close .stage > .hl{max-width:1696px}
 .slide.close .stage > [data-zone="qr"]{left:0;top:150px;width:1290px;height:720px;align-content:center}
 .slide.close .qr img{width:360px;height:360px}
 .slide.close .qr figcaption{font-size:30px}
@@ -1208,3 +1167,7 @@ i.wb__f{--w:0;position:absolute;left:0;top:0;bottom:0;width:calc(var(--w) * 10%)
 .stage.appx{display:grid;gap:22px;align-content:start;align-items:start}
 .tk-def{margin:0;padding:16px 22px;border-radius:16px;background:var(--w05-sage-100);box-shadow:inset 0 0 0 2px var(--ink);font:600 28px/1.25 var(--sans)}
 .cap.fig{font-family:var(--sans)}
+/* the tests slide teaches one idea: the proof quote under the row, then one NOT IN FILES card across the width */
+.slide.tests .tp{margin:0;font:500 34px/1.3 var(--sans)}
+.slide.tests .tp .tt__q{font-size:34px}
+.slide.tests .sc{grid-template-columns:minmax(0,1fr)}

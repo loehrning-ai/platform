@@ -10,7 +10,7 @@ Nimm das Skript check.py aus Schritt 4 und diesen Prompt:
 
 Eine benannte Person liest die Listen, verschickt die Nachrichten und schreibt für jede Lücke ein neues datiertes Papier. Ändere nie eine alte Zeile, um eine Lücke zu verstecken.
 
-Damit das nach dem Workshop weiterläuft, siehe bereit-bleiben/: eine wöchentliche geplante Aufgabe in bezahlten Tarifen, derselbe Check von Hand im Free-Tarif.
+Damit das nach dem Workshop weiterläuft, siehe extras/bereit-bleiben/: eine wöchentliche geplante Aufgabe in bezahlten Tarifen, derselbe Check von Hand im Free-Tarif.
 
 ## Weitere Orte für dasselbe Register
 

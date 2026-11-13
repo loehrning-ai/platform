@@ -193,7 +193,6 @@ export function deckData(lang = "en") {
     public: PUBLIC,
     dit: { ...dit, total: ditTotal, decisions: PUBLIC.ditDecisions2025 },
     dots,
-    finds: [result.findings.length - 4, result.findings.length, result.findings.length + 4, result.findings.length * 2],
     startHere,
     prompts,
     vars,
@@ -213,7 +212,7 @@ export function deckData(lang = "en") {
 }
 
 /** The agenda in minutes per main slide, in deck order (slides.mjs asserts that SLIDES carry exactly these). */
-export const AGENDA_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 6, 9, 5, 8, 11, 8, 6, 4];
+export const AGENDA_MINUTES = [1, 3, 5, 4, 4, 7, 4, 5, 8, 12, 2, 2, 15, 8, 6, 4];
 /**
  * The three parts of the day with the start (cover and today) in front, as slide index ranges [from, to):
  * start (slides 1 and 2), the case (3 to 7: evidence, what happens, the clock, by hand), Claude the first time (8 to 12:

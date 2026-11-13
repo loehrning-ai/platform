@@ -100,7 +100,6 @@ ${sections.join("\n")}
 <script src="./lib/scenes.js"></script>
 <script src="./lib/geo.js"></script>
 <script src="./lib/globe.js"></script>
-<script src="./lib/w05-tally.js"></script>
 <script src="./lib/w05-field.js"></script>
 <script src="./lib/w05-scrub.js"></script>
 </body>

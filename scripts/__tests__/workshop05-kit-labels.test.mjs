@@ -1,7 +1,7 @@
 /**
  * Workshop 05 kit: labels on every file, CSV comment lines, the allowed external URLs (one privacy link anywhere, the verified
- * sources only inside keep-watch/ and bereit-bleiben/), weekday words, banned words, the tree (41 files, 12 top-level entries)
- * in both editions. The tree grew by the five files of keep-watch/ (REDESIGN-3 D5).
+ * sources only inside extras/keep-watch/ and extras/bereit-bleiben/), weekday words, banned words, the tree (41 files, 10 top-level
+ * entries) in both editions. Lean layout: everything the four steps do not need sits in one folder, extras/.
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -17,11 +17,11 @@ const EDITIONS = [
 ];
 const walk = (dir, base = "") =>
   readdirSync(dir).flatMap((entry) => (statSync(path.join(dir, entry)).isDirectory() ? walk(path.join(dir, entry), `${base}${entry}/`) : [`${base}${entry}`]));
-const SKILL = "claude/audit-nachweise/SKILL.md";
+const SKILL = "extras/claude/audit-nachweise/SKILL.md";
 // Written in pieces so that this test file itself holds none of the words it forbids.
 const INTERNAL = new RegExp(["\\/Users\\/", "\\/private\\/", "maven" + "gence", "facilitator\\/", "CLAUDE" + "\\.md", "vard" + "ar", "tann" + "wald"].join("|"), "i");
 const ALLOWED_URL = "https://privacy.claude.com/en/articles/7996890";
-/** The sources keep-watch/ may link: two Anthropic help pages and the verified watch list (Anthropic help centre, projects and scheduled tasks; AZLP, Služben vesnik, DIT). */
+/** The sources extras/keep-watch/ may link: two Anthropic help pages and the verified watch list (Anthropic help centre, projects and scheduled tasks; AZLP, Služben vesnik, DIT). */
 const WATCH_URLS = [
   "https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork",
   "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects",
@@ -30,18 +30,18 @@ const WATCH_URLS = [
   "https://azlp.mk/feed/",
   "https://mzzpr.org.mk/feed/",
 ];
-const WATCH_DIR = /^(keep-watch|bereit-bleiben)\//;
+const WATCH_DIR = /^extras\/(keep-watch|bereit-bleiben)\//;
 
 for (const edition of EDITIONS) {
   const files = walk(edition.dir).filter((file) => !file.endsWith(".DS_Store"));
   const text = (file) => readFileSync(path.join(edition.dir, file), "utf8");
 
-  test(`${edition.name}: 41 files with the skill, 12 top-level entries, plain ASCII names`, () => {
+  test(`${edition.name}: 41 files with the skill, 10 top-level entries, plain ASCII names`, () => {
     const entries = edition.entries().map(([file]) => file);
     assert.equal(entries.length, 41);
     assert.ok(entries.includes(SKILL));
     assert.equal(files.length, 40);
-    assert.equal(new Set(entries.map((file) => file.split("/")[0])).size, 12);
+    assert.equal(new Set(entries.map((file) => file.split("/")[0])).size, 10);
     for (const file of entries) assert.match(file, /^[A-Za-z0-9._\-/]+$/);
   });
 
@@ -82,4 +82,5 @@ test("the two editions have the same CSV bytes", () => {
   const read = (dir, file) => readFileSync(path.join(HERE, dir, file), "utf8");
   for (const name of readdirSync(path.join(HERE, "kit/folder")).filter((f) => f.endsWith(".csv"))) assert.equal(read("kit/folder", name), read("kit-de/ordner", name), name);
   for (const name of readdirSync(path.join(HERE, "kit/templates")).filter((f) => f.endsWith(".csv"))) assert.equal(read("kit/templates", name), read("kit-de/vorlagen", name), name);
+  for (const name of readdirSync(path.join(HERE, "kit/extras/templates")).filter((f) => f.endsWith(".csv"))) assert.equal(read("kit/extras/templates", name), read("kit-de/extras/vorlagen", name), name);
 });

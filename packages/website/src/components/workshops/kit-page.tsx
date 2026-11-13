@@ -46,7 +46,8 @@ function BackGlyph() {
  * The kit page of a workshop: what the kit does (a short stepper over its
  * steps) and one big download. Lean on purpose: the three rules and the file
  * list are short and always open (nothing collapses), so the page is numbers, a
- * motion explainer and the button. Generic: it renders whatever `workshop.kit`
+ * motion explainer and the button. A kit block with a `setup` list also gets
+ * that list, numbered and open, above the download. Generic: it renders whatever `workshop.kit`
  * holds, so the next workshop adds a kit block and no page code. The zip's
  * path and size come from the workshop's kit material, and the download goes
  * through WorkshopMaterialLink, so it is counted like every other material
@@ -221,6 +222,23 @@ export function KitPage({ workshop, locale }: Props) {
       <section aria-labelledby="kit-home-heading" className={SECTION}>
         <div className={CONTAINER}>
           <SectionHead id="kit-home-heading" title={copy.homeHeading} size="compact" />
+          {kit.setup ? (
+            <ol data-kit-setup-list="" className="mt-4 divide-y divide-hairline border-y border-hairline sm:mt-6">
+              {kit.setup.map((line, index) => (
+                <li key={line} className="flex gap-4 py-3 sm:py-4">
+                  <span
+                    aria-hidden="true"
+                    className="w-7 shrink-0 font-mono text-[1.25rem] font-bold leading-snug text-kupfer-dark tabular-nums"
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="min-w-0 max-w-[68ch] text-[1rem] leading-snug text-foreground text-pretty [overflow-wrap:anywhere]">
+                    {line}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : null}
           <div className="mt-4 grid gap-3 sm:mt-6 md:grid-cols-2 md:gap-5">
             <Callout variant="note" icon="guide">
               {kit.howTo}

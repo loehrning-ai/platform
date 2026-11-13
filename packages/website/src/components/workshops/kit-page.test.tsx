@@ -121,6 +121,21 @@ describe("<KitPage>", () => {
           expect(tabs[1]).toHaveAttribute("aria-selected", "true");
         });
 
+        it("shows the kit block's setup as one open numbered list before the download, and no list without one", () => {
+          const { container } = render(<KitPage workshop={workshop} locale={locale} />);
+          const list = container.querySelector("[data-kit-setup-list]");
+          if (!kit.setup) {
+            expect(list).toBeNull();
+            return;
+          }
+          expect(list?.tagName).toBe("OL");
+          const items = [...list!.querySelectorAll(":scope > li")];
+          expect(items).toHaveLength(kit.setup.length);
+          kit.setup.forEach((line, index) => expect(items[index]).toHaveTextContent(`${index + 1}${line}`));
+          const download = container.querySelector("[data-kit-download]") as HTMLElement;
+          expect(Boolean(list!.compareDocumentPosition(download) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+        });
+
         it("has one big download link to the zip, with its size, and counts it as a zip opened", () => {
           render(<KitPage workshop={workshop} locale={locale} />);
           const downloads = screen
