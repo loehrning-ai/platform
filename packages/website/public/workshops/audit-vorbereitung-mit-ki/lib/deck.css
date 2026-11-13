@@ -177,7 +177,7 @@ html[lang="de"] .slide.register [data-id="win"] .cw-main--comp > .tk-thread > .c
 /* a script row with a count of 0 is no finding: it steps back, so the ten findings are the rows that read */
 .out.rec.is-nil{opacity:.4}
 /* a recorded line kept in the page, verbatim, but not drawn: the room sees only the lines that carry the point */
-.rec.is-off,table.rec tr.is-off{display:none}
+.rec.is-off,table.rec tr.is-off{display:none!important}
 /* the window ends on a whole line (a hair line under it), never through the middle of one: the cut is set per edition, since
    the two recordings wrap differently (measured at the stage size, which every viewport scales) */
 .slide.step2 .tk-thread > .cw-answer.tk.tk--head{flex:0 0 auto;height:734px}
